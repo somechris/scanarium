@@ -1,0 +1,4 @@
+/__pycache__
+/conf/scanarium.conf
+/dynamic
+/scenes/*/actors/*/*-mask.png

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Scanarium</title>
+    <!--
+        The below phaser file can be fetched from
+        https://cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js
+        -->
+    <script src="phaser-3.11.0.js"></script>
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+<script src="scanarium.js"></script>
+
+<script type="text/javascript">
+document.addEventListener("keypress", function(e) {
+  if (e.key === 'f') {
+    canvases = document.getElementsByTagName('canvas');
+    if (canvases.length) {
+      canvases[0].requestFullscreen();
+    }
+  } else if (e.key === 'p') {
+    // We (un)pause outside of the game itself, as a paused game did not handle
+    // keydown events reliable and hence made it tricky to unpause.
+    scanariumConfig.paused = !scanariumConfig.paused;
+    if (scanariumConfig.paused) {
+      game.scene.pause();
+    } else {
+      game.scene.resume();
+    }
+  }
+}, false);
+</script>
+
+</body>
+</html>

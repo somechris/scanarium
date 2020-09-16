@@ -159,6 +159,17 @@ def mask(image, scene, actor):
     masked = cv2.merge((b, g, r, mask))
     return masked
 
+def crop(image):
+    y, x = image[:,:,3].nonzero()
+    x_min = np.min(x)
+    x_max = np.max(x)
+    y_min = np.min(y)
+    y_max = np.max(y)
+
+    cropped = image[y_min:y_max, x_min:x_max]
+
+    return cropped
+
 def balance(image):
     algo = SCANARIUM_CONFIG['scan']['white_balance'].lower()
     if algo in ['simple', 'yes', 'true']:
@@ -213,6 +224,7 @@ def scan_actor_image():
     (qr_rect, scene, actor) = extract_qr(image)
     image = orient_image(image, qr_rect.left)
     image = mask(image, scene, actor)
+    image = crop(image)
     image = balance(image)
 
     # Finally the image is rectified, landscape, and the QR code is in the

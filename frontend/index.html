@@ -21,6 +21,12 @@
 <script src="scanarium.js"></script>
 
 <script type="text/javascript">
+var cgis = {
+  ' ': 'scan',
+  's': 'show-source',
+  'r': 'reindex'
+};
+
 document.addEventListener("keypress", function(e) {
   if (e.key === 'f') {
     canvases = document.getElementsByTagName('canvas');
@@ -36,19 +42,9 @@ document.addEventListener("keypress", function(e) {
     } else {
       game.scene.resume();
     }
-  } else if (e.key === ' ') {
+  } else if (e.key in cgis) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'cgi-bin/scan', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send();
-  } else if (e.key === 's') {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'cgi-bin/show-source', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send();
-  } else if (e.key === 'r') {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'cgi-bin/reindex', true);
+    xhr.open('POST', 'cgi-bin/' + cgis[e.key], true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
   }

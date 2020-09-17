@@ -8,9 +8,6 @@ import cv2
 import numpy as np
 from pyzbar import pyzbar
 
-PAPER_WIDTH=297
-PAPER_HEIGHT=210
-
 SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
 from common import SCANARIUM_CONFIG
@@ -98,8 +95,12 @@ def turn_landscape(image):
     return image
 
 def scale_to_paper_size(image):
+    paper_width = SCANARIUM_CONFIG.getint('scan', 'paper_width')
+    paper_height = SCANARIUM_CONFIG.getint('scan', 'paper_height')
+
     height = image.shape[0]
-    width = int(height * PAPER_WIDTH / PAPER_HEIGHT)
+
+    width = int(height * paper_width / paper_height)
     dimension = (width, height)
     return cv2.resize(image, dimension, cv2.INTER_AREA)
 

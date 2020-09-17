@@ -20,6 +20,16 @@ white_balance = yes
 # grayworld https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/grayworld_white_balance.cpp
 
 
+# Height of landscape standard paper.
+#
+# Only the ratio between height and width (see `paper_width` below)
+# are used, so we do not have to worry about units.
+#
+# The defaults are for A4 landscape paper.
+paper_height = 210
+
+# Width of landscape standard paper (See `paper_height` above)
+paper_width = 297
 
 [demo_server]
 # `port` is the default TCP port the demo server will listen on.

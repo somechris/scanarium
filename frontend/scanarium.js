@@ -87,7 +87,6 @@ var SimpleRocket = {
     nextMotionPlanningUpdate: 0,
 
     init: function(game, x, y, flavor) {
-        console.log('Init');
         this.game = game;
 
         this.scale = Math.pow(Math.random(), 5);

@@ -1,5 +1,7 @@
 import os
 import subprocess
+import json
+import tempfile
 import logging
 import logging.config
 import configparser
@@ -57,3 +59,46 @@ def get_dynamic_directory():
     if not os.path.isabs(dyn_dir):
         dyn_dir = os.path.join(SCANARIUM_DIR_ABS, dyn_dir)
     return dyn_dir
+
+
+def dump_json(file, data):
+    dir = os.path.dirname(file)
+    #fd, tmp_file = tempfile.mkstemp(dir=dir)
+    tmp_file = tempfile.NamedTemporaryFile(mode='w+', dir=dir, delete=False)
+    try:
+        json.dump(data, tmp_file, indent=2, sort_keys=True)
+    finally:
+        tmp_file.close()
+    os.replace(tmp_file.name, file)
+
+
+def reindex_actors_for_scene(scene):
+    scene_dir = os.path.join(get_dynamic_directory(), 'scenes', scene)
+    actors_data = {
+        'actors': {}
+        }
+    actors_latest_data = {
+        'actors': {}
+        }
+    actors_dir = os.path.join(scene_dir, 'actors')
+    if os.path.isdir(actors_dir):
+        for actor in os.listdir(actors_dir):
+            actor_dir = os.path.join(actors_dir, actor)
+            if os.path.isdir(actor_dir):
+                actor_conf = {}
+                flavor_files = []
+                for flavor in os.listdir(actor_dir):
+                    flavor_file = os.path.join(actor_dir, flavor)
+                    if os.path.isfile(flavor_file) and flavor.endswith('.png'):
+                        flavor_files.append({
+                                'flavor': flavor[:-4],
+                                'key': os.stat(flavor_file).st_mtime,
+                                })
+                flavor_files.sort(key=lambda f:f['key'], reverse=True)
+                flavors_sorted = [f['flavor'] for f in flavor_files]
+
+                actors_data['actors'][actor] = flavors_sorted
+                actors_latest_data['actors'][actor] = [f for f in flavors_sorted[:3]]
+
+    dump_json(os.path.join(scene_dir, 'actors.json'), actors_data)
+    dump_json(os.path.join(scene_dir, 'actors-latest.json'), actors_latest_data)

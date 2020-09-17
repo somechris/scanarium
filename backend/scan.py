@@ -14,6 +14,7 @@ from common import SCANARIUM_CONFIG
 from common import SCENES_DIR_ABS
 from common import get_dynamic_directory
 from common import get_image
+from common import reindex_actors_for_scene
 from common import run
 del sys.path[0]
 
@@ -237,8 +238,12 @@ def scan_actor_image():
     show_image('final', image)
     save_image(image, scene, actor)
 
+    return scene
+
+
 def main():
-    scan_actor_image()
+    scene = scan_actor_image()
+    reindex_actors_for_scene(scene)
 
 
 if __name__ == "__main__":

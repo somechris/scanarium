@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 
-import cv2
 import logging
+import os
+import sys
 
+import cv2
+
+SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, SCANARIUM_DIR_ABS)
 from common import get_image
+del sys.path[0]
 
 logger = logging.getLogger(__name__)
 

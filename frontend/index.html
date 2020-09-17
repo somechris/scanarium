@@ -41,6 +41,11 @@ document.addEventListener("keypress", function(e) {
     xhr.open('POST', 'cgi-bin/scan', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
+  } else if (e.key === 's') {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'cgi-bin/show-source', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
   }
 }, false);
 </script>

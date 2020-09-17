@@ -2,9 +2,13 @@
 
 import os
 import logging
+import sys
 
+SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, SCANARIUM_DIR_ABS)
 from common import get_dynamic_directory
 from common import reindex_actors_for_scene
+del sys.path[0]
 
 logger = logging.getLogger(__name__)
 

@@ -46,6 +46,11 @@ document.addEventListener("keypress", function(e) {
     xhr.open('POST', 'cgi-bin/show-source', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
+  } else if (e.key === 'r') {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'cgi-bin/reindex', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
   }
 }, false);
 </script>

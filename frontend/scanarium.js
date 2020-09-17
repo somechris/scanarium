@@ -248,7 +248,7 @@ var ScActorManager = {
                 all.push(item);
             }
         }
-        return all[Math.floor(Math.random() * all.length)];
+        return all.length ? all[Math.floor(Math.random() * all.length)] : null;
     },
 
     getNewActorNameWithFlavor: function() {
@@ -264,6 +264,10 @@ var ScActorManager = {
     addActor: function() {
         if (this.game) {
             var actor_spec = this.getNewActorNameWithFlavor();
+            if (actor_spec === null) {
+                // Configs currently do not provide good actor configs
+                return;
+            }
 
             var actor_name = actor_spec[0];
             var flavor = actor_spec[1];

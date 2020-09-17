@@ -221,7 +221,10 @@ def scan_actor_image():
     # Now normalizing the rectified image
     image = turn_landscape(image)
     image = scale_to_paper_size(image)
+
+    show_image('before QR extraction', image)
     (qr_rect, scene, actor) = extract_qr(image)
+
     image = orient_image(image, qr_rect.left)
     image = mask(image, scene, actor)
     image = crop(image)

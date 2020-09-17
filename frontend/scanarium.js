@@ -225,29 +225,41 @@ var ScActorManager = {
         scActors.push(actor);
     },
 
-    getNewActorNameWithFlavor: function() {
+    getNewActorNameWithFlavorFromConfig: function(config, forceUntried) {
         // We iterate over all entries in actors_latest_config.
         // If we find one that we have not tried yet, we try it.
         // If we have already tried all, we pick a random one.
         var all = [];
-        var names = Object.keys(this.actors_latest_config['actors']);
+        var names = Object.keys(config['actors']);
         var i;
         for (i=0; i < names.length; i++) {
-            var flavors = this.actors_latest_config['actors'][names[i]];
+            var flavors = config['actors'][names[i]];
             var j;
             for (j=0; j < flavors.length; j++) {
                 item = [names[i], flavors[j]];
-                if (names[i] in this.triedActors) {
-                    if (!(this.triedActors[names[i]].includes(flavors[j]))) {
+                if (forceUntried) {
+                    if (names[i] in this.triedActors) {
+                        if (!(this.triedActors[names[i]].includes(flavors[j]))) {
+                            return item;
+                        }
+                    } else {
                         return item;
                     }
-                } else {
-                    return item;
                 }
                 all.push(item);
             }
         }
         return all[Math.floor(Math.random() * all.length)];
+    },
+
+    getNewActorNameWithFlavor: function() {
+        var config = this.actors_latest_config
+        var forceUntried = true;
+        if (Math.random() < 0.3) {
+            config = this.actors_config
+            forceUntried = false;
+        }
+        return this.getNewActorNameWithFlavorFromConfig(config, forceUntried);
     },
 
     addActor: function() {

@@ -36,6 +36,11 @@ document.addEventListener("keypress", function(e) {
     } else {
       game.scene.resume();
     }
+  } else if (e.key === ' ') {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'cgi-bin/scan', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
   }
 }, false);
 </script>

@@ -12,24 +12,42 @@ SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, SCANARIUM_DIR_ABS)
 from common import SCANARIUM_CONFIG
+from common import BACKEND_DIR_ABS
 from common import FRONTEND_DIR_ABS
 from common import FRONTEND_DYNAMIC_DIR_ABS
+from common import FRONTEND_CGI_DIR_ABS
 from common import get_dynamic_directory
 del sys.path[0]
 
 logger = logging.getLogger(__name__)
 
 
-class RequestHandler(http.server.SimpleHTTPRequestHandler):
+class RequestHandler(http.server.CGIHTTPRequestHandler):
     """Simple HTTP handler that aliases user-generated-content"""
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    cgi_directories = ['/cgi-bin']
+
+    def run_cgi(self):
+        # Shimming in server properties that we seem to be missing on Python
+        # 3.8, although the Handler requires them. We're probably
+        # instantiating the server wrong, but as it's only a demo server and
+        # it works, it's good enough for now.
+        self.server.server_name = ''
+        self.server.server_port = 0
+
+        return super().run_cgi()
+
 
     def translate_path(self, path):
         f = super().translate_path(path)
         if f.startswith(FRONTEND_DYNAMIC_DIR_ABS + os.sep):
             f = f[len(FRONTEND_DYNAMIC_DIR_ABS + os.sep):]
             f = os.path.join(get_dynamic_directory(), f)
+            f = os.path.normpath(f)
+        if f.startswith(FRONTEND_CGI_DIR_ABS + os.sep):
+            f = f[len(FRONTEND_CGI_DIR_ABS + os.sep):]
+            f = os.path.join(BACKEND_DIR_ABS, f)
+            if not f.endswith('.py'):
+                f += '.py'
             f = os.path.normpath(f)
         return f
 

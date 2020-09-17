@@ -13,6 +13,7 @@ CONFIG_FILE_ABS = os.path.join(CONFIG_DIR_ABS, 'scanarium.conf')
 BACKEND_DIR_ABS=os.path.join(SCANARIUM_DIR_ABS, 'backend')
 FRONTEND_DIR_ABS=os.path.join(SCANARIUM_DIR_ABS, 'frontend')
 FRONTEND_DYNAMIC_DIR_ABS=os.path.join(FRONTEND_DIR_ABS, 'dynamic')
+FRONTEND_CGI_DIR_ABS=os.path.join(FRONTEND_DIR_ABS, 'cgi-bin')
 SCENES_DIR_ABS=os.path.join(SCANARIUM_DIR_ABS, 'scenes')
 
 SCANARIUM_CONFIG={}

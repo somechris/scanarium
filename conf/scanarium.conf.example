@@ -1,0 +1,27 @@
+# This example contains the most relevant settings for a quick start. See
+# `scanarium.conf.defaults` for further variables to tweak in your
+# `scanarium.conf`
+
+
+[general]
+# Set to true to turn on debugging output
+debug = False
+
+
+[scan]
+# Source to get images from.
+# `cam:<n>` denotes video camera `<n>`. On linux, thi resolves to
+# `/dev/video<n>`. So for example, `cam:2` would be `/dev/video2`.
+# Strings that do not start in `cam:` are considered a file name, and the image
+# at that file name taken.
+source = cam:0
+
+# The white-balance filter to apply.
+# Either `simple`, `grayworld`, or `none`.
+# Since white-balance filters in some setups (E.g.: too little light) often
+# distort colors of images, we do not perform white-balancing per default.
+# More information about `simple` white-balancing is available at
+# https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/simple_color_balance.cpp
+# More information about `grapworld` white-balancing is available at
+# https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/grayworld_white_balance.cpp
+white_balance = none

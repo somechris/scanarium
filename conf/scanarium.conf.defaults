@@ -33,7 +33,7 @@ paper_width = 297
 
 [demo_server]
 # `port` is the default TCP port the demo server will listen on.
-port = 8000
+port = 8080
 
 
 

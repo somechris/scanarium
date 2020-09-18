@@ -1,4 +1,5 @@
 /__pycache__
 /conf/scanarium.conf
 /dynamic
+/frontend/phaser-3.11.0.js
 /scenes/*/actors/*/*-mask.png

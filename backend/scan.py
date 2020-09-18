@@ -14,10 +14,12 @@ SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
 from common import SCANARIUM_CONFIG
 from common import SCENES_DIR_ABS
+from common import call_guarded
 from common import get_dynamic_directory
 from common import get_image
 from common import reindex_actors_for_scene
 from common import run
+from common import ScanariumError
 del sys.path[0]
 
 logger = logging.getLogger(__name__)
@@ -61,7 +63,7 @@ def find_sheet_points(image):
             break
 
     if approx is None:
-        return None
+        raise ScanariumError('SE_SCAN_NO_APPROX', 'Failed to find rectangle contour')
 
     points = approx.reshape(4, 2)
     return points
@@ -110,7 +112,7 @@ def scale_to_paper_size(image):
 def extract_qr(image):
     codes = pyzbar.decode(image)
     if len(codes) != 1:
-        return None
+        raise ScanariumError('SE_SCAN_NO_QR_CODE', 'Failed to find scanned QR code')
     code = codes[0]
 
     rect = code.rect
@@ -131,7 +133,7 @@ def generate_mask(mask_path):
     source_path = mask_path[:-9] + '.svg'
 
     if not os.path.isfile(source_path):
-        return None
+        raise ScanariumError('SE_SCAN_NO_SOURCE_FOR_MASK', 'Failed to find source file for generating mask')
 
     if not os.path.isfile(mask_path) \
             or os.stat(source_path).st_mtime > os.stat(mask_path).st_mtime:
@@ -154,7 +156,7 @@ def mask(image, scene, actor):
     generate_mask(masked_file_path)
 
     if not os.path.isfile(masked_file_path):
-        return None
+        raise ScanariumError('SE_SCAN_NO_MASK', 'Failed to find mask')
 
     mask = cv2.imread(masked_file_path, 0)
     mask = cv2.resize(mask, (image.shape[1], image.shape[0]), cv2.INTER_AREA)
@@ -186,7 +188,7 @@ def balance(image):
     elif algo in ['none', 'no', 'false']:
         ret = image
     else:
-        ret = None
+        raise ScanariumError('SE_SCAN_UNKNOWN_WB', 'Unknown white balance filter configured')
 
     return ret
 
@@ -197,13 +199,15 @@ def save_image(image, scene, actor):
         # This should never happen, as masking already ensured that the actor
         # source is there. But since we're about to create directories, we're
         # extra warry.
-        return None
+        raise ScanariumError('SE_SCAN_SAVE_PATH_MISSING', 'Directory to store file in does not exist, or is no directory')
 
     dynamic_dir = get_dynamic_directory()
     image_dir = os.path.join(dynamic_dir, 'scenes', actor_path)
     os.makedirs(image_dir, exist_ok=True)
     image_file = os.path.join(image_dir, '%s.png' % timestamp)
     cv2.imwrite(image_file, image)
+
+    return timestamp
 
 
 def scan_actor_image():
@@ -238,15 +242,20 @@ def scan_actor_image():
     # lower left-hand corner, and white-balance has been run.
 
     show_image('final', image)
-    save_image(image, scene, actor)
+    flavor = save_image(image, scene, actor)
 
-    return scene
+    return {
+        'scene': scene,
+        'actor': actor,
+        'flavor': flavor,
+        }
 
 
 def main():
-    scene = scan_actor_image()
-    reindex_actors_for_scene(scene)
+    ret = scan_actor_image()
+    reindex_actors_for_scene(ret['scene'])
+    return ret
 
 
 if __name__ == "__main__":
-    main()
+    call_guarded(main)

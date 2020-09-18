@@ -6,6 +6,7 @@ import sys
 
 SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
+from common import call_guarded
 from common import get_dynamic_directory
 from common import reindex_actors_for_scene
 del sys.path[0]
@@ -21,6 +22,5 @@ def reindex():
             if os.path.isdir(scene_dir):
                 reindex_actors_for_scene(scene)
 
-
 if __name__ == "__main__":
-    reindex()
+    call_guarded(reindex)

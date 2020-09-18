@@ -1,11 +1,21 @@
 import os
 import subprocess
 import json
+import sys
 import tempfile
+import traceback
 import logging
 import logging.config
 import configparser
 import cv2
+
+JSON_DUMP_ARGS = {'indent': 2, 'sort_keys': True}
+
+IS_CGI = 'REMOTE_ADDR' in os.environ
+if IS_CGI:
+    import cgi
+    print('Content-Type: application/json')
+    print()
 
 SCANARIUM_DIR_ABS=os.path.dirname(os.path.abspath(__file__))
 CONFIG_DIR_ABS=os.path.join(SCANARIUM_DIR_ABS, 'conf')
@@ -36,8 +46,15 @@ logger = logging.getLogger(__name__)
 def get_image():
     file_path = SCANARIUM_CONFIG['scan']['source']
     if file_path.startswith('cam:'):
-        cam_nr = int(file_path[4:])
+        try:
+            cam_nr = int(file_path[4:])
+        except ValueError:
+            raise ScanariumError('SE_VALUE', 'Failed to parse "%s" of source "%s" to number' % (file_path[4:], file_path))
         cap = cv2.VideoCapture(cam_nr)
+
+        if not cap.isOpened():
+            raise ScanariumError('SE_CAP_NOT_OPEN', 'Failed to open camera %d' % (cam_nr))
+
         ret, image = cap.read()
         cap.release()
     else:
@@ -50,9 +67,9 @@ def run(command, check=True, timeout=10):
     try:
         subprocess.run(command, check=check, timeout=timeout)
     except subprocess.TimeoutExpired:
-        return None
+        raise ScanariumError('SE_TIMEOUT', 'The command "%s" did not finish within %d seconds' % (str(command), timeout))
     except subprocess.CalledProcessError:
-        return None
+        raise ScanariumError('SE_RETURN_VALUE', 'The command "%s" did not return 0' % (str(command)))
 
 
 def get_dynamic_directory():
@@ -62,12 +79,16 @@ def get_dynamic_directory():
     return dyn_dir
 
 
+def dump_json_string(data):
+    return json.dumps(data, **JSON_DUMP_ARGS)
+
+
 def dump_json(file, data):
     dir = os.path.dirname(file)
     #fd, tmp_file = tempfile.mkstemp(dir=dir)
     tmp_file = tempfile.NamedTemporaryFile(mode='w+', dir=dir, delete=False)
     try:
-        json.dump(data, tmp_file, indent=2, sort_keys=True)
+        json.dump(data, tmp_file, **JSON_DUMP_ARGS)
     finally:
         tmp_file.close()
     os.replace(tmp_file.name, file)
@@ -103,3 +124,50 @@ def reindex_actors_for_scene(scene):
 
     dump_json(os.path.join(scene_dir, 'actors.json'), actors_data)
     dump_json(os.path.join(scene_dir, 'actors-latest.json'), actors_latest_data)
+
+
+class ScanariumError(RuntimeError):
+    def __init__(self, code, message, *args, **kwargs):
+        super(ScanariumError, self).__init__(*args, **kwargs)
+        self.code = code
+        self.message = message
+
+
+def result(payload={}, exc_info=None):
+    if exc_info is None:
+        error_code = None
+        error_message = None
+    else:
+        if SCANARIUM_CONFIG.getboolean('general', 'debug'):
+            traceback.print_exception(*exc_info)
+        if isinstance(exc_info[1], ScanariumError):
+            error_code = exc_info[1].code
+            error_message = exc_info[1].message
+        else:
+            error_code = 'SE_UNDEF'
+            error_message = 'undefined error'
+    if IS_CGI:
+        capsule = {
+            'payload': payload,
+            'is_ok': exc_info is None,
+            'error_code': error_code,
+            'error_message': error_message,
+            }
+        print(dump_json_string(capsule))
+    else:
+        if exc_info is not None:
+            print('ERROR: %s' % error_code)
+            print(error_message)
+            print()
+        if payload:
+            print(dump_json_string(payload))
+    sys.exit(0)
+
+
+def call_guarded(func):
+    try:
+        payload = func()
+    except:
+        result(payload='Failed', exc_info=sys.exc_info())
+
+    result(payload = payload)

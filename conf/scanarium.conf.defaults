@@ -13,8 +13,8 @@ dynamic = dynamic
 
 [scan]
 source = cam:0
-
-white_balance = yes
+white_balance = none
+# yes
 # none
 # simple https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/simple_color_balance.cpp
 # grayworld https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/grayworld_white_balance.cpp

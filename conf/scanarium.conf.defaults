@@ -1,23 +1,61 @@
+#-------------------------------------------------------------------------------
+# General configuration
+#-------------------------------------------------------------------------------
 [general]
+
+
 debug = False
 
+
+
+#-------------------------------------------------------------------------------
+# Configuration for where to find which binary
+#-------------------------------------------------------------------------------
 [programs]
+
+
 # The binary to start Inkscape
 inkscape = inkscape
 
 
+
+#-------------------------------------------------------------------------------
+# Configuration for directories
+#-------------------------------------------------------------------------------
 [directories]
+
+
 # Directory for user generated content, relative to the Scanarium repo
 # root directory.
 dynamic = dynamic
 
+
+
+#-------------------------------------------------------------------------------
+# Configuration for image scanning
+#-------------------------------------------------------------------------------
 [scan]
+
+
+# Source to get images from.
+#
+# `cam:<n>` denotes video camera `<n>`. On linux, thi resolves to
+# `/dev/video<n>`. So for example, `cam:2` would be `/dev/video2`.
+# Strings that do not start in `cam:` are considered a file name, and the image
+# at that file name taken.
 source = cam:0
+
+
+# The white-balance filter to apply.
+#
+# Either `simple`, `grayworld`, or `none`.
+# Since white-balance filters in some setups (E.g.: too little light) often
+# distort colors of images, we do not perform white-balancing per default.
+# More information about `simple` white-balancing is available at
+# https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/simple_color_balance.cpp
+# More information about `grapworld` white-balancing is available at
+# https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/grayworld_white_balance.cpp
 white_balance = none
-# yes
-# none
-# simple https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/simple_color_balance.cpp
-# grayworld https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/grayworld_white_balance.cpp
 
 
 # Height of landscape standard paper.
@@ -28,15 +66,24 @@ white_balance = none
 # The defaults are for A4 landscape paper.
 paper_height = 210
 
+
 # Width of landscape standard paper (See `paper_height` above)
 paper_width = 297
 
+
+
+#-------------------------------------------------------------------------------
+# Configuaration for the demo server
+#-------------------------------------------------------------------------------
 [demo_server]
-# `port` is the default TCP port the demo server will listen on.
+
+
+# TCP port the demo server will listen on.
 port = 8080
 
 
 
+#-------------------------------------------------------------------------------
 # Below this line, it's standard Python logging configuration.
 # By default, we log only INFO and above and we log to console.
 # See https://docs.python.org/3/library/logging.config.html#logging-config-fileformat

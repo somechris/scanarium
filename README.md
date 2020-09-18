@@ -1,12 +1,42 @@
-# sudo apt-get install python3-numpy python3-opencv
-# sudo apt-get install libzbar-devapt-get python3-pip python3-dev
+# Scanarium
+
+![](docs/images/bait.gif)
+
+### Table of contents
+
+1. Installation
 
 
-sudo apt-get install inkscape # <-- for masking
+## Installation
 
+First, install `inkscape`, Python >= 3.6, `opencv-python`, `numpy`, and
+`pyzbar`. For example on Linux Mint, run:
 
+```
+sudo apt-get install inkscape
 pip3 install opencv-contrib-python
-Successfully installed numpy-1.19.2 opencv-contrib-python-4.2.0.34
-
 pip3 install pyzbar
-Successfully installed pyzbar-0.1.8
+```
+
+Then run the `setup.sh` script to download the [Phaser](https://phaser.io/) and
+initialize the configuration for you:
+
+```
+./setup.sh
+```
+
+Edit `conf/scanarium.conf` and adjust to your liking:
+
+```
+nano conf/scanarium.conf
+```
+
+Launch the demo server:
+
+```
+./run-demo-server.sh
+```
+
+And finally point your browser to the default URL at http://localhost:8080/
+
+Enjoy!

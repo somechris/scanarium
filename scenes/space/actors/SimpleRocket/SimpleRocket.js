@@ -1,9 +1,17 @@
 var SimpleRocket = {
-    sprite: null,
     imgAspect: 1.455814,
     lengthMin: 50,
     lengthMax: 350,
     nextMotionPlanningUpdate: 0,
+
+    addThruster: function(game, container, x, y, angle, scale) {
+        var thruster = Object.create(SpaceshipThrust);
+
+        var sprite = thruster.init(game, x, y, angle, scale);
+        container.add([sprite]);
+
+        return thruster;
+    },
 
     init: function(game, x, y, flavor) {
         this.scale = Math.pow(Math.random(), 5);
@@ -19,8 +27,7 @@ var SimpleRocket = {
         ship.setDisplaySize(length, width);
         ship.angle = 180;
         this.destroyOffset = 2 * (length + width);
-        this.ship = ship;
-        this.container.add([this.ship]);
+        this.container.add([ship]);
 
         game.physics.world.enable(this.container);
 
@@ -33,40 +40,32 @@ var SimpleRocket = {
         this.container.body.setVelocityY(this.speedY);
 
         var thrustScale = scaleBetween(0.08, 0.7, this.scale);
-        this.nozzleLeft = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleLeft.init(game, -length*0.41, -width/2, 90, thrustScale)]);
 
-        this.nozzleMiddle = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleMiddle.init(game, -length/2, 0, 0.01, thrustScale)]);
-
-        this.nozzleRight = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleRight.init(game, -length*0.41, width/2, -90, thrustScale)]);
+        this.thrusters = [
+            this.addThruster(game, container, -length*0.41, -width/2, 90, thrustScale), // Left
+            this.addThruster(game, container, -length/2, 0, 0.01, thrustScale),         // Middle
+            this.addThruster(game, container, -length*0.41, width/2, -90, thrustScale), // Right
+        ];
 
         this.nextMotionPlanningUpdate = 0;
     },
 
     update: function(time, delta) {
         if (time > this.nextMotionPlanningUpdate) {
-            if (Math.random() > 0.5) {
-                this.nozzleLeft.setThrust(0);
-                this.nozzleRight.decideThrust();
-            } else {
-                this.nozzleLeft.decideThrust();
-                this.nozzleRight.setThrust(0);
-            }
-            this.nozzleMiddle.decideThrust();
+            this.thrusters.forEach(thruster => thruster.decideThrust());
+            // Having both left and right thruster on is counter-intuitive,
+            // so we force one of the two (at random) off.
+            this.thrusters[Math.random() > 0.5 ? 0 : 2].setThrust(0);
 
             this.nextMotionPlanningUpdate = time + scaleBetween(100, 10000, this.scale);
         }
-        this.container.angle += this.nozzleRight.thrust - this.nozzleLeft.thrust;
+        this.container.angle += this.thrusters[2].thrust - this.thrusters[0].thrust;
 
-        this.nozzleLeft.update();
-        this.nozzleMiddle.update();
-        this.nozzleRight.update();
+        this.thrusters.forEach(thruster => thruster.update());
 
         var angleRad = this.container.angle * degToRadian;
-        this.speedX += Math.cos(angleRad) * this.nozzleMiddle.thrust;
-        this.speedY += Math.sin(angleRad) * this.nozzleMiddle.thrust;
+        this.speedX += Math.cos(angleRad) * this.thrusters[1].thrust;
+        this.speedY += Math.sin(angleRad) * this.thrusters[1].thrust;
         this.container.body.setVelocityX(this.speedX);
         this.container.body.setVelocityY(this.speedY);
 

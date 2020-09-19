@@ -1,17 +1,15 @@
 // Scene: space
 
-function scene_preload(game)
+function scene_preload()
 {
     game.load.spritesheet('spaceship-thrust', scene_dir + '/spaceship-thrust.png', { frameWidth: 600, frameHeight: 200 });
 }
 
 var SpaceshipThrust = {
-    game: null,
     sprite: null,
     thrust: 0,
 
-    init: function(game, xCorr, yCorr, angleCorr, scale) {
-        this.game = game;
+    init: function(xCorr, yCorr, angleCorr, scale) {
         this.sprite = game.physics.add.sprite(xCorr, yCorr, 'spaceship-thrust');
         this.sprite.setOrigin(1,0.5);
         this.sprite.visible = false;

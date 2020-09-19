@@ -35,12 +35,10 @@ function loadJs(url, callback) {
 }
 
 var ScActorManager = {
-    init: function(game, config) {
-        this.game = game;
+    init: function(config) {
         this.config = config;
         console.log('ActorManager initialized');
     },
-    game: null,
     scene_config: null,
     actors_config: null,
     actors_latest_config: null,
@@ -57,7 +55,7 @@ var ScActorManager = {
     update: function(time, delta) {
         if (time > this.nextConfigFetch) {
             this.nextConfigFetch = time + configReloadPeriod;
-            this.reloadConfigFiles(this.game);
+            this.reloadConfigFiles();
         }
 
         if (time > this.nextSpawn) {
@@ -78,10 +76,10 @@ var ScActorManager = {
         });
     },
 
-    reloadConfigFiles: function(game, isPreload) {
+    reloadConfigFiles: function(isPreload) {
         game.load.json('actors-latest-config', dyn_scene_dir + '/actors-latest.json');
         if ((ScActorManager.configFetches % 60) == 0) {
-        game.load.json('actors-config', dyn_scene_dir + '/actors.json');
+            game.load.json('actors-config', dyn_scene_dir + '/actors.json');
         }
 
         if (isPreload === true) {
@@ -130,7 +128,7 @@ var ScActorManager = {
         var y = this.config.height * (Math.random() * 0.6 + 0.2);
 
         var actor = Object.create(this.registeredActors[actor]);
-        actor.init(game, x, y, flavor);
+        actor.init(x, y, flavor);
         this.actors.push(actor);
     },
 
@@ -172,71 +170,67 @@ var ScActorManager = {
     },
 
     addActorRandom: function() {
-        if (this.game) {
-            var actor_spec = this.getNewActorNameWithFlavor();
-            if (actor_spec === null) {
-                // Configs currently do not provide good actor configs
-                return;
-            }
-
-            var actor_name = actor_spec[0];
-            var flavor = actor_spec[1];
-            this.addActor(actor_name, flavor);
+        var actor_spec = this.getNewActorNameWithFlavor();
+        if (actor_spec === null) {
+            // Configs currently do not provide good actor configs
+            return;
         }
+
+        var actor_name = actor_spec[0];
+        var flavor = actor_spec[1];
+        this.addActor(actor_name, flavor);
     },
 
     addActor: function(actor_name, flavor) {
-        if (this.game) {
-            var flavored_actor_name = actor_name + '-' + flavor;
+        var flavored_actor_name = actor_name + '-' + flavor;
 
-            var triedActors = this.triedActors;
-            if (!(actor_name in triedActors)) {
-                triedActors[actor_name] = []
-            }
-            if (!(triedActors[actor_name].includes(flavor))) {
-                triedActors[actor_name].push(flavor);
-            }
+        var triedActors = this.triedActors;
+        if (!(actor_name in triedActors)) {
+            triedActors[actor_name] = []
+        }
+        if (!(triedActors[actor_name].includes(flavor))) {
+            triedActors[actor_name].push(flavor);
+        }
 
-            var loadedActorFlavors = this.loadedActorFlavors;
-            if (!(actor_name in loadedActorFlavors)) {
-                loadedActorFlavors[actor_name] = []
-            }
+        var loadedActorFlavors = this.loadedActorFlavors;
+        if (!(actor_name in loadedActorFlavors)) {
+            loadedActorFlavors[actor_name] = []
+        }
 
-            var created = false;
-            var that = this;
-            var image = null;
+        var created = false;
+        var that = this;
+        var image = null;
 
-            var onLoaded = function(key, file) {
-                if (key == flavored_actor_name) {
-                    if (!(that.loadedActorFlavors[actor_name].includes(flavor))) {
-                        that.loadedActorFlavors[actor_name].push(flavor);
-                    }
-
-                    if (image != null) {
-                        that.game.events.off('filecomplete', onLoaded);
-                    }
-
-                    that.addActorIfFullyLoaded(actor_name, flavor);
+        var onLoaded = function(key, file) {
+            if (key == flavored_actor_name) {
+                if (!(that.loadedActorFlavors[actor_name].includes(flavor))) {
+                    that.loadedActorFlavors[actor_name].push(flavor);
                 }
-            };
 
-            if (this.loadedActorJavascripts.includes(actor_name)) {
+                if (image != null) {
+                    game.events.off('filecomplete', onLoaded);
+                }
+
+                that.addActorIfFullyLoaded(actor_name, flavor);
+            }
+        };
+
+        if (this.loadedActorJavascripts.includes(actor_name)) {
+            this.addActorIfFullyLoaded(actor_name, flavor);
+        } else {
+            var actor_url = scene_dir + '/actors/' + actor_name;
+            var actor_js_url = actor_url + '/' + actor_name + '.js';
+            loadJs(actor_js_url, () => {
+                this.loadedActorJavascripts.push(actor_name);
                 this.addActorIfFullyLoaded(actor_name, flavor);
-            } else {
-                var actor_url = scene_dir + '/actors/' + actor_name;
-                var actor_js_url = actor_url + '/' + actor_name + '.js';
-                loadJs(actor_js_url, () => {
-                    this.loadedActorJavascripts.push(actor_name);
-                    this.addActorIfFullyLoaded(actor_name, flavor);
-                });
-            }
+            });
+        }
 
-            if (!(loadedActorFlavors[actor_name].includes(flavor))) {
-                var path = dyn_scene_dir + '/actors/' + actor_name + '/' + flavor + '.png';
-                image = this.game.load.image(flavored_actor_name, path);
-                image.on('filecomplete', onLoaded, this);
-                this.game.load.start()
-            }
+        if (!(loadedActorFlavors[actor_name].includes(flavor))) {
+            var path = dyn_scene_dir + '/actors/' + actor_name + '/' + flavor + '.png';
+            image = game.load.image(flavored_actor_name, path);
+            image.on('filecomplete', onLoaded, this);
+            game.load.start()
         }
     },
 
@@ -362,12 +356,16 @@ function preload() {
     this.load.image('ok', '/static/ok.png');
     this.load.image('background', scene_dir + '/background.png');
 
-    scene_preload(this);
+    scene_preload();
 
-    ScActorManager.reloadConfigFiles(this, true);
+    ScActorManager.reloadConfigFiles(true);
 }
 
 function create() {
+    // Initing `game` to be save even if create happens to get called before
+    // `Phaser.Game` initialization can set it.
+    game = this;
+
     var config = scanariumConfig;
 
     //  A simple background for our game
@@ -375,7 +373,7 @@ function create() {
     background.setOrigin(0, 0);
     background.setScale(config.width/background.width, config.height/background.height);
 
-    ScActorManager.init(this, config);
+    ScActorManager.init(config);
 
     this.anims.create({
         key: 'spaceship-thrust-fire',
@@ -384,7 +382,6 @@ function create() {
         repeat: -1
     });
 
-    game = this;
     this.input.keyboard.on('keydown_M', function (event) {
         ScActorManager.addActorRandom();
     });

@@ -4,16 +4,16 @@ var SimpleRocket = {
     lengthMax: 350,
     nextMotionPlanningUpdate: 0,
 
-    addThruster: function(game, container, x, y, angle, scale) {
+    addThruster: function(container, x, y, angle, scale) {
         var thruster = Object.create(SpaceshipThrust);
 
-        var sprite = thruster.init(game, x, y, angle, scale);
+        var sprite = thruster.init(x, y, angle, scale);
         container.add([sprite]);
 
         return thruster;
     },
 
-    init: function(game, x, y, flavor) {
+    init: function(x, y, flavor) {
         this.scale = Math.pow(Math.random(), 5);
 
         var length = scaleBetween(this.lengthMin, this.lengthMax, this.scale);
@@ -42,9 +42,9 @@ var SimpleRocket = {
         var thrustScale = scaleBetween(0.08, 0.7, this.scale);
 
         this.thrusters = [
-            this.addThruster(game, container, -length*0.41, -width/2, 90, thrustScale), // Left
-            this.addThruster(game, container, -length/2, 0, 0.01, thrustScale),         // Middle
-            this.addThruster(game, container, -length*0.41, width/2, -90, thrustScale), // Right
+            this.addThruster(container, -length*0.41, -width/2, 90, thrustScale), // Left
+            this.addThruster(container, -length/2, 0, 0.01, thrustScale),         // Middle
+            this.addThruster(container, -length*0.41, width/2, -90, thrustScale), // Right
         ];
 
         this.nextMotionPlanningUpdate = 0;

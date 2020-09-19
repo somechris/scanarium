@@ -21,149 +21,11 @@ var scanariumConfig = {
 
 var configReloadPeriod = 10 * 1000; // 10 seconds
 
-var game = new Phaser.Game(scanariumConfig);
-
 var degToRadian = 2 * Math.PI / 360;
-
-function preload ()
-{
-    this.load.image('failed', '/static/failed.png');
-    this.load.image('ok', '/static/ok.png');
-    this.load.image('background', scene_dir + '/background.png');
-    this.load.spritesheet('spaceship-thrust', scene_dir + '/spaceship-thrust.png', { frameWidth: 600, frameHeight: 200 });
-
-    ScActorManager.reloadConfigFiles(this, true);
-}
-
-var SpaceshipThrust = {
-    game: null,
-    spaceship: null,
-    sprite: null,
-    thrust: 0,
-
-    init: function(game, spaceship, xCorr, yCorr, angleCorr, scale) {
-        this.game = game;
-        this.spaceship = spaceship;
-        this.sprite = game.physics.add.sprite(xCorr, yCorr, 'spaceship-thrust');
-        this.sprite.setOrigin(1,0.5);
-        this.sprite.visible = false;
-        this.sprite.anims.play('spaceship-thrust-fire');
-        this.sprite.angle = angleCorr;
-        this.fullThrustWidth = 200 * scale;
-        this.fullThrustLength = 600 * scale;
-        return this.sprite;
-    },
-
-    decideThrust: function() {
-        this.setThrust(Math.max(Math.random() * 2 - 1, 0));
-    },
-
-    setThrust: function(thrust) {
-        this.thrust = thrust;
-    },
-
-    update: function() {
-        this.sprite.visible = this.thrust > 0;
-        width = this.fullThrustLength * this.thrust;
-        height = this.fullThrustWidth * (this.thrust * 0.4 + 0.6);
-        this.sprite.setDisplaySize(width, height);
-        this.sprite.setSize(width, height);
-    },
-};
 
 function scaleBetween(min, max, scale) {
     return (max - min) * scale + min;
 }
-
-var SimpleRocket = {
-    game: null,
-    sprite: null,
-    imgAspect: 1.455814,
-    angle: 180,
-    speed: 10,
-    lengthMin: 50,
-    lengthMax: 350,
-    nextMotionPlanningUpdate: 0,
-
-    init: function(game, x, y, flavor) {
-        this.game = game;
-
-        this.scale = Math.pow(Math.random(), 5);
-
-        this.length = scaleBetween(this.lengthMin, this.lengthMax, this.scale);
-        this.width = this.length / this.imgAspect;
-
-        var container = game.add.container(x, y);
-        this.container = container;
-
-        var ship = game.add.image(0, 0, 'SimpleRocket-' + flavor);
-        ship.setSize(this.length, this.width);
-        ship.setDisplaySize(this.length, this.width);
-        ship.angle = 180;
-        this.destroyOffset = 2 * (this.length + this.width);
-        this.ship = ship;
-        this.container.add([this.ship]);
-
-        game.physics.world.enable(this.container);
-
-        var speed = Math.random() * 40;
-        var angle = Math.random() * 2 * Math.PI;
-        this.speedX = Math.cos(angle) * speed
-        this.speedY = Math.sin(angle) * speed
-        this.container.angle = Math.random() * 360
-        this.container.body.setVelocityX(this.speedX);
-        this.container.body.setVelocityY(this.speedY);
-
-        var thrustScale = scaleBetween(0.08, 0.7, this.scale);
-        this.nozzleLeft = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleLeft.init(this.game, this, -this.length*0.41, -this.width/2, 90, thrustScale)]);
-
-        this.nozzleMiddle = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleMiddle.init(this.game, this, -this.length/2, 0, 0.01, thrustScale)]);
-
-        this.nozzleRight = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleRight.init(this.game, this, -this.length*0.41, this.width/2, -90, thrustScale)]);
-
-        this.nextMotionPlanningUpdate = 0;
-    },
-
-    update: function(time, delta) {
-        if (time > this.nextMotionPlanningUpdate) {
-            if (Math.random() > 0.5) {
-                this.nozzleLeft.setThrust(0);
-                this.nozzleRight.decideThrust();
-            } else {
-                this.nozzleLeft.decideThrust();
-                this.nozzleRight.setThrust(0);
-            }
-            this.nozzleMiddle.decideThrust();
-
-            this.nextMotionPlanningUpdate = time + scaleBetween(100, 10000, this.scale);
-        }
-        this.container.angle += this.nozzleRight.thrust - this.nozzleLeft.thrust;
-
-        this.nozzleLeft.update();
-        this.nozzleMiddle.update();
-        this.nozzleRight.update();
-
-        var angleRad = this.container.angle * degToRadian;
-        this.speedX += Math.cos(angleRad) * this.nozzleMiddle.thrust;
-        this.speedY += Math.sin(angleRad) * this.nozzleMiddle.thrust;
-        this.container.body.setVelocityX(this.speedX);
-        this.container.body.setVelocityY(this.speedY);
-
-        if ((this.container.x < -this.destroyOffset)
-            || (this.container.x > this.destroyOffset + scanariumConfig.width)
-            || (this.container.y < -this.destroyOffset)
-            || (this.container.y > this.destroyOffset + scanariumConfig.height)) {
-            ScActorManager.deleteActor(this);
-        }
-    },
-
-    destroy: function() {
-            this.container.destroy();
-    },
-};
 
 var ScActorManager = {
     init: function(game, config) {
@@ -181,6 +43,7 @@ var ScActorManager = {
     actors: [],
     triedActors: {},
     loadedActors: {},
+    registeredActors: {},
     nextSpawn: 0,
 
     update: function(time, delta) {
@@ -235,11 +98,11 @@ var ScActorManager = {
         }
     },
 
-    addLoadedActor: function(flavor) {
+    addLoadedActor: function(actor, flavor) {
         var x = this.config.width * (Math.random() * 0.6 + 0.2);
         var y = this.config.height * (Math.random() * 0.6 + 0.2);
 
-        var actor = Object.create(SimpleRocket);
+        var actor = Object.create(this.registeredActors[actor]);
         actor.init(game, x, y, flavor);
         this.actors.push(actor);
     },
@@ -326,7 +189,7 @@ var ScActorManager = {
                         that.game.events.off('filecomplete', onLoaded);
                     }
 
-                    that.addLoadedActor(flavor);
+                    that.addLoadedActor(actor_name, flavor);
                 }
             };
 
@@ -345,6 +208,10 @@ var ScActorManager = {
         var idx = this.actors.indexOf(actor);
         this.actors.splice(idx, 1);
         actor.destroy();
+    },
+
+    registerActor(name, stencil) {
+        this.registeredActors[name] = stencil;
     }
 }
 
@@ -394,6 +261,74 @@ var MessageManager = {
   },
 };
 
+var JsLoader = {
+    files: [],
+    loadedFiles: [],
+    allAdded: false,
+    allLoadedCallback: null,
+
+    load: function(url) {
+        this.allAdded = false;
+        this.files.push(url);
+        var element = document.createElement('script');
+        var that = this;
+        element.onload = function() {
+            that.loadedFiles.push(url);
+            if (that.allAdded) {
+                that.checkAllFilesLoaded();
+            }
+        }
+        element.src = url;
+        document.head.appendChild(element);
+    },
+
+    checkAllFilesLoaded: function() {
+        if (this.allAdded) {
+            this.files.sort();
+            this.loadedFiles.sort();
+
+            if (this.files.length != this.loadedFiles.length) {
+                return;
+            }
+
+            var i;
+            for (i=0; i < this.files.length; i++) {
+                if (this.files[i] != this.loadedFiles[i]) {
+                    return;
+                }
+            }
+
+            // All elements agree, so we're fully loaded.
+            if (this.allLoadedCallback) {
+                var callback = this.allLoadedCallback;
+                this.allLoadedCallback = null;
+                callback();
+            }
+        }
+    },
+
+    whenAllLoaded: function(callback) {
+        this.allLoadedCallback = callback;
+        this.allAdded = true;
+        this.checkAllFilesLoaded();
+    }
+}
+
+
+// The Phaser Game itself ------------------------------------------------------
+
+var game;
+
+function preload() {
+    this.load.image('failed', '/static/failed.png');
+    this.load.image('ok', '/static/ok.png');
+    this.load.image('background', scene_dir + '/background.png');
+
+    scene_preload(this);
+
+    ScActorManager.reloadConfigFiles(this, true);
+}
+
 function create() {
     var config = scanariumConfig;
 
@@ -425,3 +360,8 @@ function update (time, delta) {
       MessageManager.update(time, delta);
     }
 }
+
+JsLoader.load(scene_dir + '/scene.js');
+JsLoader.whenAllLoaded(() => {
+    game = new Phaser.Game(scanariumConfig);
+});

@@ -261,7 +261,7 @@ var ScActorManager = {
         return this.getNewActorNameWithFlavorFromConfig(config, forceUntried);
     },
 
-    addActor: function() {
+    addActorRandom: function() {
         if (this.game) {
             var actor_spec = this.getNewActorNameWithFlavor();
             if (actor_spec === null) {
@@ -271,7 +271,12 @@ var ScActorManager = {
 
             var actor_name = actor_spec[0];
             var flavor = actor_spec[1];
+            this.addActor(actor_name, flavor);
+        }
+    },
 
+    addActor: function(actor_name, flavor) {
+        if (this.game) {
             var flavored_actor_name = actor_name + '-' + flavor;
 
             var triedActors = this.triedActors;
@@ -336,7 +341,7 @@ function create() {
 
     game = this;
     this.input.keyboard.on('keydown_M', function (event) {
-        ScActorManager.addActor();
+        ScActorManager.addActorRandom();
     });
 }
 
@@ -344,7 +349,7 @@ var nextSpawn = 0;
 
 function update (time, delta) {
     if (time > nextSpawn) {
-        ScActorManager.addActor();
+        ScActorManager.addActorRandom();
         nextSpawn = time + scanariumConfig['spawnPeriod']
     }
 

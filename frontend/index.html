@@ -27,6 +27,37 @@ var cgis = {
   'r': 'reindex'
 };
 
+var cgiFail = function(cgi, reason) {
+  console.log('Call to "' + cgi + '"failed: ' + reason);
+};
+
+var cgiOk = function(cgi, payload) {
+  if (cgi == 'scan') {
+    if (payload.scene == scene) {
+      if (typeof ScActorManager !== 'undefined') {
+        ScActorManager.addActor(payload.actor, payload.flavor);
+      }
+    }
+  }
+};
+
+var onReadyStateChange = function(cgi) {
+  return function() {
+    if (this.readyState === XMLHttpRequest.DONE) {
+      if (this.status == 200) {
+        var capsule = JSON.parse(this.responseText);
+        if (capsule.is_ok) {
+          cgiOk(cgi, capsule.payload);
+        } else {
+          cgiFail(cgi, capsule.error_message);
+        }
+      } else {
+        cgiFail(cgi, 'Response status was ' + this.status + ' instead of 200');
+      }
+    }
+  };
+};
+
 document.addEventListener("keypress", function(e) {
   if (e.key === 'f') {
     canvases = document.getElementsByTagName('canvas');
@@ -43,9 +74,11 @@ document.addEventListener("keypress", function(e) {
       game.scene.resume();
     }
   } else if (e.key in cgis) {
+    var cgi = cgis[e.key];
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'cgi-bin/' + cgis[e.key], true);
+    xhr.open('POST', 'cgi-bin/' + cgi, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = onReadyStateChange(cgi);
     xhr.send();
   }
 }, false);

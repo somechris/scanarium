@@ -101,6 +101,7 @@ var SimpleRocket = {
         ship.setSize(this.length, this.width);
         ship.setDisplaySize(this.length, this.width);
         ship.angle = 180;
+        this.destroyOffset = 2 * (this.length + this.width);
         this.ship = ship;
         this.container.add([this.ship]);
 
@@ -151,6 +152,17 @@ var SimpleRocket = {
         this.speedY += Math.sin(angleRad) * this.nozzleMiddle.thrust;
         this.container.body.setVelocityX(this.speedX);
         this.container.body.setVelocityY(this.speedY);
+
+        if ((this.container.x < -this.destroyOffset)
+            || (this.container.x > this.destroyOffset + scanariumConfig.width)
+            || (this.container.y < -this.destroyOffset)
+            || (this.container.y > this.destroyOffset + scanariumConfig.height)) {
+            ScActorManager.deleteActor(this);
+        }
+    },
+
+    destroy: function() {
+            this.container.destroy();
     },
 };
 
@@ -319,6 +331,12 @@ var ScActorManager = {
                 this.game.load.start()
             }
         }
+    },
+
+    deleteActor(actor) {
+        var idx = scActors.indexOf(actor);
+        scActors.splice(idx, 1);
+        actor.destroy();
     }
 }
 

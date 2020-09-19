@@ -168,8 +168,6 @@ var SimpleRocket = {
     },
 };
 
-var scActors = [];
-
 var ScActorManager = {
     init: function(game, config) {
         this.game = game;
@@ -183,6 +181,7 @@ var ScActorManager = {
     nextConfigFetch: 0,
     configFetches: 0,
 
+    actors: [],
     triedActors: {},
     loadedActors: {},
 
@@ -191,6 +190,10 @@ var ScActorManager = {
             this.nextConfigFetch = time + configReloadPeriod;
             this.reloadConfigFiles(this.game);
         }
+
+        this.actors.forEach(function (actor, index) {
+            actor.update(time, delta);
+        });
     },
 
     reloadConfigFiles: function(game, isPreload) {
@@ -235,7 +238,7 @@ var ScActorManager = {
 
         var actor = Object.create(SimpleRocket);
         actor.init(game, x, y, flavor);
-        scActors.push(actor);
+        this.actors.push(actor);
     },
 
     getNewActorNameWithFlavorFromConfig: function(config, forceUntried) {
@@ -336,8 +339,8 @@ var ScActorManager = {
     },
 
     deleteActor(actor) {
-        var idx = scActors.indexOf(actor);
-        scActors.splice(idx, 1);
+        var idx = this.actors.indexOf(actor);
+        this.actors.splice(idx, 1);
         actor.destroy();
     }
 }
@@ -420,10 +423,6 @@ function update (time, delta) {
     }
 
     ScActorManager.update(time, delta);
-
-    scActors.forEach(function (scActor, index) {
-        scActor.update(time, delta);
-    });
 
     if (typeof MessageManager !== 'undefined') {
       MessageManager.update(time, delta);

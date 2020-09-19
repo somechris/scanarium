@@ -118,12 +118,8 @@ var SimpleRocket = {
         this.container.body.setVelocityX(this.speedX);
         this.container.body.setVelocityY(this.speedY);
 
-        if ((this.container.x < -this.destroyOffset)
-            || (this.container.x > this.destroyOffset + scanariumConfig.width)
-            || (this.container.y < -this.destroyOffset)
-            || (this.container.y > this.destroyOffset + scanariumConfig.height)) {
-            ScActorManager.deleteActor(this);
-        }
+        this.x = this.container.x;
+        this.y = this.container.y;
     },
 
     destroy: function() {

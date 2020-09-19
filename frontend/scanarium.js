@@ -57,8 +57,16 @@ var ScActorManager = {
             this.nextSpawn = time + scanariumConfig['spawnPeriod']
         }
 
+        var that = this;
         this.actors.forEach(function (actor, index) {
             actor.update(time, delta);
+
+            if ((actor.x < -actor.destroyOffset)
+                || (actor.x > actor.destroyOffset + scanariumConfig.width)
+                || (actor.y < -actor.destroyOffset)
+                || (actor.y > actor.destroyOffset + scanariumConfig.height)) {
+                that.deleteActor(actor);
+            }
         });
     },
 

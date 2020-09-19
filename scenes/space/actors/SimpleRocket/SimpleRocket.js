@@ -39,13 +39,13 @@ var SimpleRocket = {
 
         var thrustScale = scaleBetween(0.08, 0.7, this.scale);
         this.nozzleLeft = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleLeft.init(this.game, this, -this.length*0.41, -this.width/2, 90, thrustScale)]);
+        this.container.add([this.nozzleLeft.init(this.game, -this.length*0.41, -this.width/2, 90, thrustScale)]);
 
         this.nozzleMiddle = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleMiddle.init(this.game, this, -this.length/2, 0, 0.01, thrustScale)]);
+        this.container.add([this.nozzleMiddle.init(this.game, -this.length/2, 0, 0.01, thrustScale)]);
 
         this.nozzleRight = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleRight.init(this.game, this, -this.length*0.41, this.width/2, -90, thrustScale)]);
+        this.container.add([this.nozzleRight.init(this.game, -this.length*0.41, this.width/2, -90, thrustScale)]);
 
         this.nextMotionPlanningUpdate = 0;
     },

@@ -7,13 +7,11 @@ function scene_preload(game)
 
 var SpaceshipThrust = {
     game: null,
-    spaceship: null,
     sprite: null,
     thrust: 0,
 
-    init: function(game, spaceship, xCorr, yCorr, angleCorr, scale) {
+    init: function(game, xCorr, yCorr, angleCorr, scale) {
         this.game = game;
-        this.spaceship = spaceship;
         this.sprite = game.physics.add.sprite(xCorr, yCorr, 'spaceship-thrust');
         this.sprite.setOrigin(1,0.5);
         this.sprite.visible = false;

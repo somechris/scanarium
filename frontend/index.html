@@ -28,7 +28,7 @@ var cgis = {
 };
 
 var cgiFail = function(cgi, reason) {
-  console.log('Call to "' + cgi + '"failed: ' + reason);
+  MessageManager.addMessage('failed', cgi + ' failed: ' + reason);
 };
 
 var cgiOk = function(cgi, payload) {
@@ -39,6 +39,7 @@ var cgiOk = function(cgi, payload) {
       }
     }
   }
+  MessageManager.addMessage('ok', cgi + ' ok');
 };
 
 var onReadyStateChange = function(cgi) {

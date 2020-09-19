@@ -30,6 +30,8 @@ var degToRadian = 2 * Math.PI / 360;
 
 function preload ()
 {
+    this.load.image('failed', '/static/failed.png');
+    this.load.image('ok', '/static/ok.png');
     this.load.image('background', scene_dir + '/background.png');
     this.load.spritesheet('spaceship-thrust', scene_dir + '/spaceship-thrust.png', { frameWidth: 600, frameHeight: 200 });
 
@@ -340,6 +342,52 @@ var ScActorManager = {
     }
 }
 
+var MessageManager = {
+  objects: [],
+  offsetY: 10,
+  spaceY: 22,
+
+  addMessage: function(icon, message) {
+    if (game) {
+      var y = this.offsetY;
+      if (this.objects.length > 0) {
+        y = this.objects[this.objects.length - 1].sprite.y + this.spaceY;
+      }
+      var duration = 10000;
+      if (icon == 'ok') {
+          duration /= 2;
+      }
+      var len = this.objects.length;
+      this.objects.push({'sprite': game.add.image(20, y, icon).setOrigin(0.6, -0.1), duration: duration, expire: null});
+      this.objects.push({'sprite': game.add.text(32, y, message), duration: duration, expire: null});
+    }
+    console.log(message);
+  },
+
+  update: function(time, delta) {
+    var len = this.objects.length;
+    var i;
+    for (i=len - 1; i >= 0; i--) {
+      var obj = this.objects[i];
+      if (obj.expire == null) {
+        obj.expire = time + obj.duration;
+      }
+
+      var sprite = obj.sprite;
+      if (sprite.y > this.offsetY + Math.floor(i/2) * this.spaceY) {
+        sprite.y -= Math.min(delta, 1000)/25;
+      } else {
+        sprite.y = this.offsetY + Math.floor(i/2) * this.spaceY;
+      }
+
+      if (obj.expire <= time) {
+        this.objects.splice(i, 1);
+        sprite.destroy();
+      }
+    };
+  },
+};
+
 function create() {
     var config = scanariumConfig;
 
@@ -376,4 +424,8 @@ function update (time, delta) {
     scActors.forEach(function (scActor, index) {
         scActor.update(time, delta);
     });
+
+    if (typeof MessageManager !== 'undefined') {
+      MessageManager.update(time, delta);
+    }
 }

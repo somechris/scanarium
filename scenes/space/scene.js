@@ -5,6 +5,16 @@ function scene_preload()
     game.load.spritesheet('spaceship-thrust', scene_dir + '/spaceship-thrust.png', { frameWidth: 600, frameHeight: 200 });
 }
 
+function scene_create()
+{
+    game.anims.create({
+        key: 'spaceship-thrust-fire',
+        frames: game.anims.generateFrameNumbers('spaceship-thrust', { start: 0, end: 2 }),
+        frameRate: 60,
+        repeat: -1
+    });
+}
+
 var SpaceshipThrust = {
     sprite: null,
     thrust: 0,

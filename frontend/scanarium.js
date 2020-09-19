@@ -373,14 +373,9 @@ function create() {
     background.setOrigin(0, 0);
     background.setScale(config.width/background.width, config.height/background.height);
 
-    ScActorManager.init(config);
+    scene_create();
 
-    this.anims.create({
-        key: 'spaceship-thrust-fire',
-        frames: this.anims.generateFrameNumbers('spaceship-thrust', { start: 0, end: 2 }),
-        frameRate: 60,
-        repeat: -1
-    });
+    ScActorManager.init(config);
 
     this.input.keyboard.on('keydown_M', function (event) {
         ScActorManager.addActorRandom();

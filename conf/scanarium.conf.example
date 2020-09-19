@@ -25,3 +25,13 @@ source = cam:0
 # More information about `grapworld` white-balancing is available at
 # https://github.com/opencv/opencv_contrib/blob/master/modules/xphoto/src/grayworld_white_balance.cpp
 white_balance = none
+
+
+# Allow scanning directly from frontend.
+[cgi:scan]
+allow = True
+
+
+# Allow to show source directly from frontend. Very useful for debugging.
+[cgi:show-source]
+allow = True

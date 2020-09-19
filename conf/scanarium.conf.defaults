@@ -84,6 +84,23 @@ port = 8080
 
 
 #-------------------------------------------------------------------------------
+# Configuaration for each CGI script
+#-------------------------------------------------------------------------------
+[cgi:scan]
+# Whether or not to allow calling the script as cgi through the webserver.
+allow = False
+
+[cgi:show-source]
+# Whether or not to allow calling the script as cgi through the webserver.
+allow = False
+
+[cgi:reindex]
+# Whether or not to allow calling the script as cgi through the webserver.
+allow = False
+
+
+
+#-------------------------------------------------------------------------------
 # Below this line, it's standard Python logging configuration.
 # By default, we log only INFO and above and we log to console.
 # See https://docs.python.org/3/library/logging.config.html#logging-config-fileformat

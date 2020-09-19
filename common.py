@@ -1,6 +1,7 @@
 import os
 import subprocess
 import json
+import re
 import sys
 import tempfile
 import traceback
@@ -166,6 +167,21 @@ def result(payload={}, exc_info=None):
 
 def call_guarded(func):
     try:
+        caller = traceback.extract_stack()[-2].filename
+        if not os.path.isabs(caller):
+            caller = os.path.join(os.getcwd(), caller)
+        caller = os.path.normpath(caller)
+        if caller.startswith(BACKEND_DIR_ABS + os.sep):
+            caller = caller[len(BACKEND_DIR_ABS + os.sep):]
+        if caller.endswith('.py'):
+            caller = caller[:-3]
+
+        if not re.match(r'^[a-zA-Z-]*$', caller):
+            raise ScanariumError('SE_CGI_NAME_CHARS', 'Forbidden characters in cgi name')
+
+        if IS_CGI and not SCANARIUM_CONFIG.getboolean('cgi:%s' % caller, 'allow'):
+            raise ScanariumError('SE_CGI_FORBIDDEN', 'Calling this script through cgi is forbidden')
+
         payload = func()
     except:
         result(payload='Failed', exc_info=sys.exc_info())

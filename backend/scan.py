@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 from pyzbar import pyzbar
 
-SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
 from common import SCANARIUM_CONFIG
 from common import SCENES_DIR_ABS
@@ -34,7 +34,7 @@ def show_image(title, image):
 
 def scale_image(image):
     scaled_height = 1000
-    if image.shape[0] > scaled_height*1.3:
+    if image.shape[0] > scaled_height * 1.3:
         scale_factor = scaled_height / image.shape[0]
         scaled_width = int(image.shape[1] * scale_factor)
         scaled_dimension = (scaled_width, scaled_height)
@@ -63,25 +63,28 @@ def find_sheet_points(image):
             break
 
     if approx is None:
-        raise ScanariumError('SE_SCAN_NO_APPROX', 'Failed to find rectangle contour')
+        raise ScanariumError('SE_SCAN_NO_APPROX',
+                             'Failed to find rectangle contour')
 
     points = approx.reshape(4, 2)
     return points
 
+
 def distance(pointA, pointB):
-    return np.linalg.norm([pointA-pointB])
+    return np.linalg.norm([pointA - pointB])
+
 
 def rectify(image, points):
     # The following heuristics of classifying the 4 points is based on the
     # assumption that the rectangle is not distorted too much. So if the
     # camera angle is skew, it will fail.
     s = points.sum(axis=1)
-    s_tl = points[np.argmin(s)] # smallest sum, is top left
-    s_br = points[np.argmax(s)] # biggest sum, is bottom right
+    s_tl = points[np.argmin(s)]  # smallest sum, is top left
+    s_br = points[np.argmax(s)]  # biggest sum, is bottom right
 
     d = np.diff(points, axis=1)
-    s_tr = points[np.argmin(d)] # smallest difference, is top right
-    s_bl = points[np.argmax(d)] # biggest difference, is bottom left
+    s_tr = points[np.argmin(d)]  # smallest difference, is top right
+    s_bl = points[np.argmax(d)]  # biggest difference, is bottom left
 
     source = np.array([s_tl, s_tr, s_br, s_bl], dtype="float32")
 
@@ -99,6 +102,7 @@ def turn_landscape(image):
         image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
     return image
 
+
 def scale_to_paper_size(image):
     paper_width = SCANARIUM_CONFIG.getint('scan', 'paper_width')
     paper_height = SCANARIUM_CONFIG.getint('scan', 'paper_height')
@@ -109,10 +113,12 @@ def scale_to_paper_size(image):
     dimension = (width, height)
     return cv2.resize(image, dimension, cv2.INTER_AREA)
 
+
 def extract_qr(image):
     codes = pyzbar.decode(image)
     if len(codes) != 1:
-        raise ScanariumError('SE_SCAN_NO_QR_CODE', 'Failed to find scanned QR code')
+        raise ScanariumError('SE_SCAN_NO_QR_CODE',
+                             'Failed to find scanned QR code')
     code = codes[0]
 
     rect = code.rect
@@ -121,19 +127,22 @@ def extract_qr(image):
     (scene, actor) = data.split(':', 1)
     return (rect, scene, actor)
 
+
 def orient_image(image, left_coordinate):
-    if left_coordinate > image.shape[1]/2:
+    if left_coordinate > image.shape[1] / 2:
         # QR Code is not on the left half of the picture. As it's landscape
         # (see above), the qr code is in the top-right corner and we need to
         # rotate 180 degrees.
         image = cv2.rotate(image, cv2.ROTATE_180)
     return image
 
+
 def generate_mask(mask_path):
     source_path = mask_path[:-9] + '.svg'
 
     if not os.path.isfile(source_path):
-        raise ScanariumError('SE_SCAN_NO_SOURCE_FOR_MASK', 'Failed to find source file for generating mask')
+        raise ScanariumError('SE_SCAN_NO_SOURCE_FOR_MASK',
+                             'Failed to find source file for generating mask')
 
     if not os.path.isfile(mask_path) \
             or os.stat(source_path).st_mtime > os.stat(mask_path).st_mtime:
@@ -145,7 +154,7 @@ def generate_mask(mask_path):
             '--export-background=black',
             '--export-png=%s' % (mask_path),
             source_path,
-            ]
+        ]
 
         run(command)
 
@@ -165,8 +174,9 @@ def mask(image, scene, actor):
     masked = cv2.merge((b, g, r, mask))
     return masked
 
+
 def crop(image):
-    y, x = image[:,:,3].nonzero()
+    y, x = image[:, :, 3].nonzero()
     x_min = np.min(x)
     x_max = np.max(x)
     y_min = np.min(y)
@@ -175,6 +185,7 @@ def crop(image):
     cropped = image[y_min:y_max, x_min:x_max]
 
     return cropped
+
 
 def balance(image):
     algo = SCANARIUM_CONFIG['scan']['white_balance'].lower()
@@ -188,9 +199,11 @@ def balance(image):
     elif algo in ['none', 'no', 'false']:
         ret = image
     else:
-        raise ScanariumError('SE_SCAN_UNKNOWN_WB', 'Unknown white balance filter configured')
+        raise ScanariumError('SE_SCAN_UNKNOWN_WB',
+                             'Unknown white balance filter configured')
 
     return ret
+
 
 def save_image(image, scene, actor):
     timestamp = str(int(time.time()))
@@ -199,7 +212,9 @@ def save_image(image, scene, actor):
         # This should never happen, as masking already ensured that the actor
         # source is there. But since we're about to create directories, we're
         # extra warry.
-        raise ScanariumError('SE_SCAN_SAVE_PATH_MISSING', 'Directory to store file in does not exist, or is no directory')
+        raise ScanariumError('SE_SCAN_SAVE_PATH_MISSING', 'Directory to '
+                             'store file in does not exist, or is no '
+                             'directory')
 
     dynamic_dir = get_dynamic_directory()
     image_dir = os.path.join(dynamic_dir, 'scenes', actor_path)
@@ -224,7 +239,7 @@ def scan_actor_image():
     points = find_sheet_points(scaled_image)
 
     # Now rectifying using the original (!) image.
-    image = rectify(image, points/scale_factor)
+    image = rectify(image, points / scale_factor)
 
     # Now normalizing the rectified image
     image = turn_landscape(image)
@@ -248,7 +263,7 @@ def scan_actor_image():
         'scene': scene,
         'actor': actor,
         'flavor': flavor,
-        }
+    }
 
 
 def main():

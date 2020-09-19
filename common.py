@@ -14,35 +14,36 @@ JSON_DUMP_ARGS = {'indent': 2, 'sort_keys': True}
 
 IS_CGI = 'REMOTE_ADDR' in os.environ
 if IS_CGI:
-    import cgi
     print('Content-Type: application/json')
     print()
 
-SCANARIUM_DIR_ABS=os.path.dirname(os.path.abspath(__file__))
-CONFIG_DIR_ABS=os.path.join(SCANARIUM_DIR_ABS, 'conf')
+SCANARIUM_DIR_ABS = os.path.dirname(os.path.abspath(__file__))
+CONFIG_DIR_ABS = os.path.join(SCANARIUM_DIR_ABS, 'conf')
 CONFIG_FILE_ABS = os.path.join(CONFIG_DIR_ABS, 'scanarium.conf')
-BACKEND_DIR_ABS=os.path.join(SCANARIUM_DIR_ABS, 'backend')
-FRONTEND_DIR_ABS=os.path.join(SCANARIUM_DIR_ABS, 'frontend')
-FRONTEND_DYNAMIC_DIR_ABS=os.path.join(FRONTEND_DIR_ABS, 'dynamic')
-FRONTEND_CGI_DIR_ABS=os.path.join(FRONTEND_DIR_ABS, 'cgi-bin')
-SCENES_DIR_ABS=os.path.join(SCANARIUM_DIR_ABS, 'scenes')
+BACKEND_DIR_ABS = os.path.join(SCANARIUM_DIR_ABS, 'backend')
+FRONTEND_DIR_ABS = os.path.join(SCANARIUM_DIR_ABS, 'frontend')
+FRONTEND_DYNAMIC_DIR_ABS = os.path.join(FRONTEND_DIR_ABS, 'dynamic')
+FRONTEND_CGI_DIR_ABS = os.path.join(FRONTEND_DIR_ABS, 'cgi-bin')
+SCENES_DIR_ABS = os.path.join(SCANARIUM_DIR_ABS, 'scenes')
 
-SCANARIUM_CONFIG={}
+SCANARIUM_CONFIG = {}
+
 
 def load_config():
     global SCANARIUM_CONFIG
     config = configparser.ConfigParser()
     config.read(os.path.join(CONFIG_DIR_ABS, 'scanarium.conf.defaults'))
 
-    config_file = os.path.join(CONFIG_DIR_ABS, 'scanarium.conf')
     if os.path.isfile(CONFIG_FILE_ABS):
         config.read(CONFIG_FILE_ABS)
 
     SCANARIUM_CONFIG = config
 
+
 load_config()
 logging.config.fileConfig(SCANARIUM_CONFIG)
 logger = logging.getLogger(__name__)
+
 
 def get_image():
     file_path = SCANARIUM_CONFIG['scan']['source']
@@ -50,11 +51,14 @@ def get_image():
         try:
             cam_nr = int(file_path[4:])
         except ValueError:
-            raise ScanariumError('SE_VALUE', 'Failed to parse "%s" of source "%s" to number' % (file_path[4:], file_path))
+            raise ScanariumError('SE_VALUE', 'Failed to parse "%s" of source '
+                                 '"%s" to number' % (file_path[4:],
+                                                     file_path))
         cap = cv2.VideoCapture(cam_nr)
 
         if not cap.isOpened():
-            raise ScanariumError('SE_CAP_NOT_OPEN', 'Failed to open camera %d' % (cam_nr))
+            raise ScanariumError('SE_CAP_NOT_OPEN',
+                                 'Failed to open camera %d' % (cam_nr))
 
         ret, image = cap.read()
         cap.release()
@@ -68,9 +72,11 @@ def run(command, check=True, timeout=10):
     try:
         subprocess.run(command, check=check, timeout=timeout)
     except subprocess.TimeoutExpired:
-        raise ScanariumError('SE_TIMEOUT', 'The command "%s" did not finish within %d seconds' % (str(command), timeout))
+        raise ScanariumError('SE_TIMEOUT', 'The command "%s" did not finish '
+                             'within %d seconds' % (str(command), timeout))
     except subprocess.CalledProcessError:
-        raise ScanariumError('SE_RETURN_VALUE', 'The command "%s" did not return 0' % (str(command)))
+        raise ScanariumError('SE_RETURN_VALUE', 'The command "%s" did not '
+                             'return 0' % (str(command)))
 
 
 def get_dynamic_directory():
@@ -86,7 +92,6 @@ def dump_json_string(data):
 
 def dump_json(file, data):
     dir = os.path.dirname(file)
-    #fd, tmp_file = tempfile.mkstemp(dir=dir)
     tmp_file = tempfile.NamedTemporaryFile(mode='w+', dir=dir, delete=False)
     try:
         json.dump(data, tmp_file, **JSON_DUMP_ARGS)
@@ -98,33 +103,34 @@ def dump_json(file, data):
 def reindex_actors_for_scene(scene):
     scene_dir = os.path.join(get_dynamic_directory(), 'scenes', scene)
     actors_data = {
-        'actors': {}
-        }
+        'actors': {},
+    }
     actors_latest_data = {
-        'actors': {}
-        }
+        'actors': {},
+    }
     actors_dir = os.path.join(scene_dir, 'actors')
     if os.path.isdir(actors_dir):
         for actor in os.listdir(actors_dir):
             actor_dir = os.path.join(actors_dir, actor)
             if os.path.isdir(actor_dir):
-                actor_conf = {}
                 flavor_files = []
                 for flavor in os.listdir(actor_dir):
                     flavor_file = os.path.join(actor_dir, flavor)
                     if os.path.isfile(flavor_file) and flavor.endswith('.png'):
                         flavor_files.append({
-                                'flavor': flavor[:-4],
-                                'key': os.stat(flavor_file).st_mtime,
-                                })
-                flavor_files.sort(key=lambda f:f['key'], reverse=True)
+                            'flavor': flavor[:-4],
+                            'key': os.stat(flavor_file).st_mtime,
+                        })
+                flavor_files.sort(key=lambda f: f['key'], reverse=True)
                 flavors_sorted = [f['flavor'] for f in flavor_files]
 
                 actors_data['actors'][actor] = flavors_sorted
-                actors_latest_data['actors'][actor] = [f for f in flavors_sorted[:3]]
+                latest = [f for f in flavors_sorted[:3]]
+                actors_latest_data['actors'][actor] = latest
 
     dump_json(os.path.join(scene_dir, 'actors.json'), actors_data)
-    dump_json(os.path.join(scene_dir, 'actors-latest.json'), actors_latest_data)
+    dump_json(os.path.join(scene_dir, 'actors-latest.json'),
+              actors_latest_data)
 
 
 class ScanariumError(RuntimeError):
@@ -153,7 +159,7 @@ def result(payload={}, exc_info=None):
             'is_ok': exc_info is None,
             'error_code': error_code,
             'error_message': error_message,
-            }
+        }
         print(dump_json_string(capsule))
     else:
         if exc_info is not None:
@@ -184,15 +190,18 @@ def call_guarded(func):
             caller = caller[:-3]
 
         if not re.match(r'^[a-zA-Z-]*$', caller):
-            raise ScanariumError('SE_CGI_NAME_CHARS', 'Forbidden characters in cgi name')
+            raise ScanariumError('SE_CGI_NAME_CHARS',
+                                 'Forbidden characters in cgi name')
 
-        if IS_CGI and not SCANARIUM_CONFIG.getboolean('cgi:%s' % caller, 'allow'):
-            raise ScanariumError('SE_CGI_FORBIDDEN', 'Calling this script through cgi is forbidden')
+        if IS_CGI:
+            if not SCANARIUM_CONFIG.getboolean('cgi:%s' % caller, 'allow'):
+                raise ScanariumError('SE_CGI_FORBIDDEN',
+                                     'Calling script as cgi is forbidden')
 
         set_display()
 
         payload = func()
-    except:
+    except:  # noqa: E722
         result(payload='Failed', exc_info=sys.exc_info())
 
-    result(payload = payload)
+    result(payload=payload)

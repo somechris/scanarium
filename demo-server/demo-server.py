@@ -4,11 +4,10 @@ import http.server
 import socketserver
 import argparse
 import os
-import configparser
 import sys
 import logging
 
-SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, SCANARIUM_DIR_ABS)
 from common import SCANARIUM_CONFIG
@@ -35,7 +34,6 @@ class RequestHandler(http.server.CGIHTTPRequestHandler):
         self.server.server_port = 0
 
         return super().run_cgi()
-
 
     def translate_path(self, path):
         f = super().translate_path(path)
@@ -81,8 +79,12 @@ def serve_forever(port):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Scanarium demo server', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('port', metavar='PORT', type=int, help='The port to listen for connections on', default=SCANARIUM_CONFIG['demo_server']['port'], nargs='?')
+    parser = argparse.ArgumentParser(
+        description='Scanarium demo server',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('port', metavar='PORT', type=int, nargs='?',
+                        help='The port to listen for connections on',
+                        default=SCANARIUM_CONFIG['demo_server']['port'])
     args = parser.parse_args()
 
     serve_forever(args.port)

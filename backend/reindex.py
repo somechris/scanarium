@@ -4,7 +4,7 @@ import os
 import logging
 import sys
 
-SCANARIUM_DIR_ABS=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
 from common import call_guarded
 from common import get_dynamic_directory
@@ -21,6 +21,7 @@ def reindex():
             scene_dir = os.path.join(scenes_dir, scene)
             if os.path.isdir(scene_dir):
                 reindex_actors_for_scene(scene)
+
 
 if __name__ == "__main__":
     call_guarded(reindex)

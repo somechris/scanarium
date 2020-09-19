@@ -184,11 +184,17 @@ var ScActorManager = {
     actors: [],
     triedActors: {},
     loadedActors: {},
+    nextSpawn: 0,
 
     update: function(time, delta) {
         if (time > this.nextConfigFetch) {
             this.nextConfigFetch = time + configReloadPeriod;
             this.reloadConfigFiles(this.game);
+        }
+
+        if (time > this.nextSpawn) {
+            this.addActorRandom();
+            this.nextSpawn = time + scanariumConfig['spawnPeriod']
         }
 
         this.actors.forEach(function (actor, index) {
@@ -414,14 +420,8 @@ function create() {
     });
 }
 
-var nextSpawn = 0;
 
 function update (time, delta) {
-    if (time > nextSpawn) {
-        ScActorManager.addActorRandom();
-        nextSpawn = time + scanariumConfig['spawnPeriod']
-    }
-
     ScActorManager.update(time, delta);
 
     if (typeof MessageManager !== 'undefined') {

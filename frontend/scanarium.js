@@ -27,6 +27,13 @@ function scaleBetween(min, max, scale) {
     return (max - min) * scale + min;
 }
 
+function loadJs(url, callback) {
+    var element = document.createElement('script');
+    element.onload = callback;
+    element.src = url;
+    document.head.appendChild(element);
+}
+
 var ScActorManager = {
     init: function(game, config) {
         this.game = game;
@@ -42,7 +49,8 @@ var ScActorManager = {
 
     actors: [],
     triedActors: {},
-    loadedActors: {},
+    loadedActorJavascripts: [],
+    loadedActorFlavors: {},
     registeredActors: {},
     nextSpawn: 0,
 
@@ -106,7 +114,18 @@ var ScActorManager = {
         }
     },
 
-    addLoadedActor: function(actor, flavor) {
+    addActorIfFullyLoaded: function(actor, flavor) {
+        if (!(this.loadedActorJavascripts.includes(actor))) {
+            // JavaScript for actor not yet fully loaded.
+            return;
+        }
+        if (!(this.loadedActorFlavors[actor].includes(flavor))) {
+            // Flavor image for actor not yet fully loaded.
+            return;
+        }
+
+        // Everything's fully loaded, so we're creating and adding the actor
+
         var x = this.config.width * (Math.random() * 0.6 + 0.2);
         var y = this.config.height * (Math.random() * 0.6 + 0.2);
 
@@ -178,9 +197,9 @@ var ScActorManager = {
                 triedActors[actor_name].push(flavor);
             }
 
-            var loadedActors = this.loadedActors;
-            if (!(actor_name in loadedActors)) {
-                loadedActors[actor_name] = []
+            var loadedActorFlavors = this.loadedActorFlavors;
+            if (!(actor_name in loadedActorFlavors)) {
+                loadedActorFlavors[actor_name] = []
             }
 
             var created = false;
@@ -189,21 +208,30 @@ var ScActorManager = {
 
             var onLoaded = function(key, file) {
                 if (key == flavored_actor_name) {
-                    if (!(that.loadedActors[actor_name].includes(flavor))) {
-                        that.loadedActors[actor_name].push(flavor);
+                    if (!(that.loadedActorFlavors[actor_name].includes(flavor))) {
+                        that.loadedActorFlavors[actor_name].push(flavor);
                     }
 
                     if (image != null) {
                         that.game.events.off('filecomplete', onLoaded);
                     }
 
-                    that.addLoadedActor(actor_name, flavor);
+                    that.addActorIfFullyLoaded(actor_name, flavor);
                 }
             };
 
-            if (loadedActors[actor_name].includes(flavor)) {
-                onLoaded(flavored_actor_name);
+            if (this.loadedActorJavascripts.includes(actor_name)) {
+                this.addActorIfFullyLoaded(actor_name, flavor);
             } else {
+                var actor_url = scene_dir + '/actors/' + actor_name;
+                var actor_js_url = actor_url + '/' + actor_name + '.js';
+                loadJs(actor_js_url, () => {
+                    this.loadedActorJavascripts.push(actor_name);
+                    this.addActorIfFullyLoaded(actor_name, flavor);
+                });
+            }
+
+            if (!(loadedActorFlavors[actor_name].includes(flavor))) {
                 var path = dyn_scene_dir + '/actors/' + actor_name + '/' + flavor + '.png';
                 image = this.game.load.image(flavored_actor_name, path);
                 image.on('filecomplete', onLoaded, this);
@@ -278,16 +306,14 @@ var JsLoader = {
     load: function(url) {
         this.allAdded = false;
         this.files.push(url);
-        var element = document.createElement('script');
+
         var that = this;
-        element.onload = function() {
+        loadJs(url, function() {
             that.loadedFiles.push(url);
             if (that.allAdded) {
                 that.checkAllFilesLoaded();
             }
-        }
-        element.src = url;
-        document.head.appendChild(element);
+        });
     },
 
     checkAllFilesLoaded: function() {

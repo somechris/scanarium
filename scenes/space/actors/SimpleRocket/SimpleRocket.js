@@ -8,17 +8,17 @@ var SimpleRocket = {
     init: function(game, x, y, flavor) {
         this.scale = Math.pow(Math.random(), 5);
 
-        this.length = scaleBetween(this.lengthMin, this.lengthMax, this.scale);
-        this.width = this.length / this.imgAspect;
+        var length = scaleBetween(this.lengthMin, this.lengthMax, this.scale);
+        var width = length / this.imgAspect;
 
         var container = game.add.container(x, y);
         this.container = container;
 
         var ship = game.add.image(0, 0, 'SimpleRocket-' + flavor);
-        ship.setSize(this.length, this.width);
-        ship.setDisplaySize(this.length, this.width);
+        ship.setSize(length, width);
+        ship.setDisplaySize(length, width);
         ship.angle = 180;
-        this.destroyOffset = 2 * (this.length + this.width);
+        this.destroyOffset = 2 * (length + width);
         this.ship = ship;
         this.container.add([this.ship]);
 
@@ -34,13 +34,13 @@ var SimpleRocket = {
 
         var thrustScale = scaleBetween(0.08, 0.7, this.scale);
         this.nozzleLeft = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleLeft.init(game, -this.length*0.41, -this.width/2, 90, thrustScale)]);
+        this.container.add([this.nozzleLeft.init(game, -length*0.41, -width/2, 90, thrustScale)]);
 
         this.nozzleMiddle = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleMiddle.init(game, -this.length/2, 0, 0.01, thrustScale)]);
+        this.container.add([this.nozzleMiddle.init(game, -length/2, 0, 0.01, thrustScale)]);
 
         this.nozzleRight = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleRight.init(game, -this.length*0.41, this.width/2, -90, thrustScale)]);
+        this.container.add([this.nozzleRight.init(game, -length*0.41, width/2, -90, thrustScale)]);
 
         this.nextMotionPlanningUpdate = 0;
     },

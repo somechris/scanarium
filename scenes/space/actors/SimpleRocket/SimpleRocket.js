@@ -1,16 +1,11 @@
 var SimpleRocket = {
-    game: null,
     sprite: null,
     imgAspect: 1.455814,
-    angle: 180,
-    speed: 10,
     lengthMin: 50,
     lengthMax: 350,
     nextMotionPlanningUpdate: 0,
 
     init: function(game, x, y, flavor) {
-        this.game = game;
-
         this.scale = Math.pow(Math.random(), 5);
 
         this.length = scaleBetween(this.lengthMin, this.lengthMax, this.scale);
@@ -39,13 +34,13 @@ var SimpleRocket = {
 
         var thrustScale = scaleBetween(0.08, 0.7, this.scale);
         this.nozzleLeft = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleLeft.init(this.game, -this.length*0.41, -this.width/2, 90, thrustScale)]);
+        this.container.add([this.nozzleLeft.init(game, -this.length*0.41, -this.width/2, 90, thrustScale)]);
 
         this.nozzleMiddle = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleMiddle.init(this.game, -this.length/2, 0, 0.01, thrustScale)]);
+        this.container.add([this.nozzleMiddle.init(game, -this.length/2, 0, 0.01, thrustScale)]);
 
         this.nozzleRight = Object.create(SpaceshipThrust);
-        this.container.add([this.nozzleRight.init(this.game, -this.length*0.41, this.width/2, -90, thrustScale)]);
+        this.container.add([this.nozzleRight.init(game, -this.length*0.41, this.width/2, -90, thrustScale)]);
 
         this.nextMotionPlanningUpdate = 0;
     },

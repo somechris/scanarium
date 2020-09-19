@@ -86,6 +86,13 @@ port = 8080
 #-------------------------------------------------------------------------------
 # Configuaration for each CGI script
 #-------------------------------------------------------------------------------
+[cgi]
+# If not empty, use this value a DISPLAY environment variable when calling
+# scripts as cgi through the webserver.  This is useful when doing remote
+# debugging on a proper webserver and you want to enforce showing on a given
+# display.
+display =
+
 [cgi:scan]
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False

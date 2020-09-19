@@ -165,6 +165,13 @@ def result(payload={}, exc_info=None):
     sys.exit(0)
 
 
+def set_display():
+    if IS_CGI:
+        display = SCANARIUM_CONFIG['cgi']['display']
+        if display:
+            os.environ['DISPLAY'] = display
+
+
 def call_guarded(func):
     try:
         caller = traceback.extract_stack()[-2].filename
@@ -181,6 +188,8 @@ def call_guarded(func):
 
         if IS_CGI and not SCANARIUM_CONFIG.getboolean('cgi:%s' % caller, 'allow'):
             raise ScanariumError('SE_CGI_FORBIDDEN', 'Calling this script through cgi is forbidden')
+
+        set_display()
 
         payload = func()
     except:

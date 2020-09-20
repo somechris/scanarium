@@ -1,6 +1,5 @@
 class SimpleRocket extends SpaceshipBase {
     constructor(x, y, flavor) {
-        var imgAspect = 1.455814;
         var lengthMin = 50;
         var lengthMax = 350;
 
@@ -9,9 +8,9 @@ class SimpleRocket extends SpaceshipBase {
         this.scale = Math.pow(Math.random(), 5);
 
         var length = scaleBetween(lengthMin, lengthMax, this.scale);
-        var width = length / imgAspect;
 
         var ship = game.add.image(0, 0, 'SimpleRocket-' + flavor);
+        var width = ship.height / ship.width * length;
         ship.setSize(length, width);
         ship.setDisplaySize(length, width);
         ship.angle = 180;

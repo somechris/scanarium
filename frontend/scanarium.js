@@ -93,21 +93,17 @@ var ScActorManager = {
     },
 
     configFileLoaded: function(key, file) {
-        console.log('loaded ' + key);
         if (key == 'scene-config') {
             this.scene_config = game.cache.json.get(key);
-            console.log(this.scene_config);
         }
 
         if (key == 'actors-config') {
             this.actors_config = game.cache.json.get(key);
-            console.log(this.actors_config);
             game.cache.json.remove(key);
         }
 
         if (key == 'actors-latest-config') {
             this.actors_latest_config = game.cache.json.get(key);
-            console.log(this.actors_latest_config);
             game.cache.json.remove(key);
         }
     },

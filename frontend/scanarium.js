@@ -65,7 +65,16 @@ var ScActorManager = {
         }
 
         if (time > this.nextSpawn) {
-            this.addActorRandom();
+            // In a foreground tab, delta is around 16ms (i.e.: 60 Hz). In a
+            // background tab, delta is often way above 10 seconds. So we'd
+            // spawn basically every update cycle, while not giving actors
+            // frames to move out of the screen. This would lead to a screen
+            // that's boastingly full with actors when coming back to a
+            // background tab. To avoid that, we only add ships, if the delay is
+            // short enough.
+            if (delta < 100) {
+                this.addActorRandom();
+            }
             this.nextSpawn = time + scanariumConfig['spawnPeriod']
         }
 

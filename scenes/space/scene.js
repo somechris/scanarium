@@ -15,11 +15,8 @@ function scene_create()
     });
 }
 
-var SpaceshipThrust = {
-    sprite: null,
-    thrust: 0,
-
-    init: function(xCorr, yCorr, angleCorr, scale) {
+class Thruster {
+    constructor(xCorr, yCorr, angleCorr, scale) {
         this.sprite = game.physics.add.sprite(xCorr, yCorr, 'spaceship-thrust');
         this.sprite.setOrigin(1,0.5);
         this.sprite.visible = false;
@@ -27,22 +24,22 @@ var SpaceshipThrust = {
         this.sprite.angle = angleCorr;
         this.fullThrustWidth = 200 * scale;
         this.fullThrustLength = 600 * scale;
-        return this.sprite;
-    },
+        this.thrust = 0;
+    }
 
-    decideThrust: function() {
+    decideThrust() {
         this.setThrust(Math.max(Math.random() * 2 - 1, 0));
-    },
+    }
 
-    setThrust: function(thrust) {
+    setThrust(thrust) {
         this.thrust = thrust;
-    },
+    }
 
-    update: function() {
+    update() {
         this.sprite.visible = this.thrust > 0;
-        width = this.fullThrustLength * this.thrust;
-        height = this.fullThrustWidth * (this.thrust * 0.4 + 0.6);
+        var width = this.fullThrustLength * this.thrust;
+        var height = this.fullThrustWidth * (this.thrust * 0.4 + 0.6);
         this.sprite.setDisplaySize(width, height);
         this.sprite.setSize(width, height);
-    },
-};
+    }
+}

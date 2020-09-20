@@ -1,23 +1,14 @@
-var SimpleRocket = {
-    imgAspect: 1.455814,
-    lengthMin: 50,
-    lengthMax: 350,
-    nextMotionPlanningUpdate: 0,
+class SimpleRocket {
+    constructor(x, y, flavor) {
+        var imgAspect = 1.455814;
+        var lengthMin = 50;
+        var lengthMax = 350;
 
-    addThruster: function(container, x, y, angle, scale) {
-        var thruster = Object.create(SpaceshipThrust);
 
-        var sprite = thruster.init(x, y, angle, scale);
-        container.add([sprite]);
-
-        return thruster;
-    },
-
-    init: function(x, y, flavor) {
         this.scale = Math.pow(Math.random(), 5);
 
-        var length = scaleBetween(this.lengthMin, this.lengthMax, this.scale);
-        var width = length / this.imgAspect;
+        var length = scaleBetween(lengthMin, lengthMax, this.scale);
+        var width = length / imgAspect;
 
         var container = game.add.container(x, y);
         this.container = container;
@@ -48,9 +39,17 @@ var SimpleRocket = {
         ];
 
         this.nextMotionPlanningUpdate = 0;
-    },
+    }
 
-    update: function(time, delta) {
+    addThruster(container, x, y, angle, scale) {
+        var thruster = new Thruster(x, y, angle, scale);
+        container.add([thruster.sprite]);
+
+        return thruster;
+    }
+
+
+    update(time, delta) {
         if (time > this.nextMotionPlanningUpdate) {
             this.thrusters.forEach(thruster => thruster.decideThrust());
             // Having both left and right thruster on is counter-intuitive,
@@ -62,7 +61,6 @@ var SimpleRocket = {
         this.container.angle += this.thrusters[2].thrust - this.thrusters[0].thrust;
 
         this.thrusters.forEach(thruster => thruster.update());
-
         var angleRad = this.container.angle * degToRadian;
         this.speedX += Math.cos(angleRad) * this.thrusters[1].thrust;
         this.speedY += Math.sin(angleRad) * this.thrusters[1].thrust;
@@ -71,11 +69,11 @@ var SimpleRocket = {
 
         this.x = this.container.x;
         this.y = this.container.y;
-    },
+    }
 
-    destroy: function() {
+    destroy() {
             this.container.destroy();
-    },
-};
+    }
+}
 
 ScActorManager.registerActor('SimpleRocket', SimpleRocket);

@@ -76,10 +76,12 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
         this.body.setVelocityY(this.speedY);
     }
 
-    addThruster(xFactor, yFactor, angle, scale) {
+    addThruster(xFactor, yFactor, angle, scale, angularFactor, accelerationFactor) {
         var x = xFactor * this.ship.width / 2;
         var y = yFactor * this.ship.height / 2;
         var thruster = new Thruster(x, y, angle, scale);
+        thruster.angularFactor = angularFactor;
+        thruster.accelerationFactor = accelerationFactor;
         this.add([thruster]);
 
         this.thrusters.push(thruster);
@@ -94,6 +96,20 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
             this.updateMotionPlan(time, delta);
             this.nextMotionPlanningUpdate = time + scaleBetween(100, 10000, this.scale);
         }
-        this.thrusters.forEach(thruster => thruster.update());
+
+        var acceleration = 0;
+
+        this.thrusters.forEach(thruster => {
+            thruster.update()
+
+            this.angle += thruster.angularFactor * thruster.thrust;
+            acceleration += thruster.accelerationFactor * thruster.thrust;
+        });
+
+        var angleRad = this.angle * degToRadian;
+        this.speedX += Math.cos(angleRad) * acceleration;
+        this.speedY += Math.sin(angleRad) * acceleration;
+        this.body.setVelocityX(this.speedX);
+        this.body.setVelocityY(this.speedY);
     }
 }

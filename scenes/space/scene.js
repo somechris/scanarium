@@ -15,16 +15,18 @@ function scene_create()
     });
 }
 
-class Thruster {
+class Thruster extends Phaser.Physics.Arcade.Sprite {
     constructor(xCorr, yCorr, angleCorr, scale) {
-        this.sprite = game.physics.add.sprite(xCorr, yCorr, 'spaceship-thrust');
-        this.sprite.setOrigin(1,0.5);
-        this.sprite.visible = false;
-        this.sprite.anims.play('spaceship-thrust-fire');
-        this.sprite.angle = angleCorr;
+        super(game, xCorr, yCorr, 'spaceship-thrust');
+        this.setOrigin(1,0.5);
+        this.visible = false;
+        this.anims.play('spaceship-thrust-fire');
+        this.angle = angleCorr;
         this.fullThrustWidth = 200 * scale;
         this.fullThrustLength = 600 * scale;
         this.thrust = 0;
+        game.physics.world.enableBody(this);
+        game.sys.updateList.add(this);
     }
 
     decideThrust() {
@@ -36,10 +38,10 @@ class Thruster {
     }
 
     update() {
-        this.sprite.visible = this.thrust > 0;
+        this.visible = this.thrust > 0;
         var width = this.fullThrustLength * this.thrust;
         var height = this.fullThrustWidth * (this.thrust * 0.4 + 0.6);
-        this.sprite.setDisplaySize(width, height);
-        this.sprite.setSize(width, height);
+        this.setDisplaySize(width, height);
+        this.setSize(width, height);
     }
 }

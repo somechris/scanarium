@@ -125,7 +125,7 @@ def reindex_actors_for_scene(scene):
                 flavors_sorted = [f['flavor'] for f in flavor_files]
 
                 actors_data['actors'][actor] = flavors_sorted
-                latest = [f for f in flavors_sorted[:3]]
+                latest = [f for f in flavors_sorted[:10]]
                 actors_latest_data['actors'][actor] = latest
 
     dump_json(os.path.join(scene_dir, 'actors.json'), actors_data)

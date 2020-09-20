@@ -51,6 +51,7 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
         super(game, x, y);
 
         this.thrusters = [];
+        this.nextMotionPlanningUpdate = 0;
     }
 
     addThruster(x, y, angle, scale) {
@@ -58,5 +59,17 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
         this.add([thruster]);
 
         this.thrusters.push(thruster);
+    }
+
+    updateMotionPlan(time, delta) {
+    }
+
+    update(time, delta) {
+        if (time > this.nextMotionPlanningUpdate) {
+            this.thrusters.forEach(thruster => thruster.decideThrust());
+            this.updateMotionPlan(time, delta);
+            this.nextMotionPlanningUpdate = time + scaleBetween(100, 10000, this.scale);
+        }
+        this.thrusters.forEach(thruster => thruster.update());
     }
 }

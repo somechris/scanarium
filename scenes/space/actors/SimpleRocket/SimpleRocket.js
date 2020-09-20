@@ -33,22 +33,18 @@ class SimpleRocket extends SpaceshipBase {
         this.addThruster(-length*0.41, -width/2, 90, thrustScale); // Left
         this.addThruster(-length/2, 0, 0.01, thrustScale);         // Middle
         this.addThruster(-length*0.41, width/2, -90, thrustScale); // Right
+    }
 
-        this.nextMotionPlanningUpdate = 0;
+    updateMotionPlan(time, delta) {
+        // Having both left and right thruster on is counter-intuitive,
+        // so we force one of the two (at random) off.
+        this.thrusters[Math.random() > 0.5 ? 0 : 2].setThrust(0);
     }
 
     update(time, delta) {
-        if (time > this.nextMotionPlanningUpdate) {
-            this.thrusters.forEach(thruster => thruster.decideThrust());
-            // Having both left and right thruster on is counter-intuitive,
-            // so we force one of the two (at random) off.
-            this.thrusters[Math.random() > 0.5 ? 0 : 2].setThrust(0);
-
-            this.nextMotionPlanningUpdate = time + scaleBetween(100, 10000, this.scale);
-        }
+        super.update(time, delta);
         this.angle += this.thrusters[2].thrust - this.thrusters[0].thrust;
 
-        this.thrusters.forEach(thruster => thruster.update());
         var angleRad = this.angle * degToRadian;
         this.speedX += Math.cos(angleRad) * this.thrusters[1].thrust;
         this.speedY += Math.sin(angleRad) * this.thrusters[1].thrust;

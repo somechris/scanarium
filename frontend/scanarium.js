@@ -51,8 +51,14 @@ var ScActorManager = {
     loadedActorFlavors: {},
     registeredActors: {},
     nextSpawn: 0,
+    lastTime:0,
 
     update: function(time, delta) {
+        // delta is way too often off. Especially, if the tab is in the
+        // background. So we compute our own.
+        delta = time - this.lastTime;
+        this.lastTime = time;
+
         if (time > this.nextConfigFetch) {
             this.nextConfigFetch = time + configReloadPeriod;
             this.reloadConfigFiles();

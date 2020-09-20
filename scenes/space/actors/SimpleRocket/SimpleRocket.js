@@ -3,35 +3,13 @@ class SimpleRocket extends SpaceshipBase {
         var lengthMin = 50;
         var lengthMax = 350;
 
-        super(x, y);
-
-        this.scale = Math.pow(Math.random(), 5);
-
-        var length = scaleBetween(lengthMin, lengthMax, this.scale);
-
-        var ship = game.add.image(0, 0, 'SimpleRocket-' + flavor);
-        var width = ship.height / ship.width * length;
-        ship.setSize(length, width);
-        ship.setDisplaySize(length, width);
-        ship.angle = 180;
-        this.destroyOffset = 2 * (length + width);
-        this.add([ship]);
-
-        game.physics.world.enable(this);
-
-        var speed = Math.random() * 40;
-        var angle = Math.random() * 2 * Math.PI;
-        this.speedX = Math.cos(angle) * speed
-        this.speedY = Math.sin(angle) * speed
-        this.angle = Math.random() * 360
-        this.body.setVelocityX(this.speedX);
-        this.body.setVelocityY(this.speedY);
+        super('SimpleRocket', flavor, x, y, 180, lengthMin, lengthMax);
 
         var thrustScale = scaleBetween(0.08, 0.7, this.scale);
 
-        this.addThruster(-length*0.41, -width/2, 90, thrustScale); // Left
-        this.addThruster(-length/2, 0, 0.01, thrustScale);         // Middle
-        this.addThruster(-length*0.41, width/2, -90, thrustScale); // Right
+        this.addThruster(-0.82, -1, 90, thrustScale); // Left
+        this.addThruster(-1, 0, 0.01, thrustScale);   // Middle
+        this.addThruster(-0.82, 1, -90, thrustScale); // Right
     }
 
     updateMotionPlan(time, delta) {

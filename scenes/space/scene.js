@@ -47,14 +47,38 @@ class Thruster extends Phaser.Physics.Arcade.Sprite {
 }
 
 class SpaceshipBase extends Phaser.GameObjects.Container {
-    constructor(x, y) {
+    constructor(actor, flavor, x, y, angle, widthMin, widthMax) {
         super(game, x, y);
 
         this.thrusters = [];
         this.nextMotionPlanningUpdate = 0;
+
+        this.scale = Math.pow(Math.random(), 5);
+
+        var ship = game.add.image(0, 0, actor + '-' + flavor);
+        var width = scaleBetween(widthMin, widthMax, this.scale);
+        var height = ship.height / ship.width * width;
+        ship.setSize(width, height);
+        ship.setDisplaySize(width, height);
+        ship.angle = angle;
+        this.destroyOffset = 2 * (width + height);
+        this.add([ship]);
+        this.ship = ship;
+
+        game.physics.world.enable(this);
+
+        var speed = Math.random() * 40;
+        var angle = Math.random() * 2 * Math.PI;
+        this.speedX = Math.cos(angle) * speed
+        this.speedY = Math.sin(angle) * speed
+        this.angle = Math.random() * 360
+        this.body.setVelocityX(this.speedX);
+        this.body.setVelocityY(this.speedY);
     }
 
-    addThruster(x, y, angle, scale) {
+    addThruster(xFactor, yFactor, angle, scale) {
+        var x = xFactor * this.ship.width / 2;
+        var y = yFactor * this.ship.height / 2;
         var thruster = new Thruster(x, y, angle, scale);
         this.add([thruster]);
 

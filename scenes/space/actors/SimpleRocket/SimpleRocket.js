@@ -7,9 +7,9 @@ class SimpleRocket extends SpaceshipBase {
 
         var thrustScale = scaleBetween(0.08, 0.7, this.scale);
 
-        this.addThruster(-0.82, -1, 90, thrustScale, -1, 0); // Left
-        this.addThruster(-1, 0, 0.01, thrustScale, 0, 1);   // Middle
-        this.addThruster(-0.82, 1, -90, thrustScale, 1, 0); // Right
+        this.addThruster(0.82, 1, -90, thrustScale, -1, 0); // Left
+        this.addThruster(1, 0, 180, thrustScale, 0, 1);   // Middle
+        this.addThruster(0.82, -1, 90, thrustScale, 1, 0); // Right
     }
 
     updateMotionPlan(time, delta) {

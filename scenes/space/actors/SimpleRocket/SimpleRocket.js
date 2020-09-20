@@ -1,10 +1,10 @@
-class SimpleRocket extends Phaser.GameObjects.Container {
+class SimpleRocket extends SpaceshipBase {
     constructor(x, y, flavor) {
         var imgAspect = 1.455814;
         var lengthMin = 50;
         var lengthMax = 350;
 
-        super(game, x, y);
+        super(x, y);
 
         this.scale = Math.pow(Math.random(), 5);
 
@@ -30,22 +30,12 @@ class SimpleRocket extends Phaser.GameObjects.Container {
 
         var thrustScale = scaleBetween(0.08, 0.7, this.scale);
 
-        this.thrusters = [
-            this.addThruster(this, -length*0.41, -width/2, 90, thrustScale), // Left
-            this.addThruster(this, -length/2, 0, 0.01, thrustScale),         // Middle
-            this.addThruster(this, -length*0.41, width/2, -90, thrustScale), // Right
-        ];
+        this.addThruster(-length*0.41, -width/2, 90, thrustScale); // Left
+        this.addThruster(-length/2, 0, 0.01, thrustScale);         // Middle
+        this.addThruster(-length*0.41, width/2, -90, thrustScale); // Right
 
         this.nextMotionPlanningUpdate = 0;
     }
-
-    addThruster(container, x, y, angle, scale) {
-        var thruster = new Thruster(x, y, angle, scale);
-        container.add([thruster]);
-
-        return thruster;
-    }
-
 
     update(time, delta) {
         if (time > this.nextMotionPlanningUpdate) {

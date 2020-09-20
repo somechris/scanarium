@@ -45,3 +45,18 @@ class Thruster extends Phaser.Physics.Arcade.Sprite {
         this.setSize(width, height);
     }
 }
+
+class SpaceshipBase extends Phaser.GameObjects.Container {
+    constructor(x, y) {
+        super(game, x, y);
+
+        this.thrusters = [];
+    }
+
+    addThruster(x, y, angle, scale) {
+        var thruster = new Thruster(x, y, angle, scale);
+        this.add([thruster]);
+
+        this.thrusters.push(thruster);
+    }
+}

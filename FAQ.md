@@ -1,5 +1,11 @@
 # Frequently Asked Questions
 
+1. [Q: Did you invent it? Who came up with this concept?](#q-did-you-invent-it-who-came-up-with-this-concept)
+1. [Q: The physics is all wrong!](#q-the-physics-is-all-wrong)
+1. [Q: Going into fullscreen does not resize Scanarium to cover the whole page.](#q-going-into-fullscreen-does-not-resize-scanarium-to-cover-the-whole-page)
+
+
+
 ## Q: Did you invent it? Who came up with this concept?
 
 There is [much](https://workinman.com/virtual-aquarium-design-museum)

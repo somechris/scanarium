@@ -38,6 +38,16 @@ as they might be taken as part of the page's contour.
 
 ![](images/camera-setup-wrong-no-rectangle-countour.jpg)
 
+
+
+## Camera rig
+
+If you don't have a proper place to fix your camera to, maybe you have some
+Duplos or other interlocking bricks lying around from playing with your kids?
+These are very handy when building make-shift camera rigs for Scanarium.
+
+
+
 ## Lessons learnt
 
 * If Scanarium is running, and you have you browser it full-screen, it can be

@@ -2,6 +2,7 @@
 
 1. [Q: Did you invent it? Who came up with this concept?](#q-did-you-invent-it-who-came-up-with-this-concept)
 1. [Q: Which webcam / camera should I use?](#q-which-webcam--camera-should-i-use)
+1. [Q: How to adjust the camera and coloring page?](#q-how-to-adjust-the-camera-and-coloring-page)
 1. [Q: The physics is all wrong!](#q-the-physics-is-all-wrong)
 1. [Q: Going into fullscreen does not resize Scanarium to cover the whole page.](#q-going-into-fullscreen-does-not-resize-scanarium-to-cover-the-whole-page)
 
@@ -31,6 +32,12 @@ even doing 3D models. But we try to bring it to your living room.
 ## Q: Which webcam / camera should I use?
 
 See [docs/camera.md](docs/camera.md)
+
+
+
+## Q: How to adjust the camera and coloring page?
+
+See [docs/camera-setup.md](docs/camera-setup.md)
 
 
 

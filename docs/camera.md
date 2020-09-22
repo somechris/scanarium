@@ -13,4 +13,17 @@ fine.
 Colors were more vibrant with this or more dull with that camera. But all were
 decent enough for the low requirements of Scanarium.
 
+## Working without a camera
+
+If you do not have a camera at hand, but have some other way to get images into
+the computer that's fine too.
+
+Instead, of using a `source` that starts with `cam:` in the `[scan]' section of
+`conf/scanarium.conf`, simply set `source` to some absolute file name. Then,
+scanning considers the picture at this path.
+
+You can for example have an email address that stores image attachments to this
+path and therby allow users to mail in pictures to your Scanarium instance
+(E.g.: at a show booth).
+
 [Documentation Index](index.md)

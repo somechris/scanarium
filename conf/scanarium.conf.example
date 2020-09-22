@@ -10,8 +10,12 @@ debug = False
 
 [scan]
 # Source to get images from.
-# `cam:<n>` denotes video camera `<n>`. On linux, thi resolves to
+# `cam:<n>` denotes video camera `<n>`. On linux, this resolves to
 # `/dev/video<n>`. So for example, `cam:2` would be `/dev/video2`.
+# If you are unsure, which one is your camera, simply unplug your
+# camera, wait 5 seconds and check which `/dev/video<n>` gets added
+# freshly, when you plug your camera in again.
+#
 # Strings that do not start in `cam:` are considered a file name, and the image
 # at that file name taken.
 source = cam:0

@@ -1,5 +1,7 @@
 # Frequently Asked Questions
 
+[Documentation Index](docs/index.md)
+
 1. [Q: Did you invent it? Who came up with this concept?](#q-did-you-invent-it-who-came-up-with-this-concept)
 1. [Q: Which webcam / camera should I use?](#q-which-webcam--camera-should-i-use)
 1. [Q: How to adjust the camera and coloring page?](#q-how-to-adjust-the-camera-and-coloring-page)
@@ -64,3 +66,5 @@ resizing after going into full-screen. With current Phaser 3.24 the crashing
 would be resolved and fullscreen reliably resizes the game. Phaser 3.24 however
 seems to render the rocket thrusts for the space scene flaky. So we do not
 upgrade the used Phaser until we got to the bottom of the thrust issue.
+
+[Documentation Index](docs/index.md)

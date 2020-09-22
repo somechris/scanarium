@@ -1,5 +1,7 @@
 # Camera setup
 
+[Documentation Index](index.md)
+
 Scanarium takes the largest rectangle contour it finds as coloring page.
 
 As long as the coloring page is the largest rectangle contour of the camera's
@@ -52,3 +54,5 @@ spots. This helps to keep it in place.
 * Mark the background spot where the color pages should go. Either by keeping a
 blank page there, or, even better, by marking the spot on the background with
 some white tape, so kids cannot accidentally move it.
+
+[Documentation Index](index.md)

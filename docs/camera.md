@@ -1,5 +1,7 @@
 # Camera
 
+[Documentation Index](index.md)
+
 Pretty-much any camera that you can hook up with your computer and get
 video out, should do.
 
@@ -10,3 +12,5 @@ fine.
 
 Colors were more vibrant with this or more dull with that camera. But all were
 decent enough for the low requirements of Scanarium.
+
+[Documentation Index](index.md)

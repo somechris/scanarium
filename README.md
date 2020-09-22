@@ -1,5 +1,7 @@
 # Scanarium
 
+[Documentation Index](docs/index.md)
+
 ![](docs/images/bait.gif)
 
 ### Table of contents
@@ -39,3 +41,5 @@ Launch the demo server:
 And finally point your browser to the default URL at http://localhost:8080/
 
 Enjoy!
+
+[Documentation Index](docs/index.md)

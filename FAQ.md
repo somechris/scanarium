@@ -7,6 +7,7 @@
 1. [Q: How to adjust the camera and coloring page?](#q-how-to-adjust-the-camera-and-coloring-page)
 1. [Q: The physics is all wrong!](#q-the-physics-is-all-wrong)
 1. [Q: Going into fullscreen does not resize Scanarium to cover the whole page.](#q-going-into-fullscreen-does-not-resize-scanarium-to-cover-the-whole-page)
+1. [Q: I want to backup the scanned images. Where do they get stored?](#q-i-want-to-backup-the-scanned-images-where-do-they-get-stored)
 
 
 
@@ -66,5 +67,14 @@ resizing after going into full-screen. With current Phaser 3.24 the crashing
 would be resolved and fullscreen reliably resizes the game. Phaser 3.24 however
 seems to render the rocket thrusts for the space scene flaky. So we do not
 upgrade the used Phaser until we got to the bottom of the thrust issue.
+
+
+
+## Q: I want to backup the scanned images. Where do they get stored?
+
+In the default setup, they'll end up at
+`dynamic/scenes/$SCENE/actors/$ACTOR/*.png`.
+
+
 
 [Documentation Index](docs/index.md)

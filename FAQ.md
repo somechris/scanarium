@@ -21,6 +21,18 @@ even doing 3D models. But we try to bring it to your living room.
 
 
 
+## Q: The physics is all wrong!
+
+Yes, it is wrong. And it is wrong on purpose. For example angular momentum is
+missing in the space scene. If we added angular momentum, spaceships would
+either all start to spin at some point (as thrusters fire randomly) or we'd have
+to implement counter-thrusts, to keep spaceships from spinning uncontrollably if
+another thruster fired before. Neither is a good solution for a toolkit that
+should be simple and easy to extend. But the physics are good enough for kids to
+have fun with. And that's where we put focus.
+
+
+
 ## Q: Going into fullscreen does not resize Scanarium to cover the whole page.
 
 Yes. This is a known issue. To get a proper fullscreen Scanarium, first go into

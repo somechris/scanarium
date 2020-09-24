@@ -17,6 +17,9 @@ debug = False
 # The binary to start Inkscape
 inkscape = inkscape
 
+# The binary for ImageMagick's convert
+convert = convert
+
 
 
 #-------------------------------------------------------------------------------
@@ -98,6 +101,10 @@ display =
 allow = False
 
 [cgi:show-source]
+# Whether or not to allow calling the script as cgi through the webserver.
+allow = False
+
+[cgi:regenerate-static-content]
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False
 

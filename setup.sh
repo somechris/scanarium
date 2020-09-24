@@ -34,6 +34,7 @@ step "example configuration" "$CONF_TARGET" cp "conf/scanarium.conf.example" "$C
 step "content directory" "dynamic" mkdir -p "dynamic"
 step "sample content" "dynamic/scenes/space/actors/SimpleRocket/sample.png" cp -a "dynamic.sample/"* "dynamic"
 step "reindexing content" "dynamic/scenes/space/actors-latest.json" ./reindex.sh
+step "regenerating static content" "scenes/space/background-thumb.jpg" ./regenerate-static-content.sh
 
 echo
 echo "#################################################################"

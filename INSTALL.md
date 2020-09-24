@@ -12,11 +12,11 @@ Table of contents
 
 ## Software setup
 
-First, install `inkscape`, Python >= 3.6, `opencv-python`, `numpy`, and
-`pyzbar`. For example on Linux Mint Tricia, run:
+First, install `inkscape`, `imagemagick`, Python >= 3.6, `opencv-python`,
+`numpy`, and `pyzbar`. For example on Linux Mint Tricia, run:
 
 ```
-sudo apt-get install inkscape python3-pip python3-setuptools
+sudo apt-get install inkscape imagemagick python3-pip python3-setuptools
 pip3 install opencv-contrib-python pyzbar
 ```
 

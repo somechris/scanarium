@@ -10,6 +10,14 @@ to run on old hardware, and can be viewed on any modern browser or mobile phone.
 
 [![Scanarium video demo](docs/images/bait-youtube.jpg)](https://www.youtube.com/watch?v=LuFLBiLtP8Y)
 
+## Live Demo
+
+At [https://demo.scanarium.at/](https://demo.scanarium.at/) Scanarium is running
+live. Uploading files has been disabled to avoid creepy content. But the site is
+good enough to show what you can expect.
+
+
+
 ## Installation / Quick-start guide
 
 See [INSTALL.md](INSTALL.md)

@@ -8,7 +8,6 @@ var scanariumConfig = {
     type: Phaser.AUTO,
     width: window.innerWidth,
     height: window.innerHeight,
-    spawnPeriod: 2500,
     physics: {
         default: 'arcade',
     },
@@ -95,7 +94,7 @@ var ScActorManager = {
             if (delta < 100) {
                 this.addActorRandom();
             }
-            this.nextSpawn = time + scanariumConfig['spawnPeriod']
+            this.nextSpawn = time + sceneConfig['spawnPeriod']
         }
 
         var that = this;

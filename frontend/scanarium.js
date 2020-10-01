@@ -19,6 +19,10 @@ var scanariumConfig = {
     }
 };
 
+// sceneConfig gets loaded dynamically from scene directory
+var sceneConfig = {
+}
+
 var configReloadPeriod = 10 * 1000; // 10 seconds
 
 var degToRadian = 2 * Math.PI / 360;
@@ -32,6 +36,22 @@ function loadJs(url, callback) {
     element.onload = callback;
     element.src = url;
     document.head.appendChild(element);
+}
+
+function loadJson(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE) {
+            if (this.status == 200) {
+                if (typeof callback != 'undefined') {
+                    callback(JSON.parse(this.responseText));
+                }
+            }
+        }
+    }
+    xhr.send();
 }
 
 var ScActorManager = {
@@ -302,23 +322,34 @@ var MessageManager = {
   },
 };
 
-var JsLoader = {
+var FileLoader = {
     files: [],
     loadedFiles: [],
     allAdded: false,
     allLoadedCallback: null,
 
-    load: function(url) {
+    load: function(url, callback) {
         this.allAdded = false;
         this.files.push(url);
 
         var that = this;
-        loadJs(url, function() {
+        var urlEnd = url.substring(url.lastIndexOf('.'));
+        var wrappedCallback = function(param) {
+            if (typeof callback != 'undefined') {
+                callback(param);
+            }
             that.loadedFiles.push(url);
             if (that.allAdded) {
                 that.checkAllFilesLoaded();
             }
-        });
+        };
+
+        if (urlEnd == '.json') {
+            loadJson(url, wrappedCallback);
+        } else {
+            // default to JavaScript
+            loadJs(url, wrappedCallback);
+        }
     },
 
     checkAllFilesLoaded: function() {
@@ -402,7 +433,8 @@ function update (time, delta) {
     }
 }
 
-JsLoader.load(scene_dir + '/scene.js');
-JsLoader.whenAllLoaded(() => {
+FileLoader.load(scene_dir + '/scene.json', function(json) {sceneConfig = json;});
+FileLoader.load(scene_dir + '/scene.js');
+FileLoader.whenAllLoaded(() => {
     game = new Phaser.Game(scanariumConfig);
 });

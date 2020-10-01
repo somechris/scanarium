@@ -1,4 +1,16 @@
-var scene = 'space';
+if (typeof parameters == 'undefined') {
+    parameters = {};
+}
+
+function getParameter(name, defaultValue) {
+    var ret = defaultValue;
+    if (name in parameters) {
+        ret = parameters[name];
+    }
+    return ret;
+}
+
+var scene = getParameter('scene', 'space');
 
 var scene_dir = 'scenes/' + scene;
 

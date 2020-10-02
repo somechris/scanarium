@@ -6,6 +6,9 @@ function scene_preload() {
 function scene_create() {
 }
 
+function scene_update(time, delta) {
+}
+
 class BaseBalloon extends Phaser.Physics.Arcade.Sprite {
     constructor(actor, flavor, x, y) {
         super(game, x, scanariumConfig.height + 2000, actor + '-' + flavor);

@@ -435,6 +435,8 @@ function create() {
 
 
 function update (time, delta) {
+    scene_update(time, delta);
+
     ScActorManager.update(time, delta);
 
     if (typeof MessageManager !== 'undefined') {

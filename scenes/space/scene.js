@@ -15,6 +15,9 @@ function scene_create()
     });
 }
 
+function scene_update(time, delta) {
+}
+
 class Thruster extends Phaser.Physics.Arcade.Sprite {
     constructor(xCorr, yCorr, angleCorr, scale) {
         super(game, xCorr, yCorr, 'spaceship-thrust');

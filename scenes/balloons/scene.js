@@ -22,6 +22,7 @@ class BaseBalloon extends Phaser.Physics.Arcade.Sprite {
         this.y = scanariumConfig.height + height/2;
         this.setDisplaySize(width, height);
         this.setSize(width, height);
+        this.destroyOffset = Math.sqrt(width * width + height * height) / 2;
         this.speedX = 0;
         this.speedY = -20 * (1 + this.depth);
     }

@@ -58,14 +58,17 @@ var cgiFail = function(cgi, reason) {
 };
 
 var cgiOk = function(cgi, payload) {
+  var suffix = '';
   if (cgi == 'scan') {
     if (payload.scene == scene) {
       if (typeof ScActorManager !== 'undefined') {
         ScActorManager.addActor(payload.actor, payload.flavor);
       }
+    } else {
+      suffix = ', but actor cannot be used, as it is for scene "' + payload.scene + '" while we are playing scene "' + scene + '"';
     }
   }
-  MessageManager.addMessage('ok', cgi + ' ok');
+  MessageManager.addMessage('ok', cgi + ' ok' + suffix);
 };
 
 var onReadyStateChange = function(cgi) {

@@ -202,10 +202,10 @@ var ScActorManager = {
     },
 
     getNewActorNameWithFlavor: function() {
-        var config = this.actors_latest_config
+        var config = this.actors_latest_config;
         var forceUntried = true;
         if (Math.random() < 0.3) {
-            config = this.actors_config
+            config = this.actors_config;
             forceUntried = false;
         }
         return this.getNewActorNameWithFlavorFromConfig(config, forceUntried);

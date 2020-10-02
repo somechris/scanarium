@@ -70,7 +70,6 @@ var ScActorManager = {
         this.config = config;
         console.log('ActorManager initialized');
     },
-    scene_config: null,
     actors_config: null,
     actors_latest_config: null,
     nextConfigFetch: 0,
@@ -123,13 +122,12 @@ var ScActorManager = {
     },
 
     reloadConfigFiles: function(isPreload) {
-        game.load.json('actors-latest-config', dyn_scene_dir + '/actors-latest.json');
+        var file = game.load.json('actors-latest-config', dyn_scene_dir + '/actors-latest.json');
         if ((ScActorManager.configFetches % 60) == 0) {
             game.load.json('actors-config', dyn_scene_dir + '/actors.json');
         }
 
         if (isPreload === true) {
-            var file = game.load.json('scene-config', dyn_scene_dir + '/scene.json');
             file.on('filecomplete', ScActorManager.configFileLoaded, this);
         } else {
             game.load.start();
@@ -139,10 +137,6 @@ var ScActorManager = {
     },
 
     configFileLoaded: function(key, file) {
-        if (key == 'scene-config') {
-            this.scene_config = game.cache.json.get(key);
-        }
-
         if (key == 'actors-config') {
             this.actors_config = game.cache.json.get(key);
             game.cache.json.remove(key);

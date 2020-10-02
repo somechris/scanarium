@@ -419,6 +419,7 @@ function create() {
     background = this.add.image(0, 0, 'background');
     background.setOrigin(0, 0);
     background.setScale(config.width/background.width, config.height/background.height);
+    background.setDepth = -999999;
 
     scene_create();
 

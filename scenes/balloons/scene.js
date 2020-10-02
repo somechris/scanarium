@@ -10,7 +10,8 @@ class BaseBalloon extends Phaser.Physics.Arcade.Sprite {
     constructor(actor, flavor, x, y) {
         super(game, x, scanariumConfig.height + 2000, actor + '-' + flavor);
         game.physics.world.enable(this);
-        var scale = scaleBetween(0.4, 1, Math.random());
+        this.depth = Math.random();
+        var scale = scaleBetween(0.4, 1, this.depth);
         var width = this.width * scale;
         var height = this.height * scale;
         this.y = scanariumConfig.height + height + 10;

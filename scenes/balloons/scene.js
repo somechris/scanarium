@@ -18,7 +18,7 @@ class BaseBalloon extends Phaser.Physics.Arcade.Sprite {
         this.setDisplaySize(width, height);
         this.setSize(width, height);
         this.speedX = 0;
-        this.speedY = -20;
+        this.speedY = -20 * (1 + this.depth);
     }
 
     update(time, delta) {

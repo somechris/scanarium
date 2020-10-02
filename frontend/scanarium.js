@@ -163,7 +163,7 @@ var ScActorManager = {
 
         var actor = new this.registeredActors[actor](x, y, flavor);
         if (typeof actor.destroyOffset == 'undefined') {
-            actor.destroyOffset = 2 * (actor.width + actor.height);
+            actor.destroyOffset = Math.sqrt(actor.width * actor.width + actor.height * actor.height);
         }
         game.add.existing(actor);
         this.actors.push(actor);

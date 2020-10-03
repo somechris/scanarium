@@ -170,6 +170,7 @@ var ScActorManager = {
         }
         game.add.existing(actor);
         this.actors.push(actor);
+        return actor;
     },
 
     getNewActorNameWithFlavorFromConfig: function(config, forceUntried) {

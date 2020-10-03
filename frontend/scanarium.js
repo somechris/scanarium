@@ -157,7 +157,10 @@ var ScActorManager = {
         }
 
         // Everything's fully loaded, so we're creating and adding the actor
+        this.addFullyLoadedActor(actor, flavor);
+    },
 
+    addFullyLoadedActor: function(actor, flavor) {
         var x = this.config.width * (Math.random() * 0.6 + 0.2);
         var y = this.config.height * (Math.random() * 0.6 + 0.2);
 

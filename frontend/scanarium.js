@@ -422,9 +422,9 @@ function create() {
     background.setScale(config.width/background.width, config.height/background.height);
     background.setDepth = -999999;
 
-    scene_create();
-
     ScActorManager.init(config);
+
+    scene_create();
 
     this.input.keyboard.on('keydown_M', function (event) {
         ScActorManager.addActorRandom();

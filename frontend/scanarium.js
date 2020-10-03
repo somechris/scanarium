@@ -84,6 +84,7 @@ var ScActorManager = {
     loadedActorJavascripts: [],
     loadedActorFlavors: {},
     registeredActors: {},
+    destroyCallbacks: [],
     nextSpawn: 0,
 
     update: function(time, delta) {
@@ -281,7 +282,22 @@ var ScActorManager = {
     deleteActor(actor) {
         var idx = this.actors.indexOf(actor);
         this.actors.splice(idx, 1);
+        this.destroyCallbacks.forEach(function (callbackConfig) {
+            if (callbackConfig.actor == null || callbackConfig.actor == actor.actorName) {
+                callbackConfig.callback(actor);
+            }
+        });
         actor.destroy();
+    },
+
+    onActorDestroy(callback, actor) {
+        if (typeof actor === 'undefined') {
+            actor == null;
+        }
+        this.destroyCallbacks.push({
+            callback: callback,
+            actor: actor
+        });
     },
 
     registerActor(name, stencil) {

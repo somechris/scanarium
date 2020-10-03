@@ -164,10 +164,13 @@ var ScActorManager = {
         var x = this.config.width * (Math.random() * 0.6 + 0.2);
         var y = this.config.height * (Math.random() * 0.6 + 0.2);
 
+        var actorName = actor;
         var actor = new this.registeredActors[actor](x, y, flavor);
         if (typeof actor.destroyOffset == 'undefined') {
             actor.destroyOffset = Math.sqrt(actor.displayWidth * actor.displayWidth + actor.displayHeight * actor.displayHeight);
         }
+        actor.actorName = actorName;
+        actor.actorFlavor = flavor;
         game.add.existing(actor);
         this.actors.push(actor);
         return actor;

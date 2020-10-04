@@ -57,15 +57,22 @@ var cgiFail = function(cgi, reason) {
   MessageManager.addMessage('failed', cgi + ' failed: ' + reason);
 };
 
+var sanitize = function(text) {
+  return text.replace(/[^a-zA-Z0-9_,.'" -]/g, '.');
+}
+
 var cgiOk = function(cgi, payload) {
   var suffix = '';
   if (cgi == 'scan') {
-    if (payload.scene == scene) {
+    var sanitized_scene = sanitize(payload.scene);
+    var sanitized_actor = sanitize(payload.actor);
+    var sanitized_flavor = sanitize(payload.flavor);
+    if (sanitized_scene == scene) {
       if (typeof ScActorManager !== 'undefined') {
-        ScActorManager.addActor(payload.actor, payload.flavor);
+        ScActorManager.addActor(sanitized_actor, sanitized_flavor);
       }
     } else {
-      suffix = ', but actor cannot be used, as it is for scene "' + payload.scene + '" while we are playing scene "' + scene + '"';
+      suffix = ', but actor cannot be used, as it is for scene "' + sanitized_scene + '" while we are playing scene "' + scene + '"';
     }
   }
   MessageManager.addMessage('ok', cgi + ' ok' + suffix);
@@ -79,7 +86,7 @@ var onReadyStateChange = function(cgi) {
         if (capsule.is_ok) {
           cgiOk(cgi, capsule.payload);
         } else {
-          cgiFail(cgi, capsule.error_message);
+          cgiFail(cgi, sanitize(capsule.error_message));
         }
       } else {
         cgiFail(cgi, 'Response status was ' + this.status + ' instead of 200');

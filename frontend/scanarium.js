@@ -452,15 +452,49 @@ function create() {
     this.input.keyboard.on('keydown_M', function (event) {
         ScActorManager.addActorRandom();
     });
+    this.input.keyboard.on('keydown_C', function (event) {
+        FrameCounter.toggleVisibility();
+    });
 }
 
+var FrameCounter = {
+    showFrameCount: false,
+    frameCountInterval: 1000, //milli-seconds
+    frameCount: 0,
+    frameCountSprite: null,
+
+    toggleVisibility: function() {
+        this.showFrameCount = !(this.showFrameCount);
+        if (this.showFrameCount) {
+            this.frameCountSprite = game.add.text(32, 32, 'fps: ?');
+            this.frameCountSprite.depth = 999999;
+        } else {
+            if (this.frameCountSprite != null) {
+                this.frameCountSprite.destroy();
+            }
+        }
+    },
+
+    update: function(time, delta, lastTime) {
+        if (this.showFrameCount) {
+            if (Math.floor(lastTime / this.frameCountInterval) == Math.floor(time / this.frameCountInterval)) {
+                this.frameCount++;
+            } else {
+                if (this.frameCountSprite != null) {
+                    this.frameCountSprite.setText('fps: ' + this.frameCount);
+                }
+                this.frameCount=1;
+            }
+        }
+    },
+}
 
 var updateLastTime = 0;
 function update (time, delta) {
     // delta is way too often off. Especially, if the tab is in the
     // background. So we compute our own.
     delta = time - updateLastTime;
-    updateLastTime = time;
+    FrameCounter.update(time, delta, updateLastTime);
 
     scene_update(time, delta);
 
@@ -469,6 +503,8 @@ function update (time, delta) {
     if (typeof MessageManager !== 'undefined') {
       MessageManager.update(time, delta);
     }
+
+    updateLastTime = time;
 }
 
 FileLoader.load(scene_dir + '/scene.json', function(json) {sceneConfig = json;});

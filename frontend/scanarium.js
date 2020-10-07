@@ -10,6 +10,15 @@ function getParameter(name, defaultValue) {
     return ret;
 }
 
+function getParameterTrimmedLowerCaseString(name, defaultValue) {
+        return String(getParameter(name, false)).toLowerCase().trim();
+}
+
+function getParameterBoolean(name, defaultValue) {
+    var param = getParameterTrimmedLowerCaseString(name, defaultValue);
+    return (param == "1" || param == "true");
+}
+
 var scene = getParameter('scene', 'space');
 
 var scene_dir = 'scenes/' + scene;
@@ -449,6 +458,8 @@ function create() {
 
     scene_create();
 
+    FrameCounter.init();
+
     this.input.keyboard.on('keydown_M', function (event) {
         ScActorManager.addActorRandom();
     });
@@ -462,6 +473,12 @@ var FrameCounter = {
     frameCountInterval: 1000, //milli-seconds
     frameCount: 0,
     frameCountSprite: null,
+
+    init: function() {
+        if (getParameterBoolean('showFrameCounter', false)) {
+            this.toggleVisibility();
+        }
+    },
 
     toggleVisibility: function() {
         this.showFrameCount = !(this.showFrameCount);

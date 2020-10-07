@@ -2,10 +2,14 @@ if (typeof parameters == 'undefined') {
     parameters = {};
 }
 
+var sanitize = function(text) {
+  return text.replace(/[^a-zA-Z0-9_,.'" -]/g, '.');
+}
+
 function getParameter(name, defaultValue) {
     var ret = defaultValue;
     if (name in parameters) {
-        ret = parameters[name];
+        ret = sanitize(parameters[name]);
     }
     return ret;
 }

@@ -57,10 +57,6 @@ var cgiFail = function(cgi, reason) {
   MessageManager.addMessage('failed', cgi + ' failed: ' + reason);
 };
 
-var sanitize = function(text) {
-  return text.replace(/[^a-zA-Z0-9_,.'" -]/g, '.');
-}
-
 var cgiOk = function(cgi, payload) {
   var suffix = '';
   if (cgi == 'scan') {

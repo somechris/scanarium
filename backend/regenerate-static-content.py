@@ -65,7 +65,6 @@ def regenerate():
         for scene in os.listdir(scenes_dir):
             scene_dir = os.path.join(scenes_dir, scene)
             if os.path.isdir(scene_dir):
-                generate_thumbnail(scene_dir, 'background.png')
                 regenerate_actors(scene_dir)
 
 

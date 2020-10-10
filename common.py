@@ -62,6 +62,74 @@ class Scanarium(object):
     def get_scenes_dir_abs(self):
         return self.get_relative_dir_abs('scenes')
 
+    def get_dynamic_directory(self):
+        dyn_dir = self.get_config()['directories']['dynamic']
+        if not os.path.isabs(dyn_dir):
+            dyn_dir = os.path.join(self.get_scanarium_dir_abs(), dyn_dir)
+        return dyn_dir
+
+    def reindex_actors_for_scene(self, scene):
+        scene_dir = os.path.join(self.get_dynamic_directory(), 'scenes', scene)
+        actors_data = {
+            'actors': {},
+        }
+        actors_latest_data = {
+            'actors': {},
+        }
+        actors_dir = os.path.join(scene_dir, 'actors')
+        if os.path.isdir(actors_dir):
+            for actor in os.listdir(actors_dir):
+                actor_dir = os.path.join(actors_dir, actor)
+                if os.path.isdir(actor_dir):
+                    flavor_files = []
+                    for flavor in os.listdir(actor_dir):
+                        flavor_file = os.path.join(actor_dir, flavor)
+                        if os.path.isfile(flavor_file) and \
+                                flavor.endswith('.png'):
+                            flavor_files.append({
+                                'flavor': flavor[:-4],
+                                'key': os.stat(flavor_file).st_mtime,
+                            })
+                    flavor_files.sort(key=lambda f: f['key'], reverse=True)
+                    flavors_sorted = [f['flavor'] for f in flavor_files]
+
+                    actors_data['actors'][actor] = flavors_sorted
+                    latest = [f for f in flavors_sorted[:10]]
+                    actors_latest_data['actors'][actor] = latest
+
+        dump_json(os.path.join(scene_dir, 'actors.json'), actors_data)
+        dump_json(os.path.join(scene_dir, 'actors-latest.json'),
+                  actors_latest_data)
+
+    def call_guarded(self, func):
+        try:
+            caller = traceback.extract_stack()[-2].filename
+            if not os.path.isabs(caller):
+                caller = os.path.join(os.getcwd(), caller)
+            caller = os.path.normpath(caller)
+            start = self.get_backend_dir_abs() + os.sep
+            if caller.startswith(start):
+                caller = caller[len(start):]
+            if caller.endswith('.py'):
+                caller = caller[:-3]
+
+            if not re.match(r'^[a-zA-Z-]*$', caller):
+                raise ScanariumError('SE_CGI_NAME_CHARS',
+                                     'Forbidden characters in cgi name')
+
+            if IS_CGI:
+                if not SCANARIUM_CONFIG.getboolean('cgi:%s' % caller, 'allow'):
+                    raise ScanariumError('SE_CGI_FORBIDDEN',
+                                         'Calling script as cgi is forbidden')
+
+            set_display()
+
+            payload = func(self)
+        except:  # noqa: E722
+            result(payload='Failed', exc_info=sys.exc_info())
+
+        result(payload=payload)
+
 
 scanarium = Scanarium()
 SCANARIUM_CONFIG = scanarium.get_config()

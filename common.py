@@ -101,6 +101,28 @@ class Scanarium(object):
         dump_json(os.path.join(scene_dir, 'actors-latest.json'),
                   actors_latest_data)
 
+    def get_image(self):
+        file_path = self.get_config()['scan']['source']
+        if file_path.startswith('cam:'):
+            try:
+                cam_nr = int(file_path[4:])
+            except ValueError:
+                raise ScanariumError('SE_VALUE', 'Failed to parse "%s" of '
+                                     'source "%s" to number' % (file_path[4:],
+                                                                file_path))
+            cap = cv2.VideoCapture(cam_nr)
+
+            if not cap.isOpened():
+                raise ScanariumError('SE_CAP_NOT_OPEN',
+                                     'Failed to open camera %d' % (cam_nr))
+
+            ret, image = cap.read()
+            cap.release()
+        else:
+            image = cv2.imread(file_path)
+
+        return image
+
     def call_guarded(self, func):
         try:
             caller = traceback.extract_stack()[-2].filename

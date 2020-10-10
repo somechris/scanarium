@@ -17,32 +17,62 @@ if IS_CGI:
     print('Content-Type: application/json')
     print()
 
-SCANARIUM_DIR_ABS = os.path.dirname(os.path.abspath(__file__))
-CONFIG_DIR_ABS = os.path.join(SCANARIUM_DIR_ABS, 'conf')
-CONFIG_FILE_ABS = os.path.join(CONFIG_DIR_ABS, 'scanarium.conf')
-BACKEND_DIR_ABS = os.path.join(SCANARIUM_DIR_ABS, 'backend')
-FRONTEND_DIR_ABS = os.path.join(SCANARIUM_DIR_ABS, 'frontend')
-FRONTEND_DYNAMIC_DIR_ABS = os.path.join(FRONTEND_DIR_ABS, 'dynamic')
-FRONTEND_CGI_DIR_ABS = os.path.join(FRONTEND_DIR_ABS, 'cgi-bin')
-SCENES_DIR_ABS = os.path.join(SCANARIUM_DIR_ABS, 'scenes')
 
-SCANARIUM_CONFIG = {}
+class Scanarium(object):
+    def __init__(self):
+        super(Scanarium, self).__init__()
+
+    def _load_config(self):
+        config = configparser.ConfigParser()
+        config_dir_abs = self.get_relative_dir_abs('conf')
+
+        config.read(os.path.join(config_dir_abs, 'scanarium.conf.defaults'))
+
+        config_file_abs = os.path.join(config_dir_abs, 'scanarium.conf')
+        if os.path.isfile(config_file_abs):
+            config.read(config_file_abs)
+
+        return config
+
+    def get_config(self):
+        try:
+            return self.__config
+        except AttributeError:
+            self.__config = self._load_config()
+            return self.__config
+
+    def get_scanarium_dir_abs(self):
+        return os.path.dirname(os.path.abspath(__file__))
+
+    def get_relative_dir_abs(self, relative_dir):
+        return os.path.join(scanarium.get_scanarium_dir_abs(), relative_dir)
+
+    def get_backend_dir_abs(self):
+        return self.get_relative_dir_abs('backend')
+
+    def get_frontend_dir_abs(self):
+        return self.get_relative_dir_abs('frontend')
+
+    def get_frontend_dynamic_dir_abs(self):
+        return os.path.join(self.get_frontend_dir_abs(), 'dynamic')
+
+    def get_frontend_cgi_bin_dir_abs(self):
+        return os.path.join(self.get_frontend_dir_abs(), 'cgi-bin')
+
+    def get_scenes_dir_abs(self):
+        return self.get_relative_dir_abs('scenes')
 
 
-def load_config():
-    global SCANARIUM_CONFIG
-    config = configparser.ConfigParser()
-    config.read(os.path.join(CONFIG_DIR_ABS, 'scanarium.conf.defaults'))
-
-    if os.path.isfile(CONFIG_FILE_ABS):
-        config.read(CONFIG_FILE_ABS)
-
-    SCANARIUM_CONFIG = config
-
-
-load_config()
+scanarium = Scanarium()
+SCANARIUM_CONFIG = scanarium.get_config()
 logging.config.fileConfig(SCANARIUM_CONFIG)
 logger = logging.getLogger(__name__)
+
+BACKEND_DIR_ABS = scanarium.get_backend_dir_abs()
+FRONTEND_DIR_ABS = scanarium.get_frontend_dir_abs()
+FRONTEND_DYNAMIC_DIR_ABS = scanarium.get_frontend_dynamic_dir_abs()
+FRONTEND_CGI_DIR_ABS = scanarium.get_frontend_cgi_bin_dir_abs()
+SCENES_DIR_ABS = scanarium.get_scenes_dir_abs()
 
 
 def get_image():
@@ -82,7 +112,7 @@ def run(command, check=True, timeout=10):
 def get_dynamic_directory():
     dyn_dir = SCANARIUM_CONFIG['directories']['dynamic']
     if not os.path.isabs(dyn_dir):
-        dyn_dir = os.path.join(SCANARIUM_DIR_ABS, dyn_dir)
+        dyn_dir = os.path.join(scanarium.get_scanarium_dir_abs(), dyn_dir)
     return dyn_dir
 
 

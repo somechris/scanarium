@@ -123,6 +123,17 @@ class Scanarium(object):
 
         return image
 
+    def run(scanarium, command, check=True, timeout=10):
+        try:
+            subprocess.run(command, check=check, timeout=timeout)
+        except subprocess.TimeoutExpired:
+            raise ScanariumError('SE_TIMEOUT', 'The command "%s" did not '
+                                 'finish within %d seconds' % (str(command),
+                                                               timeout))
+        except subprocess.CalledProcessError:
+            raise ScanariumError('SE_RETURN_VALUE', 'The command "%s" did '
+                                 'not return 0' % (str(command)))
+
     def call_guarded(self, func):
         try:
             caller = traceback.extract_stack()[-2].filename

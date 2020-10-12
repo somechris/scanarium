@@ -12,27 +12,21 @@ from pyzbar import pyzbar
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
-from common import SCANARIUM_CONFIG
-from common import SCENES_DIR_ABS
-from common import call_guarded
-from common import get_dynamic_directory
-from common import get_image
-from common import reindex_actors_for_scene
-from common import run
+from common import Scanarium
 from common import ScanariumError
 del sys.path[0]
 
 logger = logging.getLogger(__name__)
 
 
-def show_image(title, image):
-    if SCANARIUM_CONFIG.getboolean('general', 'debug'):
+def show_image(scanarium, title, image):
+    if scanarium.get_config().getboolean('general', 'debug'):
         cv2.imshow(title, image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
 
-def scale_image(image):
+def scale_image(scanarium, image):
     scaled_height = 1000
     if image.shape[0] > scaled_height * 1.3:
         scale_factor = scaled_height / image.shape[0]
@@ -43,7 +37,7 @@ def scale_image(image):
         scaled_image = image
         scale_factor = 1
 
-    show_image('scaled', scaled_image)
+    show_image(scanarium, 'scaled', scaled_image)
 
     return (scaled_image, scale_factor)
 
@@ -103,9 +97,9 @@ def turn_landscape(image):
     return image
 
 
-def scale_to_paper_size(image):
-    paper_width = SCANARIUM_CONFIG.getint('scan', 'paper_width')
-    paper_height = SCANARIUM_CONFIG.getint('scan', 'paper_height')
+def scale_to_paper_size(scanarium, image):
+    paper_width = scanarium.get_config().getint('scan', 'paper_width')
+    paper_height = scanarium.get_config().getint('scan', 'paper_height')
 
     height = image.shape[0]
 
@@ -137,7 +131,7 @@ def orient_image(image, left_coordinate):
     return image
 
 
-def generate_mask(mask_path):
+def generate_mask(scanarium, mask_path):
     source_path = mask_path[:-9] + '.svg'
 
     if not os.path.isfile(source_path):
@@ -147,7 +141,7 @@ def generate_mask(mask_path):
     if not os.path.isfile(mask_path) \
             or os.stat(source_path).st_mtime > os.stat(mask_path).st_mtime:
         command = [
-            SCANARIUM_CONFIG['programs']['inkscape'],
+            scanarium.get_config()['programs']['inkscape'],
             '--export-id=Mask',
             '--export-id-only',
             '--export-area-page',
@@ -156,13 +150,13 @@ def generate_mask(mask_path):
             source_path,
         ]
 
-        run(command)
+        scanarium.run(command)
 
 
-def mask(image, scene, actor):
-    masked_file_path = os.path.join(SCENES_DIR_ABS, scene, 'actors', actor,
-                                    '%s-mask.png' % actor)
-    generate_mask(masked_file_path)
+def mask(scanarium, image, scene, actor):
+    masked_file_path = os.path.join(scanarium.get_scenes_dir_abs(), scene,
+                                    'actors', actor, '%s-mask.png' % actor)
+    generate_mask(scanarium, masked_file_path)
 
     if not os.path.isfile(masked_file_path):
         raise ScanariumError('SE_SCAN_NO_MASK', 'Failed to find mask')
@@ -187,8 +181,8 @@ def crop(image):
     return cropped
 
 
-def balance(image):
-    algo = SCANARIUM_CONFIG['scan']['white_balance'].lower()
+def balance(scanarium, image):
+    algo = scanarium.get_config()['scan']['white_balance'].lower()
     if algo in ['simple', 'yes', 'true']:
         wb = cv2.xphoto.createSimpleWB()
         ret = wb.balanceWhite(image)
@@ -205,10 +199,11 @@ def balance(image):
     return ret
 
 
-def save_image(image, scene, actor):
+def save_image(scanarium, image, scene, actor):
     timestamp = str(int(time.time()))
     actor_path = os.path.join(scene, 'actors', actor)
-    if not os.path.isdir(os.path.join(SCENES_DIR_ABS, actor_path)):
+    if not os.path.isdir(os.path.join(scanarium.get_scenes_dir_abs(),
+                                      actor_path)):
         # This should never happen, as masking already ensured that the actor
         # source is there. But since we're about to create directories, we're
         # extra warry.
@@ -216,7 +211,7 @@ def save_image(image, scene, actor):
                              'store file in does not exist, or is no '
                              'directory')
 
-    dynamic_dir = get_dynamic_directory()
+    dynamic_dir = scanarium.get_dynamic_directory()
     image_dir = os.path.join(dynamic_dir, 'scenes', actor_path)
     os.makedirs(image_dir, exist_ok=True)
     image_file = os.path.join(image_dir, '%s.png' % timestamp)
@@ -225,17 +220,17 @@ def save_image(image, scene, actor):
     return timestamp
 
 
-def scan_actor_image():
-    image = get_image()
+def scan_actor_image(scanarium):
+    image = scanarium.get_image()
 
-    show_image('raw_image', image)
+    show_image(scanarium, 'raw_image', image)
 
     # If the picture is too big (E.g.: from a proper photo camera), edge
     # detection won't work reliably, as the sheet's contour will exhibit too
     # much detail and would get broken down into more than 4 segments. So we
     # scale too big images down. Note though that the scaled image is only
     # used for edge detection. Rectification happens on the original picture.
-    (scaled_image, scale_factor) = scale_image(image)
+    (scaled_image, scale_factor) = scale_image(scanarium, image)
     points = find_sheet_points(scaled_image)
 
     # Now rectifying using the original (!) image.
@@ -243,21 +238,21 @@ def scan_actor_image():
 
     # Now normalizing the rectified image
     image = turn_landscape(image)
-    image = scale_to_paper_size(image)
+    image = scale_to_paper_size(scanarium, image)
 
-    show_image('before QR extraction', image)
+    show_image(scanarium, 'before QR extraction', image)
     (qr_rect, scene, actor) = extract_qr(image)
 
     image = orient_image(image, qr_rect.left)
-    image = mask(image, scene, actor)
+    image = mask(scanarium, image, scene, actor)
     image = crop(image)
-    image = balance(image)
+    image = balance(scanarium, image)
 
     # Finally the image is rectified, landscape, and the QR code is in the
     # lower left-hand corner, and white-balance has been run.
 
-    show_image('final', image)
-    flavor = save_image(image, scene, actor)
+    show_image(scanarium, 'final', image)
+    flavor = save_image(scanarium, image, scene, actor)
 
     return {
         'scene': scene,
@@ -266,11 +261,11 @@ def scan_actor_image():
     }
 
 
-def main():
-    ret = scan_actor_image()
-    reindex_actors_for_scene(ret['scene'])
+def main(scanarium):
+    ret = scan_actor_image(scanarium)
+    scanarium.reindex_actors_for_scene(ret['scene'])
     return ret
 
 
 if __name__ == "__main__":
-    call_guarded(main)
+    Scanarium().call_guarded(main)

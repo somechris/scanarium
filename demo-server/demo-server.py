@@ -82,7 +82,7 @@ if __name__ == '__main__':
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('port', metavar='PORT', type=int, nargs='?',
                         help='The port to listen for connections on',
-                        default=scanarium.get_config()['demo_server']['port'])
+                        default=scanarium.get_config('demo_server', 'port'))
     args = parser.parse_args()
 
     serve_forever(args.port)

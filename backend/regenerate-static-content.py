@@ -20,7 +20,7 @@ def get_thumbnail_name(dir, file):
 def generate_thumbnail(scanarium, dir, file, shave=True, erode=False):
     source = os.path.join(dir, file)
     target = get_thumbnail_name(dir, file)
-    command = [scanarium.get_config()['programs']['convert'], source]
+    command = [scanarium.get_config('programs', 'convert'), source]
     if shave:
         command += ['-shave', '20%']
     if erode:
@@ -33,7 +33,7 @@ def generate_pdf(scanarium, dir, file):
     source = os.path.join(dir, file)
     target = os.path.join(dir, file.rsplit('.', 1)[0] + '.pdf')
     command = [
-        scanarium.get_config()['programs']['inkscape'],
+        scanarium.get_config('programs', 'inkscape'),
         '--export-area-page',
         '--export-pdf=%s' % (target),
         source,

@@ -34,18 +34,33 @@ class Scanarium(object):
 
         return config
 
-    def get_config(self):
-        try:
-            return self.__config
-        except AttributeError:
-            self.__config = self._load_config()
-            return self.__config
+    def get_config(self, section=None, key=None, kind='string'):
+        if section is None:
+            if key is None:
+                try:
+                    return self.__config
+                except AttributeError:
+                    self.__config = self._load_config()
+                    return self.__config
+            else:
+                raise RuntimeErrore('key, but no section given')
+        else:
+            config = self.get_config()
+            if kind == 'string':
+                func = config.get
+            elif kind == 'boolean':
+                func = config.getboolean
+            elif kind == 'int':
+                func = config.getint
+            else:
+                raise RuntimeErrore('Unknown config value type "%s"' % (kind))
+            return func(section, key)
 
     def get_scanarium_dir_abs(self):
         return os.path.dirname(os.path.abspath(__file__))
 
     def get_relative_dir_abs(self, relative_dir):
-        return os.path.join(scanarium.get_scanarium_dir_abs(), relative_dir)
+        return os.path.join(self.get_scanarium_dir_abs(), relative_dir)
 
     def get_backend_dir_abs(self):
         return self.get_relative_dir_abs('backend')
@@ -63,7 +78,7 @@ class Scanarium(object):
         return self.get_relative_dir_abs('scenes')
 
     def get_dynamic_directory(self):
-        dyn_dir = self.get_config()['directories']['dynamic']
+        dyn_dir = self.get_config('directories', 'dynamic')
         if not os.path.isabs(dyn_dir):
             dyn_dir = os.path.join(self.get_scanarium_dir_abs(), dyn_dir)
         return dyn_dir
@@ -102,7 +117,7 @@ class Scanarium(object):
                        actors_latest_data)
 
     def get_image(self):
-        file_path = self.get_config()['scan']['source']
+        file_path = self.get_config('scan', 'source')
         if file_path.startswith('cam:'):
             try:
                 cam_nr = int(file_path[4:])
@@ -149,7 +164,7 @@ class Scanarium(object):
 
     def set_display(self):
         if IS_CGI:
-            display = self.get_config()['cgi']['display']
+            display = self.get_config('cgi', 'display')
             if display:
                 os.environ['DISPLAY'] = display
 
@@ -170,8 +185,7 @@ class Scanarium(object):
                                      'Forbidden characters in cgi name')
 
             if IS_CGI:
-                if not self.get_config().getboolean('cgi:%s' % caller,
-                                                    'allow'):
+                if not self.get_config('cgi:%s' % caller, 'allow', 'boolean'):
                     raise ScanariumError('SE_CGI_FORBIDDEN',
                                          'Calling script as cgi is forbidden')
 
@@ -188,7 +202,7 @@ class Scanarium(object):
             error_code = None
             error_message = None
         else:
-            if self.get_config().getboolean('general', 'debug'):
+            if self.get_config('general', 'debug', 'boolean'):
                 traceback.print_exception(*exc_info)
             if isinstance(exc_info[1], ScanariumError):
                 error_code = exc_info[1].code

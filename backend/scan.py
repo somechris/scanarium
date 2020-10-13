@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 def show_image(scanarium, title, image):
-    if scanarium.get_config().getboolean('general', 'debug'):
+    if scanarium.get_config('general', 'debug', 'boolean'):
         cv2.imshow(title, image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
@@ -98,8 +98,8 @@ def turn_landscape(image):
 
 
 def scale_to_paper_size(scanarium, image):
-    paper_width = scanarium.get_config().getint('scan', 'paper_width')
-    paper_height = scanarium.get_config().getint('scan', 'paper_height')
+    paper_width = scanarium.get_config('scan', 'paper_width', 'int')
+    paper_height = scanarium.get_config('scan', 'paper_height', 'int')
 
     height = image.shape[0]
 
@@ -141,7 +141,7 @@ def generate_mask(scanarium, mask_path):
     if not os.path.isfile(mask_path) \
             or os.stat(source_path).st_mtime > os.stat(mask_path).st_mtime:
         command = [
-            scanarium.get_config()['programs']['inkscape'],
+            scanarium.get_config('programs', 'inkscape'),
             '--export-id=Mask',
             '--export-id-only',
             '--export-area-page',
@@ -182,7 +182,7 @@ def crop(image):
 
 
 def balance(scanarium, image):
-    algo = scanarium.get_config()['scan']['white_balance'].lower()
+    algo = scanarium.get_config('scan', 'white_balance').lower()
     if algo in ['simple', 'yes', 'true']:
         wb = cv2.xphoto.createSimpleWB()
         ret = wb.balanceWhite(image)

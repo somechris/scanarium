@@ -10,14 +10,10 @@ import logging
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, SCANARIUM_DIR_ABS)
-from common import SCANARIUM_CONFIG
-from common import BACKEND_DIR_ABS
-from common import FRONTEND_DIR_ABS
-from common import FRONTEND_DYNAMIC_DIR_ABS
-from common import FRONTEND_CGI_DIR_ABS
-from common import get_dynamic_directory
+from common import Scanarium
 del sys.path[0]
 
+scanarium = Scanarium()
 logger = logging.getLogger(__name__)
 
 
@@ -37,13 +33,15 @@ class RequestHandler(http.server.CGIHTTPRequestHandler):
 
     def translate_path(self, path):
         f = super().translate_path(path)
-        if f.startswith(FRONTEND_DYNAMIC_DIR_ABS + os.sep):
-            f = f[len(FRONTEND_DYNAMIC_DIR_ABS + os.sep):]
-            f = os.path.join(get_dynamic_directory(), f)
+        dir = scanarium.get_frontend_dynamic_dir_abs() + os.sep
+        if f.startswith(dir):
+            f = f[len(dir):]
+            f = os.path.join(scanarium.get_dynamic_directory(), f)
             f = os.path.normpath(f)
-        if f.startswith(FRONTEND_CGI_DIR_ABS + os.sep):
-            f = f[len(FRONTEND_CGI_DIR_ABS + os.sep):]
-            f = os.path.join(BACKEND_DIR_ABS, f)
+        dir = scanarium.get_frontend_cgi_bin_dir_abs() + os.sep
+        if f.startswith(dir):
+            f = f[len(dir):]
+            f = os.path.join(scanarium.get_backend_dir_abs(), f)
             if not f.endswith('.py'):
                 f += '.py'
             f = os.path.normpath(f)
@@ -57,7 +55,7 @@ def serve_forever(port):
     # but unconditionally servers from the current directory. As Linux Mint
     # Tricia is still on Python 3.6 and we do not want to exclude such users,
     # we instead chdir to the expected directory.
-    os.chdir(FRONTEND_DIR_ABS)
+    os.chdir(scanarium.get_frontend_dir_abs())
 
     with socketserver.TCPServer(('', port), RequestHandler) as httpd:
         print('-------------------------------------------------------------')
@@ -84,7 +82,7 @@ if __name__ == '__main__':
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('port', metavar='PORT', type=int, nargs='?',
                         help='The port to listen for connections on',
-                        default=SCANARIUM_CONFIG['demo_server']['port'])
+                        default=scanarium.get_config()['demo_server']['port'])
     args = parser.parse_args()
 
     serve_forever(args.port)

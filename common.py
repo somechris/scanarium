@@ -218,19 +218,6 @@ SCANARIUM_CONFIG = scanarium.get_config()
 logging.config.fileConfig(SCANARIUM_CONFIG)
 logger = logging.getLogger(__name__)
 
-BACKEND_DIR_ABS = scanarium.get_backend_dir_abs()
-FRONTEND_DIR_ABS = scanarium.get_frontend_dir_abs()
-FRONTEND_DYNAMIC_DIR_ABS = scanarium.get_frontend_dynamic_dir_abs()
-FRONTEND_CGI_DIR_ABS = scanarium.get_frontend_cgi_bin_dir_abs()
-SCENES_DIR_ABS = scanarium.get_scenes_dir_abs()
-
-
-def get_dynamic_directory():
-    dyn_dir = SCANARIUM_CONFIG['directories']['dynamic']
-    if not os.path.isabs(dyn_dir):
-        dyn_dir = os.path.join(scanarium.get_scanarium_dir_abs(), dyn_dir)
-    return dyn_dir
-
 
 class ScanariumError(RuntimeError):
     def __init__(self, code, message, *args, **kwargs):

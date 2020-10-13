@@ -149,7 +149,7 @@ class Scanarium(object):
 
     def set_display(self):
         if IS_CGI:
-            display = SCANARIUM_CONFIG['cgi']['display']
+            display = self.get_config()['cgi']['display']
             if display:
                 os.environ['DISPLAY'] = display
 
@@ -170,7 +170,8 @@ class Scanarium(object):
                                      'Forbidden characters in cgi name')
 
             if IS_CGI:
-                if not SCANARIUM_CONFIG.getboolean('cgi:%s' % caller, 'allow'):
+                if not self.get_config().getboolean('cgi:%s' % caller,
+                                                    'allow'):
                     raise ScanariumError('SE_CGI_FORBIDDEN',
                                          'Calling script as cgi is forbidden')
 
@@ -187,7 +188,7 @@ class Scanarium(object):
             error_code = None
             error_message = None
         else:
-            if SCANARIUM_CONFIG.getboolean('general', 'debug'):
+            if self.get_config().getboolean('general', 'debug'):
                 traceback.print_exception(*exc_info)
             if isinstance(exc_info[1], ScanariumError):
                 error_code = exc_info[1].code
@@ -211,12 +212,6 @@ class Scanarium(object):
             if payload:
                 print(self.dump_json_string(payload))
         sys.exit(0)
-
-
-scanarium = Scanarium()
-SCANARIUM_CONFIG = scanarium.get_config()
-logging.config.fileConfig(SCANARIUM_CONFIG)
-logger = logging.getLogger(__name__)
 
 
 class ScanariumError(RuntimeError):

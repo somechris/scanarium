@@ -43,7 +43,7 @@ class Scanarium(object):
                     self.__config = self._load_config()
                     return self.__config
             else:
-                raise RuntimeErrore('key, but no section given')
+                raise RuntimeError('key, but no section given')
         else:
             config = self.get_config()
             if kind == 'string':
@@ -53,7 +53,7 @@ class Scanarium(object):
             elif kind == 'int':
                 func = config.getint
             else:
-                raise RuntimeErrore('Unknown config value type "%s"' % (kind))
+                raise RuntimeError('Unknown config value type "%s"' % (kind))
             return func(section, key)
 
     def get_scanarium_dir_abs(self):

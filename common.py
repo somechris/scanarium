@@ -5,8 +5,6 @@ import re
 import sys
 import tempfile
 import traceback
-import logging
-import logging.config
 import configparser
 import cv2
 

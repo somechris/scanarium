@@ -114,7 +114,7 @@ class Scanarium(object):
         self.dump_json(os.path.join(scene_dir, 'actors-latest.json'),
                        actors_latest_data)
 
-    def get_image(self):
+    def get_raw_image(self):
         file_path = self.get_config('scan', 'source')
         if file_path.startswith('cam:'):
             try:
@@ -135,6 +135,32 @@ class Scanarium(object):
             image = cv2.imread(file_path)
 
         return image
+
+    def undistort_image(self, image):
+        ret = image
+        param_file = self.get_config('scan', 'calibration_xml_file')
+        if param_file:
+            try:
+                storage = cv2.FileStorage(param_file, cv2.FileStorage_READ)
+                cam_matrix = storage.getNode('cameraMatrix').mat()
+                dist_coeffs = storage.getNode('dist_coeffs').mat()
+            except Exception:
+                raise ScanariumError(
+                    'SE_LOAD_UNDISTORT',
+                    'Failed to load parameters for undistortion from %s'
+                    % param_file)
+
+            width, height = image.shape[:2]
+            new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(
+                cam_matrix, dist_coeffs, (width, height), 1)
+
+            ret = cv2.undistort(ret, cam_matrix, dist_coeffs, None,
+                                new_camera_matrix)
+        return ret
+
+    def get_image(self):
+        raw = self.get_raw_image()
+        return self.undistort_image(raw)
 
     def dump_json_string(self, data):
         return json.dumps(data, **JSON_DUMP_ARGS)

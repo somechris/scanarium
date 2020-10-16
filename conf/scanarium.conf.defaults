@@ -49,6 +49,21 @@ dynamic = dynamic
 source = cam:0
 
 
+# Parameters for camera calibration
+#
+# Typical camera pictures are distorted a bit and for examlpe do not preserve
+# angles. This is in the way of best detection results. To improve detection
+# quality, you can calibrate your camera. Scanarium can then use this
+# calibration data and make up for part of the camera distortion, which leads to
+# better image detection.
+#
+# Either leave this value empty to perform no distortion, or set it to the
+# name of an XML file holding camera calibration data from OpenCV's
+# interactive camera calibration tool. See
+# https://docs.opencv.org/3.2.0/d7/d21/tutorial_interactive_calibration.html
+calibration_xml_file =
+
+
 # The white-balance filter to apply.
 #
 # Either `simple`, `grayworld`, or `none`.

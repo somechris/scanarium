@@ -19,13 +19,6 @@ del sys.path[0]
 logger = logging.getLogger(__name__)
 
 
-def show_image(scanarium, title, image):
-    if scanarium.get_config('general', 'debug', 'boolean'):
-        cv2.imshow(title, image)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-
 def scale_image(scanarium, image):
     scaled_height = 1000
     if image.shape[0] > scaled_height * 1.3:
@@ -37,7 +30,7 @@ def scale_image(scanarium, image):
         scaled_image = image
         scale_factor = 1
 
-    show_image(scanarium, 'scaled', scaled_image)
+    scanarium.debug_show_image('scaled', scaled_image)
 
     return (scaled_image, scale_factor)
 
@@ -223,7 +216,7 @@ def save_image(scanarium, image, scene, actor):
 def scan_actor_image(scanarium):
     image = scanarium.get_image()
 
-    show_image(scanarium, 'raw_image', image)
+    scanarium.debug_show_image('scanned', image)
 
     # If the picture is too big (E.g.: from a proper photo camera), edge
     # detection won't work reliably, as the sheet's contour will exhibit too
@@ -240,7 +233,7 @@ def scan_actor_image(scanarium):
     image = turn_landscape(image)
     image = scale_to_paper_size(scanarium, image)
 
-    show_image(scanarium, 'before QR extraction', image)
+    scanarium.debug_show_image('before QR extraction', image)
     (qr_rect, scene, actor) = extract_qr(image)
 
     image = orient_image(image, qr_rect.left)
@@ -251,7 +244,7 @@ def scan_actor_image(scanarium):
     # Finally the image is rectified, landscape, and the QR code is in the
     # lower left-hand corner, and white-balance has been run.
 
-    show_image(scanarium, 'final', image)
+    scanarium.debug_show_image('final', image)
     flavor = save_image(scanarium, image, scene, actor)
 
     return {

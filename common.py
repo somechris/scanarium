@@ -114,6 +114,12 @@ class Scanarium(object):
         self.dump_json(os.path.join(scene_dir, 'actors-latest.json'),
                        actors_latest_data)
 
+    def debug_show_image(self, title, image):
+        if self.get_config('general', 'debug', 'boolean'):
+            cv2.imshow(title, image)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
     def get_raw_image(self):
         file_path = self.get_config('scan', 'source')
         if file_path.startswith('cam:'):

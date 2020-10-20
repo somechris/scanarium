@@ -160,6 +160,7 @@ class Scanarium(object):
             new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(
                 cam_matrix, dist_coeffs, (width, height), 1)
 
+            self.debug_show_image('raw before undistorting', image)
             ret = cv2.undistort(ret, cam_matrix, dist_coeffs, None,
                                 new_camera_matrix)
         return ret

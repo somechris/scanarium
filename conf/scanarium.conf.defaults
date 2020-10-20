@@ -76,6 +76,22 @@ calibration_xml_file =
 white_balance = none
 
 
+# Width of camera source
+#
+# If non-empty, force camera sources to the given width (in pixels)
+# width. This is useful to force cameras to a given resolution, if
+# they default to a non-optimal one.
+width =
+
+
+# Height of camera source
+#
+# If non-empty, force camera sources to the given height (in pixels)
+# height. This is useful to force cameras to a given resolution, if
+# they default to a non-optimal one.
+height =
+
+
 # Height of landscape standard paper.
 #
 # Only the ratio between height and width (see `paper_width` below)

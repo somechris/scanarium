@@ -32,7 +32,8 @@ class Scanarium(object):
 
         return config
 
-    def get_config(self, section=None, key=None, kind='string'):
+    def get_config(self, section=None, key=None, kind='string',
+                   allow_empty=False):
         if section is None:
             if key is None:
                 try:
@@ -44,6 +45,8 @@ class Scanarium(object):
                 raise RuntimeError('key, but no section given')
         else:
             config = self.get_config()
+            if allow_empty and config.get(section, key) == '':
+                return None
             if kind == 'string':
                 func = config.get
             elif kind == 'boolean':
@@ -120,6 +123,12 @@ class Scanarium(object):
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 
+    def set_camera_property(self, cap, property, config_key):
+        value = self.get_config('scan', config_key, allow_empty=True,
+                                kind='int')
+        if value is not None:
+            cap.set(property, value)
+
     def get_raw_image(self):
         file_path = self.get_config('scan', 'source')
         if file_path.startswith('cam:'):
@@ -134,6 +143,12 @@ class Scanarium(object):
             if not cap.isOpened():
                 raise ScanariumError('SE_CAP_NOT_OPEN',
                                      'Failed to open camera %d' % (cam_nr))
+
+            # To avoid having to use external programs for basic
+            # camera setup, we set the most basic properties right
+            # within Scanarium
+            self.set_camera_property(cap, cv2.CAP_PROP_FRAME_WIDTH, 'width')
+            self.set_camera_property(cap, cv2.CAP_PROP_FRAME_HEIGHT, 'height')
 
             ret, image = cap.read()
             cap.release()

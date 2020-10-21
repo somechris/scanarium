@@ -1,3 +1,4 @@
+import time
 import os
 import subprocess
 import json
@@ -53,6 +54,8 @@ class Scanarium(object):
                 func = config.getboolean
             elif kind == 'int':
                 func = config.getint
+            elif kind == 'float':
+                func = config.getfloat
             else:
                 raise RuntimeError('Unknown config value type "%s"' % (kind))
             return func(section, key)
@@ -151,6 +154,13 @@ class Scanarium(object):
             self.set_camera_property(cap, cv2.CAP_PROP_FRAME_HEIGHT, 'height')
 
             ret, image = cap.read()
+
+            delay = self.get_config('scan', 'delay', allow_empty=True,
+                                    kind='float')
+            if delay:
+                time.sleep(delay)
+                ret, image = cap.read()
+
             cap.release()
         else:
             image = cv2.imread(file_path)

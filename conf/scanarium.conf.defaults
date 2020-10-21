@@ -92,6 +92,17 @@ width =
 height =
 
 
+# Delay for frame grabbing from cameras
+#
+# Some cameras take some time after initialization to complete
+# auto-white-balancing etc. So images grabbed early after
+# initialization might be off-colour. By waiting some time, say 1
+# second, such cameras allow to get way better images. The `delay`
+# setting allows how specify long to wait (in seconds) before grabbing
+# the frame from cameras. Leave empty for no waiting.
+delay =
+
+
 # Height of landscape standard paper.
 #
 # Only the ratio between height and width (see `paper_width` below)

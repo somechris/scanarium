@@ -1,4 +1,5 @@
 import argparse
+import logging
 import time
 import os
 import subprocess
@@ -16,6 +17,13 @@ IS_CGI = 'REMOTE_ADDR' in os.environ
 if IS_CGI:
     print('Content-Type: application/json')
     print()
+
+LOG_FORMAT = ('%(asctime)s.%(msecs)03d %(levelname)-5s [%(threadName)s] '
+              '%(filename)s:%(lineno)d - %(message)s')
+LOG_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
+
+logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
+logger = logging.getLogger(__name__)
 
 
 class Scanarium(object):

@@ -6,10 +6,15 @@ import sys
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
-from common import Scanarium
+from common import Scanarium, ScanariumError
 del sys.path[0]
 
 logger = logging.getLogger(__name__)
+
+
+def assert_directory(dir):
+    if not os.path.isdir(dir):
+        raise ScanariumError('E_NO_DIR', 'Is not a directory "%s"' % dir)
 
 
 def get_thumbnail_name(dir, file):
@@ -42,31 +47,35 @@ def generate_pdf(scanarium, dir, file):
     scanarium.run(command)
 
 
-def regenerate_actor(scanarium, actor_dir, actor):
+def regenerate_static_content_actor(scanarium, scene, actor):
+    scenes_dir = scanarium.get_scenes_dir_abs()
+    actor_dir = os.path.join(scenes_dir, scene, 'actors', actor)
+    assert_directory(actor_dir)
     generate_thumbnail(scanarium, actor_dir, actor + '.svg', shave=False,
                        erode=True)
     generate_pdf(scanarium, actor_dir, actor + '.svg')
 
 
-def regenerate_actors(scanarium, scene_dir):
-    actors_dir = os.path.join(scene_dir, 'actors')
-    if os.path.isdir(actors_dir):
-        for actor in os.listdir(actors_dir):
-            actor_dir = os.path.join(actors_dir, actor)
-            if os.path.isdir(actor_dir):
-                regenerate_actor(scanarium, actor_dir, actor)
-
-
-def regenerate(scanarium):
+def regenerate_static_content_scene(scanarium, scene):
     scenes_dir = scanarium.get_scenes_dir_abs()
-    if os.path.isdir(scenes_dir):
-        for scene in os.listdir(scenes_dir):
-            scene_dir = os.path.join(scenes_dir, scene)
-            if os.path.isdir(scene_dir):
-                regenerate_actors(scanarium, scene_dir)
+    actors_dir = os.path.join(scenes_dir, scene, 'actors')
+
+    assert_directory(actors_dir)
+
+    for actor in os.listdir(actors_dir):
+        regenerate_static_content_actor(scanarium, scene, actor)
+
+
+def regenerate_static_content(scanarium):
+    scenes_dir = scanarium.get_scenes_dir_abs()
+
+    assert_directory(scenes_dir)
+
+    for scene in os.listdir(scenes_dir):
+        regenerate_static_content_scene(scanarium, scene)
 
 
 if __name__ == "__main__":
     scanarium = Scanarium()
     scanarium.handle_arguments('Regenerates static content')
-    scanarium.call_guarded(regenerate)
+    scanarium.call_guarded(regenerate_static_content)

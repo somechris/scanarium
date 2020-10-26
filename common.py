@@ -284,11 +284,12 @@ class Scanarium(object):
                 print(self.dump_json_string(payload))
         sys.exit(0)
 
-    def handle_arguments(self, description, register_func):
+    def handle_arguments(self, description, register_func=None):
         parser = argparse.ArgumentParser(
             description=description,
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        register_func(parser)
+        if register_func is not None:
+            register_func(parser)
         return parser.parse_args()
 
 

@@ -24,4 +24,6 @@ def show_source(scanarium):
 
 
 if __name__ == "__main__":
-    Scanarium().call_guarded(show_source)
+    scanarium = Scanarium()
+    scanarium.handle_arguments('Shows the camera picture on screen')
+    scanarium.call_guarded(show_source)

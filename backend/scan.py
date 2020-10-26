@@ -261,4 +261,6 @@ def main(scanarium):
 
 
 if __name__ == "__main__":
-    Scanarium().call_guarded(main)
+    scanarium = Scanarium()
+    scanarium.handle_arguments('Scans an processes an image from the camera')
+    scanarium.call_guarded(main)

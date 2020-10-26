@@ -67,4 +67,6 @@ def regenerate(scanarium):
 
 
 if __name__ == "__main__":
-    Scanarium().call_guarded(regenerate)
+    scanarium = Scanarium()
+    scanarium.handle_arguments('Regenerates static content')
+    scanarium.call_guarded(regenerate)

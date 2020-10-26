@@ -25,4 +25,6 @@ def reindex(scanarium):
 
 
 if __name__ == "__main__":
-    Scanarium().call_guarded(reindex)
+    scanarium = Scanarium()
+    scanarium.handle_arguments('Reindexes dynamic content, such as actors')
+    scanarium.call_guarded(reindex)

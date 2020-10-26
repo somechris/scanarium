@@ -296,9 +296,18 @@ class Scanarium(object):
         parser = argparse.ArgumentParser(
             description=description,
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        parser.add_argument('--verbose', '-v', action='count', default=0,
+                            help='Increase verbosity')
+
         if register_func is not None:
             register_func(parser)
-        return parser.parse_args()
+
+        args = parser.parse_args()
+
+        if args.verbose > 0:
+            logging.getLogger().setLevel(logging.DEBUG)
+
+        return args
 
 
 class ScanariumError(RuntimeError):

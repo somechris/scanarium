@@ -2,7 +2,6 @@
 
 import http.server
 import socketserver
-import argparse
 import os
 import sys
 import logging
@@ -76,13 +75,14 @@ def serve_forever(port):
         httpd.serve_forever()
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='Scanarium demo server',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+def register_arguments(parser):
     parser.add_argument('port', metavar='PORT', type=int, nargs='?',
                         help='The port to listen for connections on',
                         default=scanarium.get_config('demo_server', 'port'))
-    args = parser.parse_args()
+
+
+if __name__ == '__main__':
+    args = scanarium.handle_arguments('Scanarium demo server',
+                                      register_arguments)
 
     serve_forever(args.port)

@@ -1,3 +1,4 @@
+import argparse
 import time
 import os
 import subprocess
@@ -282,6 +283,13 @@ class Scanarium(object):
             if payload:
                 print(self.dump_json_string(payload))
         sys.exit(0)
+
+    def handle_arguments(self, description, register_func):
+        parser = argparse.ArgumentParser(
+            description=description,
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        register_func(parser)
+        return parser.parse_args()
 
 
 class ScanariumError(RuntimeError):

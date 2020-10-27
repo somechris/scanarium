@@ -32,7 +32,7 @@ class Scanarium(object):
 
     def _load_config(self):
         config = configparser.ConfigParser()
-        config_dir_abs = self.get_relative_dir_abs('conf')
+        config_dir_abs = self.get_config_dir_abs()
 
         config.read(os.path.join(config_dir_abs, 'scanarium.conf.defaults'))
 
@@ -74,6 +74,9 @@ class Scanarium(object):
 
     def get_relative_dir_abs(self, relative_dir):
         return os.path.join(self.get_scanarium_dir_abs(), relative_dir)
+
+    def get_config_dir_abs(self):
+        return self.get_relative_dir_abs('conf')
 
     def get_backend_dir_abs(self):
         return self.get_relative_dir_abs('backend')

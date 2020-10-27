@@ -62,10 +62,11 @@ def register_svg_namespaces():
         ET.register_namespace(k, v)
 
 
-def file_needs_update(destination, source):
+def file_needs_update(destination, sources):
     ret = True
     if os.path.isfile(destination):
-        ret = os.stat(destination).st_mtime < os.stat(source).st_mtime
+        ret = any(os.stat(destination).st_mtime < os.stat(source).st_mtime
+                  for source in sources)
     return ret
 
 
@@ -86,12 +87,21 @@ def filter_svg_tree(tree, scene, actor):
         element.tail = filter_text(element.tail)
 
 
+def append_svg_layers(base, addition):
+    root = base.getroot()
+    for layer in addition.findall('./{http://www.w3.org/2000/svg}g'):
+        root.append(layer)
+
+
 def generate_full_svg(scanarium, dir, scene, actor):
     undecorated_name = os.path.join(dir, actor + '-undecorated.svg')
+    decoration_name = os.path.join(scanarium.get_config_dir_abs(),
+                                   'actor-decoration.svg')
     full_name = os.path.join(dir, actor + '.svg')
-    if file_needs_update(full_name, undecorated_name):
+    if file_needs_update(full_name, [undecorated_name, decoration_name]):
         register_svg_namespaces()
         tree = ET.parse(undecorated_name)
+        append_svg_layers(tree, ET.parse(decoration_name))
         filter_svg_tree(tree, scene, actor)
         tree.write(full_name)
 

@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.50536287"
-     inkscape:cx="1381.4232"
-     inkscape:cy="638.32868"
+     inkscape:zoom="1.7885108"
+     inkscape:cx="176.56195"
+     inkscape:cy="191.02917"
      inkscape:document-units="mm"
      inkscape:current-layer="Meta"
      showgrid="false"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -55,5 +55,16 @@
      inkscape:label="Meta"
      style="display:inline"
      transform="translate(0,-308.2677)">
+    <text
+       xml:space="preserve"
+       style="color:#000000;line-height:0%;letter-spacing:0px;word-spacing:0px;display:inline;overflow:visible;visibility:visible;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
+       x="34.782681"
+       y="1014.433"
+       id="text2990"><tspan
+         sodipodi:role="line"
+         id="tspan2992"
+         x="34.782681"
+         y="1014.433"
+         style="font-size:12px;line-height:1.25">{SCENE}:{ACTOR}</tspan></text>
   </g>
 </svg>

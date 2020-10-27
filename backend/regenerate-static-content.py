@@ -58,33 +58,36 @@ def regenerate_static_content_actor(scanarium, scene, actor):
     generate_pdf(scanarium, actor_dir, actor + '.svg')
 
 
-def regenerate_static_content_scene(scanarium, scene):
+def regenerate_static_content_scene(scanarium, scene, actor=None):
     scenes_dir = scanarium.get_scenes_dir_abs()
     actors_dir = os.path.join(scenes_dir, scene, 'actors')
 
     assert_directory(actors_dir)
 
-    for actor in os.listdir(actors_dir):
+    actors = os.listdir(actors_dir) if actor is None else [actor]
+    for actor in actors:
         regenerate_static_content_actor(scanarium, scene, actor)
 
 
-def regenerate_static_content(scanarium, scene=None):
+def regenerate_static_content(scanarium, scene=None, actor=None):
     scenes_dir = scanarium.get_scenes_dir_abs()
 
     assert_directory(scenes_dir)
 
     scenes = os.listdir(scenes_dir) if scene is None else [scene]
     for scene in scenes:
-        regenerate_static_content_scene(scanarium, scene)
+        regenerate_static_content_scene(scanarium, scene, actor)
 
 
 def register_arguments(parser):
     parser.add_argument('SCENE', nargs='?',
                         help='Regenerate only scene SCENE')
+    parser.add_argument('ACTOR', nargs='?',
+                        help='Regenerate only actor ACTOR')
 
 
 if __name__ == "__main__":
     scanarium = Scanarium()
     args = scanarium.handle_arguments('Regenerates all static content',
                                       register_arguments)
-    scanarium.call_guarded(regenerate_static_content, args.SCENE)
+    scanarium.call_guarded(regenerate_static_content, args.SCENE, args.ACTOR)

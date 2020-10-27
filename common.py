@@ -233,7 +233,7 @@ class Scanarium(object):
             if display:
                 os.environ['DISPLAY'] = display
 
-    def call_guarded(self, func):
+    def call_guarded(self, func, *args, **kwargs):
         try:
             caller = traceback.extract_stack()[-2].filename
             if not os.path.isabs(caller):
@@ -256,7 +256,7 @@ class Scanarium(object):
 
             self.set_display()
 
-            payload = func(self)
+            payload = func(self, *args, **kwargs)
         except:  # noqa: E722
             self.result(payload='Failed', exc_info=sys.exc_info())
 

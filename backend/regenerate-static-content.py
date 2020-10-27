@@ -48,6 +48,8 @@ def generate_pdf(scanarium, dir, file):
 
 
 def regenerate_static_content_actor(scanarium, scene, actor):
+    logging.debug(
+        f'Regenerating content for scene "{scene}", actor "{actor}" ...')
     scenes_dir = scanarium.get_scenes_dir_abs()
     actor_dir = os.path.join(scenes_dir, scene, 'actors', actor)
     assert_directory(actor_dir)

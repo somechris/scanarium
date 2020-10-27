@@ -3,6 +3,8 @@
 /conf/scanarium.conf
 /dynamic
 /frontend/phaser-3.11.0.js
+/scenes/*/actors/*/*.svg
+!/scenes/*/actors/*/*-undecorated.svg
 /scenes/*/actors/*/*-mask.png
 /scenes/*/actors/*/*-thumb.jpg
 /scenes/*/actors/*/*.pdf

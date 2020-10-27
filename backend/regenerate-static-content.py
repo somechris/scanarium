@@ -3,6 +3,7 @@
 import os
 import logging
 import sys
+import xml.etree.ElementTree as ET
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
@@ -46,6 +47,33 @@ def generate_pdf(scanarium, dir, file):
 
     scanarium.run(command)
 
+def register_svg_namespaces():
+    namespaces = {
+        'dc': 'http://purl.org/dc/elements/1.1/',
+        'cc': 'http://creativecommons.org/ns#',
+        'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+        'svg': 'http://www.w3.org/2000/svg',
+        '': 'http://www.w3.org/2000/svg',
+        'sodipodi': 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
+        'inkscape': 'http://www.inkscape.org/namespaces/inkscape',
+        }
+    for k, v in namespaces.items():
+        ET.register_namespace(k, v)
+
+
+def file_needs_update(destination, source):
+    ret = True
+    if os.path.isfile(destination):
+        ret = os.stat(destination).st_mtime < os.stat(source).st_mtime
+    return ret
+
+def generate_full_svg(scanarium, dir, actor):
+    undecorated_name = os.path.join(dir, actor + '-undecorated.svg')
+    full_name = os.path.join(dir, actor + '.svg')
+    if file_needs_update(full_name, undecorated_name):
+        register_svg_namespaces()
+        tree = ET.parse(undecorated_name)
+        tree.write(full_name)
 
 def regenerate_static_content_actor(scanarium, scene, actor):
     logging.debug(
@@ -53,6 +81,7 @@ def regenerate_static_content_actor(scanarium, scene, actor):
     scenes_dir = scanarium.get_scenes_dir_abs()
     actor_dir = os.path.join(scenes_dir, scene, 'actors', actor)
     assert_directory(actor_dir)
+    generate_full_svg(scanarium, actor_dir, actor)
     generate_thumbnail(scanarium, actor_dir, actor + '.svg', shave=False,
                        erode=True)
     generate_pdf(scanarium, actor_dir, actor + '.svg')

@@ -47,6 +47,7 @@ def generate_pdf(scanarium, dir, file):
 
     scanarium.run(command)
 
+
 def register_svg_namespaces():
     namespaces = {
         'dc': 'http://purl.org/dc/elements/1.1/',
@@ -56,7 +57,7 @@ def register_svg_namespaces():
         '': 'http://www.w3.org/2000/svg',
         'sodipodi': 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
         'inkscape': 'http://www.inkscape.org/namespaces/inkscape',
-        }
+    }
     for k, v in namespaces.items():
         ET.register_namespace(k, v)
 
@@ -67,11 +68,12 @@ def file_needs_update(destination, source):
         ret = os.stat(destination).st_mtime < os.stat(source).st_mtime
     return ret
 
+
 def filter_svg_tree(tree, scene, actor):
     text_replacements = {
         '{ACTOR}': actor,
         '{SCENE}': scene,
-        }
+    }
 
     def filter_text(text):
         if text is not None:
@@ -83,6 +85,7 @@ def filter_svg_tree(tree, scene, actor):
         element.text = filter_text(element.text)
         element.tail = filter_text(element.tail)
 
+
 def generate_full_svg(scanarium, dir, scene, actor):
     undecorated_name = os.path.join(dir, actor + '-undecorated.svg')
     full_name = os.path.join(dir, actor + '.svg')
@@ -91,6 +94,7 @@ def generate_full_svg(scanarium, dir, scene, actor):
         tree = ET.parse(undecorated_name)
         filter_svg_tree(tree, scene, actor)
         tree.write(full_name)
+
 
 def regenerate_static_content_actor(scanarium, scene, actor):
     logging.debug(

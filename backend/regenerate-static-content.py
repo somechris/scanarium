@@ -68,16 +68,23 @@ def regenerate_static_content_scene(scanarium, scene):
         regenerate_static_content_actor(scanarium, scene, actor)
 
 
-def regenerate_static_content(scanarium):
+def regenerate_static_content(scanarium, scene=None):
     scenes_dir = scanarium.get_scenes_dir_abs()
 
     assert_directory(scenes_dir)
 
-    for scene in os.listdir(scenes_dir):
+    scenes = os.listdir(scenes_dir) if scene is None else [scene]
+    for scene in scenes:
         regenerate_static_content_scene(scanarium, scene)
+
+
+def register_arguments(parser):
+    parser.add_argument('SCENE', nargs='?',
+                        help='Regenerate only scene SCENE')
 
 
 if __name__ == "__main__":
     scanarium = Scanarium()
-    scanarium.handle_arguments('Regenerates static content')
-    scanarium.call_guarded(regenerate_static_content)
+    args = scanarium.handle_arguments('Regenerates all static content',
+                                      register_arguments)
+    scanarium.call_guarded(regenerate_static_content, args.SCENE)

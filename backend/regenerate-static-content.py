@@ -67,12 +67,29 @@ def file_needs_update(destination, source):
         ret = os.stat(destination).st_mtime < os.stat(source).st_mtime
     return ret
 
-def generate_full_svg(scanarium, dir, actor):
+def filter_svg_tree(tree, scene, actor):
+    text_replacements = {
+        '{ACTOR}': actor,
+        '{SCENE}': scene,
+        }
+
+    def filter_text(text):
+        if text is not None:
+            for k, v in text_replacements.items():
+                text = text.replace(k, v)
+        return text
+
+    for element in tree.iter():
+        element.text = filter_text(element.text)
+        element.tail = filter_text(element.tail)
+
+def generate_full_svg(scanarium, dir, scene, actor):
     undecorated_name = os.path.join(dir, actor + '-undecorated.svg')
     full_name = os.path.join(dir, actor + '.svg')
     if file_needs_update(full_name, undecorated_name):
         register_svg_namespaces()
         tree = ET.parse(undecorated_name)
+        filter_svg_tree(tree, scene, actor)
         tree.write(full_name)
 
 def regenerate_static_content_actor(scanarium, scene, actor):
@@ -81,7 +98,7 @@ def regenerate_static_content_actor(scanarium, scene, actor):
     scenes_dir = scanarium.get_scenes_dir_abs()
     actor_dir = os.path.join(scenes_dir, scene, 'actors', actor)
     assert_directory(actor_dir)
-    generate_full_svg(scanarium, actor_dir, actor)
+    generate_full_svg(scanarium, actor_dir, scene, actor)
     generate_thumbnail(scanarium, actor_dir, actor + '.svg', shave=False,
                        erode=True)
     generate_pdf(scanarium, actor_dir, actor + '.svg')

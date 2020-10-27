@@ -70,7 +70,7 @@
          id="tspan2992"
          x="34.782681"
          y="1014.433"
-         style="line-height:1.25">space:FlyingSaucer</tspan></text>
+         style="line-height:1.25">{SCENE}:{ACTOR}</tspan></text>
   </g>
   <g
      inkscape:label="Mask"

@@ -70,7 +70,7 @@
          id="tspan2992"
          x="34.782681"
          y="1014.433"
-         style="font-size:12px;line-height:1.25">balloons:Simple</tspan></text>
+         style="font-size:12px;line-height:1.25">{SCENE}:{ACTOR}</tspan></text>
   </g>
   <g
      inkscape:label="Mask"

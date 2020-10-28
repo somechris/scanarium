@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.7885108"
-     inkscape:cx="176.56195"
-     inkscape:cy="191.02917"
+     inkscape:zoom="0.31616703"
+     inkscape:cx="-483.95474"
+     inkscape:cy="326.88655"
      inkscape:document-units="mm"
      inkscape:current-layer="Meta"
      showgrid="false"
@@ -66,5 +66,13 @@
          x="34.782681"
          y="1014.433"
          style="font-size:12px;line-height:1.25">{SCENE}:{ACTOR}</tspan></text>
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:7.08661461;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect9"
+       width="9.9212599"
+       height="9.9212599"
+       x="35.433071"
+       y="989.29138"
+       qr-pixel="true" />
   </g>
 </svg>

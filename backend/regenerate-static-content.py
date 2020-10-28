@@ -4,6 +4,7 @@ import os
 import logging
 import sys
 import xml.etree.ElementTree as ET
+import qrcode
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
@@ -70,6 +71,49 @@ def file_needs_update(destination, sources):
     return ret
 
 
+def get_qr_path_string(x, y, x_unit, y_unit, data):
+    ret = ''
+
+    # While qrcode allows to generate an SVG path element through
+    # qrcode.image.svg.SvgPathImage, its's interface is not a close match
+    # here. Also the unit setting is weird as dimensions get unconditionally
+    # divided by 10. And finally, Python's qrcode libraries are not too active
+    # these days, so we would not want to tie us too closely to any of
+    # them. So we do the image -> svg transformation manually, as it's simple
+    # enough, gives us more flexibility and untangles us from qrcode
+    # internals.
+    data_image = qrcode.make(data, box_size=1, border=0,
+                             error_correction=qrcode.constants.ERROR_CORRECT_L)
+    width = data_image.width
+    height = data_image.height
+    dot = f'h {x_unit:f} v {y_unit:f} h {-x_unit:f} Z'
+    for j in range(0, height):
+        for i in range(0, width):
+            if data_image.getpixel((i, j)) == 0:
+                ret += f'M {(x+i*x_unit):f} {(y-(height-j-1)*y_unit):f} {dot} '
+
+    return ret
+
+
+def expand_qr_pixel_to_qr_code(element, data):
+    x = float(element.get("x"))
+    y = float(element.get("y"))
+    x_unit = float(element.get("width"))
+    y_unit = float(element.get("height"))
+
+    element.tag = 'path'
+    element.set('d', get_qr_path_string(x, y, x_unit, y_unit, data))
+
+    for attrib in [
+        "x",
+        "y",
+        "width",
+        "height",
+        "qr-pixel",
+    ]:
+        del(element.attrib[attrib])
+
+
 def filter_svg_tree(tree, scene, actor):
     text_replacements = {
         '{ACTOR}': actor,
@@ -85,6 +129,10 @@ def filter_svg_tree(tree, scene, actor):
     for element in tree.iter():
         element.text = filter_text(element.text)
         element.tail = filter_text(element.tail)
+
+    for qr_element in list(tree.iter("{http://www.w3.org/2000/svg}rect")):
+        if qr_element.attrib.get('qr-pixel', 'false') == 'true':
+            expand_qr_pixel_to_qr_code(qr_element, '%s:%s' % (scene, actor))
 
 
 def append_svg_layers(base, addition):

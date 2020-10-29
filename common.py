@@ -1,4 +1,5 @@
 import argparse
+import locale
 import logging
 import time
 import os
@@ -10,6 +11,8 @@ import tempfile
 import traceback
 import configparser
 import cv2
+
+locale.resetlocale()
 
 JSON_DUMP_ARGS = {'indent': 2, 'sort_keys': True}
 

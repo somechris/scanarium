@@ -221,7 +221,9 @@ class Scanarium(object):
 
     def run(self, command, check=True, timeout=10):
         try:
-            subprocess.run(command, check=check, timeout=timeout)
+            process = subprocess.run(
+                command, check=check, timeout=timeout, stdout=subprocess.PIPE,
+                universal_newlines=True)
         except subprocess.TimeoutExpired:
             raise ScanariumError('SE_TIMEOUT', 'The command "%s" did not '
                                  'finish within %d seconds' % (str(command),
@@ -229,6 +231,7 @@ class Scanarium(object):
         except subprocess.CalledProcessError:
             raise ScanariumError('SE_RETURN_VALUE', 'The command "%s" did '
                                  'not return 0' % (str(command)))
+        return process.stdout
 
     def set_display(self):
         if IS_CGI:

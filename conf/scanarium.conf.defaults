@@ -17,6 +17,13 @@ debug = False
 # The binary to start Inkscape
 inkscape = inkscape
 
+
+# Default dpi for inkscape.
+#
+# This is 90 for Inkscape 0.91 and lower, and 96 for Inkscape 0.92 and later.
+inkscape_dpi = 96
+
+
 # The binary for ImageMagick's convert
 convert = convert
 

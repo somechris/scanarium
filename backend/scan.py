@@ -74,9 +74,7 @@ def find_rect_points(image, decreasingArea=True, required_points=[]):
     if approx is None:
         raise ScanariumError('SE_SCAN_NO_APPROX',
                              'Failed to find rectangle contour')
-
-    points = approx.reshape(4, 2)
-    return points
+    return approx
 
 
 def distance(pointA, pointB):
@@ -116,12 +114,21 @@ def rectify(scanarium, image, decreasingArea=True, required_points=[]):
     scaled_points = [(int(point[0] * scale_factor),
                       int(point[1] * scale_factor)
                       ) for point in required_points]
-    rect_points = find_rect_points(scaled_image, decreasingArea, scaled_points)
+    found_points_scaled = find_rect_points(scaled_image, decreasingArea,
+                                           scaled_points)
+    found_points = (found_points_scaled / scale_factor).astype('float32')
 
-    # todo: Check if subpixel corner detection improves the overall result
+    grey_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    if scanarium.get_config('scan', 'sub_pixel_corners', 'boolean'):
+        search_window = (5, 5)
+        rectify_points = cv2.cornerSubPix(
+            grey_image, found_points, search_window, (-1, -1),
+            (cv2.TERM_CRITERIA_EPS + cv2.TermCriteria_COUNT, 20, 0.03))
+    else:
+        rectify_points = found_points
 
     # Now rectifying using the original (!) image.
-    image = rectify_by_rect_points(image, rect_points / scale_factor)
+    image = rectify_by_rect_points(image, rectify_points.reshape(4, 2))
     return image
 
 

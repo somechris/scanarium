@@ -83,6 +83,14 @@ calibration_xml_file =
 white_balance = none
 
 
+# Whether to refine found corners to sub-pixel resolution
+#
+# Refining corners to sub-pixel resolution takes some time, but slightly
+# improves accuracy for low-resolution cameras. For 720p cameras and beyond,
+# the improvement is neglectible.
+sub_pixel_corners = False
+
+
 # Width of camera source
 #
 # If non-empty, force camera sources to the given width (in pixels)

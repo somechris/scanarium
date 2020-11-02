@@ -138,6 +138,7 @@ class Scanarium(object):
     def debug_show_image(self, title, image):
         if self.get_config('general', 'debug', 'boolean'):
             cv2.imshow(title, image)
+            locale.resetlocale()
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 

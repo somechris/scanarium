@@ -158,17 +158,6 @@ def rectify_to_biggest_rect(scanarium, image):
     return rectify(scanarium, image, decreasingArea=True)
 
 
-def scale_to_paper_size(scanarium, image):
-    paper_width = scanarium.get_config('scan', 'paper_width', 'int')
-    paper_height = scanarium.get_config('scan', 'paper_height', 'int')
-
-    height = image.shape[0]
-
-    width = int(height * paper_width / paper_height)
-    dimension = (width, height)
-    return cv2.resize(image, dimension, cv2.INTER_AREA)
-
-
 def extract_qr(image):
     codes = pyzbar.decode(image)
     if len(codes) != 1:

@@ -51,13 +51,13 @@ def generate_pdf(scanarium, dir, file):
 
 def register_svg_namespaces():
     namespaces = {
-        'dc': 'http://purl.org/dc/elements/1.1/',
-        'cc': 'http://creativecommons.org/ns#',
-        'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-        'svg': 'http://www.w3.org/2000/svg',
         '': 'http://www.w3.org/2000/svg',
-        'sodipodi': 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
+        'cc': 'http://creativecommons.org/ns#',
+        'dc': 'http://purl.org/dc/elements/1.1/',
         'inkscape': 'http://www.inkscape.org/namespaces/inkscape',
+        'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+        'sodipodi': 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
+        'svg': 'http://www.w3.org/2000/svg',
     }
     for k, v in namespaces.items():
         ET.register_namespace(k, v)

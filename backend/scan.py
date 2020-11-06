@@ -5,12 +5,10 @@ import os
 import re
 import time
 import sys
-import locale
 
 import cv2
 import numpy as np
 from pyzbar import pyzbar
-import xml.etree.ElementTree as ET
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
@@ -186,137 +184,9 @@ def orient_image(image):
     return image
 
 
-def get_svg_document_to_user_dpi_factors(scanarium, tree):
-    root = tree.getroot()
-
-    def to_inch(name, default):
-        raw = root.attrib.get(name, default)
-        ret = 0
-        if raw.endswith('mm'):
-            ret = float(raw[:-2]) / 25.4
-        elif raw.endswitch('in'):
-            ret = float(raw[:-2])
-        else:
-            ret = float(raw)
-        return ret
-
-    paper_width = scanarium.get_config('scan', 'paper_width', 'int')
-    paper_height = scanarium.get_config('scan', 'paper_height', 'int')
-    width = to_inch('width', '%dmm' % (paper_width))
-    height = to_inch('height', '%dmm' % (paper_height))
-    view_box = root.attrib.get('viewBox',
-                               '0 0 %d %d' % (paper_width, paper_height)
-                               ).split(' ')
-    view_box_width = float(view_box[2]) - float(view_box[0])
-    view_box_height = float(view_box[3]) - float(view_box[1])
-    document_dpi_x = view_box_width / width
-    document_dpi_y = view_box_height / height
-    inkscape_dpi = scanarium.get_config('programs', 'inkscape_dpi', 'int')
-    document_to_user_factor_x = inkscape_dpi / document_dpi_x
-    document_to_user_factor_y = inkscape_dpi / document_dpi_y
-
-    return (document_to_user_factor_x, document_to_user_factor_y)
-
-
-def get_svg_contour_rect_stroke_width(tree):
-    stroke_width = 0
-    try:
-        path = './/{http://www.w3.org/2000/svg}rect[@id="contour"]'
-        contour = tree.find(path)
-        for setting in contour.attrib.get('style', '').split(';'):
-            k_raw, v_raw = setting.split(':', 1)
-            if k_raw.strip() == 'stroke-width':
-                stroke_width = float(v_raw.strip())
-    except Exception:
-        logging.exception('Failed to parse "stroke-width"')
-
-    return stroke_width
-
-
-def get_svg_contour_rect_area(scanarium, svg_path):
-    # We want to determine the white inner area of the rect with id
-    # `contour` in user coordinates. Ideally, Inkscape would allow to access
-    # that directly. However, its `--query*` arguments only allow to get the
-    # rect's outer dimensions. But we need the rect's inner dimensions
-    # (without border). So we have to compute that manually.
-    # This is a 5 step process:
-    # 1. Determine the factor from document units to user units
-    # 2. Extract the stroke width from the document
-    # 3. Scale it accordingly
-    # 4. Determine contour rect position and dimension
-    # 5. Compute contour's inner rect
-
-    # 1. Determine the factor from document units to user units
-    tree = ET.parse(svg_path)
-    document_to_user_factor_x, document_to_user_factor_y = \
-        get_svg_document_to_user_dpi_factors(scanarium, tree)
-
-    # 2. Extract the stroke width from the document
-    stroke_width = get_svg_contour_rect_stroke_width(tree)
-
-    # 3. Scale it accordingly
-    user_stroke_width_x = stroke_width * document_to_user_factor_x
-    user_stroke_width_y = stroke_width * document_to_user_factor_y
-
-    # 4. Determine contour rect position and dimension
-    inkscape_dpi = scanarium.get_config('programs', 'inkscape_dpi', 'float')
-    paper_width = scanarium.get_config('scan', 'paper_width', 'int')
-    paper_height = scanarium.get_config('scan', 'paper_height', 'int')
-
-    x = 0
-    y = 0
-    width = inkscape_dpi / 25.4 * paper_width
-    height = inkscape_dpi / 25.4 * paper_height
-
-    command = [
-        scanarium.get_config('programs', 'inkscape'),
-        '--query-all',
-        svg_path,
-    ]
-    element_sizes = scanarium.run(command).split('\n')
-    for element_size in element_sizes:
-        if element_size.startswith('contour,'):
-            x, y, width, height = map(float, element_size.split(',')[1:])
-
-    # 5. Compute contour's inner rect
-    # Since we want Python 3.6 compatibility, we cannot use %n and need to
-    # resort to locale.format_string with %f.
-    return locale.format_string('%f:%f:%f:%f', (
-        (x + user_stroke_width_x),
-        (y + user_stroke_width_y),
-        (x + width - user_stroke_width_x),
-        (y + height - user_stroke_width_y),
-    ))
-
-
-def generate_mask(scanarium, mask_path):
-    source_path = mask_path[:-9] + '.svg'
-
-    if not os.path.isfile(source_path):
-        raise ScanariumError('SE_SCAN_NO_SOURCE_FOR_MASK',
-                             'Failed to find source file for generating mask')
-
-    if not os.path.isfile(mask_path) \
-            or os.stat(source_path).st_mtime > os.stat(mask_path).st_mtime:
-        contour_area = get_svg_contour_rect_area(scanarium, source_path)
-        command = [
-            scanarium.get_config('programs', 'inkscape'),
-            '--export-id=Mask',
-            '--export-id-only',
-            f'--export-area={contour_area}',
-            '--export-background=black',
-            '--export-png=%s' % (mask_path),
-            source_path,
-        ]
-
-        scanarium.run(command)
-
-
 def mask(scanarium, image, scene, actor):
     masked_file_path = os.path.join(scanarium.get_scenes_dir_abs(), scene,
                                     'actors', actor, '%s-mask.png' % actor)
-    generate_mask(scanarium, masked_file_path)
-
     if not os.path.isfile(masked_file_path):
         raise ScanariumError('SE_SCAN_NO_MASK', 'Failed to find mask')
 

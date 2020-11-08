@@ -233,7 +233,7 @@ def expand_qr_pixel_to_qr_code(element, data):
     x_unit = float(element.get("width"))
     y_unit = float(element.get("height"))
 
-    element.tag = 'path'
+    element.tag = '{http://www.w3.org/2000/svg}path'
     element.set('d', get_qr_path_string(x, y, x_unit, y_unit, data))
 
     for attrib in [

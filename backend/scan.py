@@ -249,6 +249,26 @@ def save_image(scanarium, image, scene, actor):
     return timestamp
 
 
+def process_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
+    image = rectify_to_qr_parent_rect(scanarium, image, qr_rect)
+    image = orient_image(image)
+    image = mask(scanarium, image, scene, actor)
+    image = crop(image)
+    image = balance(scanarium, image)
+
+    # Finally the image is rectified, landscape, and the QR code is in the
+    # lower left-hand corner, and white-balance has been run.
+
+    scanarium.debug_show_image('final', image)
+    flavor = save_image(scanarium, image, scene, actor)
+
+    return {
+        'scene': scene,
+        'actor': actor,
+        'flavor': flavor,
+    }
+
+
 def scan_actor_image(scanarium):
     image = scanarium.get_image()
 
@@ -271,7 +291,6 @@ def scan_actor_image(scanarium):
                                  'Failed to identify sheet on scanned image')
         try:
             (qr_rect, scene, actor) = extract_qr(image)
-            image = rectify_to_qr_parent_rect(scanarium, image, qr_rect)
         except ScanariumError as e:
             if e.code == 'SE_SCAN_NO_QR_CODE':
                 # QR code could not get scanned. Probably, because the image
@@ -284,22 +303,7 @@ def scan_actor_image(scanarium):
 
         iteration += 1
 
-    image = orient_image(image)
-    image = mask(scanarium, image, scene, actor)
-    image = crop(image)
-    image = balance(scanarium, image)
-
-    # Finally the image is rectified, landscape, and the QR code is in the
-    # lower left-hand corner, and white-balance has been run.
-
-    scanarium.debug_show_image('final', image)
-    flavor = save_image(scanarium, image, scene, actor)
-
-    return {
-        'scene': scene,
-        'actor': actor,
-        'flavor': flavor,
-    }
+    return process_image_with_qr_code(scanarium, image, qr_rect, scene, actor)
 
 
 def main(scanarium):

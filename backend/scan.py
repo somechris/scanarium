@@ -262,6 +262,8 @@ def process_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
     scanarium.debug_show_image('final', image)
     flavor = save_image(scanarium, image, scene, actor)
 
+    scanarium.reindex_actors_for_scene(scene)
+
     return {
         'scene': scene,
         'actor': actor,
@@ -307,9 +309,7 @@ def scan_actor_image(scanarium):
 
 
 def main(scanarium):
-    ret = scan_actor_image(scanarium)
-    scanarium.reindex_actors_for_scene(ret['scene'])
-    return ret
+    return scan_actor_image(scanarium)
 
 
 if __name__ == "__main__":

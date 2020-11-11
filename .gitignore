@@ -1,5 +1,5 @@
+__pycache__
 /.tox
-/__pycache__
 /conf/scanarium.conf
 /dynamic
 /frontend/phaser-3.11.0.js

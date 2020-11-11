@@ -9,8 +9,8 @@ import re
 import sys
 import tempfile
 import traceback
-import configparser
 import cv2
+import scanarium
 
 locale.resetlocale()
 
@@ -32,45 +32,11 @@ logger = logging.getLogger(__name__)
 class Scanarium(object):
     def __init__(self):
         super(Scanarium, self).__init__()
-
-    def _load_config(self):
-        config = configparser.ConfigParser()
-        config_dir_abs = self.get_config_dir_abs()
-
-        config.read(os.path.join(config_dir_abs, 'scanarium.conf.defaults'))
-
-        config_file_abs = os.path.join(config_dir_abs, 'scanarium.conf')
-        if os.path.isfile(config_file_abs):
-            config.read(config_file_abs)
-
-        return config
+        self._config = scanarium.Config(self.get_config_dir_abs())
 
     def get_config(self, section=None, key=None, kind='string',
                    allow_empty=False):
-        if section is None:
-            if key is None:
-                try:
-                    return self.__config
-                except AttributeError:
-                    self.__config = self._load_config()
-                    return self.__config
-            else:
-                raise RuntimeError('key, but no section given')
-        else:
-            config = self.get_config()
-            if allow_empty and config.get(section, key) == '':
-                return None
-            if kind == 'string':
-                func = config.get
-            elif kind == 'boolean':
-                func = config.getboolean
-            elif kind == 'int':
-                func = config.getint
-            elif kind == 'float':
-                func = config.getfloat
-            else:
-                raise RuntimeError('Unknown config value type "%s"' % (kind))
-            return func(section, key)
+        return self._config.get(section, key, kind, allow_empty)
 
     def get_scanarium_dir_abs(self):
         return os.path.dirname(os.path.abspath(__file__))

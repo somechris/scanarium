@@ -4,17 +4,13 @@ import logging
 import time
 import os
 import subprocess
-import json
 import re
 import sys
-import tempfile
 import traceback
 import cv2
 import scanarium
 
 locale.resetlocale()
-
-JSON_DUMP_ARGS = {'indent': 2, 'sort_keys': True}
 
 IS_CGI = 'REMOTE_ADDR' in os.environ
 if IS_CGI:
@@ -33,6 +29,7 @@ class Scanarium(object):
     def __init__(self):
         super(Scanarium, self).__init__()
         self._config = scanarium.Config(self.get_config_dir_abs())
+        self._dumper = scanarium.Dumper()
 
     def get_config(self, section=None, key=None, kind='string',
                    allow_empty=False):
@@ -97,9 +94,10 @@ class Scanarium(object):
                     latest = [f for f in flavors_sorted[:10]]
                     actors_latest_data['actors'][actor] = latest
 
-        self.dump_json(os.path.join(scene_dir, 'actors.json'), actors_data)
-        self.dump_json(os.path.join(scene_dir, 'actors-latest.json'),
-                       actors_latest_data)
+        self._dumper.dump_json(os.path.join(scene_dir, 'actors.json'),
+                               actors_data)
+        self._dumper.dump_json(os.path.join(scene_dir, 'actors-latest.json'),
+                               actors_latest_data)
 
     def debug_show_image(self, title, image):
         if self.get_config('general', 'debug', 'boolean'):
@@ -176,19 +174,6 @@ class Scanarium(object):
         raw = self.get_raw_image()
         return self.undistort_image(raw)
 
-    def dump_json_string(self, data):
-        return json.dumps(data, **JSON_DUMP_ARGS)
-
-    def dump_json(self, file, data):
-        dir = os.path.dirname(file)
-        tmp_file = tempfile.NamedTemporaryFile(mode='w+', dir=dir,
-                                               delete=False)
-        try:
-            json.dump(data, tmp_file, **JSON_DUMP_ARGS)
-        finally:
-            tmp_file.close()
-        os.replace(tmp_file.name, file)
-
     def run(self, command, check=True, timeout=10):
         try:
             process = subprocess.run(
@@ -258,14 +243,14 @@ class Scanarium(object):
                 'error_code': error_code,
                 'error_message': error_message,
             }
-            print(self.dump_json_string(capsule))
+            print(self._dumper.dump_json_string(capsule))
         else:
             if exc_info is not None:
                 print('ERROR: %s' % error_code)
                 print(error_message)
                 print()
             if payload:
-                print(self.dump_json_string(payload))
+                print(self._dumper.dump_json_string(payload))
         sys.exit(0)
 
     def handle_arguments(self, description, register_func=None):

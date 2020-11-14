@@ -2,3 +2,4 @@
 
 from .Config import Config
 from .Dumper import Dumper
+from .Indexer import Indexer

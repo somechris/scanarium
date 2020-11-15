@@ -10,6 +10,8 @@ import traceback
 import cv2
 import scanarium
 
+from scanarium import ScanariumError
+
 locale.resetlocale()
 
 IS_CGI = 'REMOTE_ADDR' in os.environ
@@ -240,10 +242,3 @@ class Scanarium(object):
             logging.getLogger().setLevel(logging.DEBUG)
 
         return args
-
-
-class ScanariumError(RuntimeError):
-    def __init__(self, code, message, *args, **kwargs):
-        super(ScanariumError, self).__init__(*args, **kwargs)
-        self.code = code
-        self.message = message

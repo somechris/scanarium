@@ -3,4 +3,5 @@
 from .Config import Config
 from .Dumper import Dumper
 from .Indexer import Indexer
+from .Scanner import Scanner
 from .ScanariumError import ScanariumError

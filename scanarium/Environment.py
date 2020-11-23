@@ -54,7 +54,8 @@ class Environment(object):
             caller = traceback.extract_stack()[-2].filename
             if not os.path.isabs(caller):
                 caller = os.path.join(os.getcwd(), caller)
-            if caller == os.path.join(os.getcwd(), 'common.py'):
+            if caller == os.path.join(os.getcwd(), 'scanarium',
+                                      'Scanarium.py'):
                 caller = traceback.extract_stack()[-3].filename
             if not os.path.isabs(caller):
                 caller = os.path.join(os.getcwd(), caller)

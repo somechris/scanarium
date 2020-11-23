@@ -6,7 +6,7 @@ import sys
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
-from common import Scanarium
+from scanarium import Scanarium
 del sys.path[0]
 
 logger = logging.getLogger(__name__)

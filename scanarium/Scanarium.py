@@ -22,7 +22,7 @@ class Scanarium(object):
         return self._config.get(section, key, kind, allow_empty)
 
     def get_scanarium_dir_abs(self):
-        return os.path.dirname(os.path.abspath(__file__))
+        return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     def get_relative_dir_abs(self, relative_dir):
         return os.path.join(self.get_scanarium_dir_abs(), relative_dir)

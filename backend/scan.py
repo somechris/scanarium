@@ -12,7 +12,7 @@ from pyzbar import pyzbar
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
-from common import Scanarium
+from scanarium import Scanarium
 from scanarium import ScanariumError
 del sys.path[0]
 

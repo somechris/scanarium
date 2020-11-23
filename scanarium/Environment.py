@@ -59,8 +59,6 @@ class Environment(object):
                 caller = traceback.extract_stack()[-3].filename
             if not os.path.isabs(caller):
                 caller = os.path.join(os.getcwd(), caller)
-            if not os.path.isabs(caller):
-                caller = os.path.join(os.getcwd(), caller)
             caller = os.path.normpath(caller)
             start = self._backend_dir_abs + os.sep
             if caller.startswith(start):

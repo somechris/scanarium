@@ -20,35 +20,80 @@ def set_camera_property(config, cap, property, config_key):
         cap.set(property, value)
 
 
-def get_raw_image(config):
+def get_camera_type(config):
+    ret = 'STATIC-IMAGE-CAMERA'
+
     file_path = config.get('scan', 'source')
     if file_path.startswith('cam:'):
+        ret = 'PROPER-CAMERA'
+
+    return ret
+
+
+def open_camera(config):
+    camera = None
+    camera_type = get_camera_type(config)
+    if camera_type == 'PROPER-CAMERA':
         try:
+            file_path = config.get('scan', 'source')
             cam_nr = int(file_path[4:])
         except ValueError:
             raise ScanariumError('SE_VALUE', 'Failed to parse "%s" of source '
                                  '"%s" to number' % (file_path[4:], file_path))
-        cap = cv2.VideoCapture(cam_nr)
+        camera = cv2.VideoCapture(cam_nr)
 
-        if not cap.isOpened():
+        if not camera.isOpened():
             raise ScanariumError('SE_CAP_NOT_OPEN',
                                  'Failed to open camera %d' % (cam_nr))
 
         # To avoid having to use external programs for basic camera setup, we
         # set the most basic properties right within Scanarium
-        set_camera_property(config, cap, cv2.CAP_PROP_FRAME_WIDTH, 'width')
-        set_camera_property(config, cap, cv2.CAP_PROP_FRAME_HEIGHT, 'height')
-
-        ret, image = cap.read()
+        set_camera_property(config, camera, cv2.CAP_PROP_FRAME_WIDTH, 'width')
+        set_camera_property(config, camera, cv2.CAP_PROP_FRAME_HEIGHT,
+                            'height')
 
         delay = config.get('scan', 'delay', allow_empty=True, kind='float')
         if delay:
+            camera.read()
             time.sleep(delay)
-            ret, image = cap.read()
-
-        cap.release()
+    elif camera_type == 'STATIC-IMAGE-CAMERA':
+        camera = camera_type
     else:
+        raise ScanariumError('SE_CAM_TYPE_UNKNOWN',
+                             f'Unknown camera type "{camera_type}"')
+
+    return camera
+
+
+def close_camera(config, camera):
+    camera_type = get_camera_type(config)
+    if camera_type == 'PROPER-CAMERA':
+        camera.release()
+    elif camera_type == 'STATIC-IMAGE-CAMERA':
+        # Camera is static image, nothing to do
+        pass
+    else:
+        raise ScanariumError('SE_CAM_TYPE_UNKNOWN',
+                             f'Unknown camera type "{camera_type}"')
+
+
+def get_raw_image(config, camera=None):
+    manage_camera = camera is None
+    if manage_camera:
+        camera = open_camera(config)
+
+    camera_type = get_camera_type(config)
+    if camera_type == 'PROPER-CAMERA':
+        _, image = camera.read()
+    elif camera_type == 'STATIC-IMAGE-CAMERA':
+        file_path = config.get('scan', 'source')
         image = cv2.imread(file_path)
+    else:
+        raise ScanariumError('SE_CAM_TYPE_UNKNOWN',
+                             f'Unknown camera type "{camera_type}"')
+
+    if manage_camera:
+        close_camera(config, camera)
 
     return image
 

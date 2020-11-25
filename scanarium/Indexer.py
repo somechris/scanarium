@@ -1,4 +1,7 @@
+import logging
 import os
+
+logger = logging.getLogger(__name__)
 
 
 class Indexer(object):
@@ -20,6 +23,7 @@ class Indexer(object):
             for actor in os.listdir(actors_dir):
                 actor_dir = os.path.join(actors_dir, actor)
                 if os.path.isdir(actor_dir):
+                    logging.debug(f'Reindexing scene "{scene}" actor "{actor}" ...')
                     flavor_files = []
                     for flavor in os.listdir(actor_dir):
                         flavor_file = os.path.join(actor_dir, flavor)

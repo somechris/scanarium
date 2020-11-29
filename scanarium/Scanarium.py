@@ -60,6 +60,16 @@ class Scanarium(object):
     def get_image(self):
         return self._scanner.get_image()
 
+    def extract_qr(self, image):
+        return self._scanner.extract_qr(image)
+
+    def process_image_with_qr_code(self, image, qr_rect, scene, actor):
+        return self._scanner.process_image_with_qr_code(
+            self, image, qr_rect, scene, actor)
+
+    def rectify_to_biggest_rect(self, image):
+        return self._scanner.rectify_to_biggest_rect(scanarium, image)
+
     def run(self, command, check=True, timeout=10):
         return self._environment.run(command, check, timeout)
 

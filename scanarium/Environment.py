@@ -20,6 +20,9 @@ logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
 if IS_CGI:
     print('Content-Type: application/json')
     print()
+    # If we're in a cgi, we weed out all arguments. Arguments are reserved for
+    # local callers.
+    sys.argv = sys.argv[0:1]
 
 
 class Environment(object):

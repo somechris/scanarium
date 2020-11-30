@@ -386,8 +386,14 @@ class Scanner(object):
     def debug_show_image(self, title, image):
         debug_show_image(title, image, self._config)
 
-    def get_image(self):
-        raw = get_raw_image(self._config)
+    def open_camera(self):
+        return open_camera(self._config)
+
+    def close_camera(self, camera):
+        return close_camera(self._config, camera)
+
+    def get_image(self, camera=None):
+        raw = get_raw_image(self._config, camera)
         return undistort_image(raw, self._config)
 
     def extract_qr(self, image):

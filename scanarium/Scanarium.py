@@ -57,8 +57,14 @@ class Scanarium(object):
     def debug_show_image(self, title, image):
         self._scanner.debug_show_image(title, image)
 
-    def get_image(self):
-        return self._scanner.get_image()
+    def open_camera(self):
+        return self._scanner.open_camera()
+
+    def close_camera(self, camera):
+        return self._scanner.close_camera(camera)
+
+    def get_image(self, camera=None):
+        return self._scanner.get_image(camera)
 
     def extract_qr(self, image):
         return self._scanner.extract_qr(image)

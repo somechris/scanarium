@@ -16,31 +16,98 @@ logger = logging.getLogger(__name__)
 STABLE_MOVE_DIMENSION_FACTOR = 0.05
 
 
-def is_stable_move(old, new):
-    x_allowance = old.width * STABLE_MOVE_DIMENSION_FACTOR
-    x_stable = abs(old.left - new.left) <= x_allowance
+class QrState(object):
+    def __init__(self):
+        # Data from previous update run
+        self.last_data = None
+        self.last_data_start = 0
 
-    y_allowance = old.height * STABLE_MOVE_DIMENSION_FACTOR
-    y_stable = abs(old.top - new.top) <= y_allowance
+        # Last non-None data
+        self.last_usable_data = None
+        self.last_usable_data_position = 0
+        self.last_usable_data_stable_start = 0
+        self.last_usable_data_scanned = False
 
-    return x_stable and y_stable
+    def is_stable_move(self, new):
+        old = self.last_usable_data_position
+        if old is None:
+            x_stable = False
+            y_stable = False
+        else:
+            x_allowance = old.width * STABLE_MOVE_DIMENSION_FACTOR
+            x_stable = abs(old.left - new.left) <= x_allowance
+
+            y_allowance = old.height * STABLE_MOVE_DIMENSION_FACTOR
+            y_stable = abs(old.top - new.top) <= y_allowance
+
+        return x_stable and y_stable
+
+    def set_last_usable(self, rect, data):
+        self.last_usable_data = data
+        self.last_usable_data_position = rect
+        self.last_usable_data_stable_start = self.now
+        self.last_usable_data_scanned = False
+
+    def reset_last_usable(self):
+        self.set_last_usable(None, None)
+
+    def reset_stabilization(self, rect):
+        self.last_usable_data_position = rect
+        self.last_usable_data_stable_start = self.now
+        # No resetting of last_usable_data_scanned, because if we had scanned
+        # before, a short occlusion or hiccup should not trigger a scan again.
+
+    def update(self, rect, data):
+        self.now = time.time()
+
+        if self.last_usable_data != data:
+            # Data is different from last non-None data (but data need not be
+            # different from the data of the last call of this method)
+            if data is not None:
+                # New, usable data is present. We need to pick it up.
+                self.set_last_usable(rect, data)
+            elif self.last_data is None \
+                    and self.now - self.last_data_start > 1.5:
+                # data is None since too long. So we no longer consider it a
+                # hiccup or temporary occlusion.
+                self.reset_last_usable()
+
+        else:
+            # Data matches last usable data (but need not match data from last
+            # call of this method, e.g.: if in the last call the QR code was
+            # occluded and hence data was None).
+            if self.last_data is None:
+                # Last run, the scanning failed, so we need to
+                # start stabilization again.
+                # (Note that we check on last_data, not data. So data, and
+                # hence rect might or might not be None)
+                self.reset_stabilization(rect)
+
+            if data is not None:
+                if not self.is_stable_move(rect):
+                    # Sheet is still moving too much. So we reset stablization
+                    self.reset_stabilization(rect)
+
+        # Bookkeeping of data for next call of this method
+        if data != self.last_data:
+            self.last_data_start = self.now
+        self.last_data = data
+
+    def should_scan(self):
+        return self.last_data is not None \
+            and self.now - self.last_usable_data_stable_start > 1 \
+            and not self.last_usable_data_scanned
+
+    def mark_scanned(self):
+        self.last_usable_data_scanned = True
 
 
 def scan_forever(scanarium):
     camera = scanarium.open_camera()
-
-    last_data = None
-    last_data_start = 0
-
-    last_usable_data = None
-    last_usable_data_position = 0
-    last_usable_data_stable_start = 0
-    last_usable_data_scanned = False
-
+    qr_state = QrState()
     try:
         while True:
             image = scanarium.get_image(camera)
-            now = time.time()
             try:
                 (qr_rect, data) = scanarium.extract_qr(image)
             except ScanariumError as e:
@@ -51,56 +118,17 @@ def scan_forever(scanarium):
                 else:
                     raise e
 
-            if last_usable_data != data:
-                if data is not None or (
-                        last_data is None and now - last_data_start > 1.5):
-                    # Either data is something new and usable, or it failed to
-                    # scan a code so long that it's not a temporary
-                    # occlusion/hiccup. Eitherway, we reset usable data to
-                    # current data.
-                    last_usable_data = data
-                    last_usable_data_position = qr_rect
-                    last_usable_data_stable_start = now
-                    last_usable_data_scanned = False
-            else:
-                if last_data is None:
-                    # Last run, the scanning failed, so we need to
-                    # start stabilization again.
-                    last_usable_data_position = qr_rect
-                    last_usable_data_stable_start = now
-                    # No resetting of last_usable_data_scanned,
-                    # because if we had scanned before, a short
-                    # occlusion or hiccup should not scan again.
-                if data is not None:
-                    if is_stable_move(last_usable_data_position, qr_rect):
-                        if now - last_usable_data_stable_start > 1:
-                            if not last_usable_data_scanned:
-                                try:
-                                    logger.debug(
-                                        f'Processing image "{data}" ...')
-                                    scanarium.process_image_with_qr_code(
-                                        image, qr_rect, data)
+            qr_state.update(qr_rect, data)
 
-                                    logger.debug(
-                                        f'Processed image "{data}": ok')
+            if qr_state.should_scan():
+                try:
+                    logger.debug(f'Processing image "{data}" ...')
+                    scanarium.process_image_with_qr_code(image, qr_rect, data)
 
-                                    last_usable_data_scanned = True
-                                except Exception:
-                                    logger.exception('Failed to scan')
-
-                    else:
-                        # Instable move with usable data. So we need to reset
-                        # stabilization period.
-                        last_usable_data_position = qr_rect
-                        last_usable_data_stable_start = now
-                        # No resetting of last_usable_data_scanned, because an
-                        # instable move should not trigger re-scanning
-
-            if data != last_data:
-                last_data_start = now
-            last_data = data
-
-            now = time.time()
+                    logger.debug(f'Processed image "{data}": ok')
+                    qr_state.mark_scanned()
+                except Exception:
+                    logger.exception('Failed to scan')
     finally:
         scanarium.close_camera(camera)
 

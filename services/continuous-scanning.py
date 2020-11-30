@@ -102,35 +102,50 @@ class QrState(object):
         self.last_usable_data_scanned = True
 
 
-def scan_forever(scanarium):
-    camera = scanarium.open_camera()
-    qr_state = QrState()
-    try:
-        while True:
-            image = scanarium.get_image(camera)
+def scan_forever_with_camera(scanarium, camera, qr_state):
+    while True:
+        image = scanarium.get_image(camera)
+        try:
+            (qr_rect, data) = scanarium.extract_qr(image)
+        except ScanariumError as e:
+            if e.code == 'SE_SCAN_NO_QR_CODE':
+                data = None
+                qr_rect = None
+                pass
+            else:
+                raise e
+
+        qr_state.update(qr_rect, data)
+
+        if qr_state.should_scan():
             try:
-                (qr_rect, data) = scanarium.extract_qr(image)
-            except ScanariumError as e:
-                if e.code == 'SE_SCAN_NO_QR_CODE':
-                    data = None
-                    qr_rect = None
-                    pass
-                else:
-                    raise e
+                logger.debug(f'Processing image "{data}" ...')
+                scanarium.process_image_with_qr_code(image, qr_rect, data)
 
-            qr_state.update(qr_rect, data)
+                logger.debug(f'Processed image "{data}": ok')
+                qr_state.mark_scanned()
+            except Exception:
+                logger.exception('Failed to scan from camera')
 
-            if qr_state.should_scan():
-                try:
-                    logger.debug(f'Processing image "{data}" ...')
-                    scanarium.process_image_with_qr_code(image, qr_rect, data)
 
-                    logger.debug(f'Processed image "{data}": ok')
-                    qr_state.mark_scanned()
-                except Exception:
-                    logger.exception('Failed to scan')
-    finally:
-        scanarium.close_camera(camera)
+def scan_forever(scanarium):
+    # We keep qr_state across camera re-opening to avoid re-scans if a camera
+    # gets unplugged and replugged again, while a usable sheet is lying in
+    # front of the lens.
+    qr_state = QrState()
+
+    while True:
+        try:
+            camera = scanarium.open_camera()
+            scan_forever_with_camera(scanarium, camera, qr_state)
+        except Exception:
+            logger.exception('Failed to scan')
+            # Something went wrong, like camera being unplugged. So we back off
+            # a bit to avoid busy waiting and allow for recovery before
+            # retrying.
+            time.sleep(2)
+        finally:
+            scanarium.close_camera(camera)
 
 
 if __name__ == "__main__":

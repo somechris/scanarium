@@ -6,6 +6,12 @@
 
 debug = False
 
+# When `debug` is True, scanned images get shown on the screen as they get
+# processed. If this is in the way, as you are debugging backend services, you
+# can keep `debug` at `True` and set this value to `True` as well to get all the
+# debug features but not be bothered with the images
+hide_images_in_debug = False
+
 
 
 #-------------------------------------------------------------------------------

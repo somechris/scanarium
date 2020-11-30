@@ -11,7 +11,8 @@ from .ScanariumError import ScanariumError
 
 
 def debug_show_image(title, image, config):
-    if config.get('general', 'debug', 'boolean'):
+    if config.get('general', 'debug', 'boolean') and \
+            not config.get('general', 'hide_images_in_debug', 'boolean'):
         cv2.imshow(title, image)
         locale.resetlocale()
         cv2.waitKey(0)

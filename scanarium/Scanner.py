@@ -165,15 +165,14 @@ def extract_qr(image):
     rect = code.rect
     data_raw = code.data.decode('utf-8')
     data = re.sub('[^0-9a-zA-Z:_]+', '_', data_raw)
-    (scene, actor) = data.split(':', 1)
-    return (rect, scene, actor)
+    return (rect, data)
 
 
 def orient_image(image):
     if image.shape[0] > image.shape[1]:
         image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
 
-    (qr_rect, _, _) = extract_qr(image)
+    (qr_rect, _) = extract_qr(image)
     if qr_rect.left + qr_rect.width / 2 > image.shape[1] / 2:
         # QR Code is not on the left half of the picture. As it's landscape
         # (see above), the qr code is in the top-right corner and we need to
@@ -248,7 +247,8 @@ def save_image(scanarium, image, scene, actor):
     return timestamp
 
 
-def process_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
+def process_image_with_qr_code(scanarium, image, qr_rect, data):
+    (scene, actor) = data.split(':', 1)
     image = rectify_to_qr_parent_rect(scanarium, image, qr_rect)
     image = orient_image(image)
     image = mask(scanarium, image, scene, actor)
@@ -399,10 +399,9 @@ class Scanner(object):
     def extract_qr(self, image):
         return extract_qr(image)
 
-    def process_image_with_qr_code(self, scanarium, image, qr_rect, scene,
-                                   actor):
+    def process_image_with_qr_code(self, scanarium, image, qr_rect, data):
         return process_image_with_qr_code(
-            scanarium, image, qr_rect, scene, actor)
+            scanarium, image, qr_rect, data)
 
     def rectify_to_biggest_rect(self, scanarium, image):
         return rectify_to_biggest_rect(scanarium, image)

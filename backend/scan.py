@@ -13,12 +13,11 @@ del sys.path[0]
 logger = logging.getLogger(__name__)
 
 
-def scan_actor_image(scanarium):
+def scan_image(scanarium):
     image = scanarium.get_image()
 
     qr_rect = None
-    scene = None
-    actor = None
+    data = None
     iteration = 1
     while qr_rect is None:
         if iteration > 3:
@@ -34,7 +33,7 @@ def scan_actor_image(scanarium):
             raise ScanariumError('SE_SCAN_IMAGE_GREW_TOO_SMALL',
                                  'Failed to identify sheet on scanned image')
         try:
-            (qr_rect, scene, actor) = scanarium.extract_qr(image)
+            (qr_rect, data) = scanarium.extract_qr(image)
         except ScanariumError as e:
             if e.code == 'SE_SCAN_NO_QR_CODE':
                 # QR code could not get scanned. Probably, because the image
@@ -47,11 +46,11 @@ def scan_actor_image(scanarium):
 
         iteration += 1
 
-    return scanarium.process_image_with_qr_code(image, qr_rect, scene, actor)
+    return scanarium.process_image_with_qr_code(image, qr_rect, data)
 
 
 def main(scanarium):
-    return scan_actor_image(scanarium)
+    return scan_image(scanarium)
 
 
 if __name__ == "__main__":

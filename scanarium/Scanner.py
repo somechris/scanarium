@@ -68,6 +68,8 @@ def find_rect_points(image, decreasingArea=True, required_points=[]):
             # The contour is big enough, looks like a rect, and contains all
             # required points. That's the contour to continue with.
             break
+        else:
+            approx = None
 
     if approx is None:
         raise ScanariumError('SE_SCAN_NO_APPROX',

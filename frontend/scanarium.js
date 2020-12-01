@@ -470,6 +470,90 @@ function create() {
     this.input.keyboard.on('keydown_C', function (event) {
         FrameCounter.toggleVisibility();
     });
+    this.input.keyboard.on('keydown_H', function (event) {
+        HelpPage.toggleVisibility();
+    });
+}
+
+var HelpPage = {
+    sprites: null,
+    keys: [
+        {key: '---key---', description: '---description---'},
+        {key: '?', description: 'Show/hide this help page'},
+        {key: 'c', description: 'Show/hide frame counter'},
+        {key: 'f', description: 'Switch to fullscreen mode'},
+        {key: 'h', description: 'Show/hide this help page'},
+        {key: 'm', description: 'Add another random actor'},
+        {key: 'p', description: 'Pause/Resume'},
+        {key: 'r', description: 'Reindex actors'},
+        {key: 's', description: 'Show camera source image'},
+        {key: 'space', description: 'Scan image'},
+    ],
+
+    generateSprites: function() {
+        var ret = [];
+        //var graphics = game.make.graphics({x:0, y:0, add:false});
+
+        var x = window.innerWidth / 20;
+        var y = window.innerHeight / 20;
+        var width = window.innerWidth * 18 / 20;
+        var height = window.innerHeight * 18 / 20;
+
+        var graphics = game.add.graphics(0,0);
+        graphics.lineStyle(1, 0xffffff, 1);
+        graphics.fillStyle(0x808080, 0.7);
+        graphics.fillRect(0, 0, width, height);
+
+        if (game.textures.exists('help_page')) {
+            game.textures.remove('help_page');
+        }
+        graphics.generateTexture('help_page', width, height);
+        graphics.destroy();
+
+        var background = game.add.image(x, y, 'help_page');
+        background.setOrigin(0,0);
+
+        var caption = game.add.text(x+width, y+height, 'Help Page');
+        caption.x = x + width/2 - caption.width/2;
+        caption.y = y + caption.height;
+
+        var ret = [background, caption];
+
+        var keys = this.keys;
+
+        this.keys.forEach(function (key_spec, index) {
+            var key = key_spec['key']
+            var description = key_spec['description']
+
+            var textY = y + caption.height*(index + 4);
+
+            var text = game.add.text(0, textY, key);
+            text.x = x + width/2 - text.width - width / 80;
+            ret.push(text);
+
+            text = game.add.text(0, textY, description);
+            text.x = x + width/2 + width / 80;
+            ret.push(text);
+        });
+
+        ret.forEach(function (sprite, index) {
+            sprite.setDepth(999999);
+        });
+
+
+        return ret;
+    },
+
+    toggleVisibility: function() {
+        if (this.sprites == null) {
+            this.sprites = this.generateSprites();
+        } else {
+            this.sprites.forEach(function (sprite, index) {
+                sprite.destroy();
+            });
+            this.sprites = null;
+        }
+    },
 }
 
 var FrameCounter = {

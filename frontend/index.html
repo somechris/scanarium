@@ -113,6 +113,10 @@ document.addEventListener("keypress", function(e) {
     } else {
       game.scene.resume();
     }
+  } else if (e.key === '?') {
+    // Phaser does not offer a keycode for question mark, so we trigger from
+    // outside.
+    HelpPage.toggleVisibility();
   } else if (e.key in cgis) {
     var cgi = cgis[e.key];
     var xhr = new XMLHttpRequest();

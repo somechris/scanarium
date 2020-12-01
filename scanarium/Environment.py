@@ -52,22 +52,26 @@ class Environment(object):
             if display:
                 os.environ['DISPLAY'] = display
 
+    def normalized_caller(self, idx, trim=True):
+        caller = traceback.extract_stack()[idx].filename
+        if not os.path.isabs(caller):
+            caller = os.path.join(os.getcwd(), caller)
+        caller = os.path.normpath(caller)
+        package_dir_abs = os.path.dirname(os.path.abspath(__file__))
+        if caller == os.path.join(package_dir_abs, 'Scanarium.py'):
+            caller = self.normalized_caller(idx - 2, trim=False)
+        if caller == os.path.join(package_dir_abs, 'Environment.py'):
+            caller = self.normalized_caller(idx - 2, trim=False)
+        start = self._backend_dir_abs + os.sep
+        if caller.startswith(start):
+            caller = caller[len(start):]
+        if caller.endswith('.py'):
+            caller = caller[:-3]
+        return caller
+
     def call_guarded(self, func_self, func, *args, **kwargs):
         try:
-            caller = traceback.extract_stack()[-2].filename
-            if not os.path.isabs(caller):
-                caller = os.path.join(os.getcwd(), caller)
-            if caller == os.path.join(os.getcwd(), 'scanarium',
-                                      'Scanarium.py'):
-                caller = traceback.extract_stack()[-3].filename
-            if not os.path.isabs(caller):
-                caller = os.path.join(os.getcwd(), caller)
-            caller = os.path.normpath(caller)
-            start = self._backend_dir_abs + os.sep
-            if caller.startswith(start):
-                caller = caller[len(start):]
-            if caller.endswith('.py'):
-                caller = caller[:-3]
+            caller = self.normalized_caller(-2)
 
             if not re.match(r'^[a-zA-Z-]*$', caller):
                 raise ScanariumError('SE_CGI_NAME_CHARS',

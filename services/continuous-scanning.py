@@ -137,7 +137,8 @@ def scan_forever_with_camera(scanarium, camera, qr_state):
                                 and not alerted_no_approx:
                             alerted_no_approx = True
                             raise e
-                    pass
+                    else:
+                        raise e
             except Exception:
                 logger.exception('Failed to scan from camera')
         else:

@@ -151,6 +151,7 @@ def scan_forever(scanarium):
     qr_state = QrState()
 
     while True:
+        camera = None
         try:
             camera = scanarium.open_camera()
             scan_forever_with_camera(scanarium, camera, qr_state)
@@ -161,7 +162,8 @@ def scan_forever(scanarium):
             # retrying.
             time.sleep(2)
         finally:
-            scanarium.close_camera(camera)
+            if camera is not None:
+                scanarium.close_camera(camera)
 
 
 if __name__ == "__main__":

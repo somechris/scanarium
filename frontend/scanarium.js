@@ -3,7 +3,7 @@ if (typeof parameters == 'undefined') {
 }
 
 var sanitize = function(text) {
-  return text.replace(/[^a-zA-Z0-9_,.'" -]/g, '.');
+  return text == null ? null : text.replace(/[^a-zA-Z0-9_,.'" -]/g, '.');
 }
 
 function getParameter(name, defaultValue) {
@@ -322,9 +322,11 @@ var MessageManager = {
   objects: [],
   offsetY: 10,
   spaceY: 22,
+  lastSeenUuids: [null, null, null, null, null],
 
-  addMessage: function(icon, message) {
-    if (game) {
+  addMessage: function(uuid, icon, message) {
+    var alreadySeen = (uuid != null) && this.lastSeenUuids.includes(uuid);
+    if (game && !alreadySeen) {
       var y = this.offsetY;
       if (this.objects.length > 0) {
         y = this.objects[this.objects.length - 1].sprite.y + this.spaceY;
@@ -336,6 +338,9 @@ var MessageManager = {
       var len = this.objects.length;
       this.objects.push({'sprite': game.add.image(20, y, icon).setOrigin(0.6, -0.1), duration: duration, expire: null});
       this.objects.push({'sprite': game.add.text(32, y, message), duration: duration, expire: null});
+
+      this.lastSeenUuids.shift();
+      this.lastSeenUuids.push(uuid);
     }
     console.log(message);
   },

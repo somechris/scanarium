@@ -60,11 +60,11 @@ var cgis = {
   'r': 'reindex'
 };
 
-var cgiFail = function(cgi, reason) {
-  MessageManager.addMessage('failed', cgi + ' failed: ' + reason);
+var cgiFail = function(uuid, cgi, reason) {
+  MessageManager.addMessage(uuid, 'failed', cgi + ' failed: ' + reason);
 };
 
-var cgiOk = function(cgi, payload) {
+var cgiOk = function(uuid, cgi, payload) {
   var suffix = '';
   if (cgi == 'scan') {
     var sanitized_scene = sanitize(payload.scene);
@@ -78,7 +78,7 @@ var cgiOk = function(cgi, payload) {
       suffix = ', but actor cannot be used, as it is for scene "' + sanitized_scene + '" while we are playing scene "' + scene + '"';
     }
   }
-  MessageManager.addMessage('ok', cgi + ' ok' + suffix);
+  MessageManager.addMessage(uuid, 'ok', cgi + ' ok' + suffix);
 };
 
 var onReadyStateChange = function(cgi) {
@@ -86,13 +86,14 @@ var onReadyStateChange = function(cgi) {
     if (this.readyState === XMLHttpRequest.DONE) {
       if (this.status == 200) {
         var capsule = JSON.parse(this.responseText);
+        var uuid = sanitize(capsule.uuid);
         if (capsule.is_ok) {
-          cgiOk(cgi, capsule.payload);
+          cgiOk(uuid, cgi, capsule.payload);
         } else {
-          cgiFail(cgi, sanitize(capsule.error_message));
+          cgiFail(uuid, cgi, sanitize(capsule.error_message));
         }
       } else {
-        cgiFail(cgi, 'Response status was ' + this.status + ' instead of 200');
+        cgiFail(null, cgi, 'Response status was ' + this.status + ' instead of 200');
       }
     }
   };

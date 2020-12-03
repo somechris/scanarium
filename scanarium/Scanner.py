@@ -283,7 +283,7 @@ def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
     }
 
 
-def process_image_with_qr_code(scanarium, image, qr_rect, data):
+def process_image_with_qr_code_unlogged(scanarium, image, qr_rect, data):
     (command, param) = data.split(':', 1)
     if command == 'debug':
         if param == 'ok':
@@ -301,6 +301,20 @@ def process_image_with_qr_code(scanarium, image, qr_rect, data):
     else:
         ret = process_actor_image_with_qr_code(scanarium, image, qr_rect,
                                                command, param)
+    return ret
+
+
+def process_image_with_qr_code(scanarium, image, qr_rect, data,
+                               should_skip_exception=None):
+    ret = None
+    try:
+        ret = process_image_with_qr_code_unlogged(scanarium, image, qr_rect,
+                                                  data)
+    except Exception as e:
+        if should_skip_exception is not None and should_skip_exception(e):
+            e = ScanariumError('SE_SKIPPED_EXCEPTION',
+                               'Exception marked as skipped')
+        raise e
     return ret
 
 
@@ -433,9 +447,10 @@ class Scanner(object):
     def extract_qr(self, image):
         return extract_qr(image)
 
-    def process_image_with_qr_code(self, scanarium, image, qr_rect, data):
+    def process_image_with_qr_code(self, scanarium, image, qr_rect, data,
+                                   should_skip_exception=None):
         return process_image_with_qr_code(
-            scanarium, image, qr_rect, data)
+            scanarium, image, qr_rect, data, should_skip_exception)
 
     def rectify_to_biggest_rect(self, scanarium, image):
         return rectify_to_biggest_rect(scanarium, image)

@@ -72,9 +72,10 @@ class Scanarium(object):
     def extract_qr(self, image):
         return self._scanner.extract_qr(image)
 
-    def process_image_with_qr_code(self, image, qr_rect, data):
+    def process_image_with_qr_code(self, image, qr_rect, data,
+                                   should_skip_exception=None):
         return self._scanner.process_image_with_qr_code(
-            self, image, qr_rect, data)
+            self, image, qr_rect, data, should_skip_exception)
 
     def rectify_to_biggest_rect(self, image):
         return self._scanner.rectify_to_biggest_rect(scanarium, image)

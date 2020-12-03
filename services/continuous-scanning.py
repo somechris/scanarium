@@ -109,6 +109,15 @@ class QrState(object):
 
 def scan_forever_with_camera(scanarium, camera, qr_state):
     alerted_no_approx = False
+
+    def should_skip_exception(e):
+        ret = False
+        if isinstance(e, ScanariumError) \
+                and e.code == 'SE_SCAN_NO_APPROX':
+            ret = qr_state.get_stable_duration() <= 3 or alerted_no_approx
+
+        return ret
+
     while True:
         image = scanarium.get_image(camera)
         try:
@@ -127,20 +136,22 @@ def scan_forever_with_camera(scanarium, camera, qr_state):
             try:
                 try:
                     logger.debug(f'Processing image "{data}" ...')
-                    scanarium.process_image_with_qr_code(image, qr_rect, data)
+                    scanarium.process_image_with_qr_code(image, qr_rect, data,
+                                                         should_skip_exception)
 
                     logger.debug(f'Processed image "{data}": ok')
                     qr_state.mark_scanned()
                 except ScanariumError as e:
-                    if e.code == 'SE_SCAN_NO_APPROX':
-                        if qr_state.get_stable_duration() > 3 \
-                                and not alerted_no_approx:
-                            alerted_no_approx = True
-                            raise e
+                    if e.code == 'SE_SKIPPED_EXCEPTION':
+                        pass
                     else:
                         raise e
-            except Exception:
+            except Exception as e:
                 logger.exception('Failed to scan from camera')
+
+                if isinstance(e, ScanariumError) \
+                        and e.code == 'SE_SCAN_NO_APPROX':
+                    alerted_no_approx = True
         else:
             alerted_no_approx = False
 

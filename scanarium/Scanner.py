@@ -252,6 +252,17 @@ def save_image(scanarium, image, scene, actor):
 
 def process_image_with_qr_code(scanarium, image, qr_rect, data):
     (scene, actor) = data.split(':', 1)
+    scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), scene)
+    if not os.path.isdir(scene_dir):
+        raise ScanariumError('SE_UNKNOWN_SCENE',
+                             f'Scene "{scene}" does not exist')
+
+    actor_dir = os.path.join(scene_dir, 'actors', actor)
+    if not os.path.isdir(actor_dir):
+        raise ScanariumError(
+            'SE_UNKNOWN_ACTOR',
+            f'Actor "{actor}" does not exist in scene "{scene}"')
+
     image = rectify_to_qr_parent_rect(scanarium, image, qr_rect)
     image = orient_image(image)
     image = mask(scanarium, image, scene, actor)

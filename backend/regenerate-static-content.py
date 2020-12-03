@@ -246,10 +246,12 @@ def expand_qr_pixel_to_qr_code(element, data):
         del(element.attrib[attrib])
 
 
-def filter_svg_tree(tree, scene, actor):
+def filter_svg_tree(tree, command, parameter):
     text_replacements = {
-        '{ACTOR}': actor,
-        '{SCENE}': scene,
+        '{ACTOR}': parameter,
+        '{COMMAND}': command,
+        '{PARAMETER}': parameter,
+        '{SCENE}': command,
     }
 
     def filter_text(text):
@@ -264,7 +266,8 @@ def filter_svg_tree(tree, scene, actor):
 
     for qr_element in list(tree.iter("{http://www.w3.org/2000/svg}rect")):
         if qr_element.attrib.get('qr-pixel', 'false') == 'true':
-            expand_qr_pixel_to_qr_code(qr_element, '%s:%s' % (scene, actor))
+            expand_qr_pixel_to_qr_code(
+                qr_element, '%s:%s' % (command, parameter))
 
 
 def append_svg_layers(base, addition):
@@ -273,16 +276,16 @@ def append_svg_layers(base, addition):
         root.append(layer)
 
 
-def generate_full_svg(scanarium, dir, scene, actor):
-    undecorated_name = os.path.join(dir, actor + '-undecorated.svg')
+def generate_full_svg(scanarium, dir, command, parameter):
+    undecorated_name = os.path.join(dir, parameter + '-undecorated.svg')
     decoration_name = os.path.join(scanarium.get_config_dir_abs(),
-                                   'actor-decoration.svg')
-    full_name = os.path.join(dir, actor + '.svg')
+                                   'decoration.svg')
+    full_name = os.path.join(dir, parameter + '.svg')
     if file_needs_update(full_name, [undecorated_name, decoration_name]):
         register_svg_namespaces()
         tree = ET.parse(undecorated_name)
         append_svg_layers(tree, ET.parse(decoration_name))
-        filter_svg_tree(tree, scene, actor)
+        filter_svg_tree(tree, command, parameter)
         tree.write(full_name)
 
 

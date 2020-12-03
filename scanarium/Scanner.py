@@ -250,8 +250,7 @@ def save_image(scanarium, image, scene, actor):
     return timestamp
 
 
-def process_image_with_qr_code(scanarium, image, qr_rect, data):
-    (scene, actor) = data.split(':', 1)
+def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
     scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), scene)
     if not os.path.isdir(scene_dir):
         raise ScanariumError('SE_UNKNOWN_SCENE',
@@ -282,6 +281,27 @@ def process_image_with_qr_code(scanarium, image, qr_rect, data):
         'actor': actor,
         'flavor': flavor,
     }
+
+
+def process_image_with_qr_code(scanarium, image, qr_rect, data):
+    (command, param) = data.split(':', 1)
+    if command == 'debug':
+        if param == 'ok':
+            ret = {
+                'ok': True
+            }
+        elif param == 'fail':
+            raise ScanariumError(
+                'SE_DEBUG_FAIL',
+                'Intentional error from the "debug:fail" command')
+        else:
+            raise ScanariumError(
+                'SE_UNKNOWN_PARAM',
+                f'Command "{command}" does not allow a parameter "{param}"')
+    else:
+        ret = process_actor_image_with_qr_code(scanarium, image, qr_rect,
+                                               command, param)
+    return ret
 
 
 def set_camera_property(config, cap, property, config_key):

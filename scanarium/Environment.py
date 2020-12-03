@@ -92,7 +92,13 @@ class Environment(object):
         self._result(payload=payload)
 
     def _result(self, payload={}, exc_info=None):
-        result = Result(payload, exc_info)
+        if isinstance(payload, Result):
+            if exc_info is None:
+                result = payload
+            else:
+                result = Result(payload.as_dict(), exc_info)
+        else:
+            result = Result(payload, exc_info)
         if IS_CGI:
             print(self._dumper.dump_json_string(result.as_dict()))
         else:

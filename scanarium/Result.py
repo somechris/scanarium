@@ -1,9 +1,12 @@
+import uuid
+
 from .ScanariumError import ScanariumError
 
 
 class Result(object):
     def __init__(self, payload={}, exc_info=None):
         super(Result, self).__init__()
+        self.uuid = uuid.uuid4()
         self.payload = payload
         self.is_ok = exc_info is None
 
@@ -20,6 +23,7 @@ class Result(object):
 
     def as_dict(self):
         return {
+            'uuid': str(self.uuid),
             'payload': self.payload,
             'is_ok': self.is_ok,
             'error_code': self.error_code,

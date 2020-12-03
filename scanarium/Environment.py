@@ -8,6 +8,7 @@ import sys
 import traceback
 
 from .ScanariumError import ScanariumError
+from .Result import Result
 
 IS_CGI = 'REMOTE_ADDR' in os.environ
 LOG_FORMAT = ('%(asctime)s.%(msecs)03d %(levelname)-5s [%(threadName)s] '
@@ -91,33 +92,17 @@ class Environment(object):
         self._result(payload=payload)
 
     def _result(self, payload={}, exc_info=None):
-        if exc_info is None:
-            error_code = None
-            error_message = None
-        else:
-            if self._config.get('general', 'debug', 'boolean'):
-                traceback.print_exception(*exc_info)
-            if isinstance(exc_info[1], ScanariumError):
-                error_code = exc_info[1].code
-                error_message = exc_info[1].message
-            else:
-                error_code = 'SE_UNDEF'
-                error_message = 'undefined error'
+        result = Result(payload, exc_info)
         if IS_CGI:
-            capsule = {
-                'payload': payload,
-                'is_ok': exc_info is None,
-                'error_code': error_code,
-                'error_message': error_message,
-            }
-            print(self._dumper.dump_json_string(capsule))
+            print(self._dumper.dump_json_string(result.as_dict()))
         else:
             if exc_info is not None:
-                print('ERROR: %s' % error_code)
-                print(error_message)
+                if self._config.get('general', 'debug', 'boolean'):
+                    traceback.print_exception(*exc_info)
+                print('ERROR: %s' % result.error_code)
+                print(result.error_message)
                 print()
-            if payload:
-                print(self._dumper.dump_json_string(payload))
+            print(self._dumper.dump_json_string(result.payload))
         sys.exit(0)
 
     def handle_arguments(self, description, register_func=None):

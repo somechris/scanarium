@@ -1,5 +1,8 @@
 __pycache__
 /.tox
+/commands/*/*/*.svg
+!/commands/*/*/*-undecorated.svg
+/commands/*/*/*.pdf
 /conf/scanarium.conf
 /dynamic
 /frontend/phaser-3.11.0.js

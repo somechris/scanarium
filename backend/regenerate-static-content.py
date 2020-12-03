@@ -313,7 +313,7 @@ def regenerate_static_content_scene(scanarium, scene, actor=None):
         regenerate_static_content_actor(scanarium, scene, actor)
 
 
-def regenerate_static_content(scanarium, scene=None, actor=None):
+def regenerate_static_actor_content(scanarium, scene=None, actor=None):
     scenes_dir = scanarium.get_scenes_dir_abs()
 
     assert_directory(scenes_dir)
@@ -321,6 +321,34 @@ def regenerate_static_content(scanarium, scene=None, actor=None):
     scenes = os.listdir(scenes_dir) if scene is None else [scene]
     for scene in scenes:
         regenerate_static_content_scene(scanarium, scene, actor)
+
+
+def regenerate_static_command_parameter_content(scanarium, dir, command,
+                                                parameter):
+    logging.debug(f'Regenerating content for command "{command}", '
+                  f'parameter "{parameter}" ...')
+    generate_full_svg(scanarium, dir, command, parameter)
+    generate_pdf(scanarium, dir, parameter + '.svg')
+
+
+def regenerate_static_commands_content(scanarium):
+    commands_dir = scanarium.get_commands_dir_abs()
+
+    commands = os.listdir(commands_dir)
+    for command in commands:
+        command_dir = os.path.join(commands_dir, command)
+        if os.path.isdir(command_dir):
+            parameters = os.listdir(command_dir)
+            for parameter in parameters:
+                parameter_dir = os.path.join(command_dir, parameter)
+                if os.path.isdir(parameter_dir):
+                    regenerate_static_command_parameter_content(
+                        scanarium, parameter_dir, command, parameter)
+
+
+def regenerate_static_content(scanarium, scene=None, actor=None):
+    regenerate_static_actor_content(scanarium, scene, actor)
+    regenerate_static_commands_content(scanarium)
 
 
 def register_arguments(parser):

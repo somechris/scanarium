@@ -33,6 +33,9 @@ class Scanarium(object):
     def get_backend_dir_abs(self):
         return self.get_relative_dir_abs('backend')
 
+    def get_commands_dir_abs(self):
+        return self.get_relative_dir_abs('commands')
+
     def get_frontend_dir_abs(self):
         return self.get_relative_dir_abs('frontend')
 

@@ -4,9 +4,11 @@ from .ScanariumError import ScanariumError
 
 
 class Result(object):
-    def __init__(self, payload={}, exc_info=None):
+    def __init__(self, payload={}, exc_info=None, command=None, parameters=[]):
         super(Result, self).__init__()
         self.uuid = uuid.uuid4()
+        self.command = command
+        self.parameters = parameters
         self.payload = payload
         self.is_ok = exc_info is None
 
@@ -23,6 +25,8 @@ class Result(object):
 
     def as_dict(self):
         return {
+            'command': self.command,
+            'parameters': self.parameters,
             'uuid': str(self.uuid),
             'payload': self.payload,
             'is_ok': self.is_ok,

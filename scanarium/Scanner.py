@@ -1,6 +1,7 @@
 import locale
 import os
 import re
+import sys
 import time
 
 import cv2
@@ -283,14 +284,13 @@ def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
     }
 
 
-def process_image_with_qr_code_unlogged(scanarium, image, qr_rect, data):
-    (command, param) = data.split(':', 1)
+def process_image_with_qr_code_unlogged(scanarium, command, parameter, image, qr_rect):
     if command == 'debug':
-        if param == 'ok':
+        if parameter == 'ok':
             ret = {
                 'ok': True
             }
-        elif param == 'fail':
+        elif parameter == 'fail':
             raise ScanariumError(
                 'SE_DEBUG_FAIL',
                 'Intentional error from the "debug:fail" command')
@@ -300,22 +300,28 @@ def process_image_with_qr_code_unlogged(scanarium, image, qr_rect, data):
                 f'Command "{command}" does not allow a parameter "{param}"')
     else:
         ret = process_actor_image_with_qr_code(scanarium, image, qr_rect,
-                                               command, param)
+                                               command, parameter)
     return ret
 
 
-def process_image_with_qr_code(scanarium, image, qr_rect, data,
+def process_image_with_qr_code(scanarium, command_logger, image, qr_rect, data,
                                should_skip_exception=None):
-    ret = None
+    result = None
+    command = None
+    parameter = None
     try:
-        ret = process_image_with_qr_code_unlogged(scanarium, image, qr_rect,
-                                                  data)
+        (command, parameter) = data.split(':', 1)
+        payload = process_image_with_qr_code_unlogged(
+            scanarium, command, parameter, image, qr_rect)
+        result = command_logger.log(payload, None, command, [parameter])
     except Exception as e:
         if should_skip_exception is not None and should_skip_exception(e):
             e = ScanariumError('SE_SKIPPED_EXCEPTION',
                                'Exception marked as skipped')
+        else:
+            command_logger.log(None, sys.exc_info(), command, [parameter])
         raise e
-    return ret
+    return result
 
 
 def set_camera_property(config, cap, property, config_key):
@@ -427,9 +433,10 @@ def undistort_image(image, config):
 
 
 class Scanner(object):
-    def __init__(self, config):
+    def __init__(self, config, command_logger):
         super(Scanner, self).__init__()
         self._config = config
+        self._command_logger = command_logger
 
     def debug_show_image(self, title, image):
         debug_show_image(title, image, self._config)
@@ -450,7 +457,8 @@ class Scanner(object):
     def process_image_with_qr_code(self, scanarium, image, qr_rect, data,
                                    should_skip_exception=None):
         return process_image_with_qr_code(
-            scanarium, image, qr_rect, data, should_skip_exception)
+            scanarium, self._command_logger, image, qr_rect, data,
+            should_skip_exception)
 
     def rectify_to_biggest_rect(self, scanarium, image):
         return rectify_to_biggest_rect(scanarium, image)

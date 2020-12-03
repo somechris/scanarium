@@ -11,11 +11,13 @@ class Scanarium(object):
         super(Scanarium, self).__init__()
         self._config = scanarium.Config(self.get_config_dir_abs())
         self._dumper = scanarium.Dumper()
+        self._command_logger = scanarium.CommandLogger(
+            self.get_dynamic_directory(), self._dumper)
         self._environment = scanarium.Environment(
             self.get_backend_dir_abs(), self._config, self._dumper)
         self._indexer = scanarium.Indexer(self.get_dynamic_directory(),
                                           self._dumper)
-        self._scanner = scanarium.Scanner(self._config)
+        self._scanner = scanarium.Scanner(self._config, self._command_logger)
 
     def get_config(self, section=None, key=None, kind='string',
                    allow_empty=False):

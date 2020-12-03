@@ -1,6 +1,7 @@
 # flake8: noqa
 
 from .Config import Config
+from .CommandLogger import CommandLogger
 from .Dumper import Dumper
 from .Environment import Environment
 from .Indexer import Indexer

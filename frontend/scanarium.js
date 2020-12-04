@@ -2,17 +2,35 @@ if (typeof parameters == 'undefined') {
     parameters = {};
 }
 
-var sanitize = function(value) {
-  if (value == null || value === true || value === false) {
-      return value;
-  }
-  return value.replace(/[^a-zA-Z0-9_,.'" -]/g, '.');
+var sanitize_resolve = function(value, field) {
+    if (typeof(field) != 'undefined') {
+        if (typeof(value) == 'object' && field in value) {
+            value = value[field];
+        } else {
+            value = '';
+        }
+    }
+    return value;
+}
+
+var sanitize_boolean = function(value, field) {
+    value = sanitize_resolve(value, field);
+    if (typeof(value) != 'boolean') {
+        value = false;
+    }
+    return value;
+}
+
+var sanitize_string = function(value, field) {
+    value = sanitize_resolve(value, field);
+
+    return value.replace(/[^a-zA-Z0-9_,.'" {}-]/g, '.');
 }
 
 function getParameter(name, defaultValue) {
     var ret = defaultValue;
     if (name in parameters) {
-        ret = sanitize(parameters[name]);
+        ret = sanitize_string(parameters[name]);
     }
     return ret;
 }
@@ -390,9 +408,9 @@ var CommandLogInjector = {
     },
 
     format_log_item: function(item) {
-        var is_ok = sanitize(item.is_ok);
-        var command = sanitize(item.command);
-        var error_message = sanitize(item.error_message);
+        var is_ok = sanitize_boolean(item, 'is_ok');
+        var command = sanitize_string(item, 'command');
+        var error_message = sanitize_string(item, 'error_message');
         return 'Command ' + command + ' ' + (is_ok ? 'ok' : 'failed') + (is_ok ? '' : (': ' + error_message));
     },
 
@@ -400,13 +418,13 @@ var CommandLogInjector = {
         CommandLogInjector.injectRunCount += 1;
         if (CommandLogInjector.injectRunCount <= 3) {
             items.forEach(function (item, index) {
-                var uuid = sanitize(item.uuid);
+                var uuid = sanitize_string(item, 'uuid');
                 MessageManager.markSeen(uuid);
             });
         } else {
             items.forEach(function (item, index) {
-                var uuid = sanitize(item.uuid);
-                var is_ok = sanitize(item.is_ok);
+                var uuid = sanitize_string(item, 'uuid');
+                var is_ok = sanitize_boolean(item, 'is_ok');
                 var msg = CommandLogInjector.format_log_item(item)
                 MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', msg);
             });

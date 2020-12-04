@@ -67,9 +67,9 @@ var cgiFail = function(uuid, cgi, reason) {
 var cgiOk = function(uuid, cgi, payload) {
   var suffix = '';
   if (cgi == 'scan') {
-    var sanitized_scene = sanitize(payload.scene);
-    var sanitized_actor = sanitize(payload.actor);
-    var sanitized_flavor = sanitize(payload.flavor);
+    var sanitized_scene = sanitize_string(payload, 'scene');
+    var sanitized_actor = sanitize_string(payload, 'actor');
+    var sanitized_flavor = sanitize_string(payload, 'flavor');
     if (sanitized_scene == scene) {
       if (typeof ScActorManager !== 'undefined') {
         ScActorManager.addActor(sanitized_actor, sanitized_flavor);
@@ -86,11 +86,11 @@ var onReadyStateChange = function(cgi) {
     if (this.readyState === XMLHttpRequest.DONE) {
       if (this.status == 200) {
         var capsule = JSON.parse(this.responseText);
-        var uuid = sanitize(capsule.uuid);
+        var uuid = sanitize_string(capsule.uuid);
         if (capsule.is_ok) {
           cgiOk(uuid, cgi, capsule.payload);
         } else {
-          cgiFail(uuid, cgi, sanitize(capsule.error_message));
+          cgiFail(uuid, cgi, sanitize_string(capsule.error_message));
         }
       } else {
         cgiFail(null, cgi, 'Response status was ' + this.status + ' instead of 200');

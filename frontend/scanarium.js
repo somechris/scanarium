@@ -2,8 +2,11 @@ if (typeof parameters == 'undefined') {
     parameters = {};
 }
 
-var sanitize = function(text) {
-  return text == null ? null : text.replace(/[^a-zA-Z0-9_,.'" -]/g, '.');
+var sanitize = function(value) {
+  if (value == null || value === true || value === false) {
+      return value;
+  }
+  return value.replace(/[^a-zA-Z0-9_,.'" -]/g, '.');
 }
 
 function getParameter(name, defaultValue) {
@@ -27,7 +30,9 @@ var scene = getParameter('scene', 'space');
 
 var scene_dir = 'scenes/' + scene;
 
-var dyn_scene_dir = 'dynamic/scenes/' + scene;
+var dyn_dir = 'dynamic';
+
+var dyn_scene_dir = dyn_dir + '/scenes/' + scene;
 
 var scanariumConfig = {
     type: Phaser.AUTO,
@@ -339,10 +344,14 @@ var MessageManager = {
       this.objects.push({'sprite': game.add.image(20, y, icon).setOrigin(0.6, -0.1), duration: duration, expire: null});
       this.objects.push({'sprite': game.add.text(32, y, message), duration: duration, expire: null});
 
-      this.lastSeenUuids.shift();
-      this.lastSeenUuids.push(uuid);
+      this.markSeen(uuid);
     }
     console.log(message);
+  },
+
+  markSeen: function(uuid) {
+      this.lastSeenUuids.shift();
+      this.lastSeenUuids.push(uuid);
   },
 
   update: function(time, delta) {
@@ -368,6 +377,42 @@ var MessageManager = {
     };
   },
 };
+
+var CommandLogInjector = {
+    injectRunCount: 0,
+
+    init: function() {
+        window.setInterval(this.fetchLogs, 1500);
+    },
+
+    fetchLogs: function() {
+        loadJson(dyn_dir + '/command-log.json', CommandLogInjector.injectLogs);
+    },
+
+    format_log_item: function(item) {
+        var is_ok = sanitize(item.is_ok);
+        var command = sanitize(item.command);
+        var error_message = sanitize(item.error_message);
+        return 'Command ' + command + ' ' + (is_ok ? 'ok' : 'failed') + (is_ok ? '' : (': ' + error_message));
+    },
+
+    injectLogs: function(items) {
+        CommandLogInjector.injectRunCount += 1;
+        if (CommandLogInjector.injectRunCount <= 3) {
+            items.forEach(function (item, index) {
+                var uuid = sanitize(item.uuid);
+                MessageManager.markSeen(uuid);
+            });
+        } else {
+            items.forEach(function (item, index) {
+                var uuid = sanitize(item.uuid);
+                var is_ok = sanitize(item.is_ok);
+                var msg = CommandLogInjector.format_log_item(item)
+                MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', msg);
+            });
+        }
+    },
+}
 
 var FileLoader = {
     files: [],
@@ -468,6 +513,7 @@ function create() {
     scene_create();
 
     FrameCounter.init();
+    CommandLogInjector.init();
 
     this.input.keyboard.on('keydown_M', function (event) {
         ScActorManager.addActorRandom();

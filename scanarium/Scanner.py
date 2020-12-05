@@ -304,6 +304,14 @@ def process_image_with_qr_code_unlogged(scanarium, command, parameter, image,
                 'SE_UNKNOWN_PARAM',
                 'Command "{command}" does not allow a parameter "{parameter}"',
                 {'command': command, 'parameter': parameter})
+    elif command == 'switchScene':
+        scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), parameter)
+        if os.path.isdir(scene_dir):
+            ret = {}
+        else:
+            raise ScanariumError('SE_UNKNOWN_SCENE',
+                                 'Scene "{scene_name}" does not exist',
+                                 {'scene_name': parameter})
     else:
         ret = process_actor_image_with_qr_code(scanarium, image, qr_rect,
                                                command, parameter)

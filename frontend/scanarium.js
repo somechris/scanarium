@@ -457,6 +457,22 @@ var CommandProcessor = {
     processCommandDebug: function(capsule) {
     },
 
+    processCommandSwitchScene: function(capsule) {
+        var is_ok = sanitize_boolean(capsule, 'is_ok');
+        var parameters = sanitize_list(capsule, 'parameters');
+        if (is_ok) {
+            template = 'Switching to scene {scene_name}';
+            var params = new URLSearchParams(document.location.search.substring(1));
+            params.set('scene', parameters[0]);
+            document.location.search = '?' + params.toString();
+        } else {
+            template = 'Cannot switch to scene {scene_name}';
+        }
+        return localize(template, {
+            'scene_name': parameters[0],
+        });
+    },
+
     processNew: function(capsule, prefix) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var command = sanitize_string(capsule, 'command');
@@ -469,6 +485,8 @@ var CommandProcessor = {
 
             if (command == 'debug') {
                 msg = this.processCommandDebug(capsule) || msg;
+            } else if (command == 'switchScene') {
+                msg = this.processCommandSwitchScene(capsule) || msg;
             } else {
                 msg = this.processCommandActor(capsule) || msg;
             }

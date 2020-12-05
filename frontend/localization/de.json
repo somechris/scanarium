@@ -2,6 +2,7 @@
   "messages": {
     "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "In der Szene \"{scene_name}\" gibt es keinen Akteur \"{actor_name}\"",
     "Calling script \"{script_name}\" as cgi is forbidden": "Skript \"{script_name}\"darf nicht als cgi gestartet werden",
+    "Cannot switch to scene {scene_name}": "Kann nicht zur Szene {scene_name} wechseln",
     "Command \"{command}\" does not allow a parameter \"{parameter}\"": "Kommando \"{command}\" erlaubt keinen Parameter \"{parameter}\"",
     "Directory to store file in does not exist, or is no directory": "Verzeichnis zum Speichern existiert nicht, oder ist kein Verzeichnis",
     "Exception marked as skipped": "Ausnahme ist übersprungen markiert",
@@ -22,6 +23,7 @@
     "Scanned new actor drawing for {actor_name}": "Neue Zeichnung gescannt für {actor_name}",
     "Scanned new actor drawing for {actor_name} for scene {scene_name}": "Neue Zeichnung gescannt für {actor_name} aus Szene {scene_name}",
     "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",
+    "Switching to scene {scene_name}": "Wechsle zur Szene {scene_name}",
     "Taken too many extraction tries from scanned image": "Zu viele Versuche gebraucht um Daten aus Bild zu extrahieren",
     "The command \"{command}\" did not finish within {timeout} seconds": "Das Kommando \"{command}\" wurde nicht innerhalb von {timeout} Sekunden fertig",
     "The command \"{command}\" did not return 0": "Rückgabewert von \"{command}\" war nicht 0",

@@ -24,7 +24,7 @@ var sanitize_boolean = function(value, field) {
 var sanitize_string = function(value, field) {
     value = sanitize_resolve(value, field) || '';
 
-    return value.replace(/[^a-zA-Z0-9_,.'" {}-]/g, '.');
+    return value.replace(/[^a-zA-Z0-9_,.:'" {}-]/g, '.');
 }
 
 var sanitize_list = function(value, field) {

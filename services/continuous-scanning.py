@@ -136,22 +136,24 @@ def scan_forever_with_camera(scanarium, camera, qr_state):
             try:
                 try:
                     logger.debug(f'Processing image "{data}" ...')
-                    scanarium.process_image_with_qr_code(image, qr_rect, data,
-                                                         should_skip_exception)
+                    result = scanarium.process_image_with_qr_code(
+                        image, qr_rect, data, should_skip_exception)
 
-                    logger.debug(f'Processed image "{data}": ok')
-                    qr_state.mark_scanned()
+                    if result.is_ok:
+                        logger.debug(f'Processed image "{data}": ok')
+                        qr_state.mark_scanned()
+                    else:
+                        if result.error_code == 'SE_SCAN_NO_APPROX':
+                            logger.info('Failed to find rectangle contour')
+                            alerted_no_approx = True
+
                 except ScanariumError as e:
                     if e.code == 'SE_SKIPPED_EXCEPTION':
                         pass
                     else:
                         raise e
-            except Exception as e:
+            except Exception:
                 logger.exception('Failed to scan from camera')
-
-                if isinstance(e, ScanariumError) \
-                        and e.code == 'SE_SCAN_NO_APPROX':
-                    alerted_no_approx = True
         else:
             alerted_no_approx = False
 

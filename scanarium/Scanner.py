@@ -312,22 +312,22 @@ def process_image_with_qr_code_unlogged(scanarium, command, parameter, image,
 
 def process_image_with_qr_code(scanarium, command_logger, image, qr_rect, data,
                                should_skip_exception=None):
-    result = None
     command = None
     parameter = None
+
+    payload = {}
+    exc_info = None
     try:
         (command, parameter) = data.split(':', 1)
         payload = process_image_with_qr_code_unlogged(
             scanarium, command, parameter, image, qr_rect)
-        result = command_logger.log(payload, None, command, [parameter])
     except Exception as e:
         if should_skip_exception is not None and should_skip_exception(e):
-            e = ScanariumError('SE_SKIPPED_EXCEPTION',
-                               'Exception marked as skipped')
-        else:
-            command_logger.log(None, sys.exc_info(), command, [parameter])
-        raise e
-    return result
+            raise ScanariumError('SE_SKIPPED_EXCEPTION',
+                                 'Exception marked as skipped')
+        exc_info = sys.exc_info()
+
+    return command_logger.log(payload, exc_info, command, [parameter])
 
 
 def set_camera_property(config, cap, property, config_key):

@@ -26,6 +26,9 @@ var sanitize_string = function(value, field) {
     if (typeof(value) == 'number') {
         value = value.toString();
     }
+    if (typeof(value) != 'string') {
+        value = '';
+    }
 
     return value.replace(/[^a-zA-Z0-9_,.:'" {}-]/g, '.');
 }

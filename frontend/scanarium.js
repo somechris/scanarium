@@ -510,7 +510,7 @@ var CommandProcessor = {
 
         var uuid = sanitize_string(capsule, 'uuid');
         if (prefix) {
-            msg = prefix + ': ' + msg;
+            msg = prefix + (msg ? (': ' + msg) : '');
         }
         MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', msg);
     },

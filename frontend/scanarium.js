@@ -23,6 +23,9 @@ var sanitize_boolean = function(value, field) {
 
 var sanitize_string = function(value, field) {
     value = sanitize_resolve(value, field) || '';
+    if (typeof(value) == 'number') {
+        value = value.toString();
+    }
 
     return value.replace(/[^a-zA-Z0-9_,.:'" {}-]/g, '.');
 }

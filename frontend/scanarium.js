@@ -38,7 +38,7 @@ var sanitize_list = function(value, field) {
 
 var sanitize_dictionary = function(value, field) {
     var value = sanitize_resolve(value, field);
-    if (typeof(value) != 'object') {
+    if (typeof(value) != 'object' || value == null) {
         value = {};
     }
     var ret = {};

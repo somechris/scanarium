@@ -288,7 +288,8 @@ def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
     }
 
 
-def process_image_with_qr_code_unlogged(scanarium, command, parameter, image, qr_rect):
+def process_image_with_qr_code_unlogged(scanarium, command, parameter, image,
+                                        qr_rect):
     if command == 'debug':
         if parameter == 'ok':
             ret = {

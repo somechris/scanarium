@@ -101,9 +101,9 @@ var cgis = {
   'r': 'reindex'
 };
 
-var cgiFail = function(uuid, cgi, reason) {
+var cgiFail = function(uuid, cgi, reason, parameters) {
   var msg = localize('{cgi_name} failed', {'cgi_name': cgi});
-  msg += ': ' + localize(reason);
+  msg += ': ' + localize(reason, parameters);
   MessageManager.addMessage(uuid, 'failed', msg);
 };
 
@@ -139,7 +139,10 @@ var onReadyStateChange = function(cgi) {
         if (sanitize_boolean(capsule, 'is_ok')) {
           cgiOk(uuid, cgi, sanitize_dictionary(capsule, 'payload'));
         } else {
-          cgiFail(uuid, cgi, sanitize_string(capsule, 'error_message'));
+          var error_message = sanitize_string(capsule, 'error_message');
+          var error_template = sanitize_string(capsule, 'error_template') || error_message;
+          var error_parameters = sanitize_dictionary(capsule, 'error_parameters');
+          cgiFail(uuid, cgi, error_template, error_parameters);
         }
       } else {
         cgiFail(null, cgi, 'Response status was ' + this.status + ' instead of 200');

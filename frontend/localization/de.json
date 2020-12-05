@@ -34,6 +34,9 @@
   "parameters": {
     "actor_name": {
       "Bunny": "Hase",
+      "FlyingSaucer": "FliegendeUntertasse",
+      "Heart": "Herz",
+      "Simple": "Einfach",
       "SimpleRocket": "EinfacheRakete"
     },
     "cgi_name": {

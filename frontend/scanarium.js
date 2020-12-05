@@ -44,7 +44,12 @@ var sanitize_dictionary = function(value, field) {
     var ret = {};
     Object.keys(value).forEach((key, index) => {
         var key_sanitized = sanitize_string(key);
-        var value_sanitized = sanitize_string(value[key]);
+        var value_sanitized = '';
+        if (typeof(value[key]) == 'boolean') {
+            value_sanitized = sanitize_boolean(value[key]);
+        } else {
+            value_sanitized = sanitize_string(value[key]);
+        }
 
         ret[key_sanitized] = value_sanitized;
     });
@@ -370,11 +375,9 @@ var MessageManager = {
   objects: [],
   offsetY: 10,
   spaceY: 22,
-  lastSeenUuids: [null, null, null, null, null],
 
   addMessage: function(uuid, icon, message) {
-    var alreadySeen = (uuid != null) && this.lastSeenUuids.includes(uuid);
-    if (game && !alreadySeen) {
+    if (game) {
       var y = this.offsetY;
       if (this.objects.length > 0) {
         y = this.objects[this.objects.length - 1].sprite.y + this.spaceY;
@@ -386,14 +389,7 @@ var MessageManager = {
       var len = this.objects.length;
       this.objects.push({'sprite': game.add.image(20, y, icon).setOrigin(0.6, -0.1), duration: duration, expire: null});
       this.objects.push({'sprite': game.add.text(32, y, message), duration: duration, expire: null});
-
-      this.markSeen(uuid);
     }
-  },
-
-  markSeen: function(uuid) {
-      this.lastSeenUuids.shift();
-      this.lastSeenUuids.push(uuid);
   },
 
   update: function(time, delta) {
@@ -420,6 +416,91 @@ var MessageManager = {
   },
 };
 
+var CommandProcessor = {
+    recentUuids: [null, null, null, null, null],
+
+    isNew: function(uuid) {
+        return (uuid == null || uuid == '' || !(this.recentUuids.includes(uuid)));
+    },
+
+    markOld: function(uuid) {
+        this.recentUuids.shift();
+        this.recentUuids.push(uuid);
+    },
+
+    processCommandActor: function(capsule) {
+        var is_ok = sanitize_boolean(capsule, 'is_ok');
+        var command = sanitize_string(capsule, 'command');
+        var parameters = sanitize_list(capsule, 'parameters');
+
+        var template;
+        if (is_ok) {
+            template = 'Scanned new actor drawing for {actor_name}';
+            if (command == scene) {
+                var flavor = sanitize_string(capsule.payload, 'flavor')
+                if (typeof ScActorManager !== 'undefined') {
+                    ScActorManager.addActor(parameters[0], flavor);
+                }
+            }
+        } else {
+            template = 'Failed to scan new actor drawing for {actor_name}';
+        }
+        if (command != scene) {
+            template += ' for scene {scene_name}';
+        }
+        return localize(template, {
+            'actor_name': parameters[0],
+            'scene_name': command,
+        });
+    },
+
+    processCommandDebug: function(capsule) {
+    },
+
+    processNew: function(capsule, prefix) {
+        var is_ok = sanitize_boolean(capsule, 'is_ok');
+        var command = sanitize_string(capsule, 'command');
+        var parameters = sanitize_list(capsule, 'parameters');
+        var msg = '';
+
+        if ('command' in capsule) {
+            msg = localize('{command_name} command ' + (is_ok ? 'ok' : 'failed'),
+                           {'command_name': command});
+
+            if (command == 'debug') {
+                msg = this.processCommandDebug(capsule) || msg;
+            } else {
+                msg = this.processCommandActor(capsule) || msg;
+            }
+        }
+
+        var error_message = sanitize_string(capsule, 'error_message');
+        var error_template = sanitize_string(capsule, 'error_template');
+        var error_parameters = sanitize_dictionary(capsule, 'error_parameters');
+        error_template = error_template || error_message;
+        if (error_template) {
+            if (msg) {
+                msg += ': ';
+            }
+            msg += localize(error_template, error_parameters);
+        }
+
+        var uuid = sanitize_string(capsule, 'uuid');
+        if (prefix) {
+            msg = prefix + ': ' + msg;
+        }
+        MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', msg);
+    },
+
+    process: function(capsule, prefix) {
+        var uuid = sanitize_string(capsule, 'uuid');
+        if (this.isNew(uuid)) {
+            this.markOld(uuid);
+            this.processNew(capsule, prefix);
+        }
+    }
+}
+
 var CommandLogInjector = {
     injectRunCount: 0,
 
@@ -431,52 +512,16 @@ var CommandLogInjector = {
         loadJson(dyn_dir + '/command-log.json', CommandLogInjector.injectLogs);
     },
 
-    format_log_item: function(item) {
-        var is_ok = sanitize_boolean(item, 'is_ok');
-        var command = sanitize_string(item, 'command');
-        var parameters = sanitize_list(item, 'parameters');
-        if (command == 'debug') {
-            msg = 'Debug command ' + (is_ok ? 'ok' : 'failed');
-        } else {
-            var template;
-            if (is_ok) {
-                template = 'Scanned new actor drawing for {actor_name}';
-            } else {
-                template = 'Failed to scan new actor drawing for {actor_name}';
-            }
-            if (command != scene) {
-                template += ' for scene {scene_name}';
-            }
-            msg = localize(template, {
-                'actor_name': parameters[0],
-                'scene_name': command,
-            });
-        }
-
-        var error_message = sanitize_string(item, 'error_message');
-        var error_template = sanitize_string(item, 'error_template');
-        var error_parameters = sanitize_dictionary(item, 'error_parameters');
-        error_template = error_template || error_message;
-        if (error_template) {
-            msg += ': ' + localize(error_template, error_parameters);
-        }
-
-        return msg;
-    },
-
     injectLogs: function(items) {
         CommandLogInjector.injectRunCount += 1;
         if (CommandLogInjector.injectRunCount <= 3) {
             items.forEach(function (item, index) {
                 var uuid = sanitize_string(item, 'uuid');
-                MessageManager.markSeen(uuid);
+                CommandProcessor.markOld(uuid);
             });
         } else {
             items.forEach(function (item, index) {
-                var uuid = sanitize_string(item, 'uuid');
-                var is_ok = sanitize_boolean(item, 'is_ok');
-                var msg = CommandLogInjector.format_log_item(item)
-                MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', msg);
+                CommandProcessor.process(item);
             });
         }
     },

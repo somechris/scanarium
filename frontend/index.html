@@ -107,48 +107,26 @@ var cgiFail = function(uuid, cgi, reason, parameters) {
   MessageManager.addMessage(uuid, 'failed', msg);
 };
 
-var cgiOk = function(uuid, cgi, payload) {
-  var suffix = '';
-  var msg = localize('{cgi_name} ok', {'cgi_name': cgi});
-  if (cgi == 'scan') {
-    var sanitized_scene = sanitize_string(payload, 'scene');
-    var sanitized_actor = sanitize_string(payload, 'actor');
-    var sanitized_flavor = sanitize_string(payload, 'flavor');
-    var scan_msg = 'Scanned new actor drawing for {actor_name}';
-    if (sanitized_scene == scene) {
-      if (typeof ScActorManager !== 'undefined') {
-        ScActorManager.addActor(sanitized_actor, sanitized_flavor);
-      }
-    } else {
-      scan_msg += ' for scene {scene_name}';
-    }
-    msg += ': ' + localize(scan_msg, {
-      'scene_name': sanitized_scene,
-      'actor_name': sanitized_actor,
-      });
-  }
-  MessageManager.addMessage(uuid, 'ok', msg);
-};
-
 var onReadyStateChange = function(cgi) {
   return function() {
     if (this.readyState === XMLHttpRequest.DONE) {
+      var capsule = {};
+      var prefix = '';
+      var is_ok = false;
       if (this.status == 200) {
-        var capsule = JSON.parse(this.responseText);
-        var uuid = sanitize_string(capsule, 'uuid');
-        if (sanitize_boolean(capsule, 'is_ok')) {
-          cgiOk(uuid, cgi, sanitize_dictionary(capsule, 'payload'));
-        } else {
-          var error_message = sanitize_string(capsule, 'error_message');
-          var error_template = sanitize_string(capsule, 'error_template') || error_message;
-          var error_parameters = sanitize_dictionary(capsule, 'error_parameters');
-          cgiFail(uuid, cgi, error_template, error_parameters);
-        }
+        capsule = JSON.parse(this.responseText);
+        is_ok = sanitize_boolean(capsule, 'is_ok');
       } else {
-        cgiFail(null, cgi,
-                'Response status was {response_status_code} instead of 200',
-                {'response_status_code': this.status});
+        capsule = {
+          'is_ok': false,
+          'error_template': 'Response status was {response_status_code} instead of 200',
+          'error_parameters': {'response_status_code': this.status.toString()}
+        };
       }
+
+      var status = (is_ok ? 'ok' : 'failed')
+      prefix = localize('{cgi_name} ' + status, {'cgi_name': cgi});
+      CommandProcessor.process(capsule, prefix);
     }
   };
 };

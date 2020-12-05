@@ -29,7 +29,9 @@
     "Unknown white balance filter configured": "Unbekannter Weißabgleich-Filter konfiguriert",
     "undefined error": "Unbekannter Fehler",
     "{cgi_name} failed": "{cgi_name} schlug fehl",
-    "{cgi_name} ok": "{cgi_name} ok"
+    "{cgi_name} ok": "{cgi_name} ok",
+    "{command_name} command failed": "Kommando {command_name} schlug fehl",
+    "{command_name} command ok": "Kommando {command_name} ok"
   },
   "parameters": {
     "actor_name": {

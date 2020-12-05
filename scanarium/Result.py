@@ -12,16 +12,21 @@ class Result(object):
         self.payload = payload
         self.is_ok = exc_info is None
 
-        if exc_info is None:
-            self.error_code = None
-            self.error_message = None
-        else:
+        self.error_code = None
+        self.error_message = None
+        self.error_template = None
+        self.error_parameters = []
+
+        if exc_info is not None:
             if isinstance(exc_info[1], ScanariumError):
                 self.error_code = exc_info[1].code
                 self.error_message = exc_info[1].message
+                self.error_template = exc_info[1].template
+                self.error_parameters = exc_info[1].parameters
             else:
                 self.error_code = 'SE_UNDEF'
                 self.error_message = 'undefined error'
+                self.error_template = self.error_message
 
     def as_dict(self):
         return {
@@ -32,4 +37,6 @@ class Result(object):
             'is_ok': self.is_ok,
             'error_code': self.error_code,
             'error_message': self.error_message,
+            'error_template': self.error_template,
+            'error_parameters': self.error_parameters,
         }

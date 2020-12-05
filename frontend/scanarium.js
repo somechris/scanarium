@@ -22,9 +22,34 @@ var sanitize_boolean = function(value, field) {
 }
 
 var sanitize_string = function(value, field) {
-    value = sanitize_resolve(value, field);
+    value = sanitize_resolve(value, field) || '';
 
     return value.replace(/[^a-zA-Z0-9_,.'" {}-]/g, '.');
+}
+
+var sanitize_list = function(value, field) {
+    var value = sanitize_resolve(value, field);
+    var ret = [];
+    if (Array.isArray(value)) {
+        value.forEach(element => ret.push(sanitize_string(element)));
+    }
+    return ret;
+}
+
+var sanitize_dictionary = function(value, field) {
+    var value = sanitize_resolve(value, field);
+    if (typeof(value) != 'object') {
+        value = {};
+    }
+    var ret = {};
+    Object.keys(value).forEach((key, index) => {
+        var key_sanitized = sanitize_string(key);
+        var value_sanitized = sanitize_string(value[key]);
+
+        ret[key_sanitized] = value_sanitized;
+    });
+
+    return ret;
 }
 
 function getParameter(name, defaultValue) {
@@ -108,7 +133,7 @@ function loadJson(url, callback) {
 var ScActorManager = {
     init: function(config) {
         this.config = config;
-        console.log('ActorManager initialized');
+        console.log(localize('ActorManager initialized'));
     },
     actors_config: null,
     actors_latest_config: null,
@@ -364,7 +389,6 @@ var MessageManager = {
 
       this.markSeen(uuid);
     }
-    console.log(message);
   },
 
   markSeen: function(uuid) {
@@ -410,8 +434,34 @@ var CommandLogInjector = {
     format_log_item: function(item) {
         var is_ok = sanitize_boolean(item, 'is_ok');
         var command = sanitize_string(item, 'command');
+        var parameters = sanitize_list(item, 'parameters');
+        if (command == 'debug') {
+            msg = 'Debug command ' + (is_ok ? 'ok' : 'failed');
+        } else {
+            var template;
+            if (is_ok) {
+                template = 'Scanned new actor drawing for {actor_name}';
+            } else {
+                template = 'Failed to scan new actor drawing for {actor_name}';
+            }
+            if (command != scene) {
+                template += ' for scene {scene_name}';
+            }
+            msg = localize(template, {
+                'actor_name': parameters[0],
+                'scene_name': command,
+            });
+        }
+
         var error_message = sanitize_string(item, 'error_message');
-        return 'Command ' + command + ' ' + (is_ok ? 'ok' : 'failed') + (is_ok ? '' : (': ' + error_message));
+        var error_template = sanitize_string(item, 'error_template');
+        var error_parameters = sanitize_dictionary(item, 'error_parameters');
+        error_template = error_template || error_message;
+        if (error_template) {
+            msg += ': ' + localize(error_template, error_parameters);
+        }
+
+        return msg;
     },
 
     injectLogs: function(items) {
@@ -426,7 +476,7 @@ var CommandLogInjector = {
                 var uuid = sanitize_string(item, 'uuid');
                 var is_ok = sanitize_boolean(item, 'is_ok');
                 var msg = CommandLogInjector.format_log_item(item)
-                MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', msg);
+                MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', uuid + ' ' + msg);
             });
         }
     },
@@ -591,8 +641,8 @@ var HelpPage = {
         var keys = this.keys;
 
         this.keys.forEach(function (key_spec, index) {
-            var key = key_spec['key']
-            var description = key_spec['description']
+            var key = localize(key_spec['key'])
+            var description = localize(key_spec['description'])
 
             var textY = y + caption.height*(index + 4);
 

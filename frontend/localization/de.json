@@ -36,6 +36,12 @@
       "Bunny": "Hase",
       "SimpleRocket": "EinfacheRakete"
     },
+    "cgi_name": {
+      "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",
+      "reindex": "Reindexierung",
+      "scan": "Scannen",
+      "show-source": "Kamera-Anzeige"
+    },
     "scene_name": {
       "balloons": "Luftballons",
       "space": "Weltall"

@@ -1,3 +1,6 @@
+import uuid
+
+
 class ScanariumError(RuntimeError):
     def __init__(self, code, template, parameters=[], *args, **kwargs):
         super(ScanariumError, self).__init__(*args, **kwargs)
@@ -5,6 +8,7 @@ class ScanariumError(RuntimeError):
         self.template = template
         self.parameters = parameters
         self.message = self.format_message()
+        self.uuid = uuid.uuid4()
 
     def format_message(self):
         split = self.template.split('{')

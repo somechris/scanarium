@@ -6,7 +6,7 @@ from .ScanariumError import ScanariumError
 class Result(object):
     def __init__(self, payload={}, exc_info=None, command=None, parameters=[]):
         super(Result, self).__init__()
-        self.uuid = uuid.uuid4()
+        self.uuid = None
         self.command = command
         self.parameters = parameters
         self.payload = payload
@@ -23,10 +23,14 @@ class Result(object):
                 self.error_message = exc_info[1].message
                 self.error_template = exc_info[1].template
                 self.error_parameters = exc_info[1].parameters
+                self.uuid = exc_info[1].uuid
             else:
                 self.error_code = 'SE_UNDEF'
                 self.error_message = 'undefined error'
                 self.error_template = self.error_message
+
+        if self.uuid is None:
+            self.uuid = uuid.uuid4()
 
     def as_dict(self):
         return {

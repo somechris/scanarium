@@ -122,7 +122,10 @@ var cgiOk = function(uuid, cgi, payload) {
     } else {
       scan_msg += ' for scene {scene_name}';
     }
-    msg += ': ' + localize(scan_msg);
+    msg += ': ' + localize(scan_msg, {
+      'scene_name': sanitized_scene,
+      'actor_name': sanitized_actor,
+      });
   }
   MessageManager.addMessage(uuid, 'ok', msg);
 };

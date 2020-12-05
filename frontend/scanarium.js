@@ -484,8 +484,7 @@ var CommandProcessor = {
         var command = sanitize_string(capsule, 'command');
         var parameters = sanitize_list(capsule, 'parameters');
         var msg = '';
-
-        if ('command' in capsule) {
+        if ('command' in capsule && capsule['command'] != null) {
             msg = localize('{command_name} command ' + (is_ok ? 'ok' : 'failed'),
                            {'command_name': command});
 

@@ -134,7 +134,7 @@ var onReadyStateChange = function(cgi) {
         var capsule = JSON.parse(this.responseText);
         var uuid = sanitize_string(capsule.uuid);
         if (capsule.is_ok) {
-          cgiOk(uuid, cgi, capsule.payload);
+          cgiOk(uuid, cgi, sanitize_dictionary(capsule.payload));
         } else {
           cgiFail(uuid, cgi, sanitize_string(capsule.error_message));
         }

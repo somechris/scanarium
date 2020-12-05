@@ -17,13 +17,14 @@ class Result(object):
         self.error_template = None
         self.error_parameters = []
 
-        if exc_info is not None:
-            if isinstance(exc_info[1], ScanariumError):
-                self.error_code = exc_info[1].code
-                self.error_message = exc_info[1].message
-                self.error_template = exc_info[1].template
-                self.error_parameters = exc_info[1].parameters
-                self.uuid = exc_info[1].uuid
+        if exc_info is not None and len(exc_info) > 1:
+            e = exc_info[1]
+            if isinstance(e, ScanariumError):
+                self.error_code = e.code
+                self.error_message = e.message
+                self.error_template = e.template
+                self.error_parameters = e.parameters
+                self.uuid = e.uuid
             else:
                 self.error_code = 'SE_UNDEF'
                 self.error_message = 'undefined error'

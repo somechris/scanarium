@@ -190,7 +190,9 @@ def mask(scanarium, image, scene, actor):
     masked_file_path = os.path.join(scanarium.get_scenes_dir_abs(), scene,
                                     'actors', actor, '%s-mask.png' % actor)
     if not os.path.isfile(masked_file_path):
-        raise ScanariumError('SE_SCAN_NO_MASK', 'Failed to find mask')
+        raise ScanariumError('SE_SCAN_NO_MASK',
+                             'Failed to find mask {file_name}',
+                             {'file_name': masked_file_path})
 
     mask = cv2.imread(masked_file_path, 0)
     mask = cv2.resize(mask, (image.shape[1], image.shape[0]), cv2.INTER_AREA)
@@ -255,13 +257,15 @@ def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
     scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), scene)
     if not os.path.isdir(scene_dir):
         raise ScanariumError('SE_UNKNOWN_SCENE',
-                             f'Scene "{scene}" does not exist')
+                             'Scene "{scene_name}" does not exist',
+                             {'scene_name': scene})
 
     actor_dir = os.path.join(scene_dir, 'actors', actor)
     if not os.path.isdir(actor_dir):
         raise ScanariumError(
             'SE_UNKNOWN_ACTOR',
-            f'Actor "{actor}" does not exist in scene "{scene}"')
+            'Actor "{actor_name}" does not exist in scene "{scene_name}"',
+            {'scene_name': scene, 'actor_name': actor})
 
     image = rectify_to_qr_parent_rect(scanarium, image, qr_rect)
     image = orient_image(image)
@@ -297,7 +301,8 @@ def process_image_with_qr_code_unlogged(scanarium, command, parameter, image, qr
         else:
             raise ScanariumError(
                 'SE_UNKNOWN_PARAM',
-                f'Command "{command}" does not allow a parameter "{param}"')
+                'Command "{command}" does not allow a parameter "{parameter}"',
+                {'command': command, 'parameter': parameter})
     else:
         ret = process_actor_image_with_qr_code(scanarium, image, qr_rect,
                                                command, parameter)
@@ -348,13 +353,16 @@ def open_camera(config):
             file_path = config.get('scan', 'source')
             cam_nr = int(file_path[4:])
         except ValueError:
-            raise ScanariumError('SE_VALUE', 'Failed to parse "%s" of source '
-                                 '"%s" to number' % (file_path[4:], file_path))
+            raise ScanariumError('SE_VALUE', 'Failed to parse "{cam_nr}" of '
+                                 'source "{file_name}" to number',
+                                 {'cam_nr': file_path[4:],
+                                  'file_name': file_path})
         camera = cv2.VideoCapture(cam_nr)
 
         if not camera.isOpened():
             raise ScanariumError('SE_CAP_NOT_OPEN',
-                                 'Failed to open camera %d' % (cam_nr))
+                                 'Failed to open camera {cam_nr}',
+                                 {'cam_nr': cam_nr})
 
         # To avoid having to use external programs for basic camera setup, we
         # set the most basic properties right within Scanarium
@@ -370,7 +378,8 @@ def open_camera(config):
         camera = camera_type
     else:
         raise ScanariumError('SE_CAM_TYPE_UNKNOWN',
-                             f'Unknown camera type "{camera_type}"')
+                             'Unknown camera type "{camera_type}"',
+                             {'camera_type': camera_type})
 
     return camera
 
@@ -384,7 +393,8 @@ def close_camera(config, camera):
         pass
     else:
         raise ScanariumError('SE_CAM_TYPE_UNKNOWN',
-                             f'Unknown camera type "{camera_type}"')
+                             'Unknown camera type "{camera_type}"',
+                             {'camera_type': camera_type})
 
 
 def get_raw_image(config, camera=None):
@@ -400,7 +410,8 @@ def get_raw_image(config, camera=None):
         image = cv2.imread(file_path)
     else:
         raise ScanariumError('SE_CAM_TYPE_UNKNOWN',
-                             f'Unknown camera type "{camera_type}"')
+                             'Unknown camera type "{camera_type}"',
+                             {'camera_type': camera_type})
 
     if manage_camera:
         close_camera(config, camera)
@@ -419,8 +430,9 @@ def undistort_image(image, config):
         except Exception:
             raise ScanariumError(
                 'SE_LOAD_UNDISTORT',
-                'Failed to load parameters for undistortion from %s'
-                % param_file)
+                'Failed to load parameters for undistortion from '
+                '\"{file_name}\"',
+                {'file_name': param_file})
 
         width, height = image.shape[:2]
         new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(

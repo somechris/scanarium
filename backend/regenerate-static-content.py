@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 
 def assert_directory(dir):
     if not os.path.isdir(dir):
-        raise ScanariumError('E_NO_DIR', 'Is not a directory "%s"' % dir)
+        raise ScanariumError('E_NO_DIR', 'Is not a directory "{file_name}"',
+                             {'file_name': dir})
 
 
 def get_svg_document_to_user_dpi_factors(scanarium, tree):
@@ -134,7 +135,9 @@ def generate_mask(scanarium, dir, file):
 
     if not os.path.isfile(source):
         raise ScanariumError('SE_SCAN_NO_SOURCE_FOR_MASK',
-                             'Failed to find source file for generating mask')
+                             'Failed to find source file {source_file} for '
+                             'generating mask {target_file}',
+                             {'source_file': source, 'target_file': target})
 
     if not os.path.isfile(target) \
             or os.stat(source).st_mtime > os.stat(target).st_mtime:

@@ -39,12 +39,12 @@ class Environment(object):
                 command, check=check, timeout=timeout, stdout=subprocess.PIPE,
                 universal_newlines=True)
         except subprocess.TimeoutExpired:
-            raise ScanariumError('SE_TIMEOUT', 'The command "%s" did not '
-                                 'finish within %d seconds' % (str(command),
-                                                               timeout))
+            raise ScanariumError('SE_TIMEOUT', 'The command "{command}" did '
+                                 'not finish within {timeout} seconds',
+                                 {'command': str(command), timeout: timeout})
         except subprocess.CalledProcessError:
-            raise ScanariumError('SE_RETURN_VALUE', 'The command "%s" did '
-                                 'not return 0' % (str(command)))
+            raise ScanariumError('SE_RETURN_VALUE', 'The command "{command}" '
+                                 'did not return 0', {'command': str(command)})
         return process.stdout
 
     def _set_display(self):
@@ -81,7 +81,9 @@ class Environment(object):
             if IS_CGI:
                 if not self._config.get('cgi:%s' % caller, 'allow', 'boolean'):
                     raise ScanariumError('SE_CGI_FORBIDDEN',
-                                         'Calling script as cgi is forbidden')
+                                         'Calling script "{script_name}" as '
+                                         'cgi is forbidden',
+                                         {'script_name': caller})
 
             self._set_display()
 

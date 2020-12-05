@@ -18,6 +18,7 @@
     "Forbidden characters in cgi name": "cgi Name enthält verbotene Zeichen",
     "Intentional error from the \"debug:fail\" command": "Absichtlicher Fehler vom Kommando \"debug:fail\"",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ist kein Verzeichnis",
+    "Response status was {response_status_code} instead of 200": "Server Anfrage schlug fehl (Code {response_status_code} statt 200)",
     "Scanned new actor drawing for {actor_name}": "Neue Zeichnung gescannt für {actor_name}",
     "Scanned new actor drawing for {actor_name} for scene {scene_name}": "Neue Zeichnung gescannt für {actor_name} aus Szene {scene_name}",
     "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",

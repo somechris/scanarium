@@ -1,0 +1,43 @@
+{
+  "messages": {
+    "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "In der Szene \"{scene_name}\" gibt es keinen Akteur \"{actor_name}\"",
+    "Calling script \"{script_name}\" as cgi is forbidden": "Skript \"{script_name}\"darf nicht als cgi gestartet werden",
+    "Command \"{command}\" does not allow a parameter \"{parameter}\"": "Kommando \"{command}\" erlaubt keinen Parameter \"{parameter}\"",
+    "Directory to store file in does not exist, or is no directory": "Verzeichnis zum Speichern existiert nicht, oder ist kein Verzeichnis",
+    "Exception marked as skipped": "Ausnahme ist übersprungen markiert",
+    "Failed to find mask {file_name}": "Konnte Masken-Datei \"{file_name}\" nicht finden",
+    "Failed to find rectangle contour": "Konnte keinen Rechteck-Umriss im Bild finden",
+    "Failed to find scanned QR code": "Konnte keinen QR-Code im Bild finden",
+    "Failed to find source file {source_file} for generating mask {target_file}": "Konnte Quelle {source_file} zur Erzeugung der Maske {target_file} nicht finden",
+    "Failed to identify sheet on scanned image": "Konnte Zettel auf gescanntem Bild nicht finden",
+    "Failed to load parameters for undistortion from \"{file_name}\"": "Konnte Entzerr-Parameters nicht von \"{file_name}\" laden",
+    "Failed to open camera {cam_nr}": "Konnte Kamera {cam_nr} nicht öffnen",
+    "Failed to parse \"{cam_nr}\" of source \"{file_name}\" to number": "Konnte \"{cam_nr}\" von \"{file_name}\" nicht als Zahl lesen",
+    "Failed to scan new actor drawing for {actor_name}": "Einscannen von Zeichnung für {actor_name} schlug fehl",
+    "Failed to scan new actor drawing for {actor_name} for scene {scene_name}": "Einscannen von Zeichnung für {actor_name} schlug fehl (Szene: {scene_name})",
+    "Forbidden characters in cgi name": "cgi Name enthält verbotene Zeichen",
+    "Intentional error from the \"debug:fail\" command": "Absichtlicher Fehler vom Kommando \"debug:fail\"",
+    "Is not a directory \"{file_name}\"": "\"{file_name}\" ist kein Verzeichnis",
+    "Scanned new actor drawing for {actor_name}": "Neue Zeichnung gescannt für {actor_name}",
+    "Scanned new actor drawing for {actor_name} for scene {scene_name}": "Neue Zeichnung gescannt für {actor_name} aus Szene {scene_name}",
+    "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",
+    "Taken too many extraction tries from scanned image": "Zu viele Versuche gebraucht um Daten aus Bild zu extrahieren",
+    "The command \"{command}\" did not finish within {timeout} seconds": "Das Kommando \"{command}\" wurde nicht innerhalb von {timeout} Sekunden fertig",
+    "The command \"{command}\" did not return 0": "Rückgabewert von \"{command}\" war nicht 0",
+    "Unknown camera type \"{camera_type}\"": "Unbekannter Kameratyp \"{camera_type}\"",
+    "Unknown white balance filter configured": "Unbekannter Weißabgleich-Filter konfiguriert",
+    "undefined error": "Unbekannter Fehler",
+    "{cgi_name} failed": "{cgi_name} schlug fehl",
+    "{cgi_name} ok": "{cgi_name} ok"
+  },
+  "parameters": {
+    "actor_name": {
+      "Bunny": "Hase",
+      "SimpleRocket": "EinfacheRakete"
+    },
+    "scene_name": {
+      "balloons": "Luftballons",
+      "space": "Weltall"
+    }
+  }
+}

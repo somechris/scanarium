@@ -476,7 +476,7 @@ var CommandLogInjector = {
                 var uuid = sanitize_string(item, 'uuid');
                 var is_ok = sanitize_boolean(item, 'is_ok');
                 var msg = CommandLogInjector.format_log_item(item)
-                MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', uuid + ' ' + msg);
+                MessageManager.addMessage(uuid, is_ok ? 'ok' : 'failed', msg);
             });
         }
     },

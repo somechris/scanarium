@@ -175,6 +175,10 @@ allow = False
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False
 
+[cgi:reset-dynamic-content]
+# Whether or not to allow calling the script as cgi through the webserver.
+allow = False
+
 
 
 #-------------------------------------------------------------------------------

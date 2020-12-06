@@ -671,6 +671,7 @@ var HelpPage = {
         {key: 'f', description: 'Switch to fullscreen mode'},
         {key: 'h', description: 'Show/hide this help page'},
         {key: 'm', description: 'Add another random actor'},
+        {key: 'n', description: 'Delete all your scanned actors'},
         {key: 'p', description: 'Pause/Resume'},
         {key: 'r', description: 'Reindex actors'},
         {key: 's', description: 'Show camera source image'},

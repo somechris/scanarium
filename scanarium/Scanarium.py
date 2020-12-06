@@ -17,6 +17,10 @@ class Scanarium(object):
             self.get_backend_dir_abs(), self._config, self._dumper)
         self._indexer = scanarium.Indexer(self.get_dynamic_directory(),
                                           self._dumper)
+        self._resetter = scanarium.Resetter(
+            self.get_dynamic_directory(),
+            self.get_dynamic_sample_dir_abs(),
+            self._indexer)
         self._scanner = scanarium.Scanner(self._config, self._command_logger)
 
     def get_config(self, section=None, key=None, kind='string',
@@ -56,8 +60,14 @@ class Scanarium(object):
             dyn_dir = os.path.join(self.get_scanarium_dir_abs(), dyn_dir)
         return dyn_dir
 
+    def get_dynamic_sample_dir_abs(self):
+        return self.get_relative_dir_abs('dynamic.sample')
+
     def reindex_actors_for_scene(self, scene):
         self._indexer.reindex_actors_for_scene(scene)
+
+    def reset_dynamic_content(self):
+        self._resetter.reset_dynamic_content()
 
     def debug_show_image(self, title, image):
         self._scanner.debug_show_image(title, image)

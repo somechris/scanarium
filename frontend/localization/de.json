@@ -46,6 +46,7 @@
     "cgi_name": {
       "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",
       "reindex": "Reindexierung",
+      "reset-dynamic-content": "Zurücksetzen aller dynamischen Inhalte",
       "scan": "Scannen",
       "show-source": "Kamera-Anzeige"
     },

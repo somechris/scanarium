@@ -5,6 +5,7 @@ from .CommandLogger import CommandLogger
 from .Dumper import Dumper
 from .Environment import Environment
 from .Indexer import Indexer
+from .Resetter import Resetter
 from .Result import Result
 from .Scanner import Scanner
 from .Scanarium import Scanarium

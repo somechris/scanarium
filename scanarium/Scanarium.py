@@ -66,8 +66,8 @@ class Scanarium(object):
     def reindex_actors_for_scene(self, scene):
         self._indexer.reindex_actors_for_scene(scene)
 
-    def reset_dynamic_content(self):
-        return self._resetter.reset_dynamic_content()
+    def reset_dynamic_content(self, log=True):
+        return self._resetter.reset_dynamic_content(log)
 
     def debug_show_image(self, title, image):
         self._scanner.debug_show_image(title, image)

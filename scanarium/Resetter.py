@@ -39,12 +39,19 @@ class Resetter(object):
                     self._indexer.reindex_actors_for_scene(scene)
         return exc_info
 
-    def reset_dynamic_content(self):
+    def reset_dynamic_content(self, log=True):
+        ret = None
         exc_info = None
         try:
             exc_info = self.reset_dynamic_content_unlogged()
         except Exception:
             exc_info = sys.exc_info()
 
-        return self._command_logger.log(
-            None, exc_info, 'reset', ['DynamicContent'])
+        if log:
+            ret = self._command_logger.log(
+                None, exc_info, 'reset', ['DynamicContent'])
+        else:
+            if exc_info is not None:
+                raise exc_info[1]
+
+        return ret

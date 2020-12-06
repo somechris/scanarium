@@ -304,6 +304,8 @@ def process_image_with_qr_code_unlogged(scanarium, command, parameter, image,
                 'SE_UNKNOWN_PARAM',
                 'Command "{command}" does not allow a parameter "{parameter}"',
                 {'command': command, 'parameter': parameter})
+    elif command == 'reset':
+        ret = scanarium.reset_dynamic_content(log=False)
     elif command == 'switchScene':
         scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), parameter)
         if os.path.isdir(scene_dir):

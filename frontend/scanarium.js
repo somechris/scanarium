@@ -479,6 +479,18 @@ var CommandProcessor = {
         });
     },
 
+    processCommandReset: function(capsule) {
+        var is_ok = sanitize_boolean(capsule, 'is_ok');
+        var parameters = sanitize_list(capsule, 'parameters');
+        if (is_ok) {
+            template = 'Reset all dynamic content';
+            document.location.reload();
+        } else {
+            template = 'Resetting all dynamic content failed';
+        }
+        return localize(template);
+    },
+
     processNew: function(capsule, prefix) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var command = sanitize_string(capsule, 'command');
@@ -490,6 +502,8 @@ var CommandProcessor = {
 
             if (command == 'debug') {
                 msg = this.processCommandDebug(capsule) || msg;
+            } else if (command == 'reset') {
+                msg = this.processCommandReset(capsule) || msg;
             } else if (command == 'switchScene') {
                 msg = this.processCommandSwitchScene(capsule) || msg;
             } else {

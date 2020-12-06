@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def reset_dynamic_content(scanarium):
-    scanarium.reset_dynamic_content()
+    return scanarium.reset_dynamic_content()
 
 
 if __name__ == "__main__":

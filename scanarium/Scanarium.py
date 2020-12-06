@@ -20,7 +20,7 @@ class Scanarium(object):
         self._resetter = scanarium.Resetter(
             self.get_dynamic_directory(),
             self.get_dynamic_sample_dir_abs(),
-            self._indexer)
+            self._indexer, self._command_logger)
         self._scanner = scanarium.Scanner(self._config, self._command_logger)
 
     def get_config(self, section=None, key=None, kind='string',
@@ -67,7 +67,7 @@ class Scanarium(object):
         self._indexer.reindex_actors_for_scene(scene)
 
     def reset_dynamic_content(self):
-        self._resetter.reset_dynamic_content()
+        return self._resetter.reset_dynamic_content()
 
     def debug_show_image(self, title, image):
         self._scanner.debug_show_image(title, image)

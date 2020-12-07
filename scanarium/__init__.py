@@ -6,6 +6,8 @@ from .Dumper import Dumper
 from .Environment import Environment
 from .Indexer import Indexer
 from .MessageFormatter import MessageFormatter
+from .Localizer import Localizer
+from .LocalizerFactory import LocalizerFactory
 from .Resetter import Resetter
 from .Result import Result
 from .Scanner import Scanner

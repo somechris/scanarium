@@ -11,6 +11,8 @@ class Scanarium(object):
         super(Scanarium, self).__init__()
         self._config = scanarium.Config(self.get_config_dir_abs())
         self._dumper = scanarium.Dumper()
+        self._localizer_factory = scanarium.LocalizerFactory(
+            self.get_localization_dir_abs())
         self._command_logger = scanarium.CommandLogger(
             self.get_dynamic_directory(), self._dumper)
         self._environment = scanarium.Environment(
@@ -51,6 +53,9 @@ class Scanarium(object):
     def get_frontend_cgi_bin_dir_abs(self):
         return os.path.join(self.get_frontend_dir_abs(), 'cgi-bin')
 
+    def get_localization_dir_abs(self):
+        return self.get_relative_dir_abs('localization')
+
     def get_scenes_dir_abs(self):
         return self.get_relative_dir_abs('scenes')
 
@@ -68,6 +73,9 @@ class Scanarium(object):
 
     def reset_dynamic_content(self, log=True):
         return self._resetter.reset_dynamic_content(log)
+
+    def get_localizer(self, language):
+        return self._localizer_factory.get_localizer(language)
 
     def debug_show_image(self, title, image):
         self._scanner.debug_show_image(title, image)

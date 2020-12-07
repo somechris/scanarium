@@ -249,8 +249,8 @@ def expand_qr_pixel_to_qr_code(element, data):
         del(element.attrib[attrib])
 
 
-def filter_svg_tree(tree, command, parameter, localizer):
-
+def filter_svg_tree(tree, command, parameter, localizer, command_label,
+                    parameter_label):
     def localize_parameter_with_alternative(key, value, alternative_keys=[]):
         ret = localizer.localize_parameter(key, value)
         for alternative_key in alternative_keys:
@@ -263,13 +263,20 @@ def filter_svg_tree(tree, command, parameter, localizer):
     localized_parameter = localize_parameter_with_alternative(
         'parameter_name', parameter, ['actor_name', 'scene_name'])
 
+    localized_command_label = localizer.localize_parameter(
+        'command_label', command_label)
+    localized_parameter_label = localizer.localize_parameter(
+        'parameter_label', parameter_label)
+
     template_parameters = {
         'COMMAND': localized_command,
         'COMMAND_RAW': command,
         'PARAMETER': localized_parameter,
         'PARAMETER_RAW': parameter,
         'actor_name': localized_parameter,
+        'command_label': localized_command_label,
         'command_name': localized_command,
+        'parameter_label': localized_parameter_label,
         'parameter_name': localized_parameter,
         'scene_name': localized_command,
     }
@@ -295,7 +302,8 @@ def append_svg_layers(base, addition):
         root.append(layer)
 
 
-def generate_full_svg(scanarium, dir, command, parameter, localizer):
+def generate_full_svg(scanarium, dir, command, parameter, localizer,
+                      command_label, parameter_label):
     undecorated_name = os.path.join(dir, parameter + '-undecorated.svg')
     decoration_name = os.path.join(scanarium.get_config_dir_abs(),
                                    'decoration.svg')
@@ -304,20 +312,22 @@ def generate_full_svg(scanarium, dir, command, parameter, localizer):
         register_svg_namespaces()
         tree = ET.parse(undecorated_name)
         append_svg_layers(tree, ET.parse(decoration_name))
-        filter_svg_tree(tree, command, parameter, localizer)
+        filter_svg_tree(tree, command, parameter, localizer, command_label,
+                        parameter_label)
         tree.write(full_name)
 
 
 def regenerate_static_content_command_parameter(
         scanarium, dir, command, parameter, is_actor, localizer):
-    command_str = 'scene' if is_actor else 'command'
-    parameter_str = 'actor' if is_actor else 'parameter'
-    logging.debug(f'Regenerating content for {command_str} "{command}", '
-                  f'{parameter_str} "{parameter}" ...')
+    command_label = 'scene' if is_actor else 'command'
+    parameter_label = 'actor' if is_actor else 'parameter'
+    logging.debug(f'Regenerating content for {command_label} "{command}", '
+                  f'{parameter_label} "{parameter}" ...')
 
     assert_directory(dir)
     full_svg_name = parameter + '.svg'
-    generate_full_svg(scanarium, dir, command, parameter, localizer)
+    generate_full_svg(scanarium, dir, command, parameter, localizer,
+                      command_label, parameter_label)
     generate_pdf(scanarium, dir, full_svg_name)
 
     if is_actor:

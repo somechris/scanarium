@@ -52,6 +52,14 @@
       "scan": "Scannen",
       "show-source": "Kamera-Anzeige"
     },
+    "command_label": {
+      "command": "Kommando",
+      "scene": "Szene"
+    },
+    "parameter_label": {
+      "actor": "Akteur",
+      "parameter": "Parameter"
+    },
     "scene_name": {
       "balloons": "Luftballons",
       "space": "Weltall"

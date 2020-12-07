@@ -251,10 +251,8 @@ def expand_qr_pixel_to_qr_code(element, data):
 
 def filter_svg_tree(tree, command, parameter):
     text_replacements = {
-        '{ACTOR}': parameter,
         '{COMMAND}': command,
         '{PARAMETER}': parameter,
-        '{SCENE}': command,
     }
 
     def filter_text(text):

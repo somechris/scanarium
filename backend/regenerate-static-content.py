@@ -276,8 +276,10 @@ def filter_svg_tree(tree, command, parameter, localizer, command_label,
         'actor_name': localized_parameter,
         'command_label': localized_command_label,
         'command_name': localized_command,
+        'command_name_raw': command,
         'parameter_label': localized_parameter_label,
         'parameter_name': localized_parameter,
+        'parameter_name_raw': parameter,
         'scene_name': localized_command,
     }
 

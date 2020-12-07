@@ -303,22 +303,28 @@ def append_svg_layers(base, addition):
 
 
 def generate_full_svg(scanarium, dir, command, parameter, localizer,
-                      command_label, parameter_label):
+                      command_label, parameter_label, extra_decoration_name):
     undecorated_name = os.path.join(dir, parameter + '-undecorated.svg')
     decoration_name = os.path.join(scanarium.get_config_dir_abs(),
                                    'decoration.svg')
     full_name = os.path.join(dir, parameter + '.svg')
-    if file_needs_update(full_name, [undecorated_name, decoration_name]):
+    sources = [undecorated_name, decoration_name]
+    if extra_decoration_name:
+        sources.append(extra_decoration_name)
+    if file_needs_update(full_name, sources):
         register_svg_namespaces()
         tree = ET.parse(undecorated_name)
         append_svg_layers(tree, ET.parse(decoration_name))
+        if extra_decoration_name:
+            append_svg_layers(tree, ET.parse(extra_decoration_name))
         filter_svg_tree(tree, command, parameter, localizer, command_label,
                         parameter_label)
         tree.write(full_name)
 
 
 def regenerate_static_content_command_parameter(
-        scanarium, dir, command, parameter, is_actor, localizer):
+        scanarium, dir, command, parameter, is_actor, localizer,
+        extra_decoration_name):
     command_label = 'scene' if is_actor else 'command'
     parameter_label = 'actor' if is_actor else 'parameter'
     logging.debug(f'Regenerating content for {command_label} "{command}", '
@@ -327,7 +333,7 @@ def regenerate_static_content_command_parameter(
     assert_directory(dir)
     full_svg_name = parameter + '.svg'
     generate_full_svg(scanarium, dir, command, parameter, localizer,
-                      command_label, parameter_label)
+                      command_label, parameter_label, extra_decoration_name)
     generate_pdf(scanarium, dir, full_svg_name)
 
     if is_actor:
@@ -337,14 +343,15 @@ def regenerate_static_content_command_parameter(
 
 
 def regenerate_static_content_command_parameters(
-        scanarium, dir, command, parameter, is_actor, localizer):
+        scanarium, dir, command, parameter, is_actor, localizer,
+        extra_decoration_name):
     parameters = os.listdir(dir) if parameter is None else [parameter]
     for parameter in parameters:
         parameter_dir = os.path.join(dir, parameter)
         if os.path.isdir(parameter_dir):
             regenerate_static_content_command_parameter(
                 scanarium, parameter_dir, command, parameter, is_actor,
-                localizer)
+                localizer, extra_decoration_name)
 
 
 def regenerate_static_content_commands(
@@ -353,12 +360,16 @@ def regenerate_static_content_commands(
         commands = os.listdir(dir) if command is None else [command]
         for command in commands:
             command_dir = os.path.join(dir, command)
+            extra_decoration_name = os.path.join(
+                command_dir, 'extra-decoration.svg')
+            if not os.path.isfile(extra_decoration_name):
+                extra_decoration_name = None
             if is_actor:
                 command_dir = os.path.join(command_dir, 'actors')
             if os.path.isdir(command_dir):
                 regenerate_static_content_command_parameters(
                     scanarium, command_dir, command, parameter, is_actor,
-                    localizer)
+                    localizer, extra_decoration_name)
 
 
 def regenerate_static_content(scanarium, command, parameter, localizer):

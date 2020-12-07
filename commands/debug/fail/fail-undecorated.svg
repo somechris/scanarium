@@ -25,18 +25,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.84195841"
-     inkscape:cx="84.493231"
-     inkscape:cy="489.1298"
+     inkscape:zoom="0.89425539"
+     inkscape:cx="327.49462"
+     inkscape:cy="441.25284"
      inkscape:document-units="mm"
-     inkscape:current-layer="Mask"
+     inkscape:current-layer="description"
      showgrid="false"
      units="mm"
      inkscape:window-width="1920"
-     inkscape:window-height="1080"
-     inkscape:window-x="1920"
+     inkscape:window-height="1015"
+     inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -50,23 +50,32 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Default"
      inkscape:groupmode="layer"
-     id="Mask"
+     id="description"
+     inkscape:label="description"
      style="display:inline"
      transform="translate(0,-308.2677)">
     <flowRoot
        xml:space="preserve"
-       id="flowRoot817"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,-8.8243845,330.53721)"><flowRegion
-         id="flowRegion819"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"><rect
-           id="rect821"
-           width="648.4881"
-           height="418.07291"
-           x="245.85538"
-           y="113.14461"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle" /></flowRegion><flowPara
-         id="flowPara823">Scanning this sheet will trigger a trivial command that fails</flowPara></flowRoot>  </g>
+       id="flowRoot69"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"><flowRegion
+         id="flowRegion71"><rect
+           id="rect73"
+           width="216.94026"
+           height="51.439445"
+           x="494.26596"
+           y="315.0903" /></flowRegion><flowPara
+         id="flowPara75" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot37"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.9375,0,0,0.9375,-114.75497,243.78119)"><flowRegion
+         id="flowRegion39"><rect
+           id="rect41"
+           width="526.69519"
+           height="251.60597"
+           x="514.39441"
+           y="476.11813" /></flowRegion><flowPara
+         id="flowPara43"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.33333206px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle">{command_name_raw}:{parameter_name_raw} simply fails on purpose</flowPara></flowRoot>  </g>
 </svg>

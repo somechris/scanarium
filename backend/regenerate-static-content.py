@@ -269,10 +269,6 @@ def filter_svg_tree(tree, command, parameter, localizer, command_label,
         'parameter_label', parameter_label)
 
     template_parameters = {
-        'COMMAND': localized_command,
-        'COMMAND_RAW': command,
-        'PARAMETER': localized_parameter,
-        'PARAMETER_RAW': parameter,
         'actor_name': localized_parameter,
         'command_label': localized_command_label,
         'command_name': localized_command,

@@ -251,7 +251,7 @@ def expand_qr_pixel_to_qr_code(element, data):
 
 def filter_svg_tree(tree, command, parameter, localizer):
 
-    def localize_parameter_with_alternative(key, value, alternative_keys = []):
+    def localize_parameter_with_alternative(key, value, alternative_keys=[]):
         ret = localizer.localize_parameter(key, value)
         for alternative_key in alternative_keys:
             if ret == value:

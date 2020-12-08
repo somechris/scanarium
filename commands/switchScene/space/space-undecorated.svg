@@ -25,16 +25,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.84195841"
-     inkscape:cx="305.89667"
-     inkscape:cy="489.1298"
+     inkscape:zoom="0.42097921"
+     inkscape:cx="-136.25297"
+     inkscape:cy="430.57811"
      inkscape:document-units="mm"
      inkscape:current-layer="Mask"
      showgrid="false"
      units="mm"
      inkscape:window-width="1920"
-     inkscape:window-height="1080"
-     inkscape:window-x="1920"
+     inkscape:window-height="1015"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0" />
   <metadata
@@ -55,29 +55,5 @@
      id="Mask"
      style="display:inline"
      transform="translate(0,-308.2677)">
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot817"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,-8.8243845,330.53721)"><flowRegion
-         id="flowRegion819"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"><rect
-           id="rect821"
-           width="615.2323"
-           height="138.96175"
-           x="245.85538"
-           y="113.14461"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle" /></flowRegion><flowPara
-         id="flowPara823">Scanning this sheet will switch the scene to</flowPara></flowRoot>    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:90px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.9375"
-       x="642.47534"
-       y="719.43298"
-       id="text13"><tspan
-         sodipodi:role="line"
-         id="tspan11"
-         x="642.47534"
-         y="719.43298"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:90px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.9375">{parameter_name_raw}</tspan></text>
   </g>
 </svg>

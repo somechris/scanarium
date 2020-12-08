@@ -290,6 +290,8 @@ def filter_svg_tree(tree, command, parameter, localizer, command_label,
     for element in tree.iter():
         element.text = filter_text(element.text)
         element.tail = filter_text(element.tail)
+        for key in element.keys():
+            element.set(key, filter_text(element.get(key)))
 
     for qr_element in list(tree.iter("{http://www.w3.org/2000/svg}rect")):
         if qr_element.attrib.get('qr-pixel', 'false') == 'true':

@@ -129,7 +129,7 @@ def get_mask_name(dir, file):
     return os.path.join(dir, basename + '-mask.png')
 
 
-def generate_mask(scanarium, dir, file):
+def generate_mask(scanarium, dir, file, force):
     source = os.path.join(dir, file)
     target = get_mask_name(dir, file)
 
@@ -139,7 +139,7 @@ def generate_mask(scanarium, dir, file):
                              'generating mask {target_file}',
                              {'source_file': source, 'target_file': target})
 
-    if file_needs_update(target, [source]):
+    if file_needs_update(target, [source], force):
         contour_area = get_svg_contour_rect_area(scanarium, source)
         command = [
             scanarium.get_config('programs', 'inkscape'),
@@ -158,11 +158,11 @@ def get_thumbnail_name(dir, file):
     return os.path.join(dir, basename + '-thumb.jpg')
 
 
-def generate_thumbnail(scanarium, dir, file, shave=True, erode=False):
+def generate_thumbnail(scanarium, dir, file, force, shave=True, erode=False):
     source = os.path.join(dir, file)
     target = get_thumbnail_name(dir, file)
 
-    if file_needs_update(target, [source]):
+    if file_needs_update(target, [source], force):
         command = [scanarium.get_config('programs', 'convert'), source]
         if shave:
             command += ['-shave', '20%']
@@ -172,10 +172,10 @@ def generate_thumbnail(scanarium, dir, file, shave=True, erode=False):
         scanarium.run(command)
 
 
-def generate_pdf(scanarium, dir, file):
+def generate_pdf(scanarium, dir, file, force):
     source = os.path.join(dir, file)
     target = os.path.join(dir, file.rsplit('.', 1)[0] + '.pdf')
-    if file_needs_update(target, [source]):
+    if file_needs_update(target, [source], force):
         command = [
             scanarium.get_config('programs', 'inkscape'),
             '--export-area-page',
@@ -200,9 +200,9 @@ def register_svg_namespaces():
         ET.register_namespace(k, v)
 
 
-def file_needs_update(destination, sources):
+def file_needs_update(destination, sources, force=False):
     ret = True
-    if os.path.isfile(destination):
+    if os.path.isfile(destination) and not force:
         ret = any(os.stat(destination).st_mtime < os.stat(source).st_mtime
                   for source in sources)
     return ret
@@ -303,7 +303,8 @@ def append_svg_layers(base, addition):
 
 
 def generate_full_svg(scanarium, dir, command, parameter, localizer,
-                      command_label, parameter_label, extra_decoration_name):
+                      command_label, parameter_label, force,
+                      extra_decoration_name):
     undecorated_name = os.path.join(dir, parameter + '-undecorated.svg')
     decoration_name = os.path.join(scanarium.get_config_dir_abs(),
                                    'decoration.svg')
@@ -311,7 +312,7 @@ def generate_full_svg(scanarium, dir, command, parameter, localizer,
     sources = [undecorated_name, decoration_name]
     if extra_decoration_name:
         sources.append(extra_decoration_name)
-    if file_needs_update(full_name, sources):
+    if file_needs_update(full_name, sources, force):
         register_svg_namespaces()
         tree = ET.parse(undecorated_name)
         append_svg_layers(tree, ET.parse(decoration_name))
@@ -323,7 +324,7 @@ def generate_full_svg(scanarium, dir, command, parameter, localizer,
 
 
 def regenerate_static_content_command_parameter(
-        scanarium, dir, command, parameter, is_actor, localizer,
+        scanarium, dir, command, parameter, is_actor, localizer, force,
         extra_decoration_name):
     command_label = 'scene' if is_actor else 'command'
     parameter_label = 'actor' if is_actor else 'parameter'
@@ -333,17 +334,18 @@ def regenerate_static_content_command_parameter(
     assert_directory(dir)
     full_svg_name = parameter + '.svg'
     generate_full_svg(scanarium, dir, command, parameter, localizer,
-                      command_label, parameter_label, extra_decoration_name)
-    generate_pdf(scanarium, dir, full_svg_name)
+                      command_label, parameter_label, force,
+                      extra_decoration_name)
+    generate_pdf(scanarium, dir, full_svg_name, force)
 
     if is_actor:
-        generate_mask(scanarium, dir, full_svg_name)
-        generate_thumbnail(scanarium, dir, full_svg_name, shave=False,
+        generate_mask(scanarium, dir, full_svg_name, force)
+        generate_thumbnail(scanarium, dir, full_svg_name, force, shave=False,
                            erode=True)
 
 
 def regenerate_static_content_command_parameters(
-        scanarium, dir, command, parameter, is_actor, localizer,
+        scanarium, dir, command, parameter, is_actor, localizer, force,
         extra_decoration_name):
     parameters = os.listdir(dir) if parameter is None else [parameter]
     for parameter in parameters:
@@ -351,11 +353,11 @@ def regenerate_static_content_command_parameters(
         if os.path.isdir(parameter_dir):
             regenerate_static_content_command_parameter(
                 scanarium, parameter_dir, command, parameter, is_actor,
-                localizer, extra_decoration_name)
+                localizer, force, extra_decoration_name)
 
 
 def regenerate_static_content_commands(
-        scanarium, dir, command, parameter, is_actor, localizer):
+        scanarium, dir, command, parameter, is_actor, localizer, force):
     if os.path.isdir(dir):
         commands = os.listdir(dir) if command is None else [command]
         for command in commands:
@@ -369,22 +371,27 @@ def regenerate_static_content_commands(
             if os.path.isdir(command_dir):
                 regenerate_static_content_command_parameters(
                     scanarium, command_dir, command, parameter, is_actor,
-                    localizer, extra_decoration_name)
+                    localizer, force, extra_decoration_name)
 
 
-def regenerate_static_content(scanarium, command, parameter, localizer):
+def regenerate_static_content(scanarium, command, parameter, localizer, force):
     for d in [
         {'dir': scanarium.get_commands_dir_abs(), 'is_actor': False},
         {'dir': scanarium.get_scenes_dir_abs(), 'is_actor': True},
     ]:
         regenerate_static_content_commands(
-            scanarium, d['dir'], command, parameter, d['is_actor'], localizer)
+            scanarium, d['dir'], command, parameter, d['is_actor'], localizer,
+            force)
 
 
 def register_arguments(parser):
     parser.add_argument('--language',
                         help='Localize for the given language '
                         '(E.g.: \'de\' for German)')
+    parser.add_argument('--force',
+                        help='Regenerate all files, even if they are not'
+                        'stale',
+                        action='store_true')
     parser.add_argument('COMMAND', nargs='?',
                         help='Regenerate only the given command/scene')
     parser.add_argument('PARAMETER', nargs='?',
@@ -397,4 +404,4 @@ if __name__ == "__main__":
                                       register_arguments)
     scanarium.call_guarded(
         regenerate_static_content, args.COMMAND, args.PARAMETER,
-        scanarium.get_localizer(args.language))
+        scanarium.get_localizer(args.language), args.force)

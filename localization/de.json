@@ -1,5 +1,6 @@
 {
   "messages": {
+    "(This is useful to get rid of unwanted images)": "(Das ist nützlich um unerwünschte Bilder wieder zu entfernen)",
     "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "In der Szene \"{scene_name}\" gibt es keinen Akteur \"{actor_name}\"",
     "Calling script \"{script_name}\" as cgi is forbidden": "Skript \"{script_name}\"darf nicht als cgi gestartet werden",
     "Cannot switch to scene {scene_name}": "Kann nicht zur Szene {scene_name} wechseln",
@@ -22,6 +23,7 @@
     "Reset all dynamic content": "Alle dynamische Inhalte zurückgesetzt",
     "Resetting all dynamic content failed": "Zurücksetzen der dynamischen Inhalte schlug fehl",
     "Response status was {response_status_code} instead of 200": "Server Anfrage schlug fehl (Code {response_status_code} statt 200)",
+    "Scan this page to delete all your scanned images from Scanarium": "Scannen Sie diese Seite um alle Ihre Bilder aus Scanarium zu entfernen",
     "Scanned new actor drawing for {actor_name}": "Neue Zeichnung gescannt für {actor_name}",
     "Scanned new actor drawing for {actor_name} for scene {scene_name}": "Neue Zeichnung gescannt für {actor_name} aus Szene {scene_name}",
     "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",
@@ -56,9 +58,15 @@
       "command": "Kommando",
       "scene": "Szene"
     },
+    "command_name": {
+      "reset": "Zurücksetzen"
+    },
     "parameter_label": {
       "actor": "Akteur",
       "parameter": "Parameter"
+    },
+    "parameter_name": {
+      "DynamicContent": "Alle Bilder"
     },
     "scene_name": {
       "balloons": "Luftballons",

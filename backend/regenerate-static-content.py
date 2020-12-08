@@ -195,6 +195,7 @@ def register_svg_namespaces():
         'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
         'sodipodi': 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
         'svg': 'http://www.w3.org/2000/svg',
+        'xlink': 'http://www.w3.org/1999/xlink',
     }
     for k, v in namespaces.items():
         ET.register_namespace(k, v)

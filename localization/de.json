@@ -42,10 +42,10 @@
   },
   "parameters": {
     "actor_name": {
-      "Bunny": "Hase",
+      "BunnyBalloon": "Hasen-Luftballon",
       "FlyingSaucer": "Fliegende Untertasse",
-      "Heart": "Herz",
-      "PlainBalloon": "EinfacherBallon",
+      "HeartBalloon": "Herz-Luftballon",
+      "PlainBalloon": "Einfacher Luftballon",
       "SimpleRocket": "Einfache Rakete"
     },
     "cgi_name": {

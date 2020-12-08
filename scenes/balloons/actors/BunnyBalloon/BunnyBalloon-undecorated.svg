@@ -14,8 +14,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="Heart-undecorated.svg"
-   viewBox="0 0 1052.3622 744.09446">
+   sodipodi:docname="BunnyBalloon-undecorated.svg"
+   viewBox="0 0 1052.3622 744.09448">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.45649061"
-     inkscape:cx="634.97943"
-     inkscape:cy="809.07162"
+     inkscape:zoom="0.50536287"
+     inkscape:cx="1107.3627"
+     inkscape:cy="638.32868"
      inkscape:document-units="mm"
      inkscape:current-layer="Mask"
      showgrid="false"
@@ -54,19 +54,17 @@
      inkscape:groupmode="layer"
      id="Mask"
      style="display:inline"
-     transform="translate(0,-308.26772)">
+     transform="translate(0,-308.2677)">
     <path
        style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#808080;stroke-width:0.70866144;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker:none;enable-background:accumulate"
-       d="M 609.44882,354.3307 718.28125,471.5 h 0.28125 c 0.0503,0.0499 0.1062,0.11539 0.15625,0.15625 l -9.75,17.34375 8.8125,-2.1875 9,4.84375 5.6875,-3.40625 -9.9375,-16.5 c 0.65789,-0.5172 1.35801,-1.36297 2.125,-2.4375 0.009,-0.0124 0.0224,-0.0188 0.0312,-0.0312 L 829.13381,354.3438 C 922.6766,248.8004 827.53655,140.24511 728.1895,232.76637 641.01265,137.47514 518.90519,251.00023 609.44882,354.3307 Z"
-       transform="translate(0,308.2677)"
+       d="m 816.59293,495.49498 c -19.89666,0.44426 -50.61993,32.18867 -71.66565,103.97823 -65.31612,-160.55176 -155.19861,-111.99466 -63.31391,17.18533 -14.11577,9.76702 -46.10189,49.48873 -5.82197,116.93653 -32.32444,69.22911 -26.62135,117.24623 63.48718,118.18385 0.0314,0.0829 0.072,0.1596 0.10391,0.24253 l -10.81223,19.22957 9.77259,-2.42536 9.98052,5.37042 6.30713,-3.77661 -11.02015,-18.29407 c 0.0428,-0.0336 0.0955,-0.0679 0.13861,-0.10389 h 0.27724 c 68.68558,-2.34336 108.88658,-5.99033 64.7694,-118.42638 32.88776,-53.26732 16.95383,-102.91308 -3.7427,-118.2185 43.76732,-75.34204 35.55319,-120.41777 11.53997,-119.88159 z"
        id="path2991-3"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccccccc" />
+       inkscape:connector-curvature="0" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="Overlay"
      style="display:inline"
-     transform="translate(0,-308.26772)" />
+     transform="translate(0,-308.2677)" />
 </svg>

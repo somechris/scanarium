@@ -43,10 +43,10 @@
   "parameters": {
     "actor_name": {
       "Bunny": "Hase",
-      "FlyingSaucer": "FliegendeUntertasse",
+      "FlyingSaucer": "Fliegende Untertasse",
       "Heart": "Herz",
       "PlainBalloon": "EinfacherBallon",
-      "SimpleRocket": "EinfacheRakete"
+      "SimpleRocket": "Einfache Rakete"
     },
     "cgi_name": {
       "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",

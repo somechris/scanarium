@@ -139,8 +139,7 @@ def generate_mask(scanarium, dir, file):
                              'generating mask {target_file}',
                              {'source_file': source, 'target_file': target})
 
-    if not os.path.isfile(target) \
-            or os.stat(source).st_mtime > os.stat(target).st_mtime:
+    if file_needs_update(target, [source]):
         contour_area = get_svg_contour_rect_area(scanarium, source)
         command = [
             scanarium.get_config('programs', 'inkscape'),
@@ -162,26 +161,29 @@ def get_thumbnail_name(dir, file):
 def generate_thumbnail(scanarium, dir, file, shave=True, erode=False):
     source = os.path.join(dir, file)
     target = get_thumbnail_name(dir, file)
-    command = [scanarium.get_config('programs', 'convert'), source]
-    if shave:
-        command += ['-shave', '20%']
-    if erode:
-        command += ['-morphology', 'Erode', 'Octagon']
-    command += ['-resize', '150x100', target]
-    scanarium.run(command)
+
+    if file_needs_update(target, [source]):
+        command = [scanarium.get_config('programs', 'convert'), source]
+        if shave:
+            command += ['-shave', '20%']
+        if erode:
+            command += ['-morphology', 'Erode', 'Octagon']
+        command += ['-resize', '150x100', target]
+        scanarium.run(command)
 
 
 def generate_pdf(scanarium, dir, file):
     source = os.path.join(dir, file)
     target = os.path.join(dir, file.rsplit('.', 1)[0] + '.pdf')
-    command = [
-        scanarium.get_config('programs', 'inkscape'),
-        '--export-area-page',
-        '--export-pdf=%s' % (target),
-        source,
-    ]
+    if file_needs_update(target, [source]):
+        command = [
+            scanarium.get_config('programs', 'inkscape'),
+            '--export-area-page',
+            '--export-pdf=%s' % (target),
+            source,
+        ]
 
-    scanarium.run(command)
+        scanarium.run(command)
 
 
 def register_svg_namespaces():

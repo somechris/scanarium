@@ -347,11 +347,11 @@ def set_camera_property(config, cap, property, config_key):
 
 
 def get_camera_type(config):
-    ret = 'STATIC-IMAGE-CAMERA'
+    ret = 'PROPER-CAMERA'
 
     file_path = config.get('scan', 'source')
-    if file_path.startswith('cam:'):
-        ret = 'PROPER-CAMERA'
+    if file_path.startswith('image:'):
+        ret = 'STATIC-IMAGE-CAMERA'
 
     return ret
 
@@ -360,21 +360,22 @@ def open_camera(config):
     camera = None
     camera_type = get_camera_type(config)
     if camera_type == 'PROPER-CAMERA':
-        file_path = config.get('scan', 'source')
-        cam_nr_str = file_path[4:]
-        try:
-            cam_nr = int(cam_nr_str)
-        except ValueError:
-            raise ScanariumError('SE_VALUE', 'Failed to parse "{cam_nr}" of '
-                                 'source "{file_name}" to number',
-                                 {'cam_nr': cam_nr_str,
-                                  'file_name': file_path})
-        camera = cv2.VideoCapture(cam_nr)
+        source = config.get('scan', 'source')
+        if source.startswith('cam:'):
+            stripped = source[4:]
+            try:
+                source = int(stripped)
+            except ValueError:
+                raise ScanariumError('SE_VALUE', 'Failed to parse "{stripped}"'
+                                     ' of source "{source}" to number',
+                                     {'stripped': stripped,
+                                      'source': source})
+        camera = cv2.VideoCapture(source)
 
         if not camera.isOpened():
             raise ScanariumError('SE_CAP_NOT_OPEN',
-                                 'Failed to open camera {cam_nr}',
-                                 {'cam_nr': cam_nr_str})
+                                 'Failed to open camera "{source}"',
+                                 {'source': source})
 
         # To avoid having to use external programs for basic camera setup, we
         # set the most basic properties right within Scanarium

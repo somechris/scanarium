@@ -55,10 +55,13 @@ dynamic = dynamic
 
 # Source to get images from.
 #
-# `cam:<n>` denotes video camera `<n>`. On linux, thi resolves to
+# `cam:<n>` denotes video camera `<n>`. On linux, this resolves to
 # `/dev/video<n>`. So for example, `cam:2` would be `/dev/video2`.
-# Strings that do not start in `cam:` are considered a file name, and the image
-# at that file name taken.
+# `image:<file_name>` denotes the still image file `<file_name>`. This allows
+# to test on systems without cameras, or inject images that arrived through
+# other means (E.g.: emails)
+# Strings that do not start with `cam:` or `image:` are considered raw specs to
+# OpenCV's VideoCapture contstructor.
 source = cam:0
 
 

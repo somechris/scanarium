@@ -383,6 +383,12 @@ def open_camera(config):
         set_camera_property(config, camera, cv2.CAP_PROP_FRAME_HEIGHT,
                             'height')
 
+        # Since we do not necessarily need all images, but much rather want to
+        # arrive at the most recent image quickly, we keep buffers as small as
+        # we can, so we need to skip over as few buffered images as possible.
+        camera.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        camera.set(cv2.CAP_PROP_GSTREAMER_QUEUE_LENGTH, 1)
+
         delay = config.get('scan', 'delay', allow_empty=True, kind='float')
         if delay:
             camera.read()

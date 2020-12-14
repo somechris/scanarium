@@ -391,7 +391,7 @@ def open_camera(config):
 
         delay = config.get('scan', 'delay', allow_empty=True, kind='float')
         if delay:
-            camera.read()
+            camera.grab()
             time.sleep(delay)
     elif camera_type == 'STATIC-IMAGE-CAMERA':
         camera = camera_type

@@ -15,12 +15,18 @@ logger = logging.getLogger(__name__)
 
 
 def show_source(scanarium):
-    key = -1
-    while key == -1:
-        image = scanarium.get_image()
-        title = 'Raw source (Press any key to quit)'
-        cv2.imshow(title, image)
-        key = cv2.waitKey(25)
+    camera = None
+    try:
+        camera = scanarium.open_camera()
+        key = -1
+        while key == -1:
+            image = scanarium.get_image(camera)
+            title = 'Raw source (Press any key to quit)'
+            cv2.imshow(title, image)
+            key = cv2.waitKey(25)
+    finally:
+        if camera is not None:
+            scanarium.close_camera(camera)
 
 
 if __name__ == "__main__":

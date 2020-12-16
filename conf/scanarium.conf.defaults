@@ -65,6 +65,28 @@ dynamic = dynamic
 source = cam:0
 
 
+# The duration below which image grabs are considered stale.
+#
+# For scanarium, we always want to use the image that the camera is currently
+# seeing. Some camera pipelines (E.g.: GStreamer pipelines) may buffer images.
+# This means that if we only scan once in a while (E.g.: When only doing manual
+# scans from the Web UI, OpenCV would give the next image, which might come
+# from a buffer and might have been taken immediately after the previous scan.
+# So it might be several minutes old). We want to skip past such old images and
+# instead want to only use fresh images. As we cannot rely on cameras giving
+# proper timestamps, we instead skip on the time it took to get the image, as
+# buffered images typically get `grab`-bed much quicker than fresh images.
+# Images that OpenCV `grab`s quicker than `minimum_grab_time` (in seconds) are
+# considered old, stable images from the buffer, while images that take at
+# least `minimum_grab_time` are considered fresh images. Leaving at the
+# default of 0 considers every image a fresh image. Note that this value
+# should be lower than `1 / frames-per-second-of-your-camera`. Otherwise,
+# you'll consider most images stale.
+# For example for a 21fps camera, 0.018 gives very reliable results on a board
+# that is quick enough to convert the full stream.
+minimum_grab_time = 0
+
+
 # Parameters for camera calibration
 #
 # Typical camera pictures are distorted a bit and for examlpe do not preserve

@@ -423,7 +423,14 @@ def get_raw_image(config, camera=None):
 
     camera_type = get_camera_type(config)
     if camera_type == 'PROPER-CAMERA':
-        _, image = camera.read()
+        success = True
+        duration = -1
+        min_duration = config.get('scan', 'minimum_grab_time', kind='float')
+        while success and duration < min_duration:
+            start = time.time()
+            success = camera.grab()
+            duration = time.time() - start
+        _, image = camera.retrieve()
     elif camera_type == 'STATIC-IMAGE-CAMERA':
         file_path = config.get('scan', 'source')
         image = cv2.imread(file_path)

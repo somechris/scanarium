@@ -160,6 +160,10 @@ def rectify_to_biggest_rect(scanarium, image):
 
 
 def extract_qr(image):
+    # With low light images, the random noise in different color channels is
+    # typically in the way of robust detection. So we convert to
+    # grey to smoothen out the noise a bit.
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     codes = pyzbar.decode(image)
     if len(codes) != 1:
         raise ScanariumError('SE_SCAN_NO_QR_CODE',

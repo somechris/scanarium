@@ -104,7 +104,8 @@ def rectify_by_rect_points(image, points):
     return cv2.warpPerspective(image, M, (d_w, d_h))
 
 
-def rectify(scanarium, image, decreasingArea=True, required_points=[]):
+def rectify(scanarium, image, decreasingArea=True, required_points=[],
+            yield_only_points=False):
     # If the picture is too big (E.g.: from a proper photo camera), edge
     # detection won't work reliably, as the sheet's contour will exhibit too
     # much detail and would get broken down into more than 4 segments. So we
@@ -126,13 +127,18 @@ def rectify(scanarium, image, decreasingArea=True, required_points=[]):
             (cv2.TERM_CRITERIA_EPS + cv2.TermCriteria_COUNT, 20, 0.03))
     else:
         rectify_points = found_points
+    rectify_points = rectify_points.reshape(4, 2)
 
-    # Now rectifying using the original (!) image.
-    image = rectify_by_rect_points(image, rectify_points.reshape(4, 2))
-    return image
+    if yield_only_points:
+        ret = rectify_points
+    else:
+        # Now rectifying using the original (!) image.
+        ret = rectify_by_rect_points(image, rectify_points)
+    return ret
 
 
-def rectify_to_qr_parent_rect(scanarium, image, qr_rect):
+def rectify_to_qr_parent_rect(scanarium, image, qr_rect,
+                              yield_only_points=False):
     def qr_rect_point(x_factor, y_factor):
         return (qr_rect.left + x_factor * qr_rect.width,
                 qr_rect.top + y_factor * qr_rect.height)
@@ -151,11 +157,13 @@ def rectify_to_qr_parent_rect(scanarium, image, qr_rect):
     ]
 
     return rectify(scanarium, image, decreasingArea=False,
-                   required_points=required_points)
+                   required_points=required_points,
+                   yield_only_points=yield_only_points)
 
 
-def rectify_to_biggest_rect(scanarium, image):
-    return rectify(scanarium, image, decreasingArea=True)
+def rectify_to_biggest_rect(scanarium, image, yield_only_points=False):
+    return rectify(scanarium, image, decreasingArea=True,
+                   yield_only_points=yield_only_points)
 
 
 def extract_qr(image):
@@ -501,5 +509,12 @@ class Scanner(object):
             scanarium, self._command_logger, image, qr_rect, data,
             should_skip_exception)
 
-    def rectify_to_biggest_rect(self, scanarium, image):
-        return rectify_to_biggest_rect(scanarium, image)
+    def rectify_to_biggest_rect(self, scanarium, image,
+                                yield_only_points=False):
+        return rectify_to_biggest_rect(scanarium, image,
+                                       yield_only_points=yield_only_points)
+
+    def rectify_to_qr_parent_rect(self, scanarium, image, qr_rect,
+                                  yield_only_points=False):
+        return rectify_to_qr_parent_rect(scanarium, image, qr_rect,
+                                         yield_only_points=yield_only_points)

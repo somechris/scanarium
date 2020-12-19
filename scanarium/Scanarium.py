@@ -97,8 +97,14 @@ class Scanarium(object):
         return self._scanner.process_image_with_qr_code(
             self, image, qr_rect, data, should_skip_exception)
 
-    def rectify_to_biggest_rect(self, image):
-        return self._scanner.rectify_to_biggest_rect(scanarium, image)
+    def rectify_to_biggest_rect(self, image, yield_only_points=False):
+        return self._scanner.rectify_to_biggest_rect(
+            self, image, yield_only_points=yield_only_points)
+
+    def rectify_to_qr_parent_rect(self, image, qr_rect,
+                                  yield_only_points=False):
+        return self._scanner.rectify_to_qr_parent_rect(
+            self, image, qr_rect, yield_only_points=yield_only_points)
 
     def run(self, command, check=True, timeout=10):
         return self._environment.run(command, check, timeout)

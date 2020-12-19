@@ -112,5 +112,7 @@ class Scanarium(object):
     def call_guarded(self, func, *args, **kwargs):
         return self._environment.call_guarded(self, func, *args, **kwargs)
 
-    def handle_arguments(self, description, register_func=None):
-        return self._environment.handle_arguments(description, register_func)
+    def handle_arguments(self, description, register_func=None,
+                         whitelisted_cgi_fields={}):
+        return self._environment.handle_arguments(description, register_func,
+                                                  whitelisted_cgi_fields)

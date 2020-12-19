@@ -48,7 +48,7 @@ def find_rect_points(image, decreasingArea=True, required_points=[]):
     contours, _ = cv2.findContours(cannied, cv2.RETR_LIST,
                                    cv2.CHAIN_APPROX_NONE)
 
-    approx = None
+    good_approx = None
     for contour in sorted(contours, key=cv2.contourArea,
                           reverse=decreasingArea):
         if cv2.contourArea(contour) < contour_min_area:
@@ -63,19 +63,18 @@ def find_rect_points(image, decreasingArea=True, required_points=[]):
 
             if any(cv2.pointPolygonTest(approx, point, False) < 0
                    for point in required_points):
-                # A required point is outside, so we skip this contour
+                # A required point is outside, so we skip this contour.
                 continue
 
             # The contour is big enough, looks like a rect, and contains all
             # required points. That's the contour to continue with.
+            good_approx = approx
             break
-        else:
-            approx = None
 
-    if approx is None:
+    if good_approx is None:
         raise ScanariumError('SE_SCAN_NO_APPROX',
                              'Failed to find rectangle contour')
-    return approx
+    return good_approx
 
 
 def distance(pointA, pointB):

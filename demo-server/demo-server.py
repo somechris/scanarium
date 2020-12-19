@@ -61,7 +61,7 @@ def serve_forever(port):
         print()
         print('Scanarium demo server listening on port', port)
         print()
-        print('To use Scanarium, yoint your browser to the followung URL:')
+        print('To use Scanarium, yoint your browser to the following URL:')
         print()
         print('  http://localhost:%d/' % (port))
         print()

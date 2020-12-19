@@ -204,6 +204,12 @@ allow = False
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False
 
+[cgi:dump-dynamic-config]
+# Whether or not to allow calling the script as cgi through the webserver.
+# This script is necessary for the frontend to work properly. So we enable it
+# by default.
+allow = True
+
 
 
 #-------------------------------------------------------------------------------

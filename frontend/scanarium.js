@@ -125,9 +125,11 @@ function loadJs(url, callback) {
     document.head.appendChild(element);
 }
 
-function loadJson(url, callback) {
+function loadJson(url, callback, method, param) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
+
+    method = (typeof method !== 'undefined') ? method : 'GET';
+    xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function() {
         if (this.readyState === XMLHttpRequest.DONE) {
@@ -138,7 +140,22 @@ function loadJson(url, callback) {
             }
         }
     }
-    xhr.send();
+
+    param = (typeof param !== 'undefined') ? JSON.stringify(param) : param;
+    xhr.send(param);
+}
+
+function loadDynamicConfig(url, callback) {
+    var unpack = function(capsule) {
+      if (sanitize_boolean(capsule, 'is_ok')) {
+        callback(capsule['payload']);
+      }
+    }
+
+    var xhr = new XMLHttpRequest();
+    loadJson('cgi-bin/dump-dynamic-config', unpack, 'POST', {
+      file: url
+      });
 }
 
 var ScActorManager = {
@@ -546,7 +563,7 @@ var CommandLogInjector = {
     },
 
     fetchLogs: function() {
-        loadJson(dyn_dir + '/command-log.json', CommandLogInjector.injectLogs);
+        loadDynamicConfig(dyn_dir + '/command-log.json', CommandLogInjector.injectLogs);
     },
 
     injectLogs: function(items) {

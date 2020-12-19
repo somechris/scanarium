@@ -6,6 +6,8 @@
     "Cannot switch to scene {scene_name}": "Kann nicht zur Szene \"{scene_name}\" wechseln",
     "Command \"{command}\" does not allow a parameter \"{parameter}\"": "Kommando \"{command}\" erlaubt keinen Parameter \"{parameter}\"",
     "Directory to store file in does not exist, or is no directory": "Verzeichnis zum Speichern existiert nicht, oder ist kein Verzeichnis",
+    "Dynamic config \"{file}\" is not available": "Dynamische Konfigurationsdatei \"{file}\" ist nicht verfügbar",
+    "Dynamic config \"{file}\" cannot be read": "Dynamische Konfigurationsdatei \"{file}\" kann nicht gelesen werden",
     "Exception marked as skipped": "Ausnahme ist übersprungen markiert",
     "Failed to find mask {file_name}": "Konnte Masken-Datei \"{file_name}\" nicht finden",
     "Failed to find rectangle contour": "Konnte keinen Rechteck-Umriss im Bild finden",

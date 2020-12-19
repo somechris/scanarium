@@ -115,11 +115,11 @@ def rectify(scanarium, image, decreasingArea=True, required_points=[],
     scaled_points = [(int(point[0] * scale_factor),
                       int(point[1] * scale_factor)
                       ) for point in required_points]
-    found_points_scaled = find_rect_points(scaled_image, decreasingArea,
+    grey_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    found_points_scaled = find_rect_points(grey_image, decreasingArea,
                                            scaled_points)
     found_points = (found_points_scaled / scale_factor).astype('float32')
 
-    grey_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     if scanarium.get_config('scan', 'sub_pixel_corners', 'boolean'):
         search_window = (5, 5)
         rectify_points = cv2.cornerSubPix(

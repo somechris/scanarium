@@ -15,10 +15,18 @@ del sys.path[0]
 scanarium = Scanarium()
 logger = logging.getLogger(__name__)
 
+SERVER_VERSION_OVERRIDE = None
+
 
 class RequestHandler(http.server.CGIHTTPRequestHandler):
     """Simple HTTP handler that aliases user-generated-content"""
     cgi_directories = ['/cgi-bin']
+
+    def version_string(self):
+        ret = SERVER_VERSION_OVERRIDE
+        if ret is None:
+            ret = super().version_string()
+        return ret
 
     def run_cgi(self):
         # Shimming in server properties that we seem to be missing on Python
@@ -79,10 +87,15 @@ def register_arguments(parser):
     parser.add_argument('port', metavar='PORT', type=int, nargs='?',
                         help='The port to listen for connections on',
                         default=scanarium.get_config('demo_server', 'port'))
+    parser.add_argument('--server-version-override', metavar='VERSION',
+                        help='Override for response\'s `Server` header field',
+                        default=None)
 
 
 if __name__ == '__main__':
     args = scanarium.handle_arguments('Scanarium demo server',
                                       register_arguments)
+
+    SERVER_VERSION_OVERRIDE = args.server_version_override
 
     serve_forever(args.port)

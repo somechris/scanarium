@@ -271,7 +271,7 @@ var ScActorManager = {
         // If we find one that we have not tried yet, we try it.
         // If we have already tried all, we pick a random one.
         var all = [];
-        var names = Object.keys(config['actors']);
+        var names = Object.keys(config != null ? config['actors'] : []);
         var i;
         for (i=0; i < names.length; i++) {
             var flavors = config['actors'][names[i]];

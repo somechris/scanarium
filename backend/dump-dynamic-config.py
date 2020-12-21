@@ -3,6 +3,7 @@
 import json
 import os
 import logging
+import re
 import sys
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,6 +19,14 @@ def dump(scanarium, file):
     if file == 'dynamic/command-log.json':
         local_file = os.path.join(
             scanarium.get_dynamic_directory(), 'command-log.json')
+    else:
+        parts = file.split('/', 3)
+        if parts[0:2] == ['dynamic', 'scenes'] and \
+                parts[3] in ['actors.json', 'actors-latest.json']:
+            parts[2] = re.sub('[^a-zA-Z]', '-', parts[2])
+            local_file = os.path.join(
+                scanarium.get_dynamic_directory(),
+                *parts[1:])
 
     if local_file is None:
         raise ScanariumError('SE_DYNAMIC_CONFIG_NOT_AVAILABLE',

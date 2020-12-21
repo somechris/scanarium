@@ -174,7 +174,7 @@ var ScActorManager = {
     loadedActorFlavors: {},
     registeredActors: {},
     destroyCallbacks: [],
-    nextSpawn: 0,
+    nextSpawn: 999999999999999, // This gets reset once configs are loaded.
 
     update: function(time, delta) {
         if (time > this.nextConfigFetch) {
@@ -209,31 +209,36 @@ var ScActorManager = {
         });
     },
 
-    reloadConfigFiles: function(isPreload) {
-        var file = game.load.json('actors-latest-config', dyn_scene_dir + '/actors-latest.json');
-        if ((ScActorManager.configFetches % 60) == 0) {
-            game.load.json('actors-config', dyn_scene_dir + '/actors.json');
-        }
+    isConfigLoaded: function() {
+      return this.actors_config != null && this.actors_latest_config != null;
+    },
 
-        if (isPreload === true) {
-            file.on('filecomplete', ScActorManager.configFileLoaded, this);
-        } else {
-            game.load.start();
+    reloadConfigFiles: function() {
+        var load = function (url, callback) {
+          loadDynamicConfig(dyn_scene_dir + '/' + url, function(payload) {
+            var wasLoaded = ScActorManager.isConfigLoaded();
+
+            callback(payload);
+
+            if (!wasLoaded) {
+              if (ScActorManager.isConfigLoaded()) {
+                ScActorManager.nextSpawn = 0;
+              }
+            }
+          });
+        };
+
+        load('actors-latest.json', function(payload) {
+          ScActorManager.actors_latest_config = payload;
+          });
+
+        if ((ScActorManager.configFetches % 60) == 0) {
+          load('actors.json', function(payload) {
+            ScActorManager.actors_config = payload;
+            });
         }
 
         ScActorManager.configFetches++;
-    },
-
-    configFileLoaded: function(key, file) {
-        if (key == 'actors-config') {
-            this.actors_config = game.cache.json.get(key);
-            game.cache.json.remove(key);
-        }
-
-        if (key == 'actors-latest-config') {
-            this.actors_latest_config = game.cache.json.get(key);
-            game.cache.json.remove(key);
-        }
     },
 
     addActorIfFullyLoaded: function(actor, flavor) {
@@ -659,7 +664,7 @@ function preload() {
 
     scene_preload();
 
-    ScActorManager.reloadConfigFiles(true);
+    ScActorManager.reloadConfigFiles();
 }
 
 function create() {

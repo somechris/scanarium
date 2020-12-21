@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import http.server
-import socketserver
 import os
 import sys
 import logging
@@ -56,15 +55,13 @@ class RequestHandler(http.server.CGIHTTPRequestHandler):
 
 
 def serve_forever(port):
-    socketserver.TCPServer.allow_reuse_address = True
-
     # Python <=3.6 does not allow to configure the directory to serve from,
     # but unconditionally servers from the current directory. As Linux Mint
     # Tricia is still on Python 3.6 and we do not want to exclude such users,
     # we instead chdir to the expected directory.
     os.chdir(scanarium.get_frontend_dir_abs())
 
-    with socketserver.TCPServer(('', port), RequestHandler) as httpd:
+    with http.server.HTTPServer(('', port), RequestHandler) as httpd:
         print('-------------------------------------------------------------')
         print()
         print('Scanarium demo server listening on port', port)

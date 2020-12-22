@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
+import concurrent.futures
 import http.server
 import os
+import socketserver
 import sys
 import logging
 
@@ -15,6 +17,7 @@ scanarium = Scanarium()
 logger = logging.getLogger(__name__)
 
 SERVER_VERSION_OVERRIDE = None
+THREAD_POOL_SIZE = max(2, len(os.sched_getaffinity(0)) - 2)
 
 
 class RequestHandler(http.server.CGIHTTPRequestHandler):
@@ -54,6 +57,17 @@ class RequestHandler(http.server.CGIHTTPRequestHandler):
         return f
 
 
+class ThreadPoolMixIn(socketserver.ThreadingMixIn):
+    pool = concurrent.futures.ThreadPoolExecutor(max_workers=THREAD_POOL_SIZE)
+
+    def process_request(self, request, client_address):
+        self.pool.submit(self.process_request_thread, request, client_address)
+
+
+class ThreadPoolHTTPServer(ThreadPoolMixIn, http.server.HTTPServer):
+    pass
+
+
 def serve_forever(port):
     # Python <=3.6 does not allow to configure the directory to serve from,
     # but unconditionally servers from the current directory. As Linux Mint
@@ -61,7 +75,7 @@ def serve_forever(port):
     # we instead chdir to the expected directory.
     os.chdir(scanarium.get_frontend_dir_abs())
 
-    with http.server.HTTPServer(('', port), RequestHandler) as httpd:
+    with ThreadPoolHTTPServer(('', port), RequestHandler) as httpd:
         print('-------------------------------------------------------------')
         print()
         print('Scanarium demo server listening on port', port)

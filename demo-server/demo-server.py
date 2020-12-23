@@ -17,7 +17,6 @@ scanarium = Scanarium()
 logger = logging.getLogger(__name__)
 
 SERVER_VERSION_OVERRIDE = None
-THREAD_POOL_SIZE = max(2, len(os.sched_getaffinity(0)) - 2)
 
 
 class RequestHandler(http.server.CGIHTTPRequestHandler):
@@ -58,7 +57,8 @@ class RequestHandler(http.server.CGIHTTPRequestHandler):
 
 
 class ThreadPoolMixIn(socketserver.ThreadingMixIn):
-    pool = concurrent.futures.ThreadPoolExecutor(max_workers=THREAD_POOL_SIZE)
+    def init_thread_pool(self, size):
+        self.pool = concurrent.futures.ThreadPoolExecutor(max_workers=size)
 
     def process_request(self, request, client_address):
         self.pool.submit(self.process_request_thread, request, client_address)
@@ -68,7 +68,7 @@ class ThreadPoolHTTPServer(ThreadPoolMixIn, http.server.HTTPServer):
     pass
 
 
-def serve_forever(port):
+def serve_forever(port, thread_pool_size):
     # Python <=3.6 does not allow to configure the directory to serve from,
     # but unconditionally servers from the current directory. As Linux Mint
     # Tricia is still on Python 3.6 and we do not want to exclude such users,
@@ -76,6 +76,8 @@ def serve_forever(port):
     os.chdir(scanarium.get_frontend_dir_abs())
 
     with ThreadPoolHTTPServer(('', port), RequestHandler) as httpd:
+        httpd.init_thread_pool(thread_pool_size)
+
         print('-------------------------------------------------------------')
         print()
         print('Scanarium demo server listening on port', port)
@@ -101,6 +103,9 @@ def register_arguments(parser):
     parser.add_argument('--server-version-override', metavar='VERSION',
                         help='Override for response\'s `Server` header field',
                         default=None)
+    parser.add_argument('--thread-pool-size', metavar='THREADS', type=int,
+                        help='Number of threads to serve requests from',
+                        default=max(2, len(os.sched_getaffinity(0)) - 2))
 
 
 if __name__ == '__main__':
@@ -109,4 +114,4 @@ if __name__ == '__main__':
 
     SERVER_VERSION_OVERRIDE = args.server_version_override
 
-    serve_forever(args.port)
+    serve_forever(args.port, args.thread_pool_size)

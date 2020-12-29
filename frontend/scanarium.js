@@ -108,6 +108,8 @@ var sceneConfig = {
 
 var configReloadPeriod = 10 * 1000; // 10 seconds
 
+var commandReloadPeriod = 3 * 1000; // 3 seconds
+
 var degToRadian = 2 * Math.PI / 360;
 
 function scaleBetween(min, max, scale) {
@@ -564,7 +566,7 @@ var CommandLogInjector = {
     injectRunCount: 0,
 
     init: function() {
-        window.setInterval(this.fetchLogs, 1500);
+        window.setInterval(this.fetchLogs, commandReloadPeriod);
     },
 
     fetchLogs: function() {

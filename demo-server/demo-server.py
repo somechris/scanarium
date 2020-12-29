@@ -29,6 +29,10 @@ class RequestHandler(http.server.CGIHTTPRequestHandler):
             ret = super().version_string()
         return ret
 
+    def send_response(self, code, message=None):
+        super(RequestHandler, self).send_response(code, message)
+        self.send_header('Cache-Control', 'no-store')
+
     def run_cgi(self):
         # Shimming in server properties that we seem to be missing on Python
         # 3.8, although the Handler requires them. We're probably

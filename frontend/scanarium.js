@@ -110,6 +110,8 @@ var configReloadPeriod = 10 * 1000; // 10 seconds
 
 var commandReloadPeriod = 3 * 1000; // 3 seconds
 
+var dynamicConfigMethod = 'POST';
+
 var degToRadian = 2 * Math.PI / 360;
 
 function scaleBetween(min, max, scale) {
@@ -154,10 +156,16 @@ function loadDynamicConfig(url, callback) {
       }
     }
 
-    var xhr = new XMLHttpRequest();
-    loadJson('cgi-bin/dump-dynamic-config', unpack, 'POST', {
-      file: url
-      });
+    var wrappedCallback = callback;
+    var data;
+
+    if (dynamicConfigMethod == 'POST') {
+      wrappedCallback = unpack;
+      data = {file: url};
+      url = 'cgi-bin/dump-dynamic-config';
+    }
+
+    loadJson(url, wrappedCallback, dynamicConfigMethod, data);
 }
 
 var ScActorManager = {

@@ -110,7 +110,7 @@ var configReloadPeriod = 10 * 1000; // 10 seconds
 
 var commandReloadPeriod = 3 * 1000; // 3 seconds
 
-var dynamicConfigMethod = 'POST';
+var dynamicConfigMethod = 'GET';
 
 var degToRadian = 2 * Math.PI / 360;
 

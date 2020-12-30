@@ -3,6 +3,7 @@
 import logging
 import os
 import sys
+import time
 
 import cv2
 import numpy as np
@@ -91,8 +92,9 @@ def add_biggest_rect(scanarium, image, original_image):
     return image
 
 
-def show_source(scanarium, mark):
+def show_source(scanarium, mark, store_final):
     camera = None
+    original_image = None
     try:
         camera = scanarium.open_camera()
         key = -1
@@ -108,6 +110,10 @@ def show_source(scanarium, mark):
             cv2.imshow(title, image)
             key = cv2.waitKey(25)
     finally:
+        if store_final and original_image is not None:
+            filename = str(int(time.time())) + '.png'
+            cv2.imwrite(filename, original_image)
+            logger.info('Stored last image as "%s"' % (filename))
         if camera is not None:
             scanarium.close_camera(camera)
 
@@ -116,10 +122,12 @@ def register_arguments(parser):
     parser.add_argument('--mark', help='Marks the QR-Code and suitable '
                         'contours, if found',
                         action='store_true')
+    parser.add_argument('--store-final', help='Writes the final image to disk',
+                        action='store_true')
 
 
 if __name__ == "__main__":
     scanarium = Scanarium()
     args = scanarium.handle_arguments('Shows the camera picture on screen',
                                       register_arguments)
-    scanarium.call_guarded(show_source, args.mark)
+    scanarium.call_guarded(show_source, args.mark, args.store_final)

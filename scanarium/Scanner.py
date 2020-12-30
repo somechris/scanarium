@@ -16,8 +16,6 @@ def debug_show_image(title, image, config):
             not config.get('general', 'hide_images_in_debug', 'boolean'):
         cv2.imshow(title, image)
         locale.resetlocale()
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
 
 
 def scale_image(scanarium, image):

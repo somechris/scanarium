@@ -102,18 +102,26 @@ def rectify_by_rect_points(image, points):
     return cv2.warpPerspective(image, M, (d_w, d_h))
 
 
-def rectify(scanarium, image, decreasingArea=True, required_points=[],
-            yield_only_points=False):
+def prepare_image(scanarium, image):
     # If the picture is too big (E.g.: from a proper photo camera), edge
     # detection won't work reliably, as the sheet's contour will exhibit too
     # much detail and would get broken down into more than 4 segments. So we
     # scale too big images down. Note though that the scaled image is only
     # used for edge detection. Rectification happens on the original picture.
-    (scaled_image, scale_factor) = scale_image(scanarium, image)
+    (prepared_image, scale_factor) = scale_image(scanarium, image)
+
+    prepared_image = cv2.cvtColor(prepared_image, cv2.COLOR_BGR2GRAY)
+
+    return (prepared_image, scale_factor)
+
+
+def rectify(scanarium, image, decreasingArea=True, required_points=[],
+            yield_only_points=False):
+    (prepared_image, scale_factor) = prepare_image(scanarium, image)
+
     scaled_points = [(int(point[0] * scale_factor),
                       int(point[1] * scale_factor)
                       ) for point in required_points]
-    prepared_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     found_points_scaled = find_rect_points(prepared_image, decreasingArea,
                                            scaled_points)
     found_points = (found_points_scaled / scale_factor).astype('float32')

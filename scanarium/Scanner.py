@@ -161,6 +161,8 @@ def prepare_image(scanarium, image):
     prepared_image = cv2.cvtColor(prepared_image, cv2.COLOR_BGR2GRAY)
     prepared_image = correct_image_brightness(scanarium, prepared_image)
 
+    scanarium.debug_show_image('prepared', prepared_image)
+
     return (prepared_image, scale_factor)
 
 

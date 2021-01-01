@@ -102,6 +102,54 @@ def rectify_by_rect_points(image, points):
     return cv2.warpPerspective(image, M, (d_w, d_h))
 
 
+def get_brightness_factor(scanarium):
+    factor = None
+    file_name = scanarium.get_config('scan', 'max_brightness',
+                                     allow_empty=True)
+    if file_name is not None:
+        image = cv2.imread(file_name)
+
+        brightness = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # For each pixel, brightness is a value from 0 to 255.
+        # For each pixel `c` from the camera and corresponding brightness `b`
+        # from the `max_brightness` image, we want to compute the effective
+        # brightness `e` as
+        #
+        #     e = c / b * 255
+        #
+        # (with clipping to [0, 255] afterwards). To avoid repetitive
+        # costly computations for each frame, we do not return `b` as is, but
+        # we rewrite the equation as
+        #
+        #       e = c * f, where f = 255 / b
+        #
+        # (of course again with clipping to [0, 255] afterwards). In this
+        # second formulation, we can compute the factor `f` ahead of time,
+        # which is what this function does. This approach is better than the
+        # first equation as now only a single multiplication is needed for each
+        # pixel instead of a multiplication and division. This re-formulation
+        # shaves off about 2/3 of computation time per frame.
+        #
+        # (We clip pixel with maximum brightness of 0 to 1 to avoid division by
+        # zero errors. But pixels of maximum brightness 0 do not contribute
+        # anyways, so this simplification does not adversely affect the result,
+        # while it considerably simplifies computation.)
+        factor = 255 / np.clip(brightness, 1, 255)
+
+    return factor
+
+
+def correct_image_brightness(scanarium, image):
+    factor = scanarium.get_brightness_factor()
+    if factor is not None:
+        # This pipeline normalizes each pixel with respect to the maximal
+        # brightness allowed in the max image.
+        image = np.clip(image * factor, 0, 255).astype(np.uint8)
+
+    return image
+
+
 def prepare_image(scanarium, image):
     # If the picture is too big (E.g.: from a proper photo camera), edge
     # detection won't work reliably, as the sheet's contour will exhibit too
@@ -111,6 +159,7 @@ def prepare_image(scanarium, image):
     (prepared_image, scale_factor) = scale_image(scanarium, image)
 
     prepared_image = cv2.cvtColor(prepared_image, cv2.COLOR_BGR2GRAY)
+    prepared_image = correct_image_brightness(scanarium, prepared_image)
 
     return (prepared_image, scale_factor)
 
@@ -505,6 +554,9 @@ class Scanner(object):
     def get_image(self, camera=None):
         raw = get_raw_image(self._config, camera)
         return undistort_image(raw, self._config)
+
+    def get_brightness_factor(self, scanarium):
+        return get_brightness_factor(scanarium)
 
     def extract_qr(self, image):
         return extract_qr(image)

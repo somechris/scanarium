@@ -89,6 +89,17 @@ class Scanarium(object):
     def get_image(self, camera=None):
         return self._scanner.get_image(camera)
 
+    def get_brightness_factor(self):
+        # We cache the image to avoid having to costly reload it for each
+        # processed frame.
+        try:
+            ret = self._brightness_factor
+        except AttributeError:
+            ret = self._scanner.get_brightness_factor(self)
+            self._brightness_factor = ret
+
+        return ret
+
     def extract_qr(self, image):
         return self._scanner.extract_qr(image)
 

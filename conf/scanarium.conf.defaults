@@ -102,6 +102,23 @@ minimum_grab_time = 0
 calibration_xml_file =
 
 
+# Image of maximum achievable brightness
+#
+# If empty, no brightness correction for badly lit corners gets applied before
+# contour detection.
+#
+# If not empty, it should point to an image that exposes the maximum achievable
+# brightness for each pixel (E.g.: Cover the scanned area with white paper and
+# run `./show-source.sh --store-final` and set this parameter to the stored
+# file). This image gets used to clip and stretch brightness for each pixel
+# before contour detection to equalize strongly and weakly lit areas of the
+# scanned image.
+#
+# This image has to match the resolution of the camera with applied
+# `calibration_xml_file`.
+max_brightness = 
+
+
 # The white-balance filter to apply.
 #
 # Either `simple`, `grayworld`, or `none`.

@@ -24,16 +24,16 @@
      showgrid="false"
      units="mm"
      inkscape:current-layer="Mask"
-     inkscape:cx="-10.5557"
+     inkscape:cx="188.76196"
      inkscape:cy="305.94943"
      inkscape:document-units="mm"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:window-height="1015"
      inkscape:window-maximized="0"
-     inkscape:window-width="1920"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-width="1855"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
      inkscape:zoom="0.5953545"
      inkscape:snap-text-baseline="true" />
   <metadata
@@ -57,20 +57,20 @@
     <flowRoot
        id="flowRoot817"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,-101.28876,517.83844)"
+       transform="matrix(0.9375,0,0,0.9375,99.059525,543.28225)"
        xml:space="preserve"><flowRegion
          id="flowRegion819"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"><rect
-           height="179.2594"
+           height="239.72754"
            id="rect821"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"
-           width="844.16553"
+           width="689.63574"
            x="245.85538"
            y="113.14461" /></flowRegion><flowPara
          id="flowPara15">Scan this page to delete all your scanned images from Scanarium</flowPara></flowRoot>    <flowRoot
        id="flowRoot817-8"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,121.35476,696.60084)"
+       transform="matrix(0.9375,0,0,0.9375,121.35476,740.69221)"
        xml:space="preserve"><flowRegion
          id="flowRegion819-1"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"><rect
@@ -92,7 +92,7 @@
            y="529.99237" /></flowRegion><flowPara
          id="flowPara4589" /></flowRoot>    <g
        id="g4605"
-       transform="matrix(1.2520329,0,0,1.2520329,868.65438,-510.1209)">
+       transform="matrix(1.2520329,0,0,1.2520329,1011.198,-510.12093)">
       <path
          id="path4599"
          d="m -293.25586,714.49023 a 8.8591536,8.8591536 0 0 0 -8.08789,4.41993 l -82.55664,143.02539 a 8.8591536,8.8591536 0 0 0 7.67187,13.28515 l 165.14258,-0.0137 a 8.8591536,8.8591536 0 0 0 7.66992,-13.28906 L -286,718.9082 a 8.8591536,8.8591536 0 0 0 -7.25586,-4.41797 z"

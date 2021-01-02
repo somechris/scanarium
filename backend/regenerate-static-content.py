@@ -294,9 +294,20 @@ def filter_svg_tree(tree, command, parameter, localizer, command_label,
             element.set(key, filter_text(element.get(key)))
 
     for qr_element in list(tree.iter("{http://www.w3.org/2000/svg}rect")):
-        if qr_element.attrib.get('qr-pixel', 'false') == 'true':
-            expand_qr_pixel_to_qr_code(
-                qr_element, '%s:%s' % (command, parameter))
+        qr_pixel = qr_element.attrib.get('qr-pixel', None)
+        if qr_pixel is not None:
+            if qr_pixel == command_label:
+                expand_qr_pixel_to_qr_code(
+                    qr_element, '%s:%s' % (command, parameter))
+            else:
+                # We want to remove this qr-pixel, as it does not match the
+                # needed type. But as it might be linked to other elements, we
+                # instead make it invisible to avoid messing with the layout.
+                #
+                # As setting `visibility` does not seem to do the trick (at
+                # least in Inkscape 0.92.3), we instead set opacity. This works
+                # reliably in Inkscape.
+                qr_element.set('style', 'opacity:0')
 
 
 def append_svg_layers(base, addition):

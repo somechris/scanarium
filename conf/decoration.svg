@@ -25,18 +25,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.2646681"
-     inkscape:cx="70.859323"
-     inkscape:cy="474.56675"
+     inkscape:zoom="0.63233405"
+     inkscape:cx="-72.438344"
+     inkscape:cy="306.0701"
      inkscape:document-units="mm"
      inkscape:current-layer="Meta"
      showgrid="false"
      units="mm"
-     inkscape:window-width="1920"
-     inkscape:window-height="1015"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -58,11 +58,11 @@
     <rect
        style="fill:#000000;stroke:none;stroke-width:7.08661461;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect9"
-       width="7.08661413"
-       height="7.08661413"
+       width="7.0866141"
+       height="7.0866141"
        x="70.866142"
        y="989.29132"
-       qr-pixel="true" />
+       qr-pixel="scene" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:7.08661413;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="contour"
@@ -118,5 +118,13 @@
            height="60.094814"
            x="173.95868"
            y="230.70723" /></flowRegion><flowPara
-         id="flowPara51-5-1">{parameter_label!S}</flowPara></flowRoot>  </g>
+         id="flowPara51-5-1">{parameter_label!S}</flowPara></flowRoot>    <rect
+       style="display:inline;fill:#000000;stroke:none;stroke-width:7.08661461;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect9-3"
+       width="7.0866141"
+       height="7.0866141"
+       x="113.58229"
+       y="749.33325"
+       qr-pixel="command" />
+  </g>
 </svg>

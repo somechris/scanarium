@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import concurrent.futures
+import http
 import http.server
 import os
 import socketserver
@@ -16,6 +17,7 @@ del sys.path[0]
 scanarium = Scanarium()
 logger = logging.getLogger(__name__)
 
+LOG_REQUESTS = False
 SERVER_VERSION_OVERRIDE = None
 
 
@@ -28,6 +30,22 @@ class RequestHandler(http.server.CGIHTTPRequestHandler):
         if ret is None:
             ret = super().version_string()
         return ret
+
+    def log_request(self, code='-', size='-'):
+        log = False
+        if LOG_REQUESTS == 'all':
+            log = True
+        elif LOG_REQUESTS == 'non-200':
+            log = code != 200
+        elif LOG_REQUESTS == 'non-2xx':
+            log = code < 200 or code >= 300
+        elif LOG_REQUESTS == 'none':
+            log = False
+        else:
+            raise RuntimeError('Unknown log setting "%s"' % (LOG_REQUESTS))
+
+        if log:
+            super(RequestHandler, self).log_request(code, size)
 
     def send_response(self, code, message=None):
         super(RequestHandler, self).send_response(code, message)
@@ -104,6 +122,15 @@ def register_arguments(parser):
     parser.add_argument('port', metavar='PORT', type=int, nargs='?',
                         help='The port to listen for connections on',
                         default=scanarium.get_config('demo_server', 'port'))
+    parser.add_argument('--log-requests', metavar='KIND',
+                        help='The kind of requests to log. Either `all` to '
+                        'log all requests, `non-200` to log all requests that '
+                        'have a response status different to 200, `non-2xx` '
+                        'to log all requests that are outside of the '
+                        '`success` range, or `none` to log no requests at '
+                        ' all.',
+                        choices=['all', 'non-200', 'non-2xx', 'none'],
+                        default='all')
     parser.add_argument('--server-version-override', metavar='VERSION',
                         help='Override for response\'s `Server` header field',
                         default=None)
@@ -117,5 +144,6 @@ if __name__ == '__main__':
                                       register_arguments)
 
     SERVER_VERSION_OVERRIDE = args.server_version_override
+    LOG_REQUESTS = args.log_requests
 
     serve_forever(args.port, args.thread_pool_size)

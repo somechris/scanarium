@@ -454,8 +454,12 @@ def open_camera(config):
         # Since we do not necessarily need all images, but much rather want to
         # arrive at the most recent image quickly, we keep buffers as small as
         # we can, so we need to skip over as few buffered images as possible.
-        camera.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        camera.set(cv2.CAP_PROP_GSTREAMER_QUEUE_LENGTH, 1)
+        # But as minimizing buffers makes some image pipelines re-initialize
+        # themselves, which might throw cameras off, we only minimize buffers
+        # if the configuration allows it.
+        if config.get('scan', 'minimize_buffers', 'boolean'):
+            camera.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+            camera.set(cv2.CAP_PROP_GSTREAMER_QUEUE_LENGTH, 1)
 
         delay = config.get('scan', 'delay', allow_empty=True, kind='float')
         if delay:

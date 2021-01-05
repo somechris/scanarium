@@ -131,6 +131,16 @@ max_brightness =
 white_balance = none
 
 
+# Whether to shrink the buffer sizes
+#
+# We only care about the most recent image. Buffering images makes us skip
+# through the buffered images until we reach the newest one. So we generally
+# want minimal buffers. However, minimizing causes some image pipelines to
+# re-initialize, which may throw cameras off. So we default to `False`
+# (which is save). Setting to `True` will minimize buffers.
+minimize_buffers = False
+
+
 # Whether to refine found corners to sub-pixel resolution
 #
 # Refining corners to sub-pixel resolution takes some time, but slightly

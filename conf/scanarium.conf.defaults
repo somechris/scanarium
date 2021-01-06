@@ -87,6 +87,29 @@ source = cam:0
 minimum_grab_time = 0
 
 
+# Where to store raw images for debugging
+#
+# If not empty, it is the directory raw images get stored in for later
+# debugging. This is useful to debug issues if the camera stops after some
+# time without log messages. (See `raw_image_period` to specify how often an
+# image is stored)
+#
+# If empty, raw images are not stored to disk.
+#
+raw_image_directory = 
+
+
+# How often raw images get stored
+#
+# This parameter is unused, if `raw_image_directory` is empty.
+#
+# Otherwise, it denotes the minimal period in seconds that has to pass after
+# the previous raw image store before the next raw image gets stored. Use
+# `0` to store each and every image.
+#
+raw_image_period = 60
+
+
 # Parameters for camera calibration
 #
 # Typical camera pictures are distorted a bit and for examlpe do not preserve

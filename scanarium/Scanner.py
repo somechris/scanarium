@@ -11,6 +11,9 @@ from pyzbar import pyzbar
 from .ScanariumError import ScanariumError
 
 
+NEXT_RAW_IMAGE_STORE = 0  # Timestamp of when to store the next raw image.
+
+
 def debug_show_image(title, image, config):
     if config.get('general', 'debug', 'boolean') and \
             not config.get('general', 'hide_images_in_debug', 'boolean'):
@@ -488,6 +491,20 @@ def close_camera(config, camera):
                              {'camera_type': camera_type})
 
 
+def store_raw_image(config, image):
+    global NEXT_RAW_IMAGE_STORE
+    dir_path = config.get('scan', 'raw_image_directory', allow_empty=True)
+    if dir_path is not None:
+        now = time.time()
+        if now >= NEXT_RAW_IMAGE_STORE:
+            file_path = os.path.join(dir_path, '%f.png' % (now))
+            os.makedirs(dir_path, exist_ok=True)
+            cv2.imwrite(file_path, image)
+            config.get('scan', 'raw_image_period')
+            NEXT_RAW_IMAGE_STORE = now + config.get(
+                'scan', 'raw_image_period', 'float')
+
+
 def get_raw_image(config, camera=None):
     manage_camera = camera is None
     if manage_camera:
@@ -513,6 +530,8 @@ def get_raw_image(config, camera=None):
 
     if manage_camera:
         close_camera(config, camera)
+
+    store_raw_image(config, image)
 
     return image
 

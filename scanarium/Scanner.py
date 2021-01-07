@@ -385,6 +385,18 @@ def process_image_with_qr_code_unlogged(scanarium, command, parameter, image,
             raise ScanariumError('SE_UNKNOWN_SCENE',
                                  'Scene "{scene_name}" does not exist',
                                  {'scene_name': parameter})
+    elif command == 'system':
+        if parameter == 'poweroff':
+            command = ['/usr/bin/sudo', '--non-interactive', '/sbin/poweroff']
+            scanarium.run(command, timeout=10)
+            ret = {
+                'ok': True
+            }
+        else:
+            raise ScanariumError(
+                'SE_UNKNOWN_PARAM',
+                'Command "{command}" does not allow a parameter "{parameter}"',
+                {'command': command, 'parameter': parameter})
     else:
         ret = process_actor_image_with_qr_code(scanarium, image, qr_rect,
                                                command, parameter)

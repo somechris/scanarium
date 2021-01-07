@@ -30,11 +30,15 @@
     "Scanned new actor drawing for {actor_name}": "Neue \"{actor_name}\" Figur gescannt",
     "Scanned new actor drawing for {actor_name} for scene {scene_name}": "Neue \"{actor_name}\" Figur aus der Szene \"{scene_name}\" gescannt",
     "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",
+    "Shut Scanarium down savely": "Scanarium herunterfahren",
+    "Shutdown initiated": "Scanarium wird herunterfahren",
+    "Shutdown initiation failed": "Herunterfahren schlug fehl",
     "Switching to scene {scene_name}": "Wechsle zur Szene \"{scene_name}\"",
     "Taken too many extraction tries from scanned image": "Zu viele Versuche gebraucht um Daten aus Bild zu extrahieren",
     "The command \"{command}\" did not finish within {timeout} seconds": "Das Kommando \"{command}\" wurde nicht innerhalb von {timeout} Sekunden fertig",
     "The command \"{command}\" did not return 0": "Rückgabewert von \"{command}\" war nicht 0",
     "Unknown camera type \"{camera_type}\"": "Unbekannter Kameratyp \"{camera_type}\"",
+    "Unknown system command": "Unbekannter System-Befehl",
     "Unknown white balance filter configured": "Unbekannter Weißabgleich-Filter konfiguriert",
     "undefined error": "Unbekannter Fehler",
     "{cgi_name} failed": "{cgi_name} schlug fehl",
@@ -63,14 +67,16 @@
     },
     "command_name": {
       "reset": "Zurücksetzen",
-      "switchScene": "Szenenwechsel"
+      "switchScene": "Szenenwechsel",
+      "system": "System"
     },
     "parameter_label": {
       "actor": "Figur",
       "parameter": "Parameter"
     },
     "parameter_name": {
-      "DynamicContent": "Alle Bilder"
+      "DynamicContent": "Alle Bilder",
+      "poweroff": "Herunterfahren"
     },
     "scene_name": {
       "balloons": "Luftballons",

@@ -511,6 +511,22 @@ var CommandProcessor = {
         });
     },
 
+    processCommandSystem: function(capsule) {
+        var is_ok = sanitize_boolean(capsule, 'is_ok');
+        var parameters = sanitize_list(capsule, 'parameters');
+        var template = 'Unknown system command received';
+        if (parameters.length > 0) {
+          if (parameters[0] == 'poweroff') {
+            if (is_ok) {
+              template = 'Shutdown initiated';
+            } else {
+              template = 'Shutdown initiation failed';
+            }
+          }
+        }
+        return localize(template);
+    },
+
     processCommandReset: function(capsule) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');
@@ -538,6 +554,8 @@ var CommandProcessor = {
                 msg = this.processCommandReset(capsule) || msg;
             } else if (command == 'switchScene') {
                 msg = this.processCommandSwitchScene(capsule) || msg;
+            } else if (command == 'system') {
+                msg = this.processCommandSystem(capsule) || msg;
             } else {
                 msg = this.processCommandActor(capsule) || msg;
             }

@@ -411,8 +411,11 @@ var ScActorManager = {
 
 var MessageManager = {
   objects: [],
-  offsetY: 10,
-  spaceY: 22,
+  offsetY: 10 * window.devicePixelRatio,
+  spaceY: 22 * window.devicePixelRatio,
+  fontStyle: {
+        fontSize: Math.ceil(16*window.devicePixelRatio).toString() + 'px',
+    },
 
   addMessage: function(uuid, icon, message) {
     if (game) {
@@ -426,8 +429,10 @@ var MessageManager = {
       }
       var len = this.objects.length;
       var sprites = [
-          game.add.image(20, y, icon).setOrigin(0.6, -0.1),
-          game.add.text(32, y, message),
+          game.add.image(20 * window.devicePixelRatio, y, icon)
+            .setScale(window.devicePixelRatio, window.devicePixelRatio)
+            .setOrigin(0.6, -0.1),
+          game.add.text(32 * window.devicePixelRatio, y, message, this.fontStyle),
       ];
       sprites.forEach((sprite) => {
         sprite.setDepth(999999);

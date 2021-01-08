@@ -425,8 +425,14 @@ var MessageManager = {
           duration /= 2;
       }
       var len = this.objects.length;
-      this.objects.push({'sprite': game.add.image(20, y, icon).setOrigin(0.6, -0.1), duration: duration, expire: null});
-      this.objects.push({'sprite': game.add.text(32, y, message), duration: duration, expire: null});
+      var sprites = [
+          game.add.image(20, y, icon).setOrigin(0.6, -0.1),
+          game.add.text(32, y, message),
+      ];
+      sprites.forEach((sprite) => {
+        sprite.setDepth(999999);
+        this.objects.push({'sprite': sprite, duration: duration, expire: null});
+      });
     }
   },
 

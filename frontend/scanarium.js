@@ -99,7 +99,10 @@ var scanariumConfig = {
         preload: preload,
         create: create,
         update: update
-    }
+    },
+    banner: {
+        hidePhaser: true,
+    },
 };
 
 // sceneConfig gets loaded dynamically from scene directory

@@ -418,14 +418,24 @@ var MessageManager = {
   spaceY: 22 * window.devicePixelRatio,
   fontStyle: {
         fontSize: Math.ceil(16*window.devicePixelRatio).toString() + 'px',
+        wordWrap: {
+            width: Math.floor(scanariumConfig.width * 0.95 - 32 * window.devicePixelRatio),
+        },
     },
+
+  getTargetY: function(i) {
+    var ret = this.offsetY;
+    if (i >= 2) {
+      var prevTextIdx = Math.floor(i/2 - 1) * 2 + 1;
+      var prevTextSprite = this.objects[prevTextIdx].sprite;
+      ret = prevTextSprite.y + prevTextSprite.height + this.offsetY * 0.2;
+    }
+    return ret;
+  },
 
   addMessage: function(uuid, icon, message) {
     if (game) {
-      var y = this.offsetY;
-      if (this.objects.length > 0) {
-        y = this.objects[this.objects.length - 1].sprite.y + this.spaceY;
-      }
+      var y = this.getTargetY(this.objects.length);
       var duration = 10000;
       if (icon == 'ok') {
           duration /= 2;
@@ -453,12 +463,9 @@ var MessageManager = {
         obj.expire = time + obj.duration;
       }
 
+      var targetY = this.getTargetY(i);
       var sprite = obj.sprite;
-      if (sprite.y > this.offsetY + Math.floor(i/2) * this.spaceY) {
-        sprite.y -= Math.min(delta, 1000)/25;
-      } else {
-        sprite.y = this.offsetY + Math.floor(i/2) * this.spaceY;
-      }
+      sprite.y = Math.max(sprite.y - Math.min(delta, 1000)/25, targetY);
 
       if (obj.expire <= time) {
         this.objects.splice(i, 1);

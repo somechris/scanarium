@@ -89,7 +89,14 @@ var localize = function(template, parameters) {
 <script src="scanarium.js"></script>
 
 <script type="text/javascript">
-var language = getParameter('language', '').split(/[;,._-]/)[0].toLowerCase();
+var stripLanguage = function(lang) {
+  return lang.split(/[;,._-]/)[0].toLowerCase();
+}
+
+var language = stripLanguage(getParameter('language', ''));
+if (!language) {
+  language = stripLanguage(navigator.language);
+}
 if (language) {
   loadJson('localization/' + language + '.json', function(data) {
     localization = data;

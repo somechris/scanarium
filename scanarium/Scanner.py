@@ -531,7 +531,16 @@ def get_raw_image(config, camera=None):
             start = time.time()
             success = camera.grab()
             duration = time.time() - start
-        _, image = camera.retrieve()
+
+        if success:
+            # Grabbing worked and duration is ok, so we try to retrieve
+            success, image = camera.retrieve()
+
+        if not success:
+            # Either grabbing or retrieving failed. So we give up.
+            raise ScanariumError('SE_SCAN_NO_RAW_IMAGE',
+                                 'Failed to retrieve image from camera')
+
     elif camera_type == 'STATIC-IMAGE-CAMERA':
         file_path = config.get('scan', 'source')
         image = cv2.imread(file_path)

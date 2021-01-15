@@ -117,9 +117,11 @@ class Environment(object):
     def _extract_cgi_parameters(self):
         parameters = {}
         try:
+            parameters = {}
             length = int(os.environ.get('CONTENT_LENGTH', 0))
-            parameters_string = sys.stdin.read(length)
-            parameters = json.loads(parameters_string)
+            if length > 0:
+                parameters_string = sys.stdin.read(length)
+                parameters = json.loads(parameters_string)
         except Exception:
             logging.getLogger().exception('Parsing CGI arguments')
 

@@ -2,7 +2,9 @@
 
 import logging
 import os
+import threading
 import sys
+import signal
 import time
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,6 +20,8 @@ STABLE_MOVE_DIMENSION_FACTOR = 0.05
 
 class QrState(object):
     def __init__(self):
+        self.now = time.time()
+
         # Data from previous update run
         self.last_data = None
         self.last_data_start = 0
@@ -106,6 +110,9 @@ class QrState(object):
     def mark_scanned(self):
         self.last_usable_data_scanned = True
 
+    def get_last_update(self):
+        return self.now
+
 
 def scan_forever_with_camera(scanarium, camera, qr_state):
     alerted_no_approx = False
@@ -158,12 +165,30 @@ def scan_forever_with_camera(scanarium, camera, qr_state):
             alerted_no_approx = False
 
 
-def scan_forever(scanarium):
-    # We keep qr_state across camera re-opening to avoid re-scans if a camera
-    # gets unplugged and replugged again, while a usable sheet is lying in
-    # front of the lens.
-    qr_state = QrState()
+def camera_update_watchdog(qr_state, bailout_period):
+    while True:
+        try:
+            stale_duration = time.time() - qr_state.get_last_update()
+            if stale_duration >= bailout_period:
+                logger.error(
+                    f'Failed to get good image since {int(stale_duration)} '
+                    'seconds. Aborting.')
+                os.kill(os.getpid(), signal.SIGKILL)
+            time.sleep(1)
+        except Exception:
+            logger.exception('Camera update watchdog failed')
 
+
+def start_camera_update_watchdog(qr_state, bailout_period):
+    watchdog = threading.Thread(
+        target=camera_update_watchdog,
+        args=(qr_state, bailout_period),
+        daemon=True,
+        name='camera update watchdog')
+    watchdog.start()
+
+
+def scan_forever(scanarium, qr_state):
     while True:
         camera = None
         try:
@@ -177,10 +202,28 @@ def scan_forever(scanarium):
             time.sleep(2)
         finally:
             if camera is not None:
-                scanarium.close_camera(camera)
+                try:
+                    scanarium.close_camera(camera)
+                except Exception:
+                    logger.exception('Failed to close camera')
+            time.sleep(2)
+
+
+def register_arguments(parser):
+    parser.add_argument('--bailout-period', metavar='DURATION', type=int,
+                        help='Exit if no image could get read after DURATION '
+                        'seconds. This is useful on camera pipelines that '
+                        'cannot gracefully recover. 0 means no bailout',
+                        default=0)
 
 
 if __name__ == "__main__":
     scanarium = Scanarium()
-    scanarium.handle_arguments('Continuously scans for images from the camera')
-    scan_forever(scanarium)
+    args = scanarium.handle_arguments('Continuously scans for images from '
+                                      'the camera',
+                                      register_arguments)
+
+    qr_state = QrState()
+    if args.bailout_period:
+        start_camera_update_watchdog(qr_state, args.bailout_period)
+    scan_forever(scanarium, qr_state)

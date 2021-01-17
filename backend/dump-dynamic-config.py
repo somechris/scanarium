@@ -41,7 +41,7 @@ def dump(scanarium, file):
                              {'file': file})
 
 
-def register_arguments(parser):
+def register_arguments(scanarium, parser):
     parser.add_argument('FILE', help='Path of the file to dump')
 
 

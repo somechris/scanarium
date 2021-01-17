@@ -118,7 +118,7 @@ def show_source(scanarium, mark, store_final):
             scanarium.close_camera(camera)
 
 
-def register_arguments(parser):
+def register_arguments(scanarium, parser):
     parser.add_argument('--mark', help='Marks the QR-Code and suitable '
                         'contours, if found',
                         action='store_true')

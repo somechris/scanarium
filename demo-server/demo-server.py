@@ -118,7 +118,7 @@ def serve_forever(port, thread_pool_size):
         httpd.serve_forever()
 
 
-def register_arguments(parser):
+def register_arguments(scanarium, parser):
     parser.add_argument('port', metavar='PORT', type=int, nargs='?',
                         help='The port to listen for connections on',
                         default=scanarium.get_config('demo_server', 'port'))

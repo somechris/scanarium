@@ -125,5 +125,5 @@ class Scanarium(object):
 
     def handle_arguments(self, description, register_func=None,
                          whitelisted_cgi_fields={}):
-        return self._environment.handle_arguments(description, register_func,
-                                                  whitelisted_cgi_fields)
+        return self._environment.handle_arguments(
+            self, description, register_func, whitelisted_cgi_fields)

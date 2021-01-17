@@ -398,7 +398,7 @@ def regenerate_static_content(scanarium, command, parameter, localizer, force):
             force)
 
 
-def register_arguments(parser):
+def register_arguments(scanarium, parser):
     parser.add_argument('--language',
                         help='Localize for the given language '
                         '(E.g.: \'de\' for German)')

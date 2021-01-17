@@ -209,7 +209,7 @@ def scan_forever(scanarium, qr_state):
             time.sleep(2)
 
 
-def register_arguments(parser):
+def register_arguments(scanarium, parser):
     parser.add_argument('--bailout-period', metavar='DURATION', type=int,
                         help='Exit if no image could get read after DURATION '
                         'seconds. This is useful on camera pipelines that '

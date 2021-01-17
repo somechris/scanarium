@@ -139,7 +139,7 @@ class Environment(object):
 
         sys.argv += arguments[1:]
 
-    def handle_arguments(self, description, register_func=None,
+    def handle_arguments(self, scanarium, description, register_func=None,
                          whitelisted_cgi_fields={}):
         if IS_CGI:
             self._inject_cgi_arguments(whitelisted_cgi_fields)
@@ -151,7 +151,7 @@ class Environment(object):
                             help='Increase verbosity')
 
         if register_func is not None:
-            register_func(parser)
+            register_func(scanarium, parser)
 
         args = parser.parse_args()
 

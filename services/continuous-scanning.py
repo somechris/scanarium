@@ -244,14 +244,17 @@ def register_arguments(scanarium, parser):
                         default=get_conf('bailout_mode'))
 
 
+def run(scanarium, args):
+    qr_state = QrState()
+    if args.bailout_period:
+        start_camera_update_watchdog(
+            scanarium, qr_state, args.bailout_period, args.bailout_mode)
+    scan_forever(scanarium, qr_state)
+
+
 if __name__ == "__main__":
     scanarium = Scanarium()
     args = scanarium.handle_arguments('Continuously scans for images from '
                                       'the camera',
                                       register_arguments)
-
-    qr_state = QrState()
-    if args.bailout_period:
-        start_camera_update_watchdog(scanarium, qr_state, args.bailout_period,
-                                     args.bailout_mode)
-    scan_forever(scanarium, qr_state)
+    scanarium.call_guarded(run, args, check_caller=False)

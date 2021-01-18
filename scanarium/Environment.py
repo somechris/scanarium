@@ -74,11 +74,12 @@ class Environment(object):
             caller = caller[:-3]
         return caller
 
-    def call_guarded(self, func_self, func, *args, **kwargs):
+    def call_guarded(self, func_self, func, *args, check_caller=True,
+                     **kwargs):
         try:
             caller = self.normalized_caller(-2)
 
-            if not re.match(r'^[a-zA-Z-]*$', caller):
+            if not re.match(r'^[a-zA-Z-]*$', caller) and check_caller:
                 raise ScanariumError('SE_CGI_NAME_CHARS',
                                      'Forbidden characters in cgi name')
 

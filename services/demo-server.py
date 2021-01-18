@@ -90,7 +90,7 @@ class ThreadPoolHTTPServer(ThreadPoolMixIn, http.server.HTTPServer):
     pass
 
 
-def serve_forever(port, thread_pool_size):
+def serve_forever(scanarium, port, thread_pool_size):
     # Python <=3.6 does not allow to configure the directory to serve from,
     # but unconditionally servers from the current directory. As Linux Mint
     # Tricia is still on Python 3.6 and we do not want to exclude such users,
@@ -151,4 +151,5 @@ if __name__ == '__main__':
     SERVER_VERSION_OVERRIDE = args.server_version_override
     LOG_REQUESTS = args.log_requests
 
-    serve_forever(args.port, args.thread_pool_size)
+    scanarium.call_guarded(
+        serve_forever, args.port, args.thread_pool_size, check_caller=False)

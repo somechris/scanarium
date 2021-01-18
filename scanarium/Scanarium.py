@@ -120,8 +120,9 @@ class Scanarium(object):
     def run(self, command, check=True, timeout=10):
         return self._environment.run(command, check, timeout)
 
-    def call_guarded(self, func, *args, **kwargs):
-        return self._environment.call_guarded(self, func, *args, **kwargs)
+    def call_guarded(self, func, *args, check_caller=True, **kwargs):
+        return self._environment.call_guarded(
+            self, func, *args, check_caller=check_caller, **kwargs)
 
     def handle_arguments(self, description, register_func=None,
                          whitelisted_cgi_fields={}):

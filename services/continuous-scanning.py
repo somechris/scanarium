@@ -180,13 +180,17 @@ def bailout(scanarium, mode):
 
 
 def camera_update_watchdog(scanarium, qr_state, bailout_period, bailout_mode):
+    last_bailout = time.time()
     while True:
         try:
-            stale_duration = time.time() - qr_state.get_last_update()
+            now = time.time()
+            stale_duration = now - max(qr_state.get_last_update(),
+                                       last_bailout)
             if stale_duration >= bailout_period:
                 logger.error(
                     f'Failed to get good image since {int(stale_duration)} '
                     'seconds. Aborting.')
+                last_bailout = now
                 bailout(scanarium, bailout_mode)
             time.sleep(1)
         except Exception:

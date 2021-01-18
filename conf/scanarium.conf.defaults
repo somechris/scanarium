@@ -263,6 +263,22 @@ allow = True
 
 
 #-------------------------------------------------------------------------------
+# Configuaration for services
+#-------------------------------------------------------------------------------
+[service:continuous-scanning]
+
+# Duration after which to exit if camera fails to produce images
+#
+# If the camera fails to produce after this many seconds, quit the service.
+# This is useful on camera pipelines that cannot gracefully recover from
+# failure on their own, but need to be fixed from the outside. Note that the
+# service does not automatically get restarted after bailout. You need to use
+# external measures (E.g.: systemd) to automatically restart it.
+#
+# 0 means no bailout, regardless how long the camera fails.
+bailout_period = 0
+
+#-------------------------------------------------------------------------------
 # Below this line, it's standard Python logging configuration.
 # By default, we log only INFO and above and we log to console.
 # See https://docs.python.org/3/library/logging.config.html#logging-config-fileformat

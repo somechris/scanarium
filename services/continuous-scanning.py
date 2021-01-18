@@ -210,11 +210,13 @@ def scan_forever(scanarium, qr_state):
 
 
 def register_arguments(scanarium, parser):
+    config_group = 'service:continuous-scanning'
+    default = scanarium.get_config(config_group, 'bailout_period')
     parser.add_argument('--bailout-period', metavar='DURATION', type=int,
                         help='Exit if no image could get read after DURATION '
                         'seconds. This is useful on camera pipelines that '
                         'cannot gracefully recover. 0 means no bailout',
-                        default=0)
+                        default=default)
 
 
 if __name__ == "__main__":

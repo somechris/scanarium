@@ -4,6 +4,7 @@ import locale
 import logging
 import os
 import re
+import signal
 import subprocess
 import sys
 import traceback
@@ -33,6 +34,8 @@ class Environment(object):
         self._backend_dir_abs = backend_dir_abs
         self._config = config
         self._dumper = dumper
+        self._cleanup_functions = set()
+        self.set_signal_handlers()
 
     def run(self, command, check=True, timeout=10):
         try:
@@ -159,3 +162,27 @@ class Environment(object):
             logging.getLogger().setLevel(logging.DEBUG)
 
         return args
+
+    def cleanup(self, signum=0, frame=None, exit_code=143):
+        while len(self._cleanup_functions):
+            f = self._cleanup_functions.pop()
+            try:
+                f()
+            except Exception:
+                logging.getLogger().exception('Error while cleaning up')
+
+        sys.exit(exit_code)
+
+    def register_for_cleanup(self, f):
+        self._cleanup_functions.add(f)
+
+    def unregister_for_cleanup(self, f):
+        try:
+            self._cleanup_functions.remove(f)
+        except KeyError:
+            # The function was not in the set, so it has already been removed.
+            # Hence, we pass.
+            pass
+
+    def set_signal_handlers(self):
+        signal.signal(signal.SIGTERM, self.cleanup)

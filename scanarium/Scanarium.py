@@ -127,3 +127,9 @@ class Scanarium(object):
                          whitelisted_cgi_fields={}):
         return self._environment.handle_arguments(
             self, description, register_func, whitelisted_cgi_fields)
+
+    def register_for_cleanup(self, f):
+        self._environment.register_for_cleanup(f)
+
+    def unregister_for_cleanup(self, f):
+        self._environment.unregister_for_cleanup(f)

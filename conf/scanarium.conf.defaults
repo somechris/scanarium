@@ -214,17 +214,6 @@ paper_width = 297
 
 
 #-------------------------------------------------------------------------------
-# Configuaration for the demo server
-#-------------------------------------------------------------------------------
-[demo_server]
-
-
-# TCP port the demo server will listen on.
-port = 8080
-
-
-
-#-------------------------------------------------------------------------------
 # Configuaration for each CGI script
 #-------------------------------------------------------------------------------
 [cgi]
@@ -265,6 +254,9 @@ allow = True
 #-------------------------------------------------------------------------------
 # Configuaration for services
 #-------------------------------------------------------------------------------
+
+
+
 [service:continuous-scanning]
 
 # Duration after which to exit if camera fails to produce images
@@ -277,6 +269,34 @@ allow = True
 #
 # 0 means no bailout, regardless how long the camera fails.
 bailout_period = 0
+
+
+
+[service:demo-server]
+
+
+# TCP port the demo server will listen on.
+port = 8080
+
+
+# The kind of requests to log
+#
+# Either `all` to log all requests, `non-200` to log all requests that have a
+# response status different to 200, `non-2xx` to log all requests that are
+# outside of the `success` range, or `none` to log no requests at all.
+log_requests = all
+
+
+# The value for the `Server` response header.
+#
+# If empty, Python's default `Server` response header is sent
+server_version_override =
+
+
+# The number of threads to use for serving requests
+thread_pool_size = 2
+
+
 
 #-------------------------------------------------------------------------------
 # Below this line, it's standard Python logging configuration.

@@ -119,9 +119,13 @@ def serve_forever(port, thread_pool_size):
 
 
 def register_arguments(scanarium, parser):
+    def get_conf(key, kind='string', allow_empty=False):
+        return scanarium.get_config('service:demo-server', key, kind=kind,
+                                    allow_empty=allow_empty)
+
     parser.add_argument('port', metavar='PORT', type=int, nargs='?',
                         help='The port to listen for connections on',
-                        default=scanarium.get_config('demo_server', 'port'))
+                        default=get_conf('port'))
     parser.add_argument('--log-requests', metavar='KIND',
                         help='The kind of requests to log. Either `all` to '
                         'log all requests, `non-200` to log all requests that '
@@ -130,13 +134,14 @@ def register_arguments(scanarium, parser):
                         '`success` range, or `none` to log no requests at '
                         ' all.',
                         choices=['all', 'non-200', 'non-2xx', 'none'],
-                        default='all')
+                        default=get_conf('log_requests'))
     parser.add_argument('--server-version-override', metavar='VERSION',
                         help='Override for response\'s `Server` header field',
-                        default=None)
+                        default=get_conf('server_version_override',
+                                         allow_empty=True))
     parser.add_argument('--thread-pool-size', metavar='THREADS', type=int,
                         help='Number of threads to serve requests from',
-                        default=max(2, len(os.sched_getaffinity(0)) - 2))
+                        default=get_conf('thread_pool_size', kind='int'))
 
 
 if __name__ == '__main__':

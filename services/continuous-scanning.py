@@ -3,6 +3,7 @@
 import logging
 import os
 import threading
+import re
 import sys
 import signal
 import time
@@ -165,7 +166,20 @@ def scan_forever_with_camera(scanarium, camera, qr_state):
             alerted_no_approx = False
 
 
-def camera_update_watchdog(qr_state, bailout_period):
+def bailout(scanarium, mode):
+    if mode == 'exit':
+        os.kill(os.getpid(), signal.SIGKILL)
+    elif mode.startswith('restart-service:'):
+        service = re.sub('[^a-zA-Z0-9_-]', '-', mode[16:])
+        command = ['/usr/bin/sudo', '--non-interactive', '/usr/sbin/service',
+                   service, 'restart']
+        scanarium.run(command, timeout=60)
+    else:
+        raise ScanariumError('SE_CONT_SCAN_UNKNOW_BAILOUT',
+                             'Unknown bail out method')
+
+
+def camera_update_watchdog(scanarium, qr_state, bailout_period, bailout_mode):
     while True:
         try:
             stale_duration = time.time() - qr_state.get_last_update()
@@ -173,16 +187,17 @@ def camera_update_watchdog(qr_state, bailout_period):
                 logger.error(
                     f'Failed to get good image since {int(stale_duration)} '
                     'seconds. Aborting.')
-                os.kill(os.getpid(), signal.SIGKILL)
+                bailout(scanarium, bailout_mode)
             time.sleep(1)
         except Exception:
             logger.exception('Camera update watchdog failed')
 
 
-def start_camera_update_watchdog(qr_state, bailout_period):
+def start_camera_update_watchdog(scanarium, qr_state, bailout_period,
+                                 bailout_mode):
     watchdog = threading.Thread(
         target=camera_update_watchdog,
-        args=(qr_state, bailout_period),
+        args=(scanarium, qr_state, bailout_period, bailout_mode),
         daemon=True,
         name='camera update watchdog')
     watchdog.start()
@@ -210,13 +225,19 @@ def scan_forever(scanarium, qr_state):
 
 
 def register_arguments(scanarium, parser):
-    config_group = 'service:continuous-scanning'
-    default = scanarium.get_config(config_group, 'bailout_period')
+    def get_conf(key):
+        return scanarium.get_config('service:continuous-scanning', key)
+
     parser.add_argument('--bailout-period', metavar='DURATION', type=int,
                         help='Exit if no image could get read after DURATION '
                         'seconds. This is useful on camera pipelines that '
                         'cannot gracefully recover. 0 means no bailout',
-                        default=default)
+                        default=get_conf('bailout_period'))
+    parser.add_argument('--bailout-mode', metavar='MODE',
+                        help='If `exit`, bail out by stopping this program. '
+                        'If `restart-service:FOO`, bail out by restarting '
+                        'service `FOO`.',
+                        default=get_conf('bailout_mode'))
 
 
 if __name__ == "__main__":
@@ -227,5 +248,6 @@ if __name__ == "__main__":
 
     qr_state = QrState()
     if args.bailout_period:
-        start_camera_update_watchdog(qr_state, args.bailout_period)
+        start_camera_update_watchdog(scanarium, qr_state, args.bailout_period,
+                                     args.bailout_mode)
     scan_forever(scanarium, qr_state)

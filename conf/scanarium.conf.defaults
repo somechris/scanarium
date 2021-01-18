@@ -271,6 +271,15 @@ allow = True
 bailout_period = 0
 
 
+# How to bail out
+#
+# Use `exit` to bail out by simply ending the program.
+# Use `restart-service:FOO` to bail out by restarting service `FOO`. Note that
+# restarting service `FOO` does not on it's own exit the continuous-scanning
+# program.
+bailout_mode = exit
+
+
 
 [service:demo-server]
 

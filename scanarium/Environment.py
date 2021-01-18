@@ -115,7 +115,7 @@ class Environment(object):
                 print(result.error_message)
                 print()
             print(self._dumper.dump_json_string(result.payload))
-        sys.exit(0)
+        self.cleanup(exit_code=0)
 
     def _extract_cgi_parameters(self):
         parameters = {}

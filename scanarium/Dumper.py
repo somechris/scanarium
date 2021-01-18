@@ -11,6 +11,7 @@ class Dumper(object):
 
     def dump_json(self, file, data):
         dir = os.path.dirname(file)
+        os.makedirs(dir, exist_ok=True)
         tmp_file = tempfile.NamedTemporaryFile(mode='w+', dir=dir,
                                                delete=False)
         try:

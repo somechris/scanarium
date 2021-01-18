@@ -2,4 +2,4 @@
 
 cd "$(dirname "$0")"
 
-exec demo-server/demo-server.py "$@"
+exec services/demo-server.py "$@"

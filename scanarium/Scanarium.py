@@ -77,6 +77,9 @@ class Scanarium(object):
     def get_localizer(self, language):
         return self._localizer_factory.get_localizer(language)
 
+    def dump_json(self, file, data):
+        self._dumper.dump_json(file, data)
+
     def debug_show_image(self, title, image):
         self._scanner.debug_show_image(title, image)
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import os
 import threading
@@ -20,7 +21,10 @@ STABLE_MOVE_DIMENSION_FACTOR = 0.05
 
 
 class QrState(object):
-    def __init__(self):
+    def __init__(self, scanarium, state_file):
+        self.scanarium = scanarium
+        self.state_file = state_file
+
         self.now = time.time()
 
         # Data from previous update run
@@ -29,21 +33,65 @@ class QrState(object):
 
         # Last non-None data
         self.last_usable_data = None
-        self.last_usable_data_position = 0
+        self.last_usable_data_position = []
         self.last_usable_data_stable_start = 0
         self.last_usable_data_scanned = False
 
+        self.load_state()
+        scanarium.register_for_cleanup(self.store_state)
+
+    def load_state(self):
+        if self.state_file:
+            try:
+                loaded = {}
+                with open(self.state_file) as f:
+                    loaded = json.load(f)
+
+                self.last_data = loaded.get('last_data', self.last_data)
+                self.last_data_start = float(loaded.get(
+                    'last_data_start', self.last_data_start))
+
+                self.last_usable_data = loaded.get(
+                    'last_usable_data', self.last_usable_data)
+                self.last_usable_data_position = [
+                    int(e) for e in loaded.get(
+                        'last_usable_data_position',
+                        self.last_usable_data_position)]
+                self.last_usable_data_stable_start = float(loaded.get(
+                    'last_usable_data_stable_start',
+                    self.last_usable_data_stable_start))
+                self.last_usable_data_scanned = bool(loaded.get(
+                    'last_usable_data_scanned',
+                    self.last_usable_data_scanned))
+            except Exception:
+                logger.exception(
+                    f'Failed to load state file {self.state_file}')
+        else:
+            logger.info('No state file given. Skipping state loading')
+
+    def store_state(self):
+        if self.state_file:
+            data = {
+                'last_data': self.last_data,
+                'last_data_start': self.last_data_start,
+                'last_usable_data': self.last_usable_data,
+                'last_usable_data_position': self.last_usable_data_position,
+                'last_usable_data_stable_start':
+                    self.last_usable_data_stable_start,
+                'last_usable_data_scanned': self.last_usable_data_scanned,
+            }
+            scanarium.dump_json(self.state_file, data)
+
     def is_stable_move(self, new):
         old = self.last_usable_data_position
-        if old is None:
-            x_stable = False
-            y_stable = False
-        else:
-            x_allowance = old.width * STABLE_MOVE_DIMENSION_FACTOR
-            x_stable = abs(old.left - new.left) <= x_allowance
+        x_stable = False
+        y_stable = False
+        if old and len(old) == 4 and new and len(new) == 4:
+            x_allowance = old[2] * STABLE_MOVE_DIMENSION_FACTOR
+            x_stable = abs(old[0] - new[0]) <= x_allowance
 
-            y_allowance = old.height * STABLE_MOVE_DIMENSION_FACTOR
-            y_stable = abs(old.top - new.top) <= y_allowance
+            y_allowance = old[3] * STABLE_MOVE_DIMENSION_FACTOR
+            y_stable = abs(old[1] - new[1]) <= y_allowance
 
         return x_stable and y_stable
 
@@ -62,8 +110,15 @@ class QrState(object):
         # No resetting of last_usable_data_scanned, because if we had scanned
         # before, a short occlusion or hiccup should not trigger a scan again.
 
+    def rect_to_list(self, rect):
+        ret = []
+        if rect:
+            ret = [rect.left, rect.top, rect.width, rect.height]
+        return ret
+
     def update(self, rect, data):
         self.now = time.time()
+        rect = self.rect_to_list(rect)
 
         if self.last_usable_data != data:
             # Data is different from last non-None data (but data need not be
@@ -85,7 +140,7 @@ class QrState(object):
                 # Last run, the scanning failed, so we need to
                 # start stabilization again.
                 # (Note that we check on last_data, not data. So data, and
-                # hence rect might or might not be None)
+                # hence rect might or might not be empty)
                 self.reset_stabilization(rect)
 
             if data is not None:
@@ -229,8 +284,9 @@ def scan_forever(scanarium, qr_state):
 
 
 def register_arguments(scanarium, parser):
-    def get_conf(key):
-        return scanarium.get_config('service:continuous-scanning', key)
+    def get_conf(key, allow_empty=False):
+        return scanarium.get_config('service:continuous-scanning', key,
+                                    allow_empty=allow_empty)
 
     parser.add_argument('--bailout-period', metavar='DURATION', type=int,
                         help='Exit if no image could get read after DURATION '
@@ -242,10 +298,14 @@ def register_arguments(scanarium, parser):
                         'If `restart-service:FOO`, bail out by restarting '
                         'service `FOO`.',
                         default=get_conf('bailout_mode'))
+    parser.add_argument('--state-file', metavar='FILE',
+                        help='The file to store/load state to/from. If '
+                        'empty, state storing/loading is skipped.',
+                        default=get_conf('state_file', allow_empty=True))
 
 
 def run(scanarium, args):
-    qr_state = QrState()
+    qr_state = QrState(scanarium, args.state_file)
     if args.bailout_period:
         start_camera_update_watchdog(
             scanarium, qr_state, args.bailout_period, args.bailout_mode)

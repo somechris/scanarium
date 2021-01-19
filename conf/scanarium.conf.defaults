@@ -280,6 +280,15 @@ bailout_period = 0
 bailout_mode = exit
 
 
+# Where to store state across restarts
+#
+# If not empty, it's taken as file name for the internal state. It's stored
+# before shutdown and read at startup. This file allows to avoid considering
+# a picture as new that is in front of the camera during restart.
+# If empty, persisting and loading state is skipped.
+state_file =
+
+
 
 [service:demo-server]
 

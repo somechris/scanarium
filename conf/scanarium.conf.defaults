@@ -280,6 +280,16 @@ bailout_period = 0
 bailout_mode = exit
 
 
+# How long to pause after processing an image before grabbing the next
+#
+# This setting is useful to lessen the load of this service. But do not make
+# it too long, to avoid a laggy experience for users. Also there need to be
+# at least 2 consecutive images without a QR code to allow scanning the same
+# QR code afresh.
+#
+# This setting is measured in seconds.
+image_pause_period = 0.4
+
 # Where to store state across restarts
 #
 # If not empty, it's taken as file name for the internal state. It's stored

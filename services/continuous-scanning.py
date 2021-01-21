@@ -170,7 +170,7 @@ class QrState(object):
         return self.now
 
 
-def scan_forever_with_camera(scanarium, camera, qr_state):
+def scan_forever_with_camera(scanarium, camera, qr_state, image_pause_period):
     alerted_no_approx = False
 
     def should_skip_exception(e):
@@ -220,6 +220,8 @@ def scan_forever_with_camera(scanarium, camera, qr_state):
         else:
             alerted_no_approx = False
 
+        time.sleep(image_pause_period)
+
 
 def bailout(scanarium, mode):
     if mode == 'exit':
@@ -262,12 +264,13 @@ def start_camera_update_watchdog(scanarium, qr_state, bailout_period,
     watchdog.start()
 
 
-def scan_forever(scanarium, qr_state):
+def scan_forever(scanarium, qr_state, image_pause_period):
     while True:
         camera = None
         try:
             camera = scanarium.open_camera()
-            scan_forever_with_camera(scanarium, camera, qr_state)
+            scan_forever_with_camera(scanarium, camera, qr_state,
+                                     image_pause_period)
         except Exception:
             logger.exception('Failed to scan')
             # Something went wrong, like camera being unplugged. So we back off
@@ -298,6 +301,11 @@ def register_arguments(scanarium, parser):
                         'If `restart-service:FOO`, bail out by restarting '
                         'service `FOO`.',
                         default=get_conf('bailout_mode'))
+    parser.add_argument('--image-pause-period', metavar='DURATION', type=float,
+                        help='Time (in seconds) to pause after processing an '
+                        'image before grabbing the next. This is useful to '
+                        'lessen the load of this service.',
+                        default=get_conf('image_pause_period'))
     parser.add_argument('--state-file', metavar='FILE',
                         help='The file to store/load state to/from. If '
                         'empty, state storing/loading is skipped.',
@@ -309,7 +317,7 @@ def run(scanarium, args):
     if args.bailout_period:
         start_camera_update_watchdog(
             scanarium, qr_state, args.bailout_period, args.bailout_mode)
-    scan_forever(scanarium, qr_state)
+    scan_forever(scanarium, qr_state, args.image_pause_period)
 
 
 if __name__ == "__main__":

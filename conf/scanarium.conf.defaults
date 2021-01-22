@@ -290,6 +290,15 @@ bailout_mode = exit
 # This setting is measured in seconds.
 image_pause_period = 0.4
 
+
+# How long to pause after image grabbing errors
+#
+# This setting allows to give the pipeline time to recover.
+#
+# This setting is measured in seconds.
+image_error_pause_period = 2
+
+
 # Where to store state across restarts
 #
 # If not empty, it's taken as file name for the internal state. It's stored

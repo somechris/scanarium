@@ -264,7 +264,8 @@ def start_camera_update_watchdog(scanarium, qr_state, bailout_period,
     watchdog.start()
 
 
-def scan_forever(scanarium, qr_state, image_pause_period):
+def scan_forever(scanarium, qr_state, image_error_pause_period,
+                 image_pause_period):
     while True:
         camera = None
         try:
@@ -276,14 +277,14 @@ def scan_forever(scanarium, qr_state, image_pause_period):
             # Something went wrong, like camera being unplugged. So we back off
             # a bit to avoid busy waiting and allow for recovery before
             # retrying.
-            time.sleep(2)
+            time.sleep(image_error_pause_period)
         finally:
             if camera is not None:
                 try:
                     scanarium.close_camera(camera)
                 except Exception:
                     logger.exception('Failed to close camera')
-            time.sleep(2)
+            time.sleep(image_error_pause_period)
 
 
 def register_arguments(scanarium, parser):
@@ -301,6 +302,10 @@ def register_arguments(scanarium, parser):
                         'If `restart-service:FOO`, bail out by restarting '
                         'service `FOO`.',
                         default=get_conf('bailout_mode'))
+    parser.add_argument('--image-error-pause-period', metavar='DURATION',
+                        type=float, help='Time (in seconds) to pause after '
+                        'getting an image from the camera failed.',
+                        default=get_conf('image_pause_period'))
     parser.add_argument('--image-pause-period', metavar='DURATION', type=float,
                         help='Time (in seconds) to pause after processing an '
                         'image before grabbing the next. This is useful to '
@@ -317,7 +322,8 @@ def run(scanarium, args):
     if args.bailout_period:
         start_camera_update_watchdog(
             scanarium, qr_state, args.bailout_period, args.bailout_mode)
-    scan_forever(scanarium, qr_state, args.image_pause_period)
+    scan_forever(scanarium, qr_state, args.image_error_pause_period,
+                 args.image_pause_period)
 
 
 if __name__ == "__main__":

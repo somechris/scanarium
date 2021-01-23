@@ -572,7 +572,7 @@ def undistort_image(image, config):
                 '\"{file_name}\"',
                 {'file_name': param_file})
 
-        width, height = image.shape[:2]
+        height, width = image.shape[:2]
         new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(
             cam_matrix, dist_coeffs, (width, height), 1)
 

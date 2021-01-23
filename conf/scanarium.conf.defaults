@@ -280,6 +280,17 @@ bailout_period = 0
 bailout_mode = exit
 
 
+# How long to wait after a bailout before allowing to trigger a new bailout
+#
+# This is useful for bailout modes that use a different mode than exiting the
+# program, e.g.: Restarting a service. When such a bailout got triggered, the
+# camera pipeline will typically take some time until it's fully operational
+# again. During that recovery time, we want to pause bailout triggering, as
+# we'd otherwise again and again re-trigger before the camera pipeline would
+# become working again.
+bailout_pause_period = 10
+
+
 # How long to pause after processing an image before grabbing the next
 #
 # This setting is useful to lessen the load of this service. But do not make

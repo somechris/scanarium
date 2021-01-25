@@ -241,8 +241,8 @@ class Watchdog(object):
     def start(self):
         self.watchdog.start()
 
-    def _bailout(self):
-        mode = self.mode
+    def _bailout_mode(self, mode):
+        mode = mode.strip()
         if mode == 'exit':
             os.kill(os.getpid(), signal.SIGKILL)
         elif mode.startswith('restart-service:'):
@@ -253,6 +253,14 @@ class Watchdog(object):
         else:
             raise ScanariumError('SE_CONT_SCAN_UNKNOW_BAILOUT',
                                  'Unknown bail out method')
+
+    def _bailout(self):
+        modes = [self.mode]
+        if ',' in self.mode:
+            modes = self.mode.split(',')
+
+        for mode in modes:
+            self._bailout_mode(mode)
 
     def _camera_update_watchdog(self):
         pause_end = time.time()

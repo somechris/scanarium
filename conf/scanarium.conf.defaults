@@ -277,6 +277,10 @@ bailout_period = 0
 # Use `restart-service:FOO` to bail out by restarting service `FOO`. Note that
 # restarting service `FOO` does not on it's own exit the continuous-scanning
 # program.
+#
+# To trigger more than a single action, separate actions with `,`. So bailing
+# out with mode `FOO,BAR` would first trigger bailing out `FOO` and upon
+# success `BAR`.
 bailout_mode = exit
 
 

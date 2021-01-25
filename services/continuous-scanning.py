@@ -223,46 +223,53 @@ def scan_forever_with_camera(scanarium, camera, qr_state, image_pause_period):
         time.sleep(image_pause_period)
 
 
-def bailout(scanarium, mode):
-    if mode == 'exit':
-        os.kill(os.getpid(), signal.SIGKILL)
-    elif mode.startswith('restart-service:'):
-        service = re.sub('[^a-zA-Z0-9_-]', '-', mode[16:])
-        command = ['/usr/bin/sudo', '--non-interactive', '/usr/sbin/service',
-                   service, 'restart']
-        scanarium.run(command, timeout=60)
-    else:
-        raise ScanariumError('SE_CONT_SCAN_UNKNOW_BAILOUT',
-                             'Unknown bail out method')
+class Watchdog(object):
+    def __init__(self, scanarium, qr_state, period, mode, pause_period):
+        self.scanarium = scanarium
+        self.qr_state = qr_state
 
+        self.period = period
+        self.mode = mode
+        self.pause_period = pause_period
 
-def camera_update_watchdog(scanarium, qr_state, bailout_period, bailout_mode,
-                           bailout_pause_period):
-    pause_end = time.time()
-    while True:
-        try:
-            now = time.time()
-            stale_duration = now - max(qr_state.get_last_update(), pause_end)
-            if stale_duration >= bailout_period:
-                logger.error(
-                    f'Failed to get good image since {int(stale_duration)} '
-                    'seconds. Aborting.')
-                pause_end = now + bailout_pause_period - bailout_period
-                bailout(scanarium, bailout_mode)
-            time.sleep(1)
-        except Exception:
-            logger.exception('Camera update watchdog failed')
+        self.watchdog = threading.Thread(
+            target=self._camera_update_watchdog,
+            args=(),
+            daemon=True,
+            name='camera update watchdog')
 
+    def start(self):
+        self.watchdog.start()
 
-def start_camera_update_watchdog(scanarium, qr_state, bailout_period,
-                                 bailout_mode, bailout_pause_period):
-    watchdog = threading.Thread(
-        target=camera_update_watchdog,
-        args=(scanarium, qr_state, bailout_period, bailout_mode,
-              bailout_pause_period),
-        daemon=True,
-        name='camera update watchdog')
-    watchdog.start()
+    def _bailout(self):
+        mode = self.mode
+        if mode == 'exit':
+            os.kill(os.getpid(), signal.SIGKILL)
+        elif mode.startswith('restart-service:'):
+            service = re.sub('[^a-zA-Z0-9_-]', '-', mode[16:])
+            command = ['/usr/bin/sudo', '--non-interactive',
+                       '/usr/sbin/service', service, 'restart']
+            self.scanarium.run(command, timeout=60)
+        else:
+            raise ScanariumError('SE_CONT_SCAN_UNKNOW_BAILOUT',
+                                 'Unknown bail out method')
+
+    def _camera_update_watchdog(self):
+        pause_end = time.time()
+        while True:
+            try:
+                now = time.time()
+                stale_duration = now - max(
+                    self.qr_state.get_last_update(), pause_end)
+                if stale_duration >= self.period:
+                    logger.error(
+                        'Failed to get good image since '
+                        f'{int(stale_duration)} seconds. Aborting.')
+                    pause_end = now + self.pause_period - self.period
+                    self._bailout()
+                time.sleep(1)
+            except Exception:
+                logger.exception('Camera update watchdog failed')
 
 
 def scan_forever(scanarium, qr_state, image_error_pause_period,
@@ -325,9 +332,9 @@ def register_arguments(scanarium, parser):
 def run(scanarium, args):
     qr_state = QrState(scanarium, args.state_file)
     if args.bailout_period:
-        start_camera_update_watchdog(
+        Watchdog(
             scanarium, qr_state, args.bailout_period, args.bailout_mode,
-            args.bailout_pause_period)
+            args.bailout_pause_period).start()
     scan_forever(scanarium, qr_state, args.image_error_pause_period,
                  args.image_pause_period)
 

@@ -255,6 +255,8 @@ class Watchdog(object):
                                  'Unknown bail out method')
 
     def _bailout(self):
+        self.qr_state.store_state()
+
         modes = [self.mode]
         if ',' in self.mode:
             modes = self.mode.split(',')

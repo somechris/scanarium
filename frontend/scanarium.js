@@ -111,7 +111,7 @@ var sceneConfig = {
 
 var configReloadPeriod = 10 * 1000; // 10 seconds
 
-var commandReloadPeriod = 3 * 1000; // 3 seconds
+var commandReloadPeriod = 1 * 1000; // 3 seconds
 
 var dynamicConfigMethod = 'GET';
 

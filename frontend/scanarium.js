@@ -439,6 +439,8 @@ var MessageManager = {
       var duration = 10000;
       if (icon == 'ok') {
           duration /= 2;
+      } else if (icon == 'pause') {
+          duration = 100;
       }
       var len = this.objects.length;
       var sprites = [
@@ -709,6 +711,7 @@ function preload() {
 
     this.load.image('failed', '/static/failed.png');
     this.load.image('ok', '/static/ok.png');
+    this.load.image('pause', '/static/pause.png');
     this.load.image('background', scene_dir + '/background.png');
 
     scene_preload();

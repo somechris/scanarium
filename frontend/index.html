@@ -152,8 +152,10 @@ document.addEventListener("keypress", function(e) {
     scanariumConfig.paused = !scanariumConfig.paused;
     if (scanariumConfig.paused) {
       game.scene.pause();
+      MessageManager.addMessage(null, 'pause', localize('Paused'));
     } else {
       game.scene.resume();
+      MessageManager.addMessage(null, 'ok', localize('Resuming scene'));
     }
   } else if (e.key === '?') {
     // Phaser does not offer a keycode for question mark, so we trigger from

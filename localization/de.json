@@ -1,5 +1,18 @@
 {
   "messages": {
+    "Help Page": "Hilfe-Seite",
+    "---key---": "---Taste---",
+    "---description---": "---Beschreibung---",
+    "Show/hide this help page": "Diese Hilfe-Seite ein-/ausblenden",
+    "Show/hide frame counter": "Bildfrequenz (frames-per-second) ein-/ausblenden",
+    "Switch to fullscreen mode": "Wechsel zum Vollbild Modus",
+    "Add another random actor": "Zufällige Figur zu Szene hinzufügen",
+    "Delete all your scanned actors": "Alle gespeicherten Zeichnungen löschen",
+    "Pause/Resume": "Pause",
+    "Reindex actors": "Gespeicherte Zeichnungen neu indexieren",
+    "Show camera source image": "Zeige Kamerabild",
+    "Scan image": "Bild scannen",
+    "space": "Leertaste",
     "(This is useful to get rid of unwanted images)": "(Das ist nützlich um unerwünschte Bilder wieder zu entfernen)",
     "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "In der Szene \"{scene_name}\" gibt es keinen Figur \"{actor_name}\"",
     "Calling script \"{script_name}\" as cgi is forbidden": "Skript \"{script_name}\" darf nicht als cgi gestartet werden",

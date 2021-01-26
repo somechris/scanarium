@@ -786,7 +786,7 @@ var HelpPage = {
         var background = game.add.image(x, y, 'help_page');
         background.setOrigin(0,0);
 
-        var caption = game.add.text(x+width, y+height, 'Help Page');
+        var caption = game.add.text(x+width, y+height, localize('Help Page'));
         caption.x = x + width/2 - caption.width/2;
         caption.y = y + caption.height;
 

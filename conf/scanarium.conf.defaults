@@ -24,12 +24,6 @@ hide_images_in_debug = False
 inkscape = inkscape
 
 
-# Default dpi for inkscape.
-#
-# This is 90 for Inkscape 0.91 and lower, and 96 for Inkscape 0.92 and later.
-inkscape_dpi = 96
-
-
 # The binary for ImageMagick's convert
 convert = convert
 
@@ -197,20 +191,6 @@ height =
 # setting allows how specify long to wait (in seconds) before grabbing
 # the frame from cameras. Leave empty for no waiting.
 delay =
-
-
-# Height of landscape standard paper.
-#
-# Only the ratio between height and width (see `paper_width` below)
-# are used, so we do not have to worry about units.
-#
-# The defaults are for A4 landscape paper.
-paper_height = 210
-
-
-# Width of landscape standard paper (See `paper_height` above)
-paper_width = 297
-
 
 
 #-------------------------------------------------------------------------------

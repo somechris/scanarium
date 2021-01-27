@@ -20,6 +20,8 @@ LOG_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
 
 locale.resetlocale()
 logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
+logger = logging.getLogger(__name__)
+
 if IS_CGI:
     print('Content-Type: application/json')
     print()
@@ -38,6 +40,9 @@ class Environment(object):
         self.set_signal_handlers()
 
     def run(self, command, check=True, timeout=10):
+        sep = "\" \""
+        logger.debug(f'Running external command with check={check}, '
+                     f'timeout={timeout}: "{sep.join(command)}"')
         try:
             process = subprocess.run(
                 command, check=check, timeout=timeout, stdout=subprocess.PIPE,

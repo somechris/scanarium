@@ -136,6 +136,22 @@ calibration_xml_file =
 max_brightness = 
 
 
+# First threshold for Canny Edge Detector
+#
+# This value gets used as `threshold1` in OpenCV's `Canny` implementation of
+# the Canny Edge Detector. See
+# https://docs.opencv.org/master/dd/d1a/group__imgproc__feature.html#ga04723e007ed888ddf11d9ba04e2232de
+canny_threshold_1 = 30
+
+
+# Second threshold for Canny Edge Detector
+#
+# This value gets used as `threshold2` in OpenCV's `Canny` implementation of
+# the Canny Edge Detector. See
+# https://docs.opencv.org/master/dd/d1a/group__imgproc__feature.html#ga04723e007ed888ddf11d9ba04e2232de
+canny_threshold_2 = 400
+
+
 # The white-balance filter to apply.
 #
 # Either `simple`, `grayworld`, or `none`.

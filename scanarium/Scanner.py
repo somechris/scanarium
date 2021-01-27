@@ -37,11 +37,16 @@ def scale_image(scanarium, image):
     return (scaled_image, scale_factor)
 
 
-def find_rect_points(image, decreasingArea=True, required_points=[]):
+def find_rect_points(scanarium, image, decreasingArea=True,
+                     required_points=[]):
     imageArea = image.shape[0] * image.shape[1]
     contour_min_area = imageArea / 25
 
-    cannied = cv2.Canny(image, 30, 400)
+    canny_threshold_1 = scanarium.get_config('scan', 'canny_threshold_1',
+                                             kind='int')
+    canny_threshold_2 = scanarium.get_config('scan', 'canny_threshold_2',
+                                             kind='int')
+    cannied = cv2.Canny(image, canny_threshold_1, canny_threshold_2)
     # When looking for contours that contain some QR code, RETR_LIST (below)
     # might not be most efficient, RETR_TREE might allow to optimize. But
     # RETR_LIST is simpler to use and quick enough for now.
@@ -176,8 +181,8 @@ def rectify(scanarium, image, decreasingArea=True, required_points=[],
     scaled_points = [(int(point[0] * scale_factor),
                       int(point[1] * scale_factor)
                       ) for point in required_points]
-    found_points_scaled = find_rect_points(prepared_image, decreasingArea,
-                                           scaled_points)
+    found_points_scaled = find_rect_points(scanarium, prepared_image,
+                                           decreasingArea, scaled_points)
     found_points = (found_points_scaled / scale_factor).astype('float32')
 
     if scanarium.get_config('scan', 'sub_pixel_corners', 'boolean'):

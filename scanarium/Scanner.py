@@ -3,6 +3,7 @@ import os
 import re
 import sys
 import time
+import random
 
 import cv2
 import numpy as np
@@ -37,6 +38,33 @@ def scale_image(scanarium, image):
     return (scaled_image, scale_factor)
 
 
+def add_text(image, text, x=2, y=5, color=None):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    fontScale = image.shape[0] / 1000
+
+    position = (int(image.shape[1] * x / 100),
+                int(image.shape[0] * y / 100))
+
+    if color is None:
+        color = (0, 255, 0)
+
+    return cv2.putText(image, text, position, font, fontScale, color)
+
+
+def debug_show_contours(scanarium, image, contours, hierarchy):
+    if scanarium.get_config('general', 'debug', 'boolean'):
+        # The contours image should contain the dampened image and allow color
+        contours_image = cv2.cvtColor((image * 0.3).astype('uint8'),
+                                      cv2.COLOR_GRAY2BGR)
+        for i in range(len(contours)):
+            color = (random.randint(0, 256), random.randint(0, 256),
+                     random.randint(0, 256))
+            cv2.drawContours(contours_image, contours, i, color, 2,
+                             cv2.LINE_8, hierarchy, 0)
+        add_text(contours_image, f'Found contours: {len(contours)}')
+        scanarium.debug_show_image('Contours', contours_image)
+
+
 def find_rect_points(scanarium, image, decreasingArea=True,
                      required_points=[]):
     imageArea = image.shape[0] * image.shape[1]
@@ -57,8 +85,9 @@ def find_rect_points(scanarium, image, decreasingArea=True,
     # might not be most efficient, RETR_TREE might allow to optimize. But
     # RETR_LIST is simpler to use and quick enough for now.
     # todo: See if RETR_TREE performs better here.
-    contours, _ = cv2.findContours(edges_image, cv2.RETR_LIST,
-                                   cv2.CHAIN_APPROX_NONE)
+    contours, hierarchy = cv2.findContours(edges_image, cv2.RETR_LIST,
+                                           cv2.CHAIN_APPROX_NONE)
+    debug_show_contours(scanarium, image, contours, hierarchy)
 
     good_approx = None
     for contour in sorted(contours, key=cv2.contourArea,

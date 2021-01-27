@@ -188,12 +188,34 @@ white_balance = none
 minimize_buffers = False
 
 
-# Whether to refine found corners to sub-pixel resolution
+# Search window size for refinement of found corners
 #
-# Refining corners to sub-pixel resolution takes some time, but slightly
-# improves accuracy for low-resolution cameras. For 720p cameras and beyond,
-# the improvement is neglectible.
-sub_pixel_corners = False
+# Corner refinement costs some time, but helps to improve accuracy of found
+# corner points, which is useful for spot-on matching of drawings to templates.
+#
+# We use this setting to improve the found inner corners of the rectangle on
+# actor drawings. Don't set a too high value, because if both the inner and
+# outer corner are in the search window, the refinement will gravitate towards
+# the outer corner instead of the inner corner.
+#
+# A setting of 3 should be good enough for standard web-cams.
+#
+# 0 disables sub-pixel corner detection
+corner_refinement_size = 0
+
+
+# Iteration bound for corner refinement
+#
+# If corner refinement is enabled (see `corner_refinement_size`), abort the
+# refinement algorithm after at most as many iterations as given by this bound.
+corner_refinement_iteration_bound = 20
+
+
+# Bound on accuracy of corner refinement
+#
+# If corner refinement is enabled (see `corner_refinement_size`), abort the
+# refinement algorithm if the change in accuracy drops below this bound.
+corner_refinement_accuracy = 0.03
 
 
 # Width of camera source

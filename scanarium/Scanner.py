@@ -178,6 +178,24 @@ def prepare_image(scanarium, image):
     return (prepared_image, scale_factor)
 
 
+def refine_corners(scanarium, prepared_image, points):
+    window_size = scanarium.get_config('scan', 'corner_refinement_size', 'int')
+    if window_size > 1:
+        search_window = (window_size, window_size)
+
+        iteration_bound = scanarium.get_config(
+            'scan', 'corner_refinement_iteration_bound', 'int')
+        accuracy = scanarium.get_config(
+            'scan', 'corner_refinement_accuracy', 'float')
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT,
+                    iteration_bound, accuracy)
+
+        points = cv2.cornerSubPix(
+            prepared_image, points, search_window, (-1, -1), criteria)
+
+    return points.reshape(4, 2)
+
+
 def rectify(scanarium, image, decreasingArea=True, required_points=[],
             yield_only_points=False):
     (prepared_image, scale_factor) = prepare_image(scanarium, image)
@@ -189,14 +207,7 @@ def rectify(scanarium, image, decreasingArea=True, required_points=[],
                                            decreasingArea, scaled_points)
     found_points = (found_points_scaled / scale_factor).astype('float32')
 
-    if scanarium.get_config('scan', 'sub_pixel_corners', 'boolean'):
-        search_window = (5, 5)
-        rectify_points = cv2.cornerSubPix(
-            prepared_image, found_points, search_window, (-1, -1),
-            (cv2.TERM_CRITERIA_EPS + cv2.TermCriteria_COUNT, 20, 0.03))
-    else:
-        rectify_points = found_points
-    rectify_points = rectify_points.reshape(4, 2)
+    rectify_points = refine_corners(scanarium, prepared_image, found_points)
 
     if yield_only_points:
         ret = rectify_points

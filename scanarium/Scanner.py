@@ -42,10 +42,14 @@ def find_rect_points(scanarium, image, decreasingArea=True,
     imageArea = image.shape[0] * image.shape[1]
     contour_min_area = imageArea / 25
 
+    canny_blur_size = scanarium.get_config('scan', 'canny_blur_size',
+                                           kind='int')
     canny_threshold_1 = scanarium.get_config('scan', 'canny_threshold_1',
                                              kind='int')
     canny_threshold_2 = scanarium.get_config('scan', 'canny_threshold_2',
                                              kind='int')
+    if canny_blur_size > 1:
+        image = cv2.blur(image, (canny_blur_size, canny_blur_size))
     cannied = cv2.Canny(image, canny_threshold_1, canny_threshold_2)
     # When looking for contours that contain some QR code, RETR_LIST (below)
     # might not be most efficient, RETR_TREE might allow to optimize. But

@@ -136,6 +136,20 @@ calibration_xml_file =
 max_brightness = 
 
 
+# Size of the window for blurring before Canny Edge Detector
+#
+# If your camera suffers from noise, blurring before detecting edges will give
+# better detection results (and typically overall speed up things for us as
+# the cost of blurring is compensated by having to comb through fewer bogus
+# edges).
+#
+# The value to use depends on the used camera. But you can use 3 as general
+# purpose starting point.
+#
+# 0 disables blurring.
+canny_blur_size = 30
+
+
 # First threshold for Canny Edge Detector
 #
 # This value gets used as `threshold1` in OpenCV's `Canny` implementation of

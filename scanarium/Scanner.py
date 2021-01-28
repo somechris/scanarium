@@ -629,10 +629,9 @@ def undistort_image(image, config):
         new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(
             cam_matrix, dist_coeffs, (width, height), 1)
 
-        debug_show_image('Camera adjusted image before undistortion', image,
-                         config)
         ret = cv2.undistort(ret, cam_matrix, dist_coeffs, None,
                             new_camera_matrix)
+        debug_show_image('Undistorted image', ret, config)
     return ret
 
 

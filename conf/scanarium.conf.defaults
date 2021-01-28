@@ -245,6 +245,26 @@ height =
 delay =
 
 
+
+#-------------------------------------------------------------------------------
+# Configuration for image masks
+#-------------------------------------------------------------------------------
+[mask]
+
+
+# Value to add to stroke-width of Mask layer's elements, when generating masks
+#
+# Increasing this value cuts off from the outside of the image. This helps with
+# slightly misaligned images and allows to avoid having parts from outside of
+# the actor template in the final image. But since it cuts off more, it also
+# means that it cuts off more from the actual drawing.
+#
+# If you manage to get spot ot scans each time, set this value to 0. Otherwise
+# slowly increase it.
+stroke_offset = 0
+
+
+
 #-------------------------------------------------------------------------------
 # Configuaration for each CGI script
 #-------------------------------------------------------------------------------

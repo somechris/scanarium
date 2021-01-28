@@ -77,13 +77,42 @@ def get_svg_contour_rect_area(scanarium, svg_path):
     ))
 
 
-def get_mask_name(dir, file):
+def generate_adapted_mask_source(scanarium, source, target):
+    offset = scanarium.get_config('mask', 'stroke_offset', 'float')
+
+    def adapt_style_element(style_element):
+        if ':' in style_element:
+            key, value = [s.strip() for s in style_element.split(':', 1)]
+            new_value = value
+
+            if offset and key == 'stroke-width':
+                new_value = float(value) + offset
+
+            if value != new_value:
+                style_element = f'{key}:{new_value}'
+
+        return style_element
+
+    def adapt_style(style):
+        return ';'.join([adapt_style_element(style_element)
+                         for style_element in style.split(';')])
+
+    tree = ET.parse(source)
+    for element in tree.findall('.//*[@id="Mask"]//'):
+        style = element.get('style')
+        if style:
+            element.set('style', adapt_style(style))
+    tree.write(target)
+
+
+def get_mask_name(dir, file, suffix='png'):
     basename = file.rsplit('.', 1)[0]
-    return os.path.join(dir, basename + '-mask.png')
+    return os.path.join(dir, f'{basename}-mask.{suffix}')
 
 
 def generate_mask(scanarium, dir, file, force):
     source = os.path.join(dir, file)
+    adapted_source = get_mask_name(dir, file, 'svg')
     target = get_mask_name(dir, file)
 
     if not os.path.isfile(source):
@@ -92,7 +121,10 @@ def generate_mask(scanarium, dir, file, force):
                              'generating mask {target_file}',
                              {'source_file': source, 'target_file': target})
 
-    if file_needs_update(target, [source], force):
+    if file_needs_update(adapted_source, [source], force):
+        generate_adapted_mask_source(scanarium, source, adapted_source)
+
+    if file_needs_update(target, [adapted_source], force):
         contour_area = get_svg_contour_rect_area(scanarium, source)
         command = [
             scanarium.get_config('programs', 'inkscape'),
@@ -101,7 +133,7 @@ def generate_mask(scanarium, dir, file, force):
             f'--export-area={contour_area}',
             '--export-background=black',
             '--export-png=%s' % (target),
-            source,
+            adapted_source,
         ]
         scanarium.run(command)
 

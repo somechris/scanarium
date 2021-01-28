@@ -102,7 +102,8 @@ def show_source(scanarium, mark, store_final):
             original_image = scanarium.get_image(camera)
             image = original_image.copy()
             if mark:
-                image, qr_rect, qr_data = add_qr(scanarium, image, original_image)
+                image, qr_rect, qr_data = add_qr(scanarium, image,
+                                                 original_image)
                 image = add_qr_parent_rect(scanarium, image, original_image,
                                            qr_rect)
                 image = add_biggest_rect(scanarium, image, original_image)

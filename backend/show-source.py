@@ -96,6 +96,8 @@ def show_source(scanarium, mark, store_final):
     camera = None
     original_image = None
     title = 'Source' + (' with detected features' if mark else '')
+    exception_message = None
+    last_exception_message = None
     try:
         camera = scanarium.open_camera()
         while True:
@@ -116,8 +118,20 @@ def show_source(scanarium, mark, store_final):
                                 visualized_alpha=mask_alpha)
                             scanarium.debug_show_image(
                                 f'Masked@{mask_alpha}', masked_image)
-                    except Exception:
-                        pass
+                        last_exception_message = None
+
+                    except ScanariumError as e:
+                        exception_message = e.message
+
+                    except Exception as e:
+                        exception_message = str(e)
+
+                    if exception_message != last_exception_message:
+                        print(exception_message)
+                        last_exception_message = exception_message
+                        exception_message = None
+                else:
+                    last_exception_message = None
 
             scanarium.debug_show_image(title, image)
             cv2.waitKey(25)

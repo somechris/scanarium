@@ -65,7 +65,7 @@ def add_qr(scanarium, image, original_image):
         image = add_poly(image, points, (0, 255, 0))
 
     image = add_mark(image, 'QR-data', qr_data, points, 0)
-    return image, qr_rect
+    return image, qr_rect, qr_data
 
 
 def add_qr_parent_rect(scanarium, image, original_image, qr_rect):
@@ -102,10 +102,18 @@ def show_source(scanarium, mark, store_final):
             original_image = scanarium.get_image(camera)
             image = original_image.copy()
             if mark:
-                image, qr_rect = add_qr(scanarium, image, original_image)
+                image, qr_rect, qr_data = add_qr(scanarium, image, original_image)
                 image = add_qr_parent_rect(scanarium, image, original_image,
                                            qr_rect)
                 image = add_biggest_rect(scanarium, image, original_image)
+                if qr_rect:
+                    try:
+                        (command, parameter) = qr_data.split(':', 1)
+                        scanarium.actor_image_pipeline(
+                            original_image, qr_rect, command, parameter)
+                    except Exception:
+                        pass
+
             scanarium.debug_show_image(title, image)
             cv2.waitKey(25)
     finally:

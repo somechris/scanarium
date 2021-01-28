@@ -376,7 +376,7 @@ def save_image(scanarium, image, scene, actor):
     return timestamp
 
 
-def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
+def actor_image_pipeline(scanarium, image, qr_rect, scene, actor):
     scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), scene)
     if not os.path.isdir(scene_dir):
         raise ScanariumError('SE_UNKNOWN_SCENE',
@@ -400,6 +400,11 @@ def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
     # lower left-hand corner, and white-balance has been run.
 
     scanarium.debug_show_image('Final', image)
+    return image
+
+
+def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
+    image = actor_image_pipeline(scanarium, image, qr_rect, scene, actor)
     flavor = save_image(scanarium, image, scene, actor)
 
     scanarium.reindex_actors_for_scene(scene)
@@ -665,6 +670,9 @@ class Scanner(object):
         return process_image_with_qr_code(
             scanarium, self._command_logger, image, qr_rect, data,
             should_skip_exception)
+
+    def actor_image_pipeline(self, scanarium, image, qr_rect, scene, actor):
+        return actor_image_pipeline(scanarium, image, qr_rect, scene, actor)
 
     def rectify_to_biggest_rect(self, scanarium, image,
                                 yield_only_points=False):

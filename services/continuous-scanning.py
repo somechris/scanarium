@@ -224,13 +224,15 @@ def scan_forever_with_camera(scanarium, camera, qr_state, image_pause_period):
 
 
 class Watchdog(object):
-    def __init__(self, scanarium, qr_state, period, mode, pause_period):
+    def __init__(self, scanarium, qr_state, period, mode, pause_period,
+                 initial_pause_period):
         self.scanarium = scanarium
         self.qr_state = qr_state
 
         self.period = period
         self.mode = mode
         self.pause_period = pause_period
+        self.initial_pause_period = initial_pause_period
 
         self.watchdog = threading.Thread(
             target=self._camera_update_watchdog,
@@ -265,7 +267,7 @@ class Watchdog(object):
             self._bailout_mode(mode)
 
     def _camera_update_watchdog(self):
-        pause_end = time.time()
+        pause_end = time.time() + self.initial_pause_period
         while True:
             try:
                 now = time.time()
@@ -310,6 +312,10 @@ def register_arguments(scanarium, parser):
         return scanarium.get_config('service:continuous-scanning', key,
                                     allow_empty=allow_empty)
 
+    parser.add_argument('--bailout-initial-pause-period', metavar='DURATION',
+                        type=float, help='After startup, wait at least this '
+                        'long (in seconds) before triggering a bailout.',
+                        default=get_conf('bailout_initial_pause_period'))
     parser.add_argument('--bailout-period', metavar='DURATION', type=int,
                         help='Exit if no image could get read after DURATION '
                         'seconds. This is useful on camera pipelines that '
@@ -342,9 +348,10 @@ def register_arguments(scanarium, parser):
 def run(scanarium, args):
     qr_state = QrState(scanarium, args.state_file)
     if args.bailout_period:
-        Watchdog(
+        watchdog = Watchdog(
             scanarium, qr_state, args.bailout_period, args.bailout_mode,
-            args.bailout_pause_period).start()
+            args.bailout_pause_period, args.bailout_initial_pause_period)
+        watchdog.start()
     scan_forever(scanarium, qr_state, args.image_error_pause_period,
                  args.image_pause_period)
 

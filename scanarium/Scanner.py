@@ -605,6 +605,7 @@ def get_raw_image(config, camera=None):
         close_camera(config, camera)
 
     store_raw_image(config, image)
+    debug_show_image('Raw image', image, config)
 
     return image
 

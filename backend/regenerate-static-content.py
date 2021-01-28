@@ -79,6 +79,7 @@ def get_svg_contour_rect_area(scanarium, svg_path):
 
 def generate_adapted_mask_source(scanarium, source, target):
     offset = scanarium.get_config('mask', 'stroke_offset', 'float')
+    color = scanarium.get_config('mask', 'stroke_color', allow_empty=True)
 
     def adapt_style_element(style_element):
         if ':' in style_element:
@@ -87,6 +88,8 @@ def generate_adapted_mask_source(scanarium, source, target):
 
             if offset and key == 'stroke-width':
                 new_value = float(value) + offset
+            elif color and key == 'stroke':
+                new_value = color
 
             if value != new_value:
                 style_element = f'{key}:{new_value}'

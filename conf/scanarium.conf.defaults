@@ -264,6 +264,20 @@ delay =
 stroke_offset = 0
 
 
+# Color for strokes, when generating masks
+#
+# If an element of the mask layer has set a stroke color, you can override it
+# with this setting when generating masks.
+#
+# Using this setting, you can have the actor outlines in a nice light grey and
+# still get clear masking by setting `#000000` here.
+#
+# If empty, the stroke color is not overridden.
+#
+# Note, that this setting only overrides existing stroke color settings. It
+# does nothing for elements that do not set a stroke color.
+stroke_color =
+
 
 #-------------------------------------------------------------------------------
 # Configuaration for each CGI script

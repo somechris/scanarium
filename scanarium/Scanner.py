@@ -33,7 +33,7 @@ def scale_image(scanarium, image):
         scaled_image = image
         scale_factor = 1
 
-    scanarium.debug_show_image('scaled', scaled_image)
+    scanarium.debug_show_image('Scaled image', scaled_image)
 
     return (scaled_image, scale_factor)
 
@@ -205,7 +205,7 @@ def prepare_image(scanarium, image):
     prepared_image = cv2.cvtColor(prepared_image, cv2.COLOR_BGR2GRAY)
     prepared_image = correct_image_brightness(scanarium, prepared_image)
 
-    scanarium.debug_show_image('prepared', prepared_image)
+    scanarium.debug_show_image('Prepared for detection', prepared_image)
 
     return (prepared_image, scale_factor)
 
@@ -399,7 +399,7 @@ def process_actor_image_with_qr_code(scanarium, image, qr_rect, scene, actor):
     # Finally the image is rectified, landscape, and the QR code is in the
     # lower left-hand corner, and white-balance has been run.
 
-    scanarium.debug_show_image('final', image)
+    scanarium.debug_show_image('Final', image)
     flavor = save_image(scanarium, image, scene, actor)
 
     scanarium.reindex_actors_for_scene(scene)
@@ -628,7 +628,8 @@ def undistort_image(image, config):
         new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(
             cam_matrix, dist_coeffs, (width, height), 1)
 
-        debug_show_image('raw before undistorting', image, config)
+        debug_show_image('Camera adjusted image before undistortion', image,
+                         config)
         ret = cv2.undistort(ret, cam_matrix, dist_coeffs, None,
                             new_camera_matrix)
     return ret

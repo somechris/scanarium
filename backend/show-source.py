@@ -95,6 +95,7 @@ def add_biggest_rect(scanarium, image, original_image):
 def show_source(scanarium, mark, store_final):
     camera = None
     original_image = None
+    title = 'Source' + (' with detected features' if mark else '')
     try:
         camera = scanarium.open_camera()
         while True:
@@ -105,8 +106,7 @@ def show_source(scanarium, mark, store_final):
                 image = add_qr_parent_rect(scanarium, image, original_image,
                                            qr_rect)
                 image = add_biggest_rect(scanarium, image, original_image)
-            scanarium.debug_show_image('Raw source',
-                                       image)
+            scanarium.debug_show_image(title, image)
             cv2.waitKey(25)
     finally:
         if store_final and original_image is not None:

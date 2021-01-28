@@ -97,8 +97,7 @@ def show_source(scanarium, mark, store_final):
     original_image = None
     try:
         camera = scanarium.open_camera()
-        key = -1
-        while key == -1:
+        while True:
             original_image = scanarium.get_image(camera)
             image = original_image.copy()
             if mark:
@@ -106,9 +105,9 @@ def show_source(scanarium, mark, store_final):
                 image = add_qr_parent_rect(scanarium, image, original_image,
                                            qr_rect)
                 image = add_biggest_rect(scanarium, image, original_image)
-            scanarium.debug_show_image('Raw source (Press any key to quit)',
+            scanarium.debug_show_image('Raw source',
                                        image)
-            key = cv2.waitKey(25)
+            cv2.waitKey(25)
     finally:
         if store_final and original_image is not None:
             filename = str(int(time.time())) + '.png'

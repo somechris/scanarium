@@ -309,7 +309,7 @@ def orient_image(image):
     return image
 
 
-def mask(scanarium, image, scene, actor):
+def mask(scanarium, image, scene, actor, visualized_alpha=None):
     masked_file_path = os.path.join(scanarium.get_scenes_dir_abs(), scene,
                                     'actors', actor, '%s-mask.png' % actor)
     if not os.path.isfile(masked_file_path):
@@ -320,8 +320,14 @@ def mask(scanarium, image, scene, actor):
     mask = cv2.imread(masked_file_path, 0)
     mask = cv2.resize(mask, (image.shape[1], image.shape[0]), cv2.INTER_AREA)
 
-    (b, g, r) = cv2.split(image)
-    masked = cv2.merge((b, g, r, mask))
+    channels = cv2.split(image)
+    if visualized_alpha is not None:
+        factor = np.clip(mask.astype(np.float32) / 255, visualized_alpha, 1)
+        channels = [(channel * factor).astype(np.uint8)
+                    for channel in channels]
+
+    channels.append(mask)
+    masked = cv2.merge(channels)
     return masked
 
 
@@ -376,7 +382,8 @@ def save_image(scanarium, image, scene, actor):
     return timestamp
 
 
-def actor_image_pipeline(scanarium, image, qr_rect, scene, actor):
+def actor_image_pipeline(scanarium, image, qr_rect, scene, actor,
+                         visualized_alpha=None):
     scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), scene)
     if not os.path.isdir(scene_dir):
         raise ScanariumError('SE_UNKNOWN_SCENE',
@@ -392,7 +399,8 @@ def actor_image_pipeline(scanarium, image, qr_rect, scene, actor):
 
     image = rectify_to_qr_parent_rect(scanarium, image, qr_rect)
     image = orient_image(image)
-    image = mask(scanarium, image, scene, actor)
+    image = mask(scanarium, image, scene, actor,
+                 visualized_alpha=visualized_alpha)
     image = crop(image)
     image = balance(scanarium, image)
 
@@ -671,8 +679,11 @@ class Scanner(object):
             scanarium, self._command_logger, image, qr_rect, data,
             should_skip_exception)
 
-    def actor_image_pipeline(self, scanarium, image, qr_rect, scene, actor):
-        return actor_image_pipeline(scanarium, image, qr_rect, scene, actor)
+    def actor_image_pipeline(self, scanarium, image, qr_rect, scene, actor,
+                             visualized_alpha=None):
+        return actor_image_pipeline(
+            scanarium, image, qr_rect, scene, actor,
+            visualized_alpha=visualized_alpha)
 
     def rectify_to_biggest_rect(self, scanarium, image,
                                 yield_only_points=False):

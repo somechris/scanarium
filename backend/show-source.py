@@ -42,7 +42,7 @@ def add_mark(image, label, value, points, position):
 
     if points is not None:
         color = tuple(255 if i == position else 0 for i in range(3))
-        image = add_poly(image, points, color, 7 - 2 * position)
+        image = add_poly(image, points, color, position)
 
     return image
 

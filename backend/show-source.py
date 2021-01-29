@@ -133,7 +133,7 @@ def show_source(scanarium, mark, store_final):
                 else:
                     last_exception_message = None
 
-            scanarium.debug_show_image(title, image)
+            cv2.imshow(title, image)
             cv2.waitKey(25)
     finally:
         if store_final and original_image is not None:

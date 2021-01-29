@@ -5,7 +5,7 @@ set -o pipefail
 
 cd "$(dirname "$0")"
 
-PHASER_VERSION="3.11.0"
+PHASER_VERSION="3.52.0"
 PHASER_TARGET="frontend/phaser-${PHASER_VERSION}.js"
 CONF_TARGET="conf/scanarium.conf"
 

@@ -5,7 +5,7 @@ class SimpleRocket extends SpaceshipBase {
 
         super('SimpleRocket', flavor, x, y, 180, lengthMin, lengthMax);
 
-        var thrustScale = scaleBetween(0.08, 0.7, this.scale);
+        var thrustScale = scaleBetween(0.08, 0.7, this.base_scale);
 
         this.addThruster(0.82, 1, -90, thrustScale, -1, 0); // Left
         this.addThruster(1, 0, 180, thrustScale, 0, 1);   // Middle

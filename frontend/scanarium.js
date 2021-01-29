@@ -739,13 +739,13 @@ function create() {
     FrameCounter.init();
     CommandLogInjector.init();
 
-    this.input.keyboard.on('keydown_M', function (event) {
+    this.input.keyboard.on('keydown-M', function (event) {
         ScActorManager.addActorRandom();
     });
-    this.input.keyboard.on('keydown_C', function (event) {
+    this.input.keyboard.on('keydown-C', function (event) {
         FrameCounter.toggleVisibility();
     });
-    this.input.keyboard.on('keydown_H', function (event) {
+    this.input.keyboard.on('keydown-H', function (event) {
         HelpPage.toggleVisibility();
     });
 }

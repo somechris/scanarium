@@ -41,11 +41,18 @@ class Thruster extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        this.visible = this.thrust > 0;
-        var width = this.fullThrustLength * this.thrust;
-        var height = this.fullThrustWidth * (this.thrust * 0.4 + 0.6);
-        this.setDisplaySize(width, height);
-        this.setSize(width, height);
+        var visible = this.thrust > 0;
+        this.setVisible(visible);
+        if (visible) {
+          // Setting sizes to 0 confuses Phaser and gets us NaN in a few places
+          // and effectively prohibits the thruster to be shown. So we only
+          // update sizes, if the thruster is visible (and hence does not have
+          // size 0).
+          var width = this.fullThrustLength * this.thrust;
+          var height = this.fullThrustWidth * (this.thrust * 0.4 + 0.6);
+          this.setDisplaySize(width, height);
+          this.setSize(width, height);
+        }
     }
 }
 
@@ -56,10 +63,10 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
         this.thrusters = [];
         this.nextMotionPlanningUpdate = 0;
 
-        this.scale = Math.pow(Math.random(), 5);
+        this.base_scale = Math.pow(Math.random(), 5);
 
         var ship = game.add.image(0, 0, actor + '-' + flavor);
-        var width = scaleBetween(widthMin, widthMax, this.scale);
+        var width = scaleBetween(widthMin, widthMax, this.base_scale);
         var height = ship.height / ship.width * width;
         ship.setSize(width, height);
         ship.setDisplaySize(width, height);
@@ -101,7 +108,7 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
         if (time > this.nextMotionPlanningUpdate) {
             this.thrusters.forEach(thruster => thruster.decideThrust());
             this.updateMotionPlan(time, delta);
-            this.nextMotionPlanningUpdate = time + scaleBetween(100, 10000, this.scale);
+            this.nextMotionPlanningUpdate = time + scaleBetween(100, 10000, this.base_scale);
         }
 
         var acceleration = 0;

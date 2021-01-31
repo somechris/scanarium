@@ -79,9 +79,9 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
 
         var speed = Math.random() * 40;
         var angle = Math.random() * 2 * Math.PI;
-        this.speedX = Math.cos(angle) * speed
-        this.speedY = Math.sin(angle) * speed
-        this.angle = Math.random() * 360
+        this.speedX = Math.cos(angle) * speed;
+        this.speedY = Math.sin(angle) * speed;
+        this.angle = Math.random() * 360;
         this.body.setVelocityX(this.speedX);
         this.body.setVelocityY(this.speedY);
     }

@@ -117,6 +117,8 @@ var dynamicConfigMethod = 'GET';
 
 var degToRadian = 2 * Math.PI / 360;
 
+var pixelFactor = Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / 1920;
+
 function scaleBetween(min, max, scale) {
     return (max - min) * scale + min;
 }

@@ -16,7 +16,7 @@ function scene_create() {
     ScActorManager.registerActor('Cloud', Cloud);
     ScActorManager.onActorDestroy(function(actor) {spawnCloud();}, 'Cloud');
     var i;
-    for (i=0; i<scanariumConfig.height / 50; i++) {
+    for (i=0; i<scanariumConfig.height / pixelFactor / 50; i++) {
         var cloud = spawnCloud();
         cloud.alpha = 1;
         cloud.x = Math.random() * scanariumConfig.width;
@@ -32,7 +32,7 @@ class WindAffectedSprite extends Phaser.Physics.Arcade.Sprite {
         super(game, x, y, actor + '-' + flavor);
         game.physics.world.enable(this);
         this.depth = Math.random();
-        var scale = scaleBetween(minScale, maxScale, this.depth);
+        var scale = scaleBetween(minScale, maxScale, this.depth) * pixelFactor;
         var width = this.width * scale;
         var height = this.height * scale;
         this.setDisplaySize(width, height);
@@ -43,7 +43,7 @@ class WindAffectedSprite extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        this.speedX = tunnel(this.speedX + Wind.getForce(this.y), -10, 10);
+        this.speedX = tunnel(this.speedX + Wind.getForce(this.y), -10, 10) * pixelFactor;
         this.setVelocityX(this.speedX);
         this.setVelocityY(this.speedY);
     }
@@ -58,7 +58,7 @@ class Cloud extends WindAffectedSprite {
         if (force <=0) {
             this.x += scanariumConfig.width/2;
         }
-        this.speedX = tunnel(force * 120, -10, 10);
+        this.speedX = tunnel(force * 120, -10, 10) * pixelFactor;
         this.destroyOffset = this.displayWidth / 2;
         this.alpha = 0;
     }
@@ -73,12 +73,12 @@ class BaseBalloon extends WindAffectedSprite {
     constructor(actor, flavor, x, y) {
         super(x, y, actor, flavor, 0.4, 1);
         this.y = scanariumConfig.height + this.displayHeight/2;
-        this.speedY = -20 * (1 + this.depth);
+        this.speedY = -20 * (1 + this.depth) * pixelFactor;
     }
 
     update(time, delta) {
         super.update(time, delta);
-        this.setAngle(this.speedX);
+        this.setAngle(this.speedX / pixelFactor);
     }
 }
 

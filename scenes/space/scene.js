@@ -79,11 +79,9 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
 
         var speed = Math.random() * 40;
         var angle = Math.random() * 2 * Math.PI;
-        this.speedX = Math.cos(angle) * speed;
-        this.speedY = Math.sin(angle) * speed;
+        this.body.setVelocityX(Math.cos(angle) * speed);
+        this.body.setVelocityY(Math.cos(angle) * speed);
         this.angle = Math.random() * 360;
-        this.body.setVelocityX(this.speedX);
-        this.body.setVelocityY(this.speedY);
     }
 
     addThruster(xFactor, yFactor, angle, scale, angularFactor, accelerationFactor) {
@@ -118,14 +116,11 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
             thruster.update()
 
             angularVelocity += thruster.angularFactor * thruster.thrust * 60;
-            acceleration += thruster.accelerationFactor * thruster.thrust;
+            acceleration += thruster.accelerationFactor * thruster.thrust * 60;
         });
 
         this.body.setAngularVelocity(angularVelocity);
-        var angleRad = this.angle * degToRadian;
-        this.speedX += Math.cos(angleRad) * acceleration;
-        this.speedY += Math.sin(angleRad) * acceleration;
-        this.body.setVelocityX(this.speedX);
-        this.body.setVelocityY(this.speedY);
+        this.body.setAccelerationX(Math.cos(this.rotation) * acceleration)
+        this.body.setAccelerationY(Math.sin(this.rotation) * acceleration)
     }
 }

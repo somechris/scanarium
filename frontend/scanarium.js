@@ -116,8 +116,8 @@ LayoutManager.onResize();
 
 var scanariumConfig = {
     type: Phaser.AUTO,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 0,
+    height: 0,
     physics: {
         default: 'arcade',
     },
@@ -135,6 +135,10 @@ var scanariumConfig = {
         hidePhaser: true,
     },
 };
+LayoutManager.register(function(width, height) {
+  scanariumConfig.width = width;
+  scanariumConfig.height = height;
+});
 
 // sceneConfig gets loaded dynamically from scene directory
 var sceneConfig = {

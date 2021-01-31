@@ -111,15 +111,17 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
             this.nextMotionPlanningUpdate = time + scaleBetween(100, 10000, this.base_scale);
         }
 
+        var angularVelocity = 0;
         var acceleration = 0;
 
         this.thrusters.forEach(thruster => {
             thruster.update()
 
-            this.angle += thruster.angularFactor * thruster.thrust;
+            angularVelocity += thruster.angularFactor * thruster.thrust * 60;
             acceleration += thruster.accelerationFactor * thruster.thrust;
         });
 
+        this.body.setAngularVelocity(angularVelocity);
         var angleRad = this.angle * degToRadian;
         this.speedX += Math.cos(angleRad) * acceleration;
         this.speedY += Math.sin(angleRad) * acceleration;

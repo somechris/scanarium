@@ -88,12 +88,43 @@ var dyn_dir = 'dynamic';
 
 var dyn_scene_dir = dyn_dir + '/scenes/' + scene;
 
+var LayoutManager = {
+  layouters: [],
+  width: 0,
+  height: 0,
+
+  onResize: function() {
+    LayoutManager.width = window.innerWidth;
+    LayoutManager.height = window.innerHeight;
+    LayoutManager.layout();
+  },
+
+  register: function(layouter) {
+    this.layouters.push(layouter);
+    layouter(this.width, this.height);
+  },
+
+  layout: function() {
+    var width = this.width;
+    var height = this.height;
+    this.layouters.forEach(function (layouter, index) {
+      layouter(width, height);
+    });
+  },
+}
+LayoutManager.onResize();
+
 var scanariumConfig = {
     type: Phaser.AUTO,
     width: window.innerWidth,
     height: window.innerHeight,
     physics: {
         default: 'arcade',
+    },
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        width: '100%',
+        height: '100%',
     },
     scene: {
         preload: preload,
@@ -750,6 +781,9 @@ function create() {
     this.input.keyboard.on('keydown-H', function (event) {
         HelpPage.toggleVisibility();
     });
+
+    this.scale.on('resize', LayoutManager.onResize, this);
+    LayoutManager.onResize();
 }
 
 var HelpPage = {

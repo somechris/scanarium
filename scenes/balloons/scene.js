@@ -28,13 +28,13 @@ function scene_update(time, delta) {
 }
 
 class WindAffectedSprite extends Phaser.Physics.Arcade.Sprite {
-    constructor(x, y, actor, flavor, minScale, maxScale) {
+    constructor(x, y, actor, flavor, width, minScale, maxScale) {
         super(game, x, y, actor + '-' + flavor);
         game.physics.world.enable(this);
         this.depth = Math.random();
         var scale = scaleBetween(minScale, maxScale, this.depth) * pixelFactor;
-        var width = this.width * scale;
-        var height = this.height * scale;
+        var height = this.height / this.width * width * scale;
+        var width = width * scale;
         this.setDisplaySize(width, height);
         this.setSize(width, height);
         this.destroyOffset = Math.sqrt(width * width + height * height) / 2;
@@ -51,7 +51,7 @@ class WindAffectedSprite extends Phaser.Physics.Arcade.Sprite {
 
 class Cloud extends WindAffectedSprite {
     constructor(x, y, flavor) {
-        super(x, y, 'Cloud', flavor, 0.2, 0.8);
+        super(x, y, 'Cloud', flavor, 400, 0.2, 0.8);
         this.y = Math.random() * scanariumConfig.height;
         this.x = Math.random() * scanariumConfig.width/2;
         var force = Wind.getForce(this.y);
@@ -70,8 +70,8 @@ class Cloud extends WindAffectedSprite {
 }
 
 class BaseBalloon extends WindAffectedSprite {
-    constructor(actor, flavor, x, y) {
-        super(x, y, actor, flavor, 0.4, 1);
+    constructor(actor, flavor, width, x, y) {
+        super(x, y, actor, flavor, width, 0.4, 1);
         this.y = scanariumConfig.height + this.displayHeight/2;
         this.speedY = -20 * (1 + this.depth) * pixelFactor;
     }

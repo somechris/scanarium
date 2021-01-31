@@ -1,6 +1,6 @@
 class PlainBalloon extends BaseBalloon {
     constructor(x, y, flavor) {
-        super('PlainBalloon', flavor, x, y)
+        super('PlainBalloon', flavor, 90, x, y)
     }
 }
 

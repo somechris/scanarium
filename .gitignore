@@ -5,10 +5,10 @@ __pycache__
 !/commands/*/*/*-undecorated.svg
 /commands/*/*/*.pdf
 /conf/scanarium.conf
-/conf/cameraParameters.xml
-/conf/calibration.xml
-/conf/max_brightness.png
-/conf/max-brightness.png
+/conf/cameraParameters*.xml
+/conf/calibration*.xml
+/conf/max_brightness*.png
+/conf/max-brightness*.png
 /dynamic
 /frontend/phaser-3.*.js
 /scenes/*/actors/*/*.svg

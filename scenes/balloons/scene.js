@@ -38,14 +38,11 @@ class WindAffectedSprite extends Phaser.Physics.Arcade.Sprite {
         this.setDisplaySize(width, height);
         this.setSize(width, height);
         this.destroyOffset = Math.sqrt(width * width + height * height) / 2;
-        this.speedX = 0;
-        this.speedY = 0;
+        this.body.setMaxVelocityX(10 * pixelFactor);
     }
 
     update(time, delta) {
-        this.speedX = tunnel(this.speedX + Wind.getForce(this.y), -10, 10) * pixelFactor;
-        this.setVelocityX(this.speedX);
-        this.setVelocityY(this.speedY);
+        this.setAccelerationX(Wind.getForce(this.y) * 60 * pixelFactor)
     }
 }
 
@@ -58,7 +55,7 @@ class Cloud extends WindAffectedSprite {
         if (force <=0) {
             this.x += scanariumConfig.width/2;
         }
-        this.speedX = tunnel(force * 120, -10, 10) * pixelFactor;
+        this.setVelocityX(force * 120 * pixelFactor);
         this.destroyOffset = this.displayWidth / 2;
         this.alpha = 0;
     }
@@ -73,12 +70,12 @@ class BaseBalloon extends WindAffectedSprite {
     constructor(actor, flavor, width, x, y) {
         super(x, y, actor, flavor, width, 0.4, 1);
         this.y = scanariumConfig.height + this.displayHeight/2;
-        this.speedY = -20 * (1 + this.depth) * pixelFactor;
+        this.setVelocityY(-20 * (1 + this.depth) * pixelFactor);
     }
 
     update(time, delta) {
         super.update(time, delta);
-        this.setAngle(this.speedX / pixelFactor);
+        this.setAngle(this.body.velocity.x / pixelFactor);
     }
 }
 

@@ -797,6 +797,8 @@ function create() {
 
 var HelpPage = {
     sprites: null,
+    width: 100,
+    height: 100,
     keys: [
         {key: '---key---', description: '---description---'},
         {key: '?', description: 'Show/hide this help page'},
@@ -815,10 +817,10 @@ var HelpPage = {
         var ret = [];
         //var graphics = game.make.graphics({x:0, y:0, add:false});
 
-        var x = window.innerWidth / 20;
-        var y = window.innerHeight / 20;
-        var width = window.innerWidth * 18 / 20;
-        var height = window.innerHeight * 18 / 20;
+        var x = this.width / 20;
+        var y = this.height / 20;
+        var width = this.width * 18 / 20;
+        var height = this.height * 18 / 20;
 
         var graphics = game.add.graphics(0,0);
         graphics.lineStyle(1, 0xffffff, 1);
@@ -865,17 +867,31 @@ var HelpPage = {
         return ret;
     },
 
+    isVisible: function() {
+      return this.sprites != null;
+    },
+
     toggleVisibility: function() {
-        if (this.sprites == null) {
-            this.sprites = this.generateSprites();
-        } else {
+        if (this.isVisible()) {
             this.sprites.forEach(function (sprite, index) {
                 sprite.destroy();
             });
             this.sprites = null;
+        } else {
+            this.sprites = this.generateSprites();
         }
     },
+
+    resize: function(width, height) {
+      HelpPage.width = width;
+      HelpPage.height = height;
+      if (HelpPage.isVisible()) {
+          HelpPage.toggleVisibility();
+          HelpPage.toggleVisibility();
+      }
+    }
 }
+LayoutManager.register(HelpPage.resize);
 
 var FrameCounter = {
     showFrameCount: false,

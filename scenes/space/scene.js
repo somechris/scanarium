@@ -2,14 +2,14 @@
 
 function scene_preload()
 {
-    game.load.spritesheet('spaceship-thrust', scene_dir + '/spaceship-thrust.png', { frameWidth: 600, frameHeight: 200 });
+    game.load.spritesheet('spaceship-thrust', scene_dir + '/spaceship-thrust.png', { frameWidth: 600, frameHeight: 300 });
 }
 
 function scene_create()
 {
     game.anims.create({
         key: 'spaceship-thrust-fire',
-        frames: game.anims.generateFrameNumbers('spaceship-thrust', { start: 0, end: 2 }),
+        frames: game.anims.generateFrameNumbers('spaceship-thrust', { start: 0, end: 5 }),
         frameRate: 60,
         repeat: -1
     });
@@ -25,7 +25,7 @@ class Thruster extends Phaser.Physics.Arcade.Sprite {
         this.visible = false;
         this.anims.play('spaceship-thrust-fire');
         this.angle = angleCorr;
-        this.fullThrustWidth = 200 * refToScreen * scale;
+        this.fullThrustWidth = 300 * refToScreen * scale;
         this.fullThrustLength = 600 * refToScreen * scale;
         this.thrust = 0;
         game.physics.world.enableBody(this);

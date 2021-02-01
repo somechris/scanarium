@@ -27,151 +27,23 @@
 </head>
 <body>
 
-<script type="text/javascript">
-function parseUrlParameters()
-{
-    var parameters=new Object();
-    var query = window.location.href.replace(/^[^?]*\?/,'');
-    if ( window.location.href == query )
-    {
-        query = "";
-    }
-
-    var kvs = query.split('&');
-
-    for ( index in kvs)
-    {
-        var key = decodeURIComponent(kvs[index].replace(/^([a-zA-Z0-9_]*)=.*/,"\$1"));
-        if ( key != kvs[index] )
-        {
-            var value = decodeURIComponent(kvs[index].replace(/^([a-zA-Z0-9_]*)=/,""));
-            parameters[key]=value;
-        }
-    }
-    return parameters;
-}
-var parameters = parseUrlParameters();
-
-var localization = {};
-var formatTemplate = function(string, parameters) {
-    split = string.split('{');
-    for (i=1; i<split.length; i++) {
-        closingIdx = split[i].indexOf('}');
-        if (closingIdx != -1) {
-            param_name = split[i].substring(0, closingIdx);
-            rest = split[i].substring(closingIdx+1);
-            param_value = parameters[param_name];
-            split[i] = param_value + rest;
-        } else {
-            split[i] = '{' + split[i];
-        }
-    }
-    return split.join('');
-}
-
-var localize_parameter = function(name, value) {
-    all_parameter_localizations = localization['parameters'] || {};
-    key_localizations = all_parameter_localizations[name] || {};
-    return key_localizations[value] || value;
-}
-
-var localize = function(template, parameters) {
-    localized_parameters = {};
-    Object.keys(parameters || {}).forEach((key, index) => {
-        localized_parameters[key] = localize_parameter(key, parameters[key]);
-    });
-    message_localizations = localization['messages'] || {};
-    template = message_localizations[template] || template;
-    return formatTemplate(template, localized_parameters);
-};
-
-</script>
-
-<script src="scanarium.js"></script>
-
-<script type="text/javascript">
-var stripLanguage = function(lang) {
-  return lang.split(/[;,._-]/)[0].toLowerCase();
-}
-
-var language = stripLanguage(getParameter('language', ''));
-if (!language) {
-  language = stripLanguage(navigator.language);
-}
-if (language) {
-  loadJson('localization/' + language + '.json', function(data) {
-    localization = data;
-  });
-}
-
-var cgis = {
-  ' ': 'scan',
-  'n': 'reset-dynamic-content',
-  's': 'show-source',
-  'r': 'reindex'
-};
-
-var cgiFail = function(uuid, cgi, reason, parameters) {
-  var msg = localize('{cgi_name} failed', {'cgi_name': cgi});
-  msg += ': ' + localize(reason, parameters);
-  MessageManager.addMessage(uuid, 'failed', msg);
-};
-
-var onReadyStateChange = function(cgi) {
-  return function() {
-    if (this.readyState === XMLHttpRequest.DONE) {
-      var capsule = {};
-      var prefix = '';
-      var is_ok = false;
-      if (this.status == 200) {
-        capsule = JSON.parse(this.responseText);
-        is_ok = sanitize_boolean(capsule, 'is_ok');
-      } else {
-        capsule = {
-          'is_ok': false,
-          'error_template': 'Response status was {response_status_code} instead of 200',
-          'error_parameters': {'response_status_code': this.status.toString()}
-        };
-      }
-
-      var status = (is_ok ? 'ok' : 'failed')
-      prefix = localize('{cgi_name} ' + status, {'cgi_name': cgi});
-      CommandProcessor.process(capsule, prefix);
-    }
-  };
-};
-
-document.addEventListener("keypress", function(e) {
-  if (e.key === 'f') {
-    canvases = document.getElementsByTagName('canvas');
-    if (canvases.length) {
-      canvases[0].requestFullscreen();
-    }
-  } else if (e.key === 'p') {
-    // We (un)pause outside of the game itself, as a paused game did not handle
-    // keydown events reliable and hence made it tricky to unpause.
-    scanariumConfig.paused = !scanariumConfig.paused;
-    if (scanariumConfig.paused) {
-      game.scene.pause();
-      MessageManager.addMessage(null, 'pause', localize('Paused'));
-    } else {
-      game.scene.resume();
-      MessageManager.addMessage(null, 'ok', localize('Resuming scene'));
-    }
-  } else if (e.key === '?') {
-    // Phaser does not offer a keycode for question mark, so we trigger from
-    // outside.
-    HelpPage.toggleVisibility();
-  } else if (e.key in cgis) {
-    var cgi = cgis[e.key];
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'cgi-bin/' + cgi, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = onReadyStateChange(cgi);
-    xhr.send();
-  }
-}, false);
-</script>
+<script src="javascript/sanitization.js"></script>
+<script src="javascript/parameters.js"></script>
+<script src="javascript/loader.js"></script>
+<script src="javascript/localization.js"></script>
+<script src="javascript/layout-manager.js"></script>
+<script src="javascript/util.js"></script>
+<script src="javascript/config.js"></script>
+<script src="javascript/message-manager.js"></script>
+<script src="javascript/actor-manager.js"></script>
+<script src="javascript/command-processor.js"></script>
+<script src="javascript/command-log-injector.js"></script>
+<script src="javascript/help-page.js"></script>
+<script src="javascript/frame-counter.js"></script>
+<script src="javascript/game.js"></script>
+<script src="javascript/cgi.js"></script>
+<script src="javascript/keys.js"></script>
+<script src="javascript/boot.js"></script>
 
 </body>
 </html>

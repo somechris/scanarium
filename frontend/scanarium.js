@@ -294,6 +294,16 @@ var ScActorManager = {
         ScActorManager.configFetches++;
     },
 
+    getActorCount: function(actorName) {
+      var ret = 0;
+      this.actors.forEach(function (actor, index) {
+        if (actorName == actor.actorName) {
+          ret += 1;
+        }
+      });
+      return ret;
+    },
+
     addActorIfFullyLoaded: function(actor, flavor) {
         if (!(this.loadedActorJavascripts.includes(actor))) {
             // JavaScript for actor not yet fully loaded.

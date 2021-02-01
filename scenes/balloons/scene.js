@@ -11,16 +11,24 @@ function spawnCloud() {
     return ScActorManager.addFullyLoadedActor('Cloud', flavor);
 }
 
+function spawnClouds(immediate = false) {
+    var existing = ScActorManager.getActorCount('Cloud');
+    var target = scanariumConfig.height / pixelFactor / 50;
+    var needed = target - existing;
+    for (var i = 0; i < needed; i++) {
+        var cloud = spawnCloud();
+        if (immediate) {
+          cloud.alpha = 1;
+          cloud.x = Math.random() * scanariumConfig.width;
+        }
+    }
+}
+
 function scene_create() {
     Wind.init();
     ScActorManager.registerActor('Cloud', Cloud);
-    ScActorManager.onActorDestroy(function(actor) {spawnCloud();}, 'Cloud');
-    var i;
-    for (i=0; i<scanariumConfig.height / pixelFactor / 50; i++) {
-        var cloud = spawnCloud();
-        cloud.alpha = 1;
-        cloud.x = Math.random() * scanariumConfig.width;
-    }
+    ScActorManager.onActorDestroy(function(actor) {spawnClouds();}, 'Cloud');
+    LayoutManager.register(function() {spawnClouds(true)});
 }
 
 function scene_update(time, delta) {

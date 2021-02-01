@@ -25,8 +25,8 @@ class Thruster extends Phaser.Physics.Arcade.Sprite {
         this.visible = false;
         this.anims.play('spaceship-thrust-fire');
         this.angle = angleCorr;
-        this.fullThrustWidth = 200 * scale * pixelFactor;
-        this.fullThrustLength = 600 * scale * pixelFactor;
+        this.fullThrustWidth = 200 * refToScreen * scale;
+        this.fullThrustLength = 600 * refToScreen * scale;
         this.thrust = 0;
         game.physics.world.enableBody(this);
         game.sys.updateList.add(this);
@@ -65,7 +65,7 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
 
         this.base_scale = Math.pow(Math.random(), 5);
         var ship = game.add.image(0, 0, actor + '-' + flavor);
-        var width = scaleBetween(widthMin, widthMax, this.base_scale) * pixelFactor;
+        var width = scaleBetween(widthMin, widthMax, this.base_scale) * refToScreen;
         var height = ship.height / ship.width * width;
         ship.setSize(width, height);
         ship.setDisplaySize(width, height);
@@ -76,7 +76,7 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
 
         game.physics.world.enable(this);
 
-        var speed = Math.random() * 40 * pixelFactor;
+        var speed = Math.random() * 40 * refToScreen;
         var angle = Math.random() * 2 * Math.PI;
         this.body.setVelocityX(Math.cos(angle) * speed);
         this.body.setVelocityY(Math.cos(angle) * speed);
@@ -114,8 +114,8 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
         this.thrusters.forEach(thruster => {
             thruster.update()
 
-            angularVelocity += thruster.angularFactor * thruster.thrust * 60 * pixelFactor;
-            acceleration += thruster.accelerationFactor * thruster.thrust * 60 * pixelFactor;
+            angularVelocity += thruster.angularFactor * thruster.thrust * 60 * refToScreen;
+            acceleration += thruster.accelerationFactor * thruster.thrust * 60 * refToScreen;
         });
 
         this.body.setAngularVelocity(angularVelocity);

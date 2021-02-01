@@ -13,7 +13,7 @@ function spawnCloud() {
 
 function spawnClouds(immediate = false) {
     var existing = ScActorManager.getActorCount('Cloud');
-    var target = scanariumConfig.height / pixelFactor / 50;
+    var target = scanariumConfig.height * screenToRef / 50;
     var needed = target - existing;
     for (var i = 0; i < needed; i++) {
         var cloud = spawnCloud();
@@ -40,17 +40,17 @@ class WindAffectedSprite extends Phaser.Physics.Arcade.Sprite {
         super(game, x, y, actor + '-' + flavor);
         game.physics.world.enable(this);
         this.depth = Math.random();
-        var scale = scaleBetween(minScale, maxScale, this.depth) * pixelFactor;
+        var scale = scaleBetween(minScale, maxScale, this.depth) * refToScreen;
         var height = this.height / this.width * width * scale;
         var width = width * scale;
         this.setDisplaySize(width, height);
         this.setSize(width, height);
         this.destroyOffset = Math.sqrt(width * width + height * height) / 2;
-        this.body.setMaxVelocityX(10 * pixelFactor);
+        this.body.setMaxVelocityX(10 * refToScreen);
     }
 
     update(time, delta) {
-        this.setAccelerationX(Wind.getForce(this.y) * 60 * pixelFactor)
+        this.setAccelerationX(Wind.getForce(this.y) * 60 * refToScreen)
     }
 }
 
@@ -63,7 +63,7 @@ class Cloud extends WindAffectedSprite {
         if (force <=0) {
             this.x += scanariumConfig.width/2;
         }
-        this.setVelocityX(force * 120 * pixelFactor);
+        this.setVelocityX(force * 120 * refToScreen);
         this.destroyOffset = this.displayWidth / 2;
         this.alpha = 0;
     }
@@ -78,12 +78,12 @@ class BaseBalloon extends WindAffectedSprite {
     constructor(actor, flavor, width, x, y) {
         super(x, y, actor, flavor, width, 0.4, 1);
         this.y = scanariumConfig.height + this.displayHeight/2;
-        this.setVelocityY(-20 * (1 + this.depth) * pixelFactor);
+        this.setVelocityY(-20 * (1 + this.depth) * refToScreen);
     }
 
     update(time, delta) {
         super.update(time, delta);
-        this.setAngle(this.body.velocity.x / pixelFactor);
+        this.setAngle(this.body.velocity.x * screenToRef);
     }
 }
 

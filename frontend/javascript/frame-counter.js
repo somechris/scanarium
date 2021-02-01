@@ -3,6 +3,7 @@ var FrameCounter = {
     frameCountInterval: 1000, //milli-seconds
     frameCount: 0,
     frameCountSprite: null,
+    labelPrefix: 'fps: ',
 
     init: function() {
         if (getParameterBoolean('showFrameCounter', false)) {
@@ -14,7 +15,7 @@ var FrameCounter = {
         this.showFrameCount = !(this.showFrameCount);
         if (this.showFrameCount) {
             var offset = 32 * window.devicePixelRatio;
-            this.frameCountSprite = game.add.text(offset, offset, 'fps: ?');
+            this.frameCountSprite = game.add.text(offset, offset, this.labelPrefix + '?');
             this.frameCountSprite.depth = 999999;
         } else {
             if (this.frameCountSprite != null) {
@@ -29,7 +30,7 @@ var FrameCounter = {
                 this.frameCount++;
             } else {
                 if (this.frameCountSprite != null) {
-                    this.frameCountSprite.setText('fps: ' + this.frameCount);
+                    this.frameCountSprite.setText(this.labelPrefix + this.frameCount);
                 }
                 this.frameCount=1;
             }

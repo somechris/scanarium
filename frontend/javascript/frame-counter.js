@@ -13,7 +13,8 @@ var FrameCounter = {
     toggleVisibility: function() {
         this.showFrameCount = !(this.showFrameCount);
         if (this.showFrameCount) {
-            this.frameCountSprite = game.add.text(32, 32, 'fps: ?');
+            var offset = 32 * window.devicePixelRatio;
+            this.frameCountSprite = game.add.text(offset, offset, 'fps: ?');
             this.frameCountSprite.depth = 999999;
         } else {
             if (this.frameCountSprite != null) {

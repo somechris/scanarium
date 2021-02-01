@@ -54,6 +54,7 @@
     "Unknown camera type \"{camera_type}\"": "Unbekannter Kameratyp \"{camera_type}\"",
     "Unknown system command": "Unbekannter System-Befehl",
     "Unknown white balance filter configured": "Unbekannter Weißabgleich-Filter konfiguriert",
+    "fps: {fps}": "Bilder/s: {fps}",
     "space": "Leertaste",
     "undefined error": "Unbekannter Fehler",
     "{cgi_name} failed": "{cgi_name} schlug fehl",

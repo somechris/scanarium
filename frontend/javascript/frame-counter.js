@@ -3,7 +3,7 @@ var FrameCounter = {
     frameCountInterval: 1000, //milli-seconds
     frameCount: 0,
     frameCountSprite: null,
-    labelPrefix: 'fps: ',
+    labelPrefix: 'fps: {fps}',
 
     init: function() {
         if (getParameterBoolean('showFrameCounter', false)) {
@@ -11,11 +11,18 @@ var FrameCounter = {
         }
     },
 
+    formatCount: function(count) {
+        if (this.frameCountSprite != null) {
+            this.frameCountSprite.setText(localize(this.labelPrefix, {'fps': count}));
+        }
+    },
+
     toggleVisibility: function() {
         this.showFrameCount = !(this.showFrameCount);
         if (this.showFrameCount) {
             var offset = 32 * window.devicePixelRatio;
-            this.frameCountSprite = game.add.text(offset, offset, this.labelPrefix + '?');
+            this.frameCountSprite = game.add.text(offset, offset, '');
+            this.formatCount('?');
             this.frameCountSprite.depth = 999999;
         } else {
             if (this.frameCountSprite != null) {
@@ -29,9 +36,7 @@ var FrameCounter = {
             if (Math.floor(lastTime / this.frameCountInterval) == Math.floor(time / this.frameCountInterval)) {
                 this.frameCount++;
             } else {
-                if (this.frameCountSprite != null) {
-                    this.frameCountSprite.setText(this.labelPrefix + this.frameCount);
-                }
+                this.formatCount(this.frameCount);
                 this.frameCount=1;
             }
         }

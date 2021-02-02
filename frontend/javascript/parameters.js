@@ -1,23 +1,13 @@
 function parseUrlParameters()
 {
-    var parameters=new Object();
-    var query = window.location.href.replace(/^[^?]*\?/,'');
-    if ( window.location.href == query )
-    {
-        query = "";
-    }
-
-    var kvs = query.split('&');
-
-    for ( index in kvs)
-    {
-        var key = decodeURIComponent(kvs[index].replace(/^([a-zA-Z0-9_]*)=.*/,"\$1"));
-        if ( key != kvs[index] )
-        {
-            var value = decodeURIComponent(kvs[index].replace(/^([a-zA-Z0-9_]*)=/,""));
-            parameters[key]=value;
+    var parameters = new URLSearchParams("");
+    var allowed = /^[a-zA-Z0-9_]*$/;
+    (new URLSearchParams(document.location.search.substring(1))).forEach((value, key) => {
+        if (key.match(allowed) && value.match(allowed) && !parameters.has(key)) {
+          parameters.set(key, value);
         }
-    }
+    });
+
     return parameters;
 }
 

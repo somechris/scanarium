@@ -35,4 +35,8 @@ function setUrlParameter(key, value, follow) {
     }
 }
 
+function setUrlParameterBoolean(key, value) {
+    setUrlParameter(key, value ? 'true' : 'false');
+}
+
 var urlParameters = parseUrlParameters();

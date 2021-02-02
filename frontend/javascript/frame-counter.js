@@ -4,9 +4,10 @@ var FrameCounter = {
     frameCount: 0,
     frameCountSprite: null,
     labelPrefix: 'fps: {fps}',
+    urlParameter: 'showFrameCounter',
 
     init: function() {
-        if (getUrlParameterBoolean('showFrameCounter', false)) {
+        if (getUrlParameterBoolean(this.urlParameter, false)) {
             this.toggleVisibility();
         }
     },
@@ -29,6 +30,7 @@ var FrameCounter = {
                 this.frameCountSprite.destroy();
             }
         }
+        setUrlParameterBoolean(this.urlParameter, this.showFrameCount);
     },
 
     update: function(time, delta, lastTime) {

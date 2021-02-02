@@ -1,4 +1,6 @@
+import json
 import locale
+import logging
 import os
 import re
 import sys
@@ -11,6 +13,7 @@ from pyzbar import pyzbar
 
 from .ScanariumError import ScanariumError
 
+logger = logging.getLogger(__name__)
 
 NEXT_RAW_IMAGE_STORE = 0  # Timestamp of when to store the next raw image.
 
@@ -443,13 +446,29 @@ def process_image_with_qr_code_unlogged(scanarium, command, parameter, image,
     elif command == 'reset':
         ret = scanarium.reset_dynamic_content(log=False)
     elif command == 'switchScene':
-        scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), parameter)
+        scene = parameter
+        scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), scene)
         if os.path.isdir(scene_dir):
             ret = {}
         else:
             raise ScanariumError('SE_UNKNOWN_SCENE',
                                  'Scene "{scene_name}" does not exist',
-                                 {'scene_name': parameter})
+                                 {'scene_name': scene})
+        # We opportunistically try to update the default scene in the global
+        # config.json. If that updating fails, we still flag success, as the
+        # clients can still switch their scene. But we log the error for the
+        # admins to notice.
+        try:
+            dynamic_dir_abs = scanarium.get_dynamic_directory()
+            json_file_abs = os.path.join(dynamic_dir_abs, 'config.json')
+            config = {}
+            if os.path.isfile(json_file_abs):
+                with open(json_file_abs, 'r') as file:
+                    config = json.load(file)
+            config['default_scene'] = scene
+            scanarium.dump_json(json_file_abs, config)
+        except Exception:
+            logger.exception(f'Failed to update {json_file_abs}')
     elif command == 'system':
         if parameter == 'poweroff':
             command = ['/usr/bin/sudo', '--non-interactive', '/sbin/poweroff']

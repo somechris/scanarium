@@ -35,7 +35,7 @@ var stripLanguage = function(lang) {
   return lang.split(/[;,._-]/)[0].toLowerCase();
 }
 
-var language = stripLanguage(getParameter('language', ''));
+var language = stripLanguage(getUrlParameter('language', ''));
 if (!language) {
   language = stripLanguage(navigator.language);
 }

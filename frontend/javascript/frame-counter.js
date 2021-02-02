@@ -6,7 +6,7 @@ var FrameCounter = {
     labelPrefix: 'fps: {fps}',
 
     init: function() {
-        if (getParameterBoolean('showFrameCounter', false)) {
+        if (getUrlParameterBoolean('showFrameCounter', false)) {
             this.toggleVisibility();
         }
     },

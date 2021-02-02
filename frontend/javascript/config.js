@@ -1,4 +1,4 @@
-var scene = getParameter('scene', 'space');
+var scene = getUrlParameter('scene', 'space');
 
 var scene_dir = 'scenes/' + scene;
 

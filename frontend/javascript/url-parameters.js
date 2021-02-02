@@ -11,27 +11,27 @@ function parseUrlParameters()
     return parameters;
 }
 
-function getParameter(name, defaultValue) {
+function getUrlParameter(name, defaultValue) {
     var ret = defaultValue;
-    if (name in parameters) {
-        ret = sanitize_string(parameters[name]);
+    if (urlParameters.has(name)) {
+        ret = sanitize_string(urlParameters.get(name));
     }
     return ret;
 }
 
-function getParameterTrimmedLowerCaseString(name, defaultValue) {
-        return String(getParameter(name, false)).toLowerCase().trim();
+function getUrlParameterTrimmedLowerCaseString(name, defaultValue) {
+        return String(getUrlParameter(name, false)).toLowerCase().trim();
 }
 
-function getParameterBoolean(name, defaultValue) {
-    var param = getParameterTrimmedLowerCaseString(name, defaultValue);
+function getUrlParameterBoolean(name, defaultValue) {
+    var param = getUrlParameterTrimmedLowerCaseString(name, defaultValue);
     return (param == "1" || param == "true");
 }
 
-function setParameter(key, value) {
+function setUrlParameter(key, value) {
     var params = new URLSearchParams(document.location.search.substring(1));
     params.set(key, value);
     document.location.search = '?' + params.toString();
 }
 
-var parameters = parseUrlParameters();
+var urlParameters = parseUrlParameters();

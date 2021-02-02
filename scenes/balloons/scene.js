@@ -13,7 +13,7 @@ function spawnCloud() {
 
 function spawnClouds(immediate = false) {
     var existing = ScActorManager.getActorCount('Cloud');
-    var target = scanariumConfig.height * screenToRef / 50;
+    var target = 20;
     var needed = target - existing;
     for (var i = 0; i < needed; i++) {
         var cloud = spawnCloud();

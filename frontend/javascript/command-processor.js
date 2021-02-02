@@ -43,7 +43,7 @@ var CommandProcessor = {
         var parameters = sanitize_list(capsule, 'parameters');
         if (is_ok) {
             template = 'Switching to scene {scene_name}';
-            setUrlParameter('scene', parameters[0]);
+            setUrlParameter('scene', parameters[0], true);
         } else {
             template = 'Cannot switch to scene {scene_name}';
         }

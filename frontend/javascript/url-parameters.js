@@ -28,9 +28,11 @@ function getUrlParameterBoolean(name, defaultValue) {
     return (param == "1" || param == "true");
 }
 
-function setUrlParameter(key, value) {
+function setUrlParameter(key, value, follow) {
     urlParameters.set(key, value);
-    document.location.search = '?' + urlParameters.toString();
+    if (follow) {
+      document.location.search = '?' + urlParameters.toString();
+    }
 }
 
 var urlParameters = parseUrlParameters();

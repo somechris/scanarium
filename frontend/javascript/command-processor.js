@@ -43,9 +43,7 @@ var CommandProcessor = {
         var parameters = sanitize_list(capsule, 'parameters');
         if (is_ok) {
             template = 'Switching to scene {scene_name}';
-            var params = new URLSearchParams(document.location.search.substring(1));
-            params.set('scene', parameters[0]);
-            document.location.search = '?' + params.toString();
+            setParameter('scene', parameters[0]);
         } else {
             template = 'Cannot switch to scene {scene_name}';
         }

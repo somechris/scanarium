@@ -38,4 +38,10 @@ function getParameterBoolean(name, defaultValue) {
     return (param == "1" || param == "true");
 }
 
+function setParameter(key, value) {
+    var params = new URLSearchParams(document.location.search.substring(1));
+    params.set(key, value);
+    document.location.search = '?' + params.toString();
+}
+
 var parameters = parseUrlParameters();

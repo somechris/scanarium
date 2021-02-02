@@ -19,6 +19,9 @@ def dump(scanarium, file):
     if file == 'dynamic/command-log.json':
         local_file = os.path.join(
             scanarium.get_dynamic_directory(), 'command-log.json')
+    elif file == 'dynamic/config.json':
+        local_file = os.path.join(
+            scanarium.get_dynamic_directory(), 'config.json')
     else:
         parts = file.split('/', 3)
         if parts[0:2] == ['dynamic', 'scenes'] and \

@@ -29,9 +29,8 @@ function getUrlParameterBoolean(name, defaultValue) {
 }
 
 function setUrlParameter(key, value) {
-    var params = new URLSearchParams(document.location.search.substring(1));
-    params.set(key, value);
-    document.location.search = '?' + params.toString();
+    urlParameters.set(key, value);
+    document.location.search = '?' + urlParameters.toString();
 }
 
 var urlParameters = parseUrlParameters();

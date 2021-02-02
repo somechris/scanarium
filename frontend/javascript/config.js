@@ -1,10 +1,18 @@
-var scene = getUrlParameter('scene', 'space');
+var default_global_config = {
+  'default_scene': 'space',
+};
 
-var scene_dir = 'scenes/' + scene;
+var global_config = {};
+
+function getConfig(key) {
+  return global_config[key] || default_global_config[key];
+}
 
 var dyn_dir = 'dynamic';
 
-var dyn_scene_dir = dyn_dir + '/scenes/' + scene;
+var scene;         // Initialized in boot.js
+var scene_dir;     // Initialized in boot.js
+var dyn_scene_dir; // Initialized in boot.js
 
 var scanariumConfig = {
     type: Phaser.AUTO,

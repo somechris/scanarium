@@ -24,6 +24,9 @@ var CommandProcessor = {
                     ScActorManager.addActor(parameters[0], flavor);
                 }
             }
+            if (PageInsertionHint != null && (global_config['drop_page_insertion_hint_after_scan'] || true)) {
+                PageInsertionHint.setInvisible();
+            }
         } else {
             template = 'Failed to scan new actor drawing for {actor_name}';
         }

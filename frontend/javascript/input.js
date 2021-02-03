@@ -22,3 +22,6 @@ document.addEventListener("keypress", function(e) {
   }
 }, false);
 
+document.addEventListener("click", event => {
+  PauseManager.toggle();
+});

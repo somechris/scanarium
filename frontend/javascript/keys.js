@@ -7,14 +7,7 @@ document.addEventListener("keypress", function(e) {
   } else if (e.key === 'p') {
     // We (un)pause outside of the game itself, as a paused game did not handle
     // keydown events reliable and hence made it tricky to unpause.
-    scanariumConfig.paused = !scanariumConfig.paused;
-    if (scanariumConfig.paused) {
-      game.scene.pause();
-      MessageManager.addMessage(null, 'pause', localize('Paused'));
-    } else {
-      game.scene.resume();
-      MessageManager.addMessage(null, 'ok', localize('Resuming scene'));
-    }
+    PauseManager.toggle();
   } else if (e.key === '?') {
     // Phaser does not offer a keycode for question mark, so we trigger from
     // outside.

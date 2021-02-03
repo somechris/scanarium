@@ -34,6 +34,7 @@ function create() {
     scene_create();
 
     FrameCounter.init();
+    PageInsertionHint.init();
     CommandLogInjector.init();
 
     this.input.keyboard.on('keydown-M', function (event) {
@@ -57,6 +58,7 @@ function update (time, delta) {
     // background. So we compute our own.
     delta = time - updateLastTime;
     FrameCounter.update(time, delta, updateLastTime);
+    PageInsertionHint.update(time, delta, updateLastTime);
 
     scene_update(time, delta);
 

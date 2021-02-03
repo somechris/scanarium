@@ -60,7 +60,8 @@
     "{cgi_name} failed": "{cgi_name} schlug fehl",
     "{cgi_name} ok": "{cgi_name} ok",
     "{command_name} command failed": "Kommando {command_name} schlug fehl",
-    "{command_name} command ok": "Kommando {command_name} ok"
+    "{command_name} command ok": "Kommando {command_name} ok",
+    "↓↓↓ Insert coloring pages below ↓↓↓": "↓↓↓ Ausgemalte Bilder hier unten ins Fach einlegen ↓↓↓"
   },
   "parameters": {
     "actor_name": {

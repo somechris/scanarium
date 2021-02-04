@@ -2,7 +2,7 @@ var PauseManager = {
   paused: false,
 
   init: function() {
-    this.resume();
+    this.resume(true);
   },
 
   toggle: function() {
@@ -25,14 +25,20 @@ var PauseManager = {
     ScreensaverManager.allow();
   },
 
-  resume: function() {
+  resume: function(silent) {
     this.paused = false;
+
+    if (typeof silent == 'undefined') {
+      silent = false;
+    }
 
     if (game != null) {
       game.scene.resume();
     }
 
-    MessageManager.addMessage(null, 'ok', localize('Resuming scene'));
+    if (!silent) {
+      MessageManager.addMessage(null, 'ok', localize('Resuming scene'));
+    }
 
     ScreensaverManager.prohibit();
   },

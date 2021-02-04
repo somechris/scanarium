@@ -21,6 +21,8 @@ var PauseManager = {
     }
 
     MessageManager.addMessage(null, 'pause', localize('Paused'));
+
+    ScreensaverManager.allow();
   },
 
   resume: function() {
@@ -31,5 +33,7 @@ var PauseManager = {
     }
 
     MessageManager.addMessage(null, 'ok', localize('Resuming scene'));
+
+    ScreensaverManager.prohibit();
   },
 };

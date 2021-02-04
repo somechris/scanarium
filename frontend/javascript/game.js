@@ -36,6 +36,7 @@ function create() {
     FrameCounter.init();
     PageInsertionHint.init();
     CommandLogInjector.init();
+    ScreensaverManager.init();
     PauseManager.init();
 
     this.input.keyboard.on('keydown-M', function (event) {

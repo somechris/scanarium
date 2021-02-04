@@ -65,6 +65,7 @@
   },
   "parameters": {
     "actor_name": {
+      "Astronaut": "Astronaut",
       "BunnyBalloon": "Hasen-Luftballon",
       "FlyingSaucer": "Fliegende Untertasse",
       "HeartBalloon": "Herz-Luftballon",

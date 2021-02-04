@@ -25,3 +25,7 @@ document.addEventListener("keypress", function(e) {
 document.addEventListener("click", event => {
   PauseManager.toggle();
 });
+
+document.addEventListener("touchstart", event => {
+  PauseManager.toggle();
+});

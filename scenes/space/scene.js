@@ -93,7 +93,7 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
         var thruster = new Thruster(x, y, this.ship.angle + angle, scale);
         thruster.angularFactor = angularFactor;
         thruster.accelerationFactor = accelerationFactor;
-        this.add([thruster]);
+        this.addAt(thruster, 0);
 
         this.thrusters.push(thruster);
     }

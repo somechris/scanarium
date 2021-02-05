@@ -70,7 +70,8 @@
       "FlyingSaucer": "Fliegende Untertasse",
       "HeartBalloon": "Herz-Luftballon",
       "PlainBalloon": "Einfacher Luftballon",
-      "SimpleRocket": "Einfache Rakete"
+      "SimpleRocket": "Einfache Rakete",
+      "UnicormBalloon": "Einhorn-Luftballon"
     },
     "cgi_name": {
       "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",

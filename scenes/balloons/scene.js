@@ -45,6 +45,7 @@ class WindAffectedSprite extends Phaser.Physics.Arcade.Sprite {
         var width = width * scale;
         this.setDisplaySize(width, height);
         this.setSize(width, height);
+        this.setFlipX(Math.random() > 0.5);
         this.destroyOffset = Math.sqrt(width * width + height * height) / 2;
         this.body.setMaxVelocityX(10 * refToScreen);
     }

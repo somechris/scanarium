@@ -70,6 +70,7 @@
       "DragonBalloon": "Drachen-Ballon",
       "FlyingSaucer": "Fliegende Untertasse",
       "HeartBalloon": "Herz-Luftballon",
+      "OldFamilyCar": "Altes Familienauto",
       "PlainBalloon": "Einfacher Luftballon",
       "SimpleRocket": "Einfache Rakete",
       "UnicormBalloon": "Einhorn-Luftballon"
@@ -100,6 +101,7 @@
     },
     "scene_name": {
       "balloons": "Luftballons",
+      "highway": "Landstraße",
       "space": "Weltall"
     }
   }

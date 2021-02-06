@@ -2,11 +2,12 @@
 
 var lanes=[];
 
-function add_lane(y, leftToRight) {
+function add_lane(y, leftToRight, scale) {
   lanes.push({
     y: y,
     leftToRight: leftToRight,
-    speedFactor: (leftToRight ? 1 : -1),
+    scale: scale,
+    speedFactor: (leftToRight ? 1 : -1) * scale,
   });
 }
 
@@ -14,12 +15,12 @@ function scene_preload() {
 }
 
 function scene_create() {
-  add_lane(0.255, false);
-  add_lane(0.300, true);
-  add_lane(0.460, false);
-  add_lane(0.560, true);
-  add_lane(0.780, false);
-  add_lane(0.920, true);
+  add_lane(0.255, false, 0.18);
+  add_lane(0.300, true, 0.2);
+  add_lane(0.460, false, 0.4);
+  add_lane(0.560, true, 0.5);
+  add_lane(0.780, false, 0.9);
+  add_lane(0.920, true, 1);
 }
 
 function scene_update(time, delta) {
@@ -32,8 +33,9 @@ class Vehicle extends Phaser.GameObjects.Container {
         var y = lane.y * scanariumConfig.height;
         super(game, x, y);
 
+        this.setDepth(lane.scale*100);
         var body = game.add.image(0, 0, actor + '-' + flavor);
-        var width = width * refToScreen;
+        var width = width * lane.scale * refToScreen;
         var height = body.height / body.width * width;
         body.setFlipX(lane.leftToRight);
         body.setOrigin((lane.leftToRight ? 1 : 0), 1);

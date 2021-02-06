@@ -10,6 +10,11 @@ function scene_preload() {
 }
 
 function scene_create() {
+  add_lane(0.255);
+  add_lane(0.300);
+  add_lane(0.460);
+  add_lane(0.560);
+  add_lane(0.780);
   add_lane(0.920);
 }
 

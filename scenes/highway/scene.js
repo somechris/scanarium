@@ -16,6 +16,13 @@ function add_lane(yMinRef, yMaxRef, leftToRight, scale) {
   });
 }
 
+function relayoutLanes(width, height) {
+  lanes.forEach((lane) => {
+    lane.vehicles.forEach((vehicle) => vehicle.relayout());
+  });
+};
+LayoutManager.register(relayoutLanes);
+
 function scene_preload() {
 }
 
@@ -44,8 +51,8 @@ class Vehicle extends Phaser.GameObjects.Container {
     constructor(actor, flavor, x, y, width, tires, angularShake, yShake) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;
-        var y = randomBetween(lane.yMinRef, lane.yMaxRef) / refHeight * scanariumConfig.height;
-        super(game, x, y);
+
+        super(game, x, 0);
 
         this.setDepth(lane.scale*100);
         var image_name = actor + '-' + flavor;
@@ -87,6 +94,13 @@ class Vehicle extends Phaser.GameObjects.Container {
         // Setting velocity
         this.desired_velocity = (Math.random()+1) * 100 * lane.scale * (lane.leftToRight ? 1 : -1) * refToScreen;
         this.updateVelocity(this.desired_velocity);
+
+        this.yRef = randomBetween(lane.yMinRef, lane.yMaxRef);
+        this.relayout();
+    }
+
+    relayout() {
+      this.y = this.yRef / refHeight * scanariumConfig.height;
     }
 
     createTextures(image_name, tires) {

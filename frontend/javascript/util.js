@@ -12,6 +12,10 @@ function scaleBetween(min, max, scale) {
     return (max - min) * scale + min;
 }
 
+function randomBetween(min, max) {
+    return scaleBetween(min, max, Math.random());
+}
+
 function tunnel(value, min, max) {
     return Math.max(Math.min(value, max), min);
 }

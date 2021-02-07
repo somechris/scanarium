@@ -7,7 +7,7 @@ function add_lane(y, leftToRight, scale) {
     y: y,
     leftToRight: leftToRight,
     scale: scale,
-    speedFactor: (leftToRight ? 1 : -1) * scale,
+    vehicles: [], // Vehicles on this lane
   });
 }
 
@@ -62,9 +62,6 @@ class Vehicle extends Phaser.GameObjects.Container {
 
         game.physics.world.enable(this);
 
-        var speed = (Math.random()+1) * 100 * lane.speedFactor * refToScreen;
-        this.body.setVelocityX(speed);
-
         var that = this;
         tires.forEach((tire, i) => {
           const cx = (tire.x1 + tire.x2) / 2 * base_scale * (lane.leftToRight ? -1 : 1);
@@ -74,10 +71,17 @@ class Vehicle extends Phaser.GameObjects.Container {
           tire.r = tire.width * base_scale / 2;
           tire.setSize(tire.width * base_scale, tire.height * base_scale);
           tire.setDisplaySize(tire.width * base_scale, tire.height * base_scale);
-          tire.setAngularVelocity(that.body.velocity.x * 360 / 2 / Math.PI / tire.r);
           that.add(tire);
           that.tires.push(tire);
         });
+
+        // Assigning lane
+        this.lane = lane;
+        lane.vehicles.push(this);
+
+        // Setting velocity
+        this.desired_velocity = (Math.random()+1) * 100 * lane.scale * (lane.leftToRight ? 1 : -1) * refToScreen;
+        this.updateVelocity(this.desired_velocity);
     }
 
     createTextures(image_name, tires) {
@@ -142,8 +146,40 @@ class Vehicle extends Phaser.GameObjects.Container {
       body.saveTexture(image_name + '-body');
     }
 
+    updateVelocity() {
+      var velocity = this.desired_velocity;
+      const prevVehicleIdx = this.lane.vehicles.indexOf(this) - 1;
+      if (prevVehicleIdx >= 0) {
+        // There's a car before the current, so we need to brake if we get too
+        // close to avoid an accident.
+        const prevVehicle = this.lane.vehicles[prevVehicleIdx];
+
+        // The unbounded velocity based on proximity to the previous vehicle
+        velocity = (Math.abs(this.x - prevVehicle.x) / prevVehicle.vehicle_body.width - 1) * this.desired_velocity;
+
+        // Applying bounds to the velocity
+        velocity = tunnel(velocity, Math.min(0, this.desired_velocity), Math.max(0, this.desired_velocity));
+      }
+
+      // Finally, we apply the velocity to the vehicles components
+      this.body.setVelocityX(velocity);
+      this.tires.forEach((tire) => {
+        tire.setAngularVelocity(velocity * 360 / 2 / Math.PI / tire.r);
+      });
+    }
+
     update(time, delta) {
       this.vehicle_body.angle = randomBetween(-this.angularShake, this.angularShake);
       this.vehicle_body.y = randomBetween(-this.yShake, this.yShake);
+
+      this.updateVelocity();
+    }
+
+    destroy() {
+      // Remove the vehicle reference from the vehicle's lane
+      var lane_vehicles = this.lane.vehicles;
+      lane_vehicles.splice(lane_vehicles.indexOf(this), 1);
+
+      super.destroy();
     }
 }

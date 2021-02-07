@@ -48,7 +48,7 @@ class Tire extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Vehicle extends Phaser.GameObjects.Container {
-    constructor(actor, flavor, x, y, width, tires, angularShake, yShake) {
+    constructor(actor, flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, angularShake, yShake) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;
 
@@ -92,7 +92,7 @@ class Vehicle extends Phaser.GameObjects.Container {
         lane.vehicles.push(this);
 
         // Setting velocity
-        this.desired_velocity = (Math.random()+1) * 100 * lane.scale * (lane.leftToRight ? 1 : -1) * refToScreen;
+        this.desired_velocity = randomBetween(initialMinSpeed, initialMaxSpeed) * lane.scale * (lane.leftToRight ? 1 : -1) * refToScreen;
         this.updateVelocity(this.desired_velocity);
 
         this.yRef = randomBetween(lane.yMinRef, lane.yMaxRef);

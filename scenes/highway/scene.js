@@ -36,7 +36,7 @@ class Tire extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Vehicle extends Phaser.GameObjects.Container {
-    constructor(actor, flavor, x, y, width, tires, angularShake) {
+    constructor(actor, flavor, x, y, width, tires, angularShake, yShake) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;
         var y = lane.y * scanariumConfig.height;
@@ -58,6 +58,7 @@ class Vehicle extends Phaser.GameObjects.Container {
         this.vehicle_body = body;
         this.tires = [];
         this.angularShake = angularShake;
+        this.yShake = yShake * lane.scale * refToScreen;
 
         game.physics.world.enable(this);
 
@@ -143,5 +144,6 @@ class Vehicle extends Phaser.GameObjects.Container {
 
     update(time, delta) {
       this.vehicle_body.angle = randomBetween(-this.angularShake, this.angularShake);
+      this.vehicle_body.y = randomBetween(-this.yShake, this.yShake);
     }
 }

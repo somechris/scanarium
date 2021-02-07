@@ -5,7 +5,8 @@ class OldFamilyCar extends Vehicle {
           {x1: 285, x2: 343, y1: 92, y2: 150, w: 398, h: 151, clearance: 1},
         ];
         const angularShake = 0.2;
-        super('OldFamilyCar', flavor, x, y, 500, tires, angularShake);
+        const yShake = 1.5;
+        super('OldFamilyCar', flavor, x, y, 500, tires, angularShake, yShake);
     }
 }
 

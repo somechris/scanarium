@@ -76,8 +76,8 @@ class Vehicle extends Phaser.GameObjects.Container {
 
         var that = this;
         tires.forEach((tire, i) => {
-          const cx = (tire.x1 + tire.x2) / 2 * base_scale * (lane.leftToRight ? -1 : 1);
-          const cy = (tire.y1 + tire.y2) / 2 * base_scale - body.height;
+          const cx = (tire.x1 + tire.x2) / 2 / tire.w * width * (lane.leftToRight ? -1 : 1);
+          const cy = (tire.y1 + tire.y2) / 2 / tire.h * height - body.height;
           var tire = new Tire(cx, cy, image_name + '-tire-' + i);
           tire.setFlipX(lane.leftToRight);
           tire.r = tire.width * base_scale / 2;

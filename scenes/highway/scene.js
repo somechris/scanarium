@@ -2,9 +2,14 @@
 
 var lanes=[];
 
-function add_lane(y, leftToRight, scale) {
+function add_lane(yMinRef, yMaxRef, leftToRight, scale) {
+  var width = (yMaxRef - yMinRef);
   lanes.push({
-    y: y,
+    // Usable lane width for user-facing vehicle side is only 30% of full lane.
+    // This allows for some variability, but still keeping the cars on the
+    // expected side of the lane.
+    yMinRef: yMinRef + width * 0.1,
+    yMaxRef: yMinRef + width * 0.4,
     leftToRight: leftToRight,
     scale: scale,
     vehicles: [], // Vehicles on this lane
@@ -15,12 +20,12 @@ function scene_preload() {
 }
 
 function scene_create() {
-  add_lane(0.255, false, 0.18);
-  add_lane(0.300, true, 0.2);
-  add_lane(0.460, false, 0.4);
-  add_lane(0.560, true, 0.5);
-  add_lane(0.780, false, 0.9);
-  add_lane(0.920, true, 1);
+  add_lane(286, 241, false, 0.18);
+  add_lane(340, 291, true, 0.2);
+  add_lane(514, 425, false, 0.4);
+  add_lane(623, 524, true, 0.5);
+  add_lane(864, 730, false, 0.9);
+  add_lane(1029, 880, true, 1);
 }
 
 function scene_update(time, delta) {
@@ -39,7 +44,7 @@ class Vehicle extends Phaser.GameObjects.Container {
     constructor(actor, flavor, x, y, width, tires, angularShake, yShake) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;
-        var y = lane.y * scanariumConfig.height;
+        var y = randomBetween(lane.yMinRef, lane.yMaxRef) / refHeight * scanariumConfig.height;
         super(game, x, y);
 
         this.setDepth(lane.scale*100);

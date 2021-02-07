@@ -1,10 +1,12 @@
 var degToRadian = 2 * Math.PI / 360;
 
 // Reference is 1920x1080 monitor
+var refWidth = 1920;
+var refHeight = 1080;
 var refToScreen = 1;
 var screenToRef = 1;
 LayoutManager.register(function(width, height) {
-  refToScreen = Math.max(width, height) / 1920;
+  refToScreen = Math.max(width, height) / refWidth;
   screenToRef = 1 / refToScreen;
 });
 

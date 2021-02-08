@@ -40,7 +40,24 @@ var CommandProcessor = {
     },
 
     processCommandDebug: function(capsule) {
+        var is_ok = sanitize_boolean(capsule, 'is_ok');
+        var parameters = sanitize_list(capsule, 'parameters');
+        var template = 'Unknown debug command received';
+        if (parameters.length > 0) {
+          if (['ok', 'fail'].includes(parameters[0])) {
+            template = false;
+          } else if (parameters[0] == 'toggleFps') {
+            if (is_ok) {
+              FrameCounter.toggleVisibility();
+              template = 'Toggled frames-per-second counter';
+            } else {
+              template = 'Toggling frames-per-second counter failed';
+            }
+          }
+        }
+        return template ? localize(template) : false;
     },
+
     processCommandSwitchScene: function(capsule) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');

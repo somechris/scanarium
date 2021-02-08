@@ -438,6 +438,8 @@ def process_image_with_qr_code_unlogged(scanarium, command, parameter, image,
             raise ScanariumError(
                 'SE_DEBUG_FAIL',
                 'Intentional error from the "debug:fail" command')
+        elif parameter == 'toggleFps':
+            ret = {}
         else:
             raise ScanariumError(
                 'SE_UNKNOWN_PARAM',

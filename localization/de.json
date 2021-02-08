@@ -38,6 +38,7 @@
     "Scan this page to delete all your scanned images from Scanarium": "Lege diese Seite ein um die gespeicherten Bilder zu löschen",
     "Scan this page to shut Scanarium down savely": "Lege diese Seite ein um Scanarium auszuschalten",
     "Scan this page to switch to scene": "Lege diese Seite ein um zur Szene {parameter_name} zu wechseln",
+    "Scan this page to show/hide the frames-per-second counter": "Lege diese Seite ein um die Bildfrequenz-Anzeige umzuschalten",
     "Scanned new actor drawing for {actor_name}": "Neue \"{actor_name}\" Zeichnung gescannt",
     "Scanned new actor drawing for {actor_name} for scene {scene_name}": "Neue \"{actor_name}\" Zeichnung aus der Szene \"{scene_name}\" gescannt",
     "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",
@@ -51,6 +52,7 @@
     "Taken too many extraction tries from scanned image": "Zu viele Versuche gebraucht um Daten aus Bild zu extrahieren",
     "The command \"{command}\" did not finish within {timeout} seconds": "Das Kommando \"{command}\" wurde nicht innerhalb von {timeout} Sekunden fertig",
     "The command \"{command}\" did not return 0": "Rückgabewert von \"{command}\" war nicht 0",
+    "Toggled frames-per-second counter": "Bildfrequenz-Anzeige umgeschaltet",
     "Unknown camera type \"{camera_type}\"": "Unbekannter Kameratyp \"{camera_type}\"",
     "Unknown system command": "Unbekannter System-Befehl",
     "Unknown white balance filter configured": "Unbekannter Weißabgleich-Filter konfiguriert",
@@ -99,7 +101,8 @@
     },
     "parameter_name": {
       "DynamicContent": "Alle Bilder",
-      "poweroff": "Herunterfahren"
+      "poweroff": "Herunterfahren",
+      "toggleFps": "Bildfrequenz ein/aus"
     },
     "scene_name": {
       "balloons": "Luftballons",

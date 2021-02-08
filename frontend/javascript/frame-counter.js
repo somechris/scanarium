@@ -21,8 +21,8 @@ var FrameCounter = {
     toggleVisibility: function() {
         this.showFrameCount = !(this.showFrameCount);
         if (this.showFrameCount) {
-            var offset = 32 * window.devicePixelRatio;
-            this.frameCountSprite = game.add.text(offset, offset, '');
+            this.frameCountSprite = game.add.text(0, 0, '');
+            this.relayout();
             this.formatCount('?');
             this.frameCountSprite.depth = 999999;
         } else {
@@ -43,5 +43,12 @@ var FrameCounter = {
             }
         }
     },
-};
 
+    relayout: function() {
+        if (FrameCounter.showFrameCount) {
+            FrameCounter.frameCountSprite.x = 32 * window.devicePixelRatio;
+            FrameCounter.frameCountSprite.y = scanariumConfig.height - 32 * window.devicePixelRatio;
+        }
+    },
+};
+LayoutManager.register(FrameCounter.relayout);

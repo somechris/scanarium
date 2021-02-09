@@ -38,6 +38,7 @@ function create() {
     CommandLogInjector.init();
     ScreensaverManager.init();
     PauseManager.init();
+    DeveloperInformation.init();
 
     this.input.keyboard.on('keydown-M', function (event) {
         ScActorManager.addActorRandom();
@@ -47,6 +48,9 @@ function create() {
     });
     this.input.keyboard.on('keydown-H', function (event) {
         HelpPage.toggleVisibility();
+    });
+    this.input.keyboard.on('keydown-D', function (event) {
+        DeveloperInformation.toggleVisibility();
     });
 
     this.scale.on('resize', LayoutManager.onResize, this);
@@ -61,6 +65,7 @@ function update (time, delta) {
     delta = time - updateLastTime;
     FrameCounter.update(time, delta, updateLastTime);
     PageInsertionHint.update(time, delta, updateLastTime);
+    DeveloperInformation.update(time, delta, updateLastTime);
 
     scene_update(time, delta);
 

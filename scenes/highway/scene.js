@@ -202,3 +202,11 @@ class Vehicle extends Phaser.GameObjects.Container {
       super.destroy();
     }
 }
+
+DeveloperInformation.register(() => {
+  var ret = 'lanes: ' + lanes.length;
+  lanes.forEach((lane, idx) => {
+    ret += ', (lane#' + idx + ': ' + lane.vehicles.length + ' vehicles)';
+  });
+  return ret;
+});

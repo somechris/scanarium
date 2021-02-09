@@ -53,6 +53,13 @@ var CommandProcessor = {
             } else {
               template = 'Toggling frames-per-second counter failed';
             }
+          } else if (parameters[0] == 'toggleDevInfo') {
+            if (is_ok) {
+              DeveloperInformation.toggleVisibility();
+              template = 'Toggled developer information';
+            } else {
+              template = 'Toggling developer information failed';
+            }
           }
         }
         return template ? localize(template) : false;

@@ -24,7 +24,7 @@ var FrameCounter = {
             this.frameCountSprite = game.add.text(0, 0, '');
             this.relayout();
             this.formatCount('?');
-            this.frameCountSprite.depth = 999999;
+            bringToFront(this.frameCountSprite);
         } else {
             if (this.frameCountSprite != null) {
                 this.frameCountSprite.destroy();

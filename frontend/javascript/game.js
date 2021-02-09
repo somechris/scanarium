@@ -24,7 +24,7 @@ function create() {
     //  A simple background for our game
     background = this.add.image(0, 0, 'background');
     background.setOrigin(0, 0);
-    background.setDepth = -999999;
+    sendToBack(background);
     LayoutManager.register(function(width, height) {
       background.setScale(width/background.width, height/background.height);
     });

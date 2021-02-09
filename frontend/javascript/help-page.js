@@ -63,7 +63,7 @@ var HelpPage = {
         });
 
         ret.forEach(function (sprite, index) {
-            sprite.setDepth(999999);
+            bringToFront(sprite);
         });
 
 

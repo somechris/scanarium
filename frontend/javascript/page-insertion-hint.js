@@ -22,7 +22,7 @@ var PageInsertionHint = {
     var text = localize('↓↓↓ Insert coloring pages below ↓↓↓');
     var sprite = game.add.text(0, 0, text, this.fontStyle);
     sprite.setOrigin(0.5, 1);
-    sprite.depth = 999999;
+    bringToFront(sprite);
     return sprite;
   },
 

@@ -36,7 +36,7 @@ var MessageManager = {
           game.add.text(32 * window.devicePixelRatio, y, message, this.fontStyle),
       ];
       sprites.forEach((sprite) => {
-        sprite.setDepth(999999);
+        bringToFront(sprite);
         this.objects.push({'sprite': sprite, duration: duration, expire: null});
       });
     }

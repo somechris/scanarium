@@ -247,6 +247,10 @@ var ScActorManager = {
 
     registerActor(name, stencil) {
         this.registeredActors[name] = stencil;
+    },
+
+    actorInfo: function() {
+      return 'ActorManager: actors: ' + ScActorManager.actors.length;
     }
 };
-
+DeveloperInformation.register(ScActorManager.actorInfo);

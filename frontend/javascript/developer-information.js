@@ -16,6 +16,7 @@ var DeveloperInformation = {
         } else {
             this.sprite = game.add.text(0, 0, 'Developer Information');
             this.sprite.setOrigin(0, 1);
+            bringToFront(this.sprite);
             this.relayout();
         }
         setUrlParameterBoolean(this.urlParameter, this.sprite != null);

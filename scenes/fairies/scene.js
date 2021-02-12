@@ -95,6 +95,14 @@ class Creature extends Phaser.GameObjects.Container {
     var previousX = this.x;
     var width = scanariumConfig.width;
     var height = scanariumConfig.height;
+
+    // First step is to quickly, but gradually appear at start position
+    this.alpha = 0;
+    tweens.push({
+      duration: randomBetween(100, 200),
+      alpha: 1,
+    });
+
     while (tweens.length < steps) {
       var x = randomBetween(0.1, 0.9) * width;
       var y = randomBetween(0.1, 0.9) * height;

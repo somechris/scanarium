@@ -60,14 +60,14 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Creature extends Phaser.GameObjects.Container {
-  constructor(actor, flavor, x, y, widthRef, bodySpec) {
+  constructor(actor, flavor, x, y, minWidthRef, maxWidthRef, bodySpec) {
     super(game, 0, 0);
 
     var flavored_actor = actor + '-' + flavor;
     this.createTextures(flavored_actor, bodySpec);
 
     var body = game.add.image(0, 0, flavored_actor + '-body');
-    var width = widthRef * refToScreen;
+    var width = randomBetween(minWidthRef, maxWidthRef) * refToScreen;
     var base_scale = width / body.width;
     var height = body.height * base_scale;
     body.setOrigin(0.5, bodySpec.centerY / bodySpec.height);

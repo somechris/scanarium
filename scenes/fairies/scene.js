@@ -119,6 +119,9 @@ class Creature extends Phaser.GameObjects.Container {
   }
 
   update(time, delta) {
+    this.x += randomBetween(-2,2) * refToScreen;
+    this.y += randomBetween(-2,2) * refToScreen;
+    this.angle += randomBetween(-5,5);
     this.wings.update(time, delta);
   }
 }

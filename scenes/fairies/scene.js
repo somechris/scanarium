@@ -72,9 +72,11 @@ class Creature extends Phaser.GameObjects.Container {
     var i;
     var steps = Math.random() * 4 + 3;
     var previousX = this.x;
+    var width = scanariumConfig.width;
+    var height = scanariumConfig.height;
     while (tweens.length < steps) {
-      var x = randomBetween(0.1, 0.9) * scanariumConfig.width;
-      var y = randomBetween(0.1, 0.9) * scanariumConfig.height;
+      var x = randomBetween(0.1, 0.9) * width;
+      var y = randomBetween(0.1, 0.9) * height;
       tweens.push({
         x: x,
         y: y,
@@ -84,9 +86,37 @@ class Creature extends Phaser.GameObjects.Container {
       });
       previousX = x;
     }
+
+    // And finally, we add a move to a position that will have the creature
+    // evicted and destroyed.
+    var destroyX = -this.destroyOffset - 10;
+    var destroyY = -this.destroyOffset - 10;
+    var destroyPosition = Math.random() * (2 * width + 2 * height);
+    if (destroyPosition < width) {
+      destroyX = destroyPosition;
+    } else if (destroyPosition < width + height) {
+      destroyX = width - destroyX;
+      destroyY = destroyPosition - width;
+    } else if (destroyPosition < 2 * width + height) {
+      destroyX = 2 * width + height - destroyPosition;
+      destroyY = height - destroyY;
+    } else {
+      destroyY = 2 * width + 2 * height - destroyPosition;
+    }
     tweens.push({
-      x: -2000,
-      duration: 1000,
+      x: destroyX,
+      y: destroyY,
+      duration: randomBetween(1000, 3000),
+    });
+
+    // When having a destroy position with positive X and Y coordinates, it
+    // might be that a window resize made the destroy position a proper
+    // position. So we back up with making one coordinate negative. This kills
+    // the sprite for good (regargless of window resizes).
+    tweens.push({
+      x: destroyX,
+      y: -destroyY,
+      duration: randomBetween(1000, 3000),
     });
 
     this.timeline = game.tweens.timeline({

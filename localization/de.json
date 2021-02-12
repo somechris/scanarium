@@ -70,7 +70,6 @@
     "actor_name": {
       "Astronaut": "Astronaut",
       "BunnyBalloon": "Hasen-Luftballon",
-      "Butterfly": "Schmetterling",
       "DragonBalloon": "Drachen-Ballon",
       "FlyingSaucer": "Fliegende Untertasse",
       "HeartBalloon": "Herz-Luftballon",
@@ -78,6 +77,7 @@
       "OldFamilyCar": "Altes Familienauto",
       "PlainBalloon": "Einfacher Luftballon",
       "QuadBike": "Quad",
+      "SimpleButterfly": "Schlichter Schmetterling",
       "SimpleRocket": "Einfache Rakete",
       "SportsCar": "Sportwagen",
       "Tractor": "Traktor",

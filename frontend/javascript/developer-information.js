@@ -27,13 +27,14 @@ var DeveloperInformation = {
     formatDuration: function() {
       var duration = Date.now() - this.start;
       var seconds = Math.floor(duration / 1000);
+      var total_seconds = seconds;
       var minutes = Math.floor(seconds / 60);
       var hours = Math.floor(minutes / 60);
       var days = Math.floor(hours / 24);
       seconds = seconds % 60;
       minutes = minutes % 60;
       hours = hours % 24;
-      return '' + days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+      return '' + days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's (total: ' + total_seconds + 's)';
     },
 
     basicInformation: function() {

@@ -21,8 +21,18 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
     this.fullWidth = body.width;
     this.fullHeight = body.height;
     this.setOrigin(body.originX, body.originY);
-    this.setSize(this.fullWidth, this.fullHeight);
-    this.setDisplaySize(this.fullWidth, this.fullHeight);
+    this.angleFactor = 100 / 360 * 2 * Math.PI;
+    this.update(0, 0);
+  }
+
+  update(time, delta) {
+    var phase = Math.abs((time % 200) / 100 - 1);
+
+    // Pushing up factor 0 up to 0.001, as width 0 makes the sprite vanish from
+    // the scene, even for later frames with width > 0.
+    var currentWidth = tunnel(Math.sin(phase * this.angleFactor), 0.001, 1) * this.fullWidth;
+    this.setSize(currentWidth, this.fullHeight);
+    this.setDisplaySize(currentWidth, this.fullHeight);
   }
 }
 
@@ -104,5 +114,9 @@ class Creature extends Phaser.GameObjects.Container {
 
     body.erase(eraser);
     body.saveTexture(flavored_actor + '-body');
+  }
+
+  update(time, delta) {
+    this.wings.update(time, delta);
   }
 }

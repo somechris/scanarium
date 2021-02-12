@@ -23,7 +23,12 @@ var DeveloperInformation = {
     },
 
     basicInformation: function() {
-        return 'scene: ' + scene + ', size: ' + scanariumConfig.width + 'x' + scanariumConfig.height + ', language:' + language;
+        var ret = '';
+        ret += 'scene: ' + scene + ', size: ' + scanariumConfig.width + 'x' + scanariumConfig.height + ', language:' + language;
+        if (game) {
+          ret += '\nchildren: ' + game.children.getChildren().length;
+        }
+        return ret;
     },
 
     update: function(time, delta, lastTime) {

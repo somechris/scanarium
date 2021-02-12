@@ -9,6 +9,27 @@ function scene_create() {
 function scene_update(time, delta) {
 }
 
+function getBorderPosition(defaultX, defaultY) {
+  var width = scanariumConfig.width;
+  var height = scanariumConfig.height;
+
+  var x = defaultX;
+  var y = defaultY;
+  var position = Math.random() * (2 * width + 2 * height);
+  if (position < width) {
+    x = position;
+  } else if (position < width + height) {
+    x = width - x;
+    y = position - width;
+  } else if (position < 2 * width + height) {
+    x = 2 * width + height - position;
+    y = height - y;
+  } else {
+    y = 2 * width + 2 * height - position;
+  }
+  return [x, y];
+}
+
 class Wings extends Phaser.Physics.Arcade.Sprite {
   constructor(x, y, image_name, body) {
     super(game, x, y, image_name);
@@ -40,10 +61,7 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
 
 class Creature extends Phaser.GameObjects.Container {
   constructor(actor, flavor, x, y, widthRef, bodySpec) {
-    var x = scanariumConfig.width / 2;
-    var y = scanariumConfig.height / 2;
-
-    super(game, x, y);
+    super(game, 0, 0);
 
     var flavored_actor = actor + '-' + flavor;
     this.createTextures(flavored_actor, bodySpec);
@@ -55,15 +73,18 @@ class Creature extends Phaser.GameObjects.Container {
     body.setOrigin(0.5, bodySpec.centerY / bodySpec.height);
     body.setSize(width, height);
     body.setDisplaySize(width, height);
-    this.destroyOffset = Math.max(width, height);
+    this.destroyOffset = Math.max(width, height) + 20;
 
-    var wings = new Wings(x, y, flavored_actor + '-wings', body);
+    var wings = new Wings(0, 0, flavored_actor + '-wings', body);
     this.add(wings);
     this.wings = wings;
 
     this.add(body);
     game.physics.world.enable(this);
 
+    const startPosition = getBorderPosition(-this.destroyOffset + 10, -this.destroyOffset + 10);
+    this.x = startPosition[0];
+    this.y = startPosition[1];
     this.addTimeline();
   }
 
@@ -89,23 +110,10 @@ class Creature extends Phaser.GameObjects.Container {
 
     // And finally, we add a move to a position that will have the creature
     // evicted and destroyed.
-    var destroyX = -this.destroyOffset - 10;
-    var destroyY = -this.destroyOffset - 10;
-    var destroyPosition = Math.random() * (2 * width + 2 * height);
-    if (destroyPosition < width) {
-      destroyX = destroyPosition;
-    } else if (destroyPosition < width + height) {
-      destroyX = width - destroyX;
-      destroyY = destroyPosition - width;
-    } else if (destroyPosition < 2 * width + height) {
-      destroyX = 2 * width + height - destroyPosition;
-      destroyY = height - destroyY;
-    } else {
-      destroyY = 2 * width + 2 * height - destroyPosition;
-    }
+    const endPosition = getBorderPosition(-this.destroyOffset - 10, -this.destroyOffset - 10);
     tweens.push({
-      x: destroyX,
-      y: destroyY,
+      x: endPosition[0],
+      y: endPosition[1],
       duration: randomBetween(1000, 3000),
     });
 
@@ -114,8 +122,8 @@ class Creature extends Phaser.GameObjects.Container {
     // position. So we back up with making one coordinate negative. This kills
     // the sprite for good (regargless of window resizes).
     tweens.push({
-      x: destroyX,
-      y: -destroyY,
+      x: endPosition[0],
+      y: -this.destroyOffset - 10,
       duration: randomBetween(1000, 3000),
     });
 

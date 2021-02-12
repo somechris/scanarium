@@ -82,7 +82,8 @@
       "SportsCar": "Sportwagen",
       "Tractor": "Traktor",
       "Truck": "Laster",
-      "UnicornBalloon": "Einhorn-Luftballon"
+      "UnicornBalloon": "Einhorn-Luftballon",
+      "ZaggedButterfly": "Gezackter Schmetterling"
     },
     "cgi_name": {
       "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",

@@ -2,11 +2,13 @@ var DeveloperInformation = {
     sprite: null,
     urlParameter: 'showDeveloperInformation',
     providers: [],
+    start: 0,
 
     init: function() {
         if (getUrlParameterBoolean(this.urlParameter, false)) {
             this.toggleVisibility();
         }
+        this.start = Date.now();
     },
 
     toggleVisibility: function() {
@@ -22,9 +24,24 @@ var DeveloperInformation = {
         setUrlParameterBoolean(this.urlParameter, this.sprite != null);
     },
 
+    formatDuration: function() {
+      var duration = Date.now() - this.start;
+      var seconds = Math.floor(duration / 1000);
+      var minutes = Math.floor(seconds / 60);
+      var hours = Math.floor(minutes / 60);
+      var days = Math.floor(hours / 24);
+      seconds = seconds % 60;
+      minutes = minutes % 60;
+      hours = hours % 24;
+      return '' + days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+    },
+
     basicInformation: function() {
         var ret = '';
-        ret += 'scene: ' + scene + ', size: ' + scanariumConfig.width + 'x' + scanariumConfig.height + ', language:' + language;
+        ret += 'scene: ' + scene;
+        ret += ', size: ' + scanariumConfig.width + 'x' + scanariumConfig.height;
+        ret += ', language: ' + language;
+        ret += ', running since: ' + DeveloperInformation.formatDuration();
         if (game) {
           ret += '\nchildren: ' + game.children.getChildren().length;
           ret += ', textures: ' + game.textures.getTextureKeys().length;

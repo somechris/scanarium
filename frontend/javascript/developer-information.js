@@ -26,7 +26,7 @@ var DeveloperInformation = {
         var ret = '';
         ret += 'scene: ' + scene + ', size: ' + scanariumConfig.width + 'x' + scanariumConfig.height + ', language:' + language;
         if (game) {
-          ret += '\nchildren: ' + game.children.getChildren().length;
+          ret += '\nchildren: ' + game.children.getChildren().length + ', textures: ' + game.textures.getTextureKeys().length ;
         }
         return ret;
     },

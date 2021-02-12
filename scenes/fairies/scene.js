@@ -21,12 +21,13 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
     this.fullWidth = body.width;
     this.fullHeight = body.height;
     this.setOrigin(body.originX, body.originY);
+    this.cycleLength = randomBetween(180, 220);
     this.angleFactor = 100 / 360 * 2 * Math.PI;
     this.update(0, 0);
   }
 
   update(time, delta) {
-    var phase = Math.abs((time % 200) / 100 - 1);
+    var phase = Math.abs((time % this.cycleLength) / (this.cycleLength / 2) - 1);
 
     // Pushing up factor 0 up to 0.001, as width 0 makes the sprite vanish from
     // the scene, even for later frames with width > 0.

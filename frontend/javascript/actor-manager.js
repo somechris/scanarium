@@ -8,6 +8,7 @@ var ScActorManager = {
     nextConfigFetch: 0,
     configFetches: 0,
 
+    created: 0,
     actors: [],
     triedActors: {},
     loadedActorJavascripts: [],
@@ -118,6 +119,7 @@ var ScActorManager = {
         actor.actorName = actorName;
         actor.actorFlavor = flavor;
         game.add.existing(actor);
+        this.created += 1
         this.actors.push(actor);
         return actor;
     },
@@ -250,7 +252,7 @@ var ScActorManager = {
     },
 
     actorInfo: function() {
-      return 'ActorManager: actors: ' + ScActorManager.actors.length;
+      return 'ActorManager: created: ' + ScActorManager.created + ', active: ' + ScActorManager.actors.length;
     }
 };
 DeveloperInformation.register(ScActorManager.actorInfo);

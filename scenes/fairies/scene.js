@@ -63,6 +63,37 @@ class Creature extends Phaser.GameObjects.Container {
 
     this.add(body);
     game.physics.world.enable(this);
+
+    this.addTimeline();
+  }
+
+  addTimeline() {
+    var tweens = [];
+    var i;
+    var steps = Math.random() * 4 + 3;
+    var previousX = this.x;
+    while (tweens.length < steps) {
+      var x = randomBetween(0.1, 0.9) * scanariumConfig.width;
+      var y = randomBetween(0.1, 0.9) * scanariumConfig.height;
+      tweens.push({
+        x: x,
+        y: y,
+        duration: randomBetween(1000, 3000),
+        hold: randomBetween(100, 1000),
+        angle: tunnel((x-previousX) * screenToRef / 100, -15, 15),
+      });
+      previousX = x;
+    }
+    tweens.push({
+      x: -2000,
+      duration: 1000,
+    });
+
+    this.timeline = game.tweens.timeline({
+      targets: this,
+      ease: 'Cubic.easeOut',
+      tweens: tweens,
+    });
   }
 
   createTextures(flavored_actor, bodySpec) {

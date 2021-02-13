@@ -1,7 +1,7 @@
 class WoodFairy extends Creature {
     constructor(x, y, flavor) {
-        const minWidthRef = 210;
-        const maxWidthRef = 330;
+        const minWidthRef = 154;
+        const maxWidthRef = 231;
         const body = {
           points: [
             [104, 0],

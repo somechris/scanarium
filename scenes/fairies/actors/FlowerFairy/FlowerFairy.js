@@ -1,7 +1,7 @@
 class FlowerFairy extends Creature {
     constructor(x, y, flavor) {
-        const minWidthRef = 330;
-        const maxWidthRef = 500;
+        const minWidthRef = 231;
+        const maxWidthRef = 350;
         const body = {
           points: [
             [119, 0],

@@ -9,6 +9,7 @@ class Star extends SpaceshipBase {
     this.body.setVelocityY(0);
     sendToBack(this);
 
+    this.angVelocity = (Math.random() > 0.8) ? randomBetween(-50, 50) : 0;
     this.addTimeline();
   }
 
@@ -42,6 +43,11 @@ class Star extends SpaceshipBase {
       ease: 'Cubic.easeInOut',
       tweens: tweens,
     });
+  }
+
+  update(time, delta) {
+    super.update(time, delta);
+    this.body.setAngularVelocity(this.angVelocity);
   }
 }
 

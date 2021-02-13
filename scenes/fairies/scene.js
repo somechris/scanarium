@@ -31,7 +31,7 @@ function getBorderPosition(defaultX, defaultY) {
 }
 
 class Wings extends Phaser.Physics.Arcade.Sprite {
-  constructor(x, y, image_name, body) {
+  constructor(x, y, image_name, body, minCycleLength, maxCycleLength) {
     super(game, x, y, image_name);
 
     game.physics.world.enableBody(this);
@@ -42,7 +42,7 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
     this.fullWidth = body.width;
     this.fullHeight = body.height;
     this.setOrigin(body.originX, body.originY);
-    this.cycleLength = randomBetween(180, 220);
+    this.cycleLength = randomBetween(minCycleLength, maxCycleLength);
     this.cycleOffset = randomBetween(0, this.cycleLength);
     this.angleFactor = 100 / 360 * 2 * Math.PI;
     this.update(0, 0);
@@ -60,8 +60,11 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Creature extends Phaser.GameObjects.Container {
-  constructor(actor, flavor, x, y, minWidthRef, maxWidthRef, bodySpec) {
+  constructor(actor, flavor, x, y, minWidthRef, maxWidthRef, bodySpec, wiggleX, wiggleY, wiggleAngle, minFlapCycleLength, maxFlapCycleLength) {
     super(game, 0, 0);
+    this.wiggleX = wiggleX / 2;
+    this.wiggleY = wiggleY / 2;
+    this.wiggleAngle = wiggleAngle / 2;
 
     var flavored_actor = actor + '-' + flavor;
     this.createTextures(flavored_actor, bodySpec);
@@ -75,7 +78,7 @@ class Creature extends Phaser.GameObjects.Container {
     body.setDisplaySize(width, height);
     this.destroyOffset = Math.max(width, height) + 20;
 
-    var wings = new Wings(0, 0, flavored_actor + '-wings', body);
+    var wings = new Wings(0, 0, flavored_actor + '-wings', body, minFlapCycleLength, maxFlapCycleLength);
     this.add(wings);
     this.wings = wings;
 
@@ -196,9 +199,9 @@ class Creature extends Phaser.GameObjects.Container {
   }
 
   update(time, delta) {
-    this.x += randomBetween(-2,2) * refToScreen;
-    this.y += randomBetween(-2,2) * refToScreen;
-    this.angle += randomBetween(-5,5);
+    this.x += randomBetween(-this.wiggleX, this.wiggleX) * refToScreen;
+    this.y += randomBetween(-this.wiggleY, this.wiggleY) * refToScreen;
+    this.angle += randomBetween(-this.wiggleAngle, this.wiggleAngle);
     this.wings.update(time, delta);
   }
 }

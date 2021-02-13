@@ -34,7 +34,14 @@ class WoodFairy extends Creature {
           width: 296,
           height: 262,
         };
-        super('WoodFairy', flavor, x, y, minWidthRef, maxWidthRef, body);
+        const wiggleX = 1;
+        const wiggleY = 1;
+        const wiggleAngle = 2;
+        const minFlapCycleLength = 120;
+        const maxFlapCycleLength = 150;
+        super('WoodFairy', flavor, x, y, minWidthRef, maxWidthRef, body,
+              wiggleX, wiggleY, wiggleAngle,
+              minFlapCycleLength, maxFlapCycleLength);
     }
 }
 

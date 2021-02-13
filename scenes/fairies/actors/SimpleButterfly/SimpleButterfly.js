@@ -15,7 +15,14 @@ class SimpleButterfly extends Creature {
           width: 223,
           height: 238,
         };
-        super('SimpleButterfly', flavor, x, y, minWidthRef, maxWidthRef, body);
+        const wiggleX = 4;
+        const wiggleY = 4;
+        const wiggleAngle = 10;
+        const minFlapCycleLength = 180;
+        const maxFlapCycleLength = 220;
+        super('SimpleButterfly', flavor, x, y, minWidthRef, maxWidthRef, body,
+              wiggleX, wiggleY, wiggleAngle,
+              minFlapCycleLength, maxFlapCycleLength);
     }
 }
 

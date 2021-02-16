@@ -1,5 +1,9 @@
 var default_global_config = {
+  // Default scene to load, if no `scene` parameter is given.
   'default_scene': 'space',
+
+  // If true, the page insertion hint gets removed after the first actor image
+  // got scanned.
   'drop_page_insertion_hint_after_scan': true,
 };
 

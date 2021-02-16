@@ -29,7 +29,7 @@ step() {
 }
 
 
-step "phaser ${PHASER_VERSION}" "$PHASER_TARGET" curl --output "$PHASER_TARGET" "https://cdn.jsdelivr.net/npm/phaser@${PHASER_VERSION}/dist/phaser.js"
+step "phaser ${PHASER_VERSION}" "$PHASER_TARGET" curl --output "$PHASER_TARGET" "https://cdn.jsdelivr.net/npm/phaser@${PHASER_VERSION}/dist/phaser.min.js"
 step "example configuration" "$CONF_TARGET" cp "conf/scanarium.conf.example" "$CONF_TARGET"
 step "content directory" "dynamic" mkdir -p "dynamic"
 step "sample content" "dynamic/scenes/space/actors/SimpleRocket/sample.png" cp -a "dynamic.sample/"* "dynamic"

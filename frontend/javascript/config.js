@@ -1,4 +1,7 @@
 var default_global_config = {
+  // How often (in milliseconds) to reload the actor configs
+  'actor-reload-period': 10 * 1000,
+
   // How often (in milliseconds) to reload the command log
   'command-log-reload-period': 1 * 1000,
 
@@ -51,8 +54,6 @@ LayoutManager.register(function(width, height) {
 // sceneConfig gets loaded dynamically from scene directory
 var sceneConfig = {
 }
-
-var configReloadPeriod = 10 * 1000; // 10 seconds
 
 var dynamicConfigMethod = 'GET';
 

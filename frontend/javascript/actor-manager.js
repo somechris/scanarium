@@ -19,7 +19,7 @@ var ScActorManager = {
 
     update: function(time, delta) {
         if (time > this.nextConfigFetch) {
-            this.nextConfigFetch = time + configReloadPeriod;
+            this.nextConfigFetch = time + getConfig('actor-reload-period');
             this.reloadConfigFiles();
         }
 

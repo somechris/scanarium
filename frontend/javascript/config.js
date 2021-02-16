@@ -1,5 +1,6 @@
 var default_global_config = {
   'default_scene': 'space',
+  'drop_page_insertion_hint_after_scan': true,
 };
 
 var global_config = {};

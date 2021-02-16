@@ -29,12 +29,7 @@ step() {
 }
 
 generate_global_config() {
-  cat >"dynamic/config.json" <<EOF
-{
-  "default_scene": "space",
-  "drop_page_insertion_hint_after_scan": true
-}
-EOF
+  echo "{}" >"dynamic/config.json"
 }
 
 generate_command_log() {

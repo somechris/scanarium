@@ -350,6 +350,7 @@ def regenerate_static_content_command_parameters(
         scanarium, dir, command, parameter, is_actor, localizer, force,
         extra_decoration_name):
     parameters = os.listdir(dir) if parameter is None else [parameter]
+    parameters.sort()
     for parameter in parameters:
         parameter_dir = os.path.join(dir, parameter)
         if os.path.isdir(parameter_dir):
@@ -362,6 +363,7 @@ def regenerate_static_content_commands(
         scanarium, dir, command, parameter, is_actor, localizer, force):
     if os.path.isdir(dir):
         commands = os.listdir(dir) if command is None else [command]
+        commands.sort()
         for command in commands:
             command_dir = os.path.join(dir, command)
             extra_decoration_name = os.path.join(

@@ -2,7 +2,7 @@ var CommandLogInjector = {
     injectRunCount: 0,
 
     init: function() {
-        window.setInterval(this.fetchLogs, commandReloadPeriod);
+        window.setInterval(this.fetchLogs, getConfig('command-log-reload-period'));
     },
 
     fetchLogs: function() {

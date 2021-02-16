@@ -1,4 +1,7 @@
 var default_global_config = {
+  // How often (in milliseconds) to reload the command log
+  'command-log-reload-period': 1 * 1000,
+
   // Default scene to load, if no `scene` parameter is given.
   'default_scene': 'space',
 
@@ -50,8 +53,6 @@ var sceneConfig = {
 }
 
 var configReloadPeriod = 10 * 1000; // 10 seconds
-
-var commandReloadPeriod = 1 * 1000; // 3 seconds
 
 var dynamicConfigMethod = 'GET';
 

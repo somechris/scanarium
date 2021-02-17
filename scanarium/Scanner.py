@@ -20,7 +20,7 @@ NEXT_RAW_IMAGE_STORE = 0  # Timestamp of when to store the next raw image.
 
 def debug_show_image(title, image, config):
     if config.get('general', 'debug', 'boolean') and \
-            not config.get('general', 'hide_images_in_debug', 'boolean'):
+            not config.get('debug', 'hide_images', 'boolean'):
         cv2.imshow(title, image)
         locale.resetlocale()
 

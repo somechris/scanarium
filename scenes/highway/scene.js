@@ -134,7 +134,11 @@ class Vehicle extends Phaser.GameObjects.Container {
         const cy = (spec.y1 + spec.y2) / 2 / spec.h * full_height;
         const r = x2 - cx + 1;
 
-        var frameOriginal = full_texture.add(name, full_texture_source_index, x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+        var frameOriginal = full_texture.add(
+            name, full_texture_source_index,
+            x1, y1,
+            Math.min(x2, full_width) - x1 + 1, Math.min(y2, full_height) - y1 + 1);
+
         var tire = game.make.renderTexture({
           width: x2 - x1 + 1,
           height: y2 - y1 + 1,

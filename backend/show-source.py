@@ -3,6 +3,7 @@
 import logging
 import os
 import sys
+import re
 import time
 
 import cv2
@@ -96,6 +97,8 @@ def show_source(scanarium, mark, store_final):
     camera = None
     original_image = None
     title = 'Source' + (' with detected features' if mark else '')
+    hide_image_key = re.sub('[^0-9a-z_]+', '_', 'hide_image_' + title.lower())
+    show_image = not scanarium.get_config('debug', hide_image_key, 'boolean')
     exception_message = None
     last_exception_message = None
     try:
@@ -133,7 +136,8 @@ def show_source(scanarium, mark, store_final):
                 else:
                     last_exception_message = None
 
-            cv2.imshow(title, image)
+            if show_image:
+                cv2.imshow(title, image)
             cv2.waitKey(25)
     finally:
         if store_final and original_image is not None:

@@ -19,6 +19,45 @@ debug = False
 hide_images = False
 
 
+# Whether to hide source image with marked features during debugging
+hide_image_source_with_detected_features = False
+
+
+# Whether to hide source image without marked features during debugging
+hide_image_source = False
+
+
+# Whether to hide the raw image during debugging
+hide_image_raw_image = False
+
+
+# Whether to hide the undistorted image during debugging
+hide_image_undistorted_image = False
+
+
+# Whether to hide the scaled image during debugging
+hide_image_scaled_image = False
+
+
+# Whether to hide the image used for feature detection during debugging
+hide_image_prepared_for_detection = False
+
+
+# Whether to hide the image with found contours during debugging
+hide_image_contours = False
+
+
+# Whether to hide the final image during debugging
+hide_image_final = False
+
+
+# Whether to hide the cut out image with 0.6 blendend stencil during debugging
+hide_image_masked_0_6 = False
+
+
+# Whether to hide the cut out image with 0.01 blendend stencil during debugging
+hide_image_masked_0_01 = False
+
 
 #-------------------------------------------------------------------------------
 # Configuration for where to find which binary

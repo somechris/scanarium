@@ -128,33 +128,42 @@ class Vehicle extends Phaser.GameObjects.Container {
 
         const x1 = (spec.x1 - spec.clearance) / spec.w * full_width;
         const y1 = (spec.y1 - spec.clearance) / spec.h * full_height;
-        const x2 = (spec.x2 + spec.clearance) / spec.w * full_width;
-        const y2 = (spec.y2 + spec.clearance) / spec.h * full_height;
-        const cx = (spec.x1 + spec.x2) / 2 / spec.w * full_width;
-        const cy = (spec.y1 + spec.y2) / 2 / spec.h * full_height;
-        const r = x2 - cx + 1;
+        const x2 = (spec.x2 + 1 + spec.clearance) / spec.w * full_width;
+        const y2 = (spec.y2 + 1 + spec.clearance) / spec.h * full_height;
+
+        // We want the tire box coordinates to be integers to avoid the
+        // environment rounding the wrong way and making the tires uncentered.
+        // So we first determine the tire center in X direction and choose r so
+        // the X bounds become integers. And choose the center in Y direction
+        // accordingly.
+        const cx = Math.round((spec.x1 + spec.x2) / 2 / spec.w * full_width * 2) / 2;
+        const r = cx - Math.floor(x1);
+        const cy = Math.floor((spec.y1 + spec.y2) / 2 / spec.h * full_height - r) + r;
 
         var frameOriginal = full_texture.add(
             name, full_texture_source_index,
-            x1, y1,
-            Math.min(x2, full_width) - x1 + 1, Math.min(y2, full_height) - y1 + 1);
+            cx - r, cy - r,
+            // Bounding width/height by full dimensions to avoid selecting
+            // rows/columns outside of the texture, as they duplicate the last
+            // row/column and lead to blocky tires.
+            Math.min(2 * r, full_width - (cx - r)), Math.min(2 * r, full_height - (cy - r)));
 
         var tire = game.make.renderTexture({
-          width: x2 - x1 + 1,
-          height: y2 - y1 + 1,
+          width: 2 * r,
+          height: 2 * r,
         }, false);
 
         tire.drawFrame(image_name, name);
 
         var tireEraser = game.make.renderTexture({
-          width: x2 - x1 + 1,
-          height: y2 - y1 + 1,
+          width: 2 * r,
+          height: 2 * r,
         }, false);
         tireEraser.fill(0xffffff, 1);
 
         var tireEraserEraser = game.make.graphics();
         tireEraserEraser.fillStyle(0xffffff, 1);
-        tireEraserEraser.fillCircle(cx - x1, cy - y1, r);
+        tireEraserEraser.fillCircle(r, r, r);
         tireEraser.erase(tireEraserEraser);
 
         tire.erase(tireEraser);

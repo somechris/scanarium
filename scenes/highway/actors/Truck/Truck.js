@@ -4,9 +4,9 @@ class Truck extends Vehicle {
         const initialMaxSpeed = 750;
         const width = 1000;
         const tires = [
-          {x1: 42, x2: 94, y1: 183, y2: 235, w: 470, h: 236, clearance: 2},
-          {x1: 290, x2: 342, y1: 183, y2: 235, w: 470, h: 236, clearance: 2},
-          {x1: 357, x2: 409, y1: 183, y2: 235, w: 470, h: 236, clearance: 2},
+          {x1: 42, x2: 94, y1: 182, y2: 233, w: 474, h: 234, clearance: 2},
+          {x1: 291, x2: 343, y1: 182, y2: 233, w: 474, h: 234, clearance: 2},
+          {x1: 358, x2: 410, y1: 182, y2: 233, w: 474, h: 234, clearance: 2},
         ];
         const angularShake = 0.2;
         const yShake = 1.5;

@@ -4,8 +4,8 @@ class SportsCar extends Vehicle {
         const initialMaxSpeed = 1300;
         const width = 650;
         const tires = [
-          {x1: 170, x2: 318, y1: 137, y2: 285, w: 1000, h: 286, clearance: 1},
-          {x1: 767, x2: 915, y1: 137, y2: 285, w: 1000, h: 286, clearance: 1},
+          {x1: 82, x2: 150, y1: 66, y2: 133, w: 473, h: 134, clearance: 2},
+          {x1: 366, x2: 433, y1: 66, y2: 133, w: 473, h: 134, clearance: 2},
         ];
         const angularShake = 0.05;
         const yShake = 0.5;

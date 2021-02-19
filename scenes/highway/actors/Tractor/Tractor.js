@@ -4,8 +4,8 @@ class Tractor extends Vehicle {
         const initialMaxSpeed = 350;
         const width = 550;
         const tires = [
-          {x1: 1, x2: 263, y1: 526, y2: 789, w: 1000, h: 791, clearance: 1},
-          {x1: 541, x2: 998, y1: 332, y2: 789, w: 1000, h: 791, clearance: 1},
+          {x1: 0, x2: 79, y1: 157, y2: 232, w: 301, h: 233, clearance: 2},
+          {x1: 164, x2: 300, y1: 99, y2: 232, w: 301, h: 233, clearance: 2},
         ];
         const angularShake = 0.2;
         const yShake = 1.5;

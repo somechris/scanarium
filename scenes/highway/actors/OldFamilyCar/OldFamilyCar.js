@@ -4,8 +4,8 @@ class OldFamilyCar extends Vehicle {
         const initialMaxSpeed = 600;
         const width = 500;
         const tires = [
-          {x1: 46, x2: 104, y1: 92, y2: 150, w: 398, h: 151, clearance: 1},
-          {x1: 285, x2: 343, y1: 92, y2: 150, w: 398, h: 151, clearance: 1},
+          {x1: 46, x2: 104, y1: 92, y2: 150, w: 398, h: 151},
+          {x1: 285, x2: 343, y1: 92, y2: 150, w: 398, h: 151},
         ];
         const angularShake = 0.2;
         const yShake = 1.5;

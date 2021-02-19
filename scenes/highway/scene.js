@@ -58,6 +58,9 @@ class Vehicle extends Phaser.GameObjects.Container {
         var image_name = actor + '-' + flavor;
         this.createTextures(image_name, tires);
         var body = game.add.image(0, 0, image_name + '-body');
+        const body_unscaled_width = body.width;
+        const body_unscaled_height = body.height;
+
         var width = widthRef * lane.scale * refToScreen;
         var base_scale = width / body.width;
         var height = body.height * base_scale;
@@ -76,8 +79,9 @@ class Vehicle extends Phaser.GameObjects.Container {
 
         var that = this;
         tires.forEach((tire, i) => {
-          const cx = (tire.x1 + tire.x2) / 2 / tire.w * width * (lane.leftToRight ? -1 : 1);
-          const cy = (tire.y1 + tire.y2) / 2 / tire.h * height - body.height;
+          const coords = this.getTireTextureCoordinates(tire, body_unscaled_width, body_unscaled_height);
+          const cx = coords.cx * base_scale * (lane.leftToRight ? -1 : 1);
+          const cy = coords.cy * base_scale - body.height;
           var tire = new Tire(cx, cy, image_name + '-tire-' + i);
           tire.setFlipX(lane.leftToRight);
           tire.r = tire.width * base_scale / 2;
@@ -109,7 +113,38 @@ class Vehicle extends Phaser.GameObjects.Container {
       }
     }
 
+    getTireTextureCoordinates(spec, width, height) {
+        const x1 = (spec.x1) / spec.w * width;
+        const y1 = (spec.y1) / spec.h * height;
+        const x2 = (spec.x2 + 1) / spec.w * width;
+        const y2 = (spec.y2 + 1) / spec.h * height;
+
+        // We want the tire box coordinates to be integers to avoid the
+        // environment rounding the wrong way and making the tires uncentered.
+        // So we first determine the tire center in one direction and choose r
+        // so the bounds become integers. Only then we choose the center in
+        // other direction accordingly.
+        //
+        // In the typical setting, tires on a vehicle have the same Y specs,
+        // but different X coordinates. Would we start with center computation
+        // in X direction, then it may be that (due to rounding) the r of two
+        // wheels with the same Y but different X specs differ by 0.5. This
+        // difference would make one wheel roll slightly slower which makes
+        // them look rolling out of sync on screen. So we start by computing
+        // the center in Y direction. This way, it's guaranteed that tires
+        // with the same Y specs have the same r and hence roll in sync.
+        const cy = Math.round(y1 + y2) / 2;
+        const r = cy - Math.ceil(y1);
+        const cx = Math.floor((x1 + x2) / 2 - r) + r;
+        return {
+          cx: cx,
+          cy: cy,
+          r: r,
+        };
+    }
+
     createTexturesForce(image_name, tires) {
+      const that = this;
       const full_texture = game.textures.get(image_name);
       const full_texture_source_index = 0;
       const full_source = full_texture.source[full_texture_source_index];
@@ -126,19 +161,10 @@ class Vehicle extends Phaser.GameObjects.Container {
       tires.forEach((spec, i) => {
         const name = 'tire-' + i;
 
-        const x1 = (spec.x1 - spec.clearance) / spec.w * full_width;
-        const y1 = (spec.y1 - spec.clearance) / spec.h * full_height;
-        const x2 = (spec.x2 + 1 + spec.clearance) / spec.w * full_width;
-        const y2 = (spec.y2 + 1 + spec.clearance) / spec.h * full_height;
-
-        // We want the tire box coordinates to be integers to avoid the
-        // environment rounding the wrong way and making the tires uncentered.
-        // So we first determine the tire center in X direction and choose r so
-        // the X bounds become integers. And choose the center in Y direction
-        // accordingly.
-        const cx = Math.round((spec.x1 + spec.x2) / 2 / spec.w * full_width * 2) / 2;
-        const r = cx - Math.floor(x1);
-        const cy = Math.floor((spec.y1 + spec.y2) / 2 / spec.h * full_height - r) + r;
+        const tireCoords = that.getTireTextureCoordinates(spec, full_width, full_height);
+        const cx = tireCoords.cx;
+        const cy = tireCoords.cy;
+        const r = tireCoords.r;
 
         var frameOriginal = full_texture.add(
             name, full_texture_source_index,
@@ -171,7 +197,9 @@ class Vehicle extends Phaser.GameObjects.Container {
 
         const bodyEraser = game.make.graphics();
         bodyEraser.fillStyle(0xffffff, 1);
-        bodyEraser.fillCircle(cx, cy, r);
+        // We shave off 2 extra pixels to avoid that tire
+        // stickouts/misalignments stay visible.
+        bodyEraser.fillCircle(cx, cy, r + 2);
         body.erase(bodyEraser);
       })
 

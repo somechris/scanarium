@@ -4,8 +4,8 @@ class QuadBike extends Vehicle {
         const initialMaxSpeed = 900;
         const width = 350;
         const tires = [
-          {x1: 2, x2: 62, y1: 129, y2: 189, w: 232, h: 190, clearance: 2},
-          {x1: 171, x2: 231, y1: 129, y2: 189, w: 232, h: 190, clearance: 2},
+          {x1: 2, x2: 62, y1: 129, y2: 189, w: 232, h: 190},
+          {x1: 171, x2: 231, y1: 129, y2: 189, w: 232, h: 190},
         ];
         const angularShake = 1;
         const yShake = 1;

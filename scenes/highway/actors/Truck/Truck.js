@@ -8,9 +8,12 @@ class Truck extends Vehicle {
           {x1: 291, x2: 343, y1: 182, y2: 233, w: 474, h: 234},
           {x1: 358, x2: 410, y1: 182, y2: 233, w: 474, h: 234},
         ];
+        const undercarriage = [
+          {points: [[24, 206], [420, 206], [420, 164], [24, 164]], w: 474, h: 234},
+          ];
         const angularShake = 0.2;
         const yShake = 1.5;
-        super('Truck', flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, angularShake, yShake);
+        super('Truck', flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
     }
 }
 

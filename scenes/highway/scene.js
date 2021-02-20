@@ -48,7 +48,7 @@ class Tire extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Vehicle extends Phaser.GameObjects.Container {
-    constructor(actor, flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, angularShake, yShake) {
+    constructor(actor, flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, undercarriage, angularShake, yShake) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;
 
@@ -56,7 +56,7 @@ class Vehicle extends Phaser.GameObjects.Container {
 
         this.setDepth(lane.scale*100);
         var image_name = actor + '-' + flavor;
-        this.createTextures(image_name, tires);
+        this.createTextures(image_name, tires, undercarriage);
         var body = game.add.image(0, 0, image_name + '-body');
         const body_unscaled_width = body.width;
         const body_unscaled_height = body.height;
@@ -107,9 +107,9 @@ class Vehicle extends Phaser.GameObjects.Container {
       this.y = this.yRef / refHeight * scanariumConfig.height;
     }
 
-    createTextures(image_name, tires) {
+    createTextures(image_name, tires, undercarriage) {
       if (!game.textures.exists(image_name + '-body')) {
-        this.createTexturesForce(image_name, tires);
+        this.createTexturesForce(image_name, tires, undercarriage);
       }
     }
 
@@ -143,7 +143,7 @@ class Vehicle extends Phaser.GameObjects.Container {
         };
     }
 
-    createTexturesForce(image_name, tires) {
+    createTexturesForce(image_name, tires, undercarriage) {
       const that = this;
       const full_texture = game.textures.get(image_name);
       const full_texture_source_index = 0;
@@ -151,12 +151,12 @@ class Vehicle extends Phaser.GameObjects.Container {
       const full_width = full_source.width;
       const full_height = full_source.height;
 
-      var body = game.make.renderTexture({
+      var platform = game.make.renderTexture({
         width: full_width,
         height: full_height,
       }, false);
 
-      body.draw(image_name);
+      platform.draw(image_name);
 
       tires.forEach((spec, i) => {
         const name = 'tire-' + i;
@@ -195,14 +195,35 @@ class Vehicle extends Phaser.GameObjects.Container {
         tire.erase(tireEraser);
         tire.saveTexture(image_name + '-' + name);
 
-        const bodyEraser = game.make.graphics();
-        bodyEraser.fillStyle(0xffffff, 1);
+        const platformEraser = game.make.graphics();
+        platformEraser.fillStyle(0xffffff, 1);
         // We shave off 2 extra pixels to avoid that tire
         // stickouts/misalignments stay visible.
-        bodyEraser.fillCircle(cx, cy, r + 2);
-        body.erase(bodyEraser);
+        platformEraser.fillCircle(cx, cy, r + 2);
+        platform.erase(platformEraser);
       })
 
+      var body = game.make.renderTexture({
+        width: full_width,
+        height: full_height,
+      }, false);
+      undercarriage.forEach((part) => {
+        var graph = game.make.graphics();
+        graph.fillStyle((typeof (part.color) !== 'undefined') ? part.color : 0x606060, 1);
+
+        const points = part.points;
+        const factorX = full_width / part.w;
+        const factorY = full_height / part.h;
+        graph.moveTo(points[points.length-1][0] * factorX, points[points.length-1][1] * factorY);
+        points.forEach((point) => {
+          graph.lineTo(point[0] * factorX, point[1] * factorY);
+        });
+        graph.closePath();
+        graph.fillPath();
+
+        body.draw(graph);
+      });
+      body.draw(platform);
       body.saveTexture(image_name + '-body');
     }
 

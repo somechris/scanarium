@@ -7,9 +7,12 @@ class QuadBike extends Vehicle {
           {x1: 2, x2: 62, y1: 129, y2: 189, w: 232, h: 190},
           {x1: 171, x2: 231, y1: 129, y2: 189, w: 232, h: 190},
         ];
+        const undercarriage = [
+          {points: [[26, 115], [26, 167], [203, 167], [215, 157], [200, 110], [177, 115]], w: 232, h: 192},
+          ];
         const angularShake = 1;
         const yShake = 1;
-        super('QuadBike', flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, angularShake, yShake);
+        super('QuadBike', flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
     }
 }
 

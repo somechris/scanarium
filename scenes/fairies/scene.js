@@ -173,7 +173,7 @@ class Creature extends Phaser.GameObjects.Container {
     const points = bodySpec.points;
     bodyEraser.moveTo(points[points.length-1][0] * factorX, points[points.length-1][1] * factorY);
     points.forEach((point) => {
-      bodyEraser.lineTo(point[0], point[1]);
+      bodyEraser.lineTo(point[0] * factorX, point[1] * factorY);
     });
     bodyEraser.closePath();
     bodyEraser.fillPath();

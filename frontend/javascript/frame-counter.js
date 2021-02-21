@@ -21,7 +21,10 @@ var FrameCounter = {
     toggleVisibility: function() {
         this.showFrameCount = !(this.showFrameCount);
         if (this.showFrameCount) {
-            this.frameCountSprite = game.add.text(0, 0, '');
+            const style =  {
+              fontSize: Math.ceil(16 * window.devicePixelRatio).toString() + 'px',
+            };
+            this.frameCountSprite = game.add.text(0, 0, '', style);
             this.relayout();
             this.formatCount('?');
             bringToFront(this.frameCountSprite);

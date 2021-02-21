@@ -16,7 +16,10 @@ var DeveloperInformation = {
             this.sprite.destroy();
             this.sprite = null;
         } else {
-            this.sprite = game.add.text(0, 0, 'Developer Information');
+            const style =  {
+              fontSize: Math.ceil(16 * window.devicePixelRatio).toString() + 'px',
+            };
+            this.sprite = game.add.text(0, 0, 'Developer Information', style);
             this.sprite.setOrigin(0, 1);
             bringToFront(this.sprite);
             this.relayout();

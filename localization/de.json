@@ -91,7 +91,8 @@
       "UnicornBalloon": "Einhorn-Luftballon",
       "WoodFairy": "Waldfee",
       "WoodFairyDetailed": "Waldfee mit Details",
-      "ZaggedButterfly": "Gezackter Schmetterling"
+      "ZaggedButterfly": "Gezackter Schmetterling",
+      "ZaggedButterflyDetailed": "Gezackter Schmetterling mit Details"
     },
     "cgi_name": {
       "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",

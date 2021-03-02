@@ -632,7 +632,7 @@ def get_raw_image(config, camera=None):
                                  'Failed to retrieve image from camera')
 
     elif camera_type == 'STATIC-IMAGE-CAMERA':
-        file_path = config.get('scan', 'source')
+        file_path = config.get('scan', 'source')[6:]
         image = cv2.imread(file_path)
     else:
         raise ScanariumError('SE_CAM_TYPE_UNKNOWN',

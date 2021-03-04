@@ -633,7 +633,12 @@ def get_raw_image(config, camera=None):
 
     elif camera_type == 'STATIC-IMAGE-CAMERA':
         file_path = config.get('scan', 'source')[6:]
-        image = cv2.imread(file_path)
+        if os.path.isfile(file_path):
+            image = cv2.imread(file_path)
+        else:
+            raise ScanariumError('SE_SCAN_STATIC_SOURCE_MISSING',
+                                 'The static source "{file}" does not exist',
+                                 {'file': file_path})
     else:
         raise ScanariumError('SE_CAM_TYPE_UNKNOWN',
                              'Unknown camera type "{camera_type}"',

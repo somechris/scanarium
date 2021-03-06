@@ -192,7 +192,7 @@ max_brightness =
 # purpose starting point.
 #
 # 0 disables blurring.
-canny_blur_size = 30
+canny_blur_size = 3
 
 
 # First threshold for Canny Edge Detector

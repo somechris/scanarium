@@ -330,6 +330,27 @@ def orient_image(image):
     return image
 
 
+def align_aspect_ratio(scanarium, image, target):
+    target_ar = target.shape[1] / target.shape[0]
+    image_ar = image.shape[1] / image.shape[0]
+
+    # We only resize the image, if its aspect ration is too far off. So we
+    # tolerate smaller mismatches to avoid resizes just because of a few
+    # pixels, as each resize makes the image more mushy.
+    if abs(target_ar - image_ar) > 0.05:
+        if target_ar > image_ar:
+            new_width = round(image.shape[0] * target_ar)
+            new_height = image.shape[0]
+        else:
+            new_width = image.shape[1]
+            new_height = round(image.shape[1] / target_ar)
+        image = cv2.resize(image, (new_width, new_height), cv2.INTER_AREA)
+
+    scanarium.debug_show_image('Aspect ratio fixed image', image)
+
+    return image
+
+
 def mask(scanarium, image, scene, actor, visualized_alpha=None):
     masked_file_path = os.path.join(scanarium.get_scenes_dir_abs(), scene,
                                     'actors', actor, '%s-mask.png' % actor)
@@ -339,6 +360,9 @@ def mask(scanarium, image, scene, actor, visualized_alpha=None):
                              {'file_name': masked_file_path})
 
     mask = cv2.imread(masked_file_path, 0)
+
+    image = align_aspect_ratio(scanarium, image, mask)
+
     mask = cv2.resize(mask, (image.shape[1], image.shape[0]), cv2.INTER_AREA)
 
     channels = cv2.split(image)

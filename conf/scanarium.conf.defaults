@@ -55,6 +55,10 @@ hide_image_contours = False
 hide_image_rectified_image = False
 
 
+# Whether to hide the aspect ration fixed image during debugging
+hide_image_aspect_ratio_fixed_image = False
+
+
 # Whether to hide the final image during debugging
 hide_image_final = False
 

@@ -20,6 +20,8 @@ NEXT_RAW_IMAGE_STORE = 0  # Timestamp of when to store the next raw image.
 
 def debug_show_image(title, image, config):
     image_hide_key = re.sub('[^0-9a-z_]+', '_', 'hide_image_' + title.lower())
+    if image_hide_key[-1] == '_':
+        image_hide_key = image_hide_key[:-1]
     if config.get('general', 'debug', 'boolean') and \
             not config.get('debug', 'hide_images', 'boolean') and \
             not config.get('debug', image_hide_key, 'boolean'):

@@ -141,7 +141,7 @@ def distance(pointA, pointB):
     return np.linalg.norm([pointA - pointB])
 
 
-def rectify_by_rect_points(image, points):
+def rectify_by_rect_points(scanarium, image, points):
     # The following heuristics of classifying the 4 points is based on the
     # assumption that the rectangle is not distorted too much. So if the
     # camera angle is skew, it will fail.
@@ -161,7 +161,9 @@ def rectify_by_rect_points(image, points):
     dest = np.array([[0, 0], [d_w, 0], [d_w, d_h], [0, d_h]], dtype="float32")
 
     M = cv2.getPerspectiveTransform(source, dest)
-    return cv2.warpPerspective(image, M, (d_w, d_h))
+    image = cv2.warpPerspective(image, M, (d_w, d_h))
+    scanarium.debug_show_image('Rectified image', image)
+    return image
 
 
 def get_brightness_factor(scanarium):
@@ -264,7 +266,7 @@ def rectify(scanarium, image, decreasingArea=True, required_points=[],
         ret = rectify_points
     else:
         # Now rectifying using the original (!) image.
-        ret = rectify_by_rect_points(image, rectify_points)
+        ret = rectify_by_rect_points(scanarium, image, rectify_points)
     return ret
 
 

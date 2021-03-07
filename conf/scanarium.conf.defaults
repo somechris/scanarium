@@ -51,6 +51,10 @@ hide_image_prepared_for_detection = False
 hide_image_contours = False
 
 
+# Whether to hide the rectified image during debugging
+hide_image_rectified_image = False
+
+
 # Whether to hide the final image during debugging
 hide_image_final = False
 

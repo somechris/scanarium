@@ -43,6 +43,10 @@ hide_image_scaled_image_preparation = False
 hide_image_scaled_image_raw = False
 
 
+# Whether to hide the final scaled image during debugging
+hide_image_scaled_image_final = False
+
+
 # Whether to hide the image used for feature detection during debugging
 hide_image_prepared_for_detection = False
 
@@ -325,6 +329,42 @@ max_raw_width_trip =
 #
 # If empty, defaults to `max_raw_height`
 max_raw_height_trip =
+
+
+# Maximum width of final image
+#
+# Proportionally rescale the final image to at most this width, if it is wider than
+# `max_final_width_trip`.
+#
+# If empty, the final image width does not trigger rescaling
+max_final_width =
+
+
+# Maximum height of final image
+#
+# Proportionally rescale the final image to at most this height, if it is higher
+# than `max_final_height_trip`.
+#
+# If empty, the final image does not trigger rescaling
+max_final_height =
+
+
+# Trip point of the final image width to trigger rescaling
+#
+# If the final image is wider than this setting, the image gets proportionally
+# rescaled `max_final_width`.
+#
+# If empty, defaults to `max_final_width`
+max_final_width_trip =
+
+
+# Trip point of the final image height to trigger rescaling
+#
+# If the final image is heigher than this setting, the image gets proportionally
+# rescaled `max_final_height`.
+#
+# If empty, defaults to `max_final_height`
+max_final_height_trip =
 
 
 # Delay for frame grabbing from cameras

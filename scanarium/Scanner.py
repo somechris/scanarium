@@ -56,6 +56,19 @@ def scale_image(scanarium, image, description, scaled_height=None,
     return (scaled_image, scale_factor)
 
 
+def scale_image_from_config(scanarium, image, kind):
+    def get_config(key):
+        return scanarium.get_config('scan', f'max_{kind}_{key}',
+                                    kind='int', allow_empty=True)
+
+    return scale_image(scanarium, image, kind,
+                       scaled_height=get_config('height'),
+                       scaled_width=get_config('width'),
+                       trip_height=get_config('height_trip'),
+                       trip_width=get_config('width_trip'),
+                       )
+
+
 def add_text(image, text, x=2, y=5, color=None):
     font = cv2.FONT_HERSHEY_SIMPLEX
     fontScale = image.shape[0] / 1000
@@ -452,6 +465,7 @@ def actor_image_pipeline(scanarium, image, qr_rect, scene, actor,
     # Finally the image is rectified, landscape, and the QR code is in the
     # lower left-hand corner, and white-balance has been run.
 
+    (image, _) = scale_image_from_config(scanarium, image, 'final')
     scanarium.debug_show_image('Final', image)
     return image
 
@@ -734,17 +748,8 @@ class Scanner(object):
         return close_camera(self._config, camera)
 
     def get_image(self, scanarium, camera=None):
-        def get_config(key):
-            return scanarium.get_config('scan', key, kind='int',
-                                        allow_empty=True)
-
         image = get_raw_image(self._config, camera)
-        (image, _) = scale_image(scanarium, image, 'raw',
-                                 scaled_height=get_config('max_raw_height'),
-                                 scaled_width=get_config('max_raw_width'),
-                                 trip_height=get_config('max_raw_height_trip'),
-                                 trip_width=get_config('max_raw_width_trip'),
-                                 )
+        (image, _) = scale_image_from_config(scanarium, image, 'raw')
         return undistort_image(image, self._config)
 
     def get_brightness_factor(self, scanarium):

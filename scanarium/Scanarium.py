@@ -90,7 +90,7 @@ class Scanarium(object):
         return self._scanner.close_camera(camera)
 
     def get_image(self, camera=None):
-        return self._scanner.get_image(camera)
+        return self._scanner.get_image(self, camera)
 
     def get_brightness_factor(self):
         # We cache the image to avoid having to costly reload it for each

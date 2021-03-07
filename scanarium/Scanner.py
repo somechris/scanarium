@@ -29,18 +29,29 @@ def debug_show_image(title, image, config):
         locale.resetlocale()
 
 
-def scale_image(scanarium, image):
-    scaled_height = 1000
-    if image.shape[0] > scaled_height * 1.3:
-        scale_factor = scaled_height / image.shape[0]
+def scale_image(scanarium, image, description, scaled_height=None,
+                scaled_width=None, trip_height=None, trip_width=None):
+    scaled_image = image
+
+    def get_scale_factor(shape, trip, scaled):
+        factor = 1
+        if trip is None:
+            trip = scaled
+        if trip is not None and shape > trip and scaled is not None:
+            factor = scaled / shape
+        return factor
+
+    height_factor = get_scale_factor(
+        image.shape[0], trip_height, scaled_height)
+    width_factor = get_scale_factor(image.shape[1], trip_width, scaled_width)
+    scale_factor = min(height_factor, width_factor)
+    if scale_factor != 1:
+        scaled_height = int(image.shape[0] * scale_factor)
         scaled_width = int(image.shape[1] * scale_factor)
         scaled_dimension = (scaled_width, scaled_height)
         scaled_image = cv2.resize(image, scaled_dimension, cv2.INTER_AREA)
-    else:
-        scaled_image = image
-        scale_factor = 1
 
-    scanarium.debug_show_image('Scaled image', scaled_image)
+    scanarium.debug_show_image(f'Scaled image ({description})', scaled_image)
 
     return (scaled_image, scale_factor)
 
@@ -207,7 +218,8 @@ def prepare_image(scanarium, image):
     # much detail and would get broken down into more than 4 segments. So we
     # scale too big images down. Note though that the scaled image is only
     # used for edge detection. Rectification happens on the original picture.
-    (prepared_image, scale_factor) = scale_image(scanarium, image)
+    (prepared_image, scale_factor) = scale_image(
+        scanarium, image, 'preparation', scaled_height=1000, trip_height=1300)
 
     prepared_image = cv2.cvtColor(prepared_image, cv2.COLOR_BGR2GRAY)
     prepared_image = correct_image_brightness(scanarium, prepared_image)
@@ -695,9 +707,19 @@ class Scanner(object):
     def close_camera(self, camera):
         return close_camera(self._config, camera)
 
-    def get_image(self, camera=None):
-        raw = get_raw_image(self._config, camera)
-        return undistort_image(raw, self._config)
+    def get_image(self, scanarium, camera=None):
+        def get_config(key):
+            return scanarium.get_config('scan', key, kind='int',
+                                        allow_empty=True)
+
+        image = get_raw_image(self._config, camera)
+        (image, _) = scale_image(scanarium, image, 'raw',
+                                 scaled_height=get_config('max_raw_height'),
+                                 scaled_width=get_config('max_raw_width'),
+                                 trip_height=get_config('max_raw_height_trip'),
+                                 trip_width=get_config('max_raw_width_trip'),
+                                 )
+        return undistort_image(image, self._config)
 
     def get_brightness_factor(self, scanarium):
         return get_brightness_factor(scanarium)

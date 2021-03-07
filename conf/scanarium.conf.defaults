@@ -35,8 +35,12 @@ hide_image_raw_image = False
 hide_image_undistorted_image = False
 
 
-# Whether to hide the scaled image during debugging
-hide_image_scaled_image = False
+# Whether to hide the image scaled for preparation during debugging
+hide_image_scaled_image_preparation = False
+
+
+# Whether to hide the raw scaled image during debugging
+hide_image_scaled_image_raw = False
 
 
 # Whether to hide the image used for feature detection during debugging
@@ -277,6 +281,42 @@ width =
 # height. This is useful to force cameras to a given resolution, if
 # they default to a non-optimal one.
 height =
+
+
+# Maximum width of raw camera source
+#
+# Proportionally rescale raw camera images to at most this width, if
+# the raw camera image is wider than `max_raw_width_trip`.
+#
+# If empty, raw camera image width does not trigger rescaling
+max_raw_width =
+
+
+# Maximum height of raw camera source
+#
+# Proportionally rescale raw camera images to at most this height, if
+# the raw camera image is higher than `max_raw_height_trip`.
+#
+# If empty, raw camera image height does not trigger rescaling
+max_raw_height =
+
+
+# Trip point of raw camera source width to trigger rescaling
+#
+# If the raw camera source image is wider than this setting, the image gets
+# proportionally rescaled `max_raw_width`.
+#
+# If empty, defaults to `max_raw_width`
+max_raw_width_trip =
+
+
+# Trip point of raw camera source height to trigger rescaling
+#
+# If the raw camera source image is heigher than this setting, the image gets
+# proportionally rescaled `max_raw_height`.
+#
+# If empty, defaults to `max_raw_height`
+max_raw_height_trip =
 
 
 # Delay for frame grabbing from cameras

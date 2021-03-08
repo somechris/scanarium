@@ -29,6 +29,9 @@ class Scanarium(object):
                    allow_empty=False):
         return self._config.get(section, key, kind, allow_empty)
 
+    def set_config(self, section, key, value):
+        self._config.set(section, key, value)
+
     def get_scanarium_dir_abs(self):
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

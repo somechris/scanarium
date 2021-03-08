@@ -32,3 +32,6 @@ class Config(object):
         else:
             raise RuntimeError('Unknown config value type "%s"' % (kind))
         return func(section, key)
+
+    def set(self, section, key, value):
+        self._config.set(section, key, value)

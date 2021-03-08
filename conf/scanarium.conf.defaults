@@ -426,6 +426,12 @@ display =
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False
 
+[cgi:scan-data]
+# Whether or not to allow calling the script as cgi through the webserver.
+# This endpoint is use for a proof of concept. It will likely change
+# or go a way. Do not rely on it.
+allow = False
+
 [cgi:show-source]
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False

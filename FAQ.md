@@ -35,7 +35,7 @@ even doing 3D models. But we try to bring it to your living room.
 
 ## Q: Is there some public Scanarium demo instance?
 
-At [https://demo.scanarium.at/](https://demo.scanarium.at/) Scanarium is running
+At [https://demo.scanarium.com/](https://demo.scanarium.com/) Scanarium is running
 live. Uploading files has been disabled to avoid creepy content. But the site is
 good enough to show what you can expect.
 

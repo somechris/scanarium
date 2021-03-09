@@ -12,7 +12,7 @@ to run on old hardware, and can be viewed on any modern browser or mobile phone.
 
 ## Live Demo
 
-At [https://demo.scanarium.at/](https://demo.scanarium.at/) Scanarium is running
+At [https://demo.scanarium.com/](https://demo.scanarium.com/) Scanarium is running
 live. Uploading files has been disabled to avoid creepy content. But the site is
 good enough to show what you can expect.
 

@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 def run_inkscape(scanarium, arguments):
     command = [
         scanarium.get_config('programs', 'inkscape'),
+        '--without-gui',
     ]
     command += arguments
     return scanarium.run(command)

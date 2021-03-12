@@ -15,6 +15,14 @@ del sys.path[0]
 logger = logging.getLogger(__name__)
 
 
+def run_inkscape(scanarium, arguments):
+    command = [
+        scanarium.get_config('programs', 'inkscape'),
+    ]
+    command += arguments
+    return scanarium.run(command)
+
+
 def assert_directory(dir):
     if not os.path.isdir(dir):
         raise ScanariumError('E_NO_DIR', 'Is not a directory "{file_name}"',
@@ -50,8 +58,7 @@ def get_svg_contour_rect_area(scanarium, svg_path):
     tree = ET.parse(svg_path)
     stroke_width = get_svg_contour_rect_stroke_width(tree)
 
-    command = [
-        scanarium.get_config('programs', 'inkscape'),
+    inkscape_args = [
         '--query-all',
         svg_path,
     ]
@@ -60,7 +67,7 @@ def get_svg_contour_rect_area(scanarium, svg_path):
     y = None
     width = None
     height = None
-    element_sizes = scanarium.run(command).split('\n')
+    element_sizes = run_inkscape(scanarium, inkscape_args).split('\n')
     for element_size in element_sizes:
         if x is None or element_size.startswith('contour,'):
             # We're at either the first element (ie.: page), or the contour
@@ -129,8 +136,7 @@ def generate_mask(scanarium, dir, file, force):
 
     if file_needs_update(target, [adapted_source], force):
         contour_area = get_svg_contour_rect_area(scanarium, source)
-        command = [
-            scanarium.get_config('programs', 'inkscape'),
+        inkscape_args = [
             '--export-id=Mask',
             '--export-id-only',
             f'--export-area={contour_area}',
@@ -138,7 +144,7 @@ def generate_mask(scanarium, dir, file, force):
             '--export-png=%s' % (target),
             adapted_source,
         ]
-        scanarium.run(command)
+        run_inkscape(scanarium, inkscape_args)
 
 
 def get_thumbnail_name(dir, file):
@@ -164,14 +170,13 @@ def generate_pdf(scanarium, dir, file, force):
     source = os.path.join(dir, file)
     target = os.path.join(dir, file.rsplit('.', 1)[0] + '.pdf')
     if file_needs_update(target, [source], force):
-        command = [
-            scanarium.get_config('programs', 'inkscape'),
+        inkscape_args = [
             '--export-area-page',
             '--export-pdf=%s' % (target),
             source,
         ]
 
-        scanarium.run(command)
+        run_inkscape(scanarium, inkscape_args)
 
 
 def register_svg_namespaces():

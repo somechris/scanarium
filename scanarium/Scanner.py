@@ -29,6 +29,10 @@ def debug_show_image(title, image, config):
         locale.resetlocale()
 
 
+def get_cv_major_version():
+    return int(cv2.__version__.split('.', 1)[0])
+
+
 def scale_image(scanarium, image, description, scaled_height=None,
                 scaled_width=None, trip_height=None, trip_width=None):
     scaled_image = image
@@ -117,8 +121,16 @@ def find_rect_points(scanarium, image, decreasingArea=True,
     # might not be most efficient, RETR_TREE might allow to optimize. But
     # RETR_LIST is simpler to use and quick enough for now.
     # todo: See if RETR_TREE performs better here.
-    contours, hierarchy = cv2.findContours(edges_image, cv2.RETR_LIST,
-                                           cv2.CHAIN_APPROX_NONE)
+    contours_result = cv2.findContours(edges_image, cv2.RETR_LIST,
+                                       cv2.CHAIN_APPROX_NONE)
+
+    if get_cv_major_version() >= 4:
+        contours, hierarchy = contours_result
+    else:
+        # OpenCV <4 used to pass back the image as first element in the tuple.
+        # So we get rid of that to transparently work on OpenCV 3.x
+        _, contours, hierarchy = contours_result
+
     debug_show_contours(scanarium, image, contours, hierarchy)
 
     good_approx = None

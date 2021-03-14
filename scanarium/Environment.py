@@ -1,4 +1,5 @@
 import argparse
+import base64
 import cgi
 import locale
 import logging
@@ -129,6 +130,10 @@ class Environment(object):
         arguments = ['']
         for source, target in fields.items():
             value = parameters.getfirst(source, '')
+
+            if isinstance(value, bytes):
+                value = base64.standard_b64encode(value).decode()
+
             if len(arguments) <= target:
                 arguments += [''] * (target - len(arguments) + 1)
             arguments[target] = value

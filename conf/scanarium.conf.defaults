@@ -450,9 +450,11 @@ allow = False
 
 [cgi:dump-dynamic-config]
 # Whether or not to allow calling the script as cgi through the webserver.
-# This script is necessary for the frontend to work properly. So we enable it
-# by default.
-allow = True
+# If you cannot control the webserver caching headers to disable caching of
+# dynamic content, this script can help you to bypass caching.
+# To switch clients to dump-dynamic-config, see `dynamicConfigMethod` in
+# `frontend/javascript/config.js`
+allow = False
 
 
 

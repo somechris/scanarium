@@ -10,7 +10,6 @@ function loadJson(url, callback, method, param) {
 
     method = (typeof method !== 'undefined') ? method : 'GET';
     xhr.open(method, url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function() {
         if (this.readyState === XMLHttpRequest.DONE) {
             if (this.status == 200) {
@@ -21,7 +20,6 @@ function loadJson(url, callback, method, param) {
         }
     }
 
-    param = (typeof param !== 'undefined') ? JSON.stringify(param) : param;
     xhr.send(param);
 }
 
@@ -37,7 +35,8 @@ function loadDynamicConfig(url, callback) {
 
     if (dynamicConfigMethod == 'POST') {
       wrappedCallback = unpack;
-      data = {file: url};
+      data = new FormData();
+      data.append('file', url);
       url = 'cgi-bin/dump-dynamic-config';
     }
 

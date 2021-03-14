@@ -1,5 +1,5 @@
 import argparse
-import json
+import cgi
 import locale
 import logging
 import os
@@ -123,25 +123,12 @@ class Environment(object):
             print(self._dumper.dump_json_string(result.payload))
         self.cleanup(exit_code=0)
 
-    def _extract_cgi_parameters(self):
-        parameters = {}
-        try:
-            parameters = {}
-            length = int(os.environ.get('CONTENT_LENGTH', 0))
-            if length > 0:
-                parameters_string = sys.stdin.read(length)
-                parameters = json.loads(parameters_string)
-        except Exception:
-            logging.getLogger().exception('Parsing CGI arguments')
-
-        return parameters
-
     def _inject_cgi_arguments(self, fields):
-        parameters = self._extract_cgi_parameters()
+        parameters = cgi.FieldStorage()
 
         arguments = ['']
         for source, target in fields.items():
-            value = parameters.get(source, '')
+            value = parameters.getfirst(source, '')
             if len(arguments) <= target:
                 arguments += [''] * (target - len(arguments) + 1)
             arguments[target] = value
@@ -151,7 +138,10 @@ class Environment(object):
     def handle_arguments(self, scanarium, description, register_func=None,
                          whitelisted_cgi_fields={}):
         if IS_CGI:
-            self._inject_cgi_arguments(whitelisted_cgi_fields)
+            try:
+                self._inject_cgi_arguments(whitelisted_cgi_fields)
+            except Exception:
+                logging.getLogger().exception('Parsing CGI arguments')
 
         parser = argparse.ArgumentParser(
             description=description,

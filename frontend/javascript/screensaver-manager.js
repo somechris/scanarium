@@ -64,3 +64,31 @@ var ScreensaverManager = {
     this.backends.push({weight: weight, backend: backend});
   },
 };
+
+var WakeLockScreensaverBackend = {
+  wakeLock: null,
+
+  isUsable: function() {
+    return 'wakeLock' in navigator && 'request' in navigator.wakeLock;
+  },
+
+  init: function() {
+    this.allowSleep();
+  },
+
+  allowSleep: function() {
+    if (this.wakeLock != null) {
+      this.wakeLock.release();
+      this.wakeLock = null;
+    }
+  },
+
+  keepWoken: function() {
+    try {
+      navigator.wakeLock.request();
+    } catch (err) {
+      console.error(`wakeLock request failed. ${err.name}, ${err.message}`);
+    }
+  },
+}
+ScreensaverManager.register(10, WakeLockScreensaverBackend);

@@ -64,6 +64,7 @@
     "{cgi_name} ok": "{cgi_name} ok",
     "{command_name} command failed": "Kommando {command_name} schlug fehl",
     "{command_name} command ok": "Kommando {command_name} ok",
+    "{parameter_name} ({parameter_variant_name})": "{parameter_name} mit {parameter_variant_name}",
     "↓↓↓ Insert coloring pages below ↓↓↓": "↓↓↓ Ausgemalte Bilder hier unten ins Fach einlegen ↓↓↓"
   },
   "parameters": {
@@ -122,6 +123,9 @@
       "poweroff": "Herunterfahren",
       "toggleFps": "Bildfrequenz ein/aus",
       "toggleDevInfo": "Entwicklerinformationen ein/aus"
+    },
+    "parameter_variant_name": {
+      "Detailed": "Details"
     },
     "scene_name": {
       "balloons": "Luftballons",

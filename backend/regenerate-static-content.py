@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import copy
 import os
 import locale
 import logging
@@ -13,6 +14,10 @@ from scanarium import Scanarium, ScanariumError
 del sys.path[0]
 
 logger = logging.getLogger(__name__)
+
+SVG_VARIANTS = [
+    'Detailed',
+]
 
 
 def run_inkscape(scanarium, arguments):
@@ -246,8 +251,8 @@ def expand_qr_pixel_to_qr_code(element, data):
         del(element.attrib[attrib])
 
 
-def filter_svg_tree(tree, command, parameter, localizer, command_label,
-                    parameter_label):
+def filter_svg_tree(tree, command, parameter, variant, localizer,
+                    command_label, parameter_label):
     def localize_parameter_with_alternative(key, value, alternative_keys=[]):
         ret = localizer.localize_parameter(key, value)
         for alternative_key in alternative_keys:
@@ -259,6 +264,19 @@ def filter_svg_tree(tree, command, parameter, localizer, command_label,
         'command_name', command, ['scene_name'])
     localized_parameter = localize_parameter_with_alternative(
         'parameter_name', parameter, ['actor_name', 'scene_name'])
+
+    localized_variant = localizer.localize_parameter(
+        'parameter_variant_name', variant)
+
+    if variant:
+        localized_parameter_with_variant = localizer.localize(
+            '{parameter_name} ({parameter_variant_name})',
+            {
+                'parameter_name': localized_parameter,
+                'parameter_variant_name': localized_variant
+            })
+    else:
+        localized_parameter_with_variant = localized_parameter
 
     localized_command_label = localizer.localize_parameter(
         'command_label', command_label)
@@ -272,8 +290,10 @@ def filter_svg_tree(tree, command, parameter, localizer, command_label,
         'command_name_raw': command,
         'parameter_label': localized_parameter_label,
         'parameter_name': localized_parameter,
+        'parameter_with_variant_name': localized_parameter_with_variant,
         'parameter_name_raw': parameter,
         'scene_name': localized_command,
+        'variant_name': localized_variant,
     }
 
     def filter_text(text):
@@ -304,31 +324,86 @@ def filter_svg_tree(tree, command, parameter, localizer, command_label,
                 qr_element.set('style', 'opacity:0')
 
 
+def extract_layers(tree):
+    return tree.findall('./{http://www.w3.org/2000/svg}g')
+
+
+def extract_variant_from_layer(layer):
+    variant = ''
+    id = layer.attrib.get('id')
+    if id in SVG_VARIANTS:
+        variant = id
+    else:
+        label = layer.attrib.get(
+            '{http://www.inkscape.org/namespaces/inkscape}label')
+        if label in SVG_VARIANTS:
+            variant = label
+    return variant
+
+
+def extract_variants(tree):
+    ret = ['']
+    for layer in extract_layers(tree):
+        variant = extract_variant_from_layer(layer)
+        if variant:
+            ret.append(variant)
+    return ret
+
+
+def show_only_variant(tree, variant):
+    for layer in extract_layers(tree):
+        layer_variant = extract_variant_from_layer(layer)
+        if layer_variant in SVG_VARIANTS:
+            visible = layer_variant == variant
+            display = 'inline' if visible else 'none'
+            style = {}
+            for setting in layer.attrib.get('style', '').split(';'):
+                k, v = setting.split(':', 1)
+                style[k.strip()] = v
+            style['display'] = display
+            layer.set('style', ';'.join(':'.join(i) for i in style.items()))
+
+
 def append_svg_layers(base, addition):
     root = base.getroot()
-    for layer in addition.findall('./{http://www.w3.org/2000/svg}g'):
+    for layer in extract_layers(addition):
         root.append(layer)
 
 
-def generate_full_svg(scanarium, dir, command, parameter, localizer,
-                      command_label, parameter_label, force,
-                      extra_decoration_name):
+def generate_full_svg_tree(scanarium, dir, parameter, extra_decoration_name):
     undecorated_name = os.path.join(dir, parameter + '-undecorated.svg')
     decoration_name = os.path.join(scanarium.get_config_dir_abs(),
                                    'decoration.svg')
-    full_name = os.path.join(dir, parameter + '.svg')
     sources = [undecorated_name, decoration_name]
+    register_svg_namespaces()
+    tree = ET.parse(undecorated_name)
+    append_svg_layers(tree, ET.parse(decoration_name))
     if extra_decoration_name:
         sources.append(extra_decoration_name)
-    if file_needs_update(full_name, sources, force):
-        register_svg_namespaces()
-        tree = ET.parse(undecorated_name)
-        append_svg_layers(tree, ET.parse(decoration_name))
-        if extra_decoration_name:
-            append_svg_layers(tree, ET.parse(extra_decoration_name))
-        filter_svg_tree(tree, command, parameter, localizer, command_label,
-                        parameter_label)
-        tree.write(full_name)
+        append_svg_layers(tree, ET.parse(extra_decoration_name))
+
+    return (tree, sources)
+
+
+def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
+                         sources, is_actor, localizer, force, command_label,
+                         parameter_label):
+    base_name = parameter + ('-variant-' if variant else '') + variant + '.svg'
+    full_svg_name = os.path.join(dir, base_name)
+
+    if file_needs_update(full_svg_name, sources, force):
+        show_only_variant(tree, variant)
+        filter_svg_tree(tree, command, parameter, variant, localizer,
+                        command_label, parameter_label)
+        tree.write(full_svg_name)
+
+    generate_pdf(scanarium, dir, full_svg_name, force)
+
+    if is_actor:
+        if variant == '':
+            generate_mask(scanarium, dir, full_svg_name, force)
+        generate_thumbnail(scanarium, dir, full_svg_name, force, shave=False,
+                           erode=True)
 
 
 def regenerate_static_content_command_parameter(
@@ -340,16 +415,14 @@ def regenerate_static_content_command_parameter(
                   f'{parameter_label} "{parameter}" ...')
 
     assert_directory(dir)
-    full_svg_name = parameter + '.svg'
-    generate_full_svg(scanarium, dir, command, parameter, localizer,
-                      command_label, parameter_label, force,
-                      extra_decoration_name)
-    generate_pdf(scanarium, dir, full_svg_name, force)
 
-    if is_actor:
-        generate_mask(scanarium, dir, full_svg_name, force)
-        generate_thumbnail(scanarium, dir, full_svg_name, force, shave=False,
-                           erode=True)
+    raw_tree, sources = generate_full_svg_tree(scanarium, dir, parameter,
+                                               extra_decoration_name)
+    variants = extract_variants(raw_tree)
+    for variant in sorted(variants):
+        svg_variant_pipeline(scanarium, dir, command, parameter, variant,
+                             copy.deepcopy(raw_tree), sources, is_actor,
+                             localizer, force, command_label, parameter_label)
 
 
 def regenerate_static_content_command_parameters(

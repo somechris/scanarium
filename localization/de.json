@@ -90,8 +90,7 @@
       "UnicornBalloon": "Einhorn-Luftballon",
       "WaterElf": "Wasserelf",
       "WoodFairy": "Waldfee",
-      "ZaggedButterfly": "Gezackter Schmetterling",
-      "ZaggedButterflyDetailed": "Gezackter Schmetterling mit Details"
+      "ZaggedButterfly": "Gezackter Schmetterling"
     },
     "cgi_name": {
       "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",

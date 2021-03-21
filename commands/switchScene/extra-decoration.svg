@@ -11,7 +11,6 @@
    height="210mm"
    id="svg2"
    version="1.1"
-   viewBox="0 0 1052.3622 744.09448"
    width="297mm"
    sodipodi:docname="extra-decoration.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)">
@@ -25,7 +24,7 @@
      showgrid="false"
      units="mm"
      inkscape:current-layer="extra"
-     inkscape:cx="314.27746"
+     inkscape:cx="115.33652"
      inkscape:cy="341.51555"
      inkscape:document-units="mm"
      inkscape:pageopacity="0.0"
@@ -51,13 +50,13 @@
   <g
      id="extra"
      style="display:inline"
-     transform="translate(0,-308.2677)"
+     transform="translate(0,-328.81888)"
      inkscape:groupmode="layer"
      inkscape:label="extra">
     <flowRoot
        id="flowRoot817"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,110.53794,271.60545)"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       transform="translate(117.90714,289.71248)"
        xml:space="preserve"><flowRegion
          id="flowRegion819"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"><rect
@@ -67,24 +66,25 @@
            width="695.99634"
            x="245.85538"
            y="113.14461" /></flowRegion><flowPara
-         id="flowPara823">Scan this page to switch to scene</flowPara></flowRoot>    <text
+         id="flowPara823"
+         style="font-size:42.66666794px;line-height:1.25">Scan this page to switch to scene</flowPara></flowRoot>    <text
        id="text13"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:90px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.9375"
-       x="667.18445"
-       y="960.37219"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.80000019px;line-height:0%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1"
+       x="711.66339"
+       y="1024.397"
        xml:space="preserve"><tspan
          id="tspan11"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:90px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.9375"
-         x="667.18445"
-         y="960.37219"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:1"
+         x="711.66339"
+         y="1024.397"
          sodipodi:role="line">{parameter_name}</tspan></text>
     <image
        xlink:href="../../../scenes/{parameter_name_raw}/scene-bait.png"
-       width="582.32452"
-       height="359.87653"
-       preserveAspectRatio="none"
+       y="524.67151"
+       x="402.59381"
        id="image1550"
-       x="377.4317"
-       y="491.87952" />
+       preserveAspectRatio="none"
+       height="383.86829"
+       width="621.14618" />
   </g>
 </svg>

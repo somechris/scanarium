@@ -14,8 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="Star.svg"
-   viewBox="0 0 1052.3622 744.09448"
+   sodipodi:docname="Star-undecorated.svg"
    inkscape:export-filename="/home/christian/SportsCar.svg.png"
    inkscape:export-xdpi="138.06"
    inkscape:export-ydpi="138.06">
@@ -29,17 +28,17 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.50000001"
-     inkscape:cx="593.07266"
+     inkscape:cx="258.07267"
      inkscape:cy="603.54575"
      inkscape:document-units="mm"
      inkscape:current-layer="Mask"
      showgrid="false"
      units="mm"
      inkscape:window-width="1920"
-     inkscape:window-height="1015"
-     inkscape:window-x="0"
+     inkscape:window-height="1080"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:snap-global="false" />
   <metadata
      id="metadata7">
@@ -58,29 +57,29 @@
      inkscape:groupmode="layer"
      id="Mask"
      style="display:inline;opacity:1"
-     transform="translate(0,-308.2677)">
+     transform="translate(0,-328.81888)">
     <path
        sodipodi:type="star"
-       style="fill:#ffffff;fill-opacity:1;stroke:#808080;stroke-width:0.70866144;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#808080;stroke-width:0.75590551;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path858"
        sodipodi:sides="5"
-       sodipodi:cx="663.6731"
-       sodipodi:cy="689.01453"
-       sodipodi:r1="99.96801"
-       sodipodi:r2="52.805332"
+       sodipodi:cx="707.91797"
+       sodipodi:cy="734.94885"
+       sodipodi:r1="106.63254"
+       sodipodi:r2="56.325687"
        sodipodi:arg1="0.93127399"
        sodipodi:arg2="1.5595925"
        inkscape:flatsided="false"
        inkscape:rounded="0.2"
        inkscape:randomized="0"
-       d="m 723.33523,769.22695 c -10.45026,7.77292 -46.04728,-27.55632 -59.07052,-27.41041 -13.02325,0.14592 -47.81975,36.26387 -58.44155,28.72705 -10.6218,-7.53683 11.97823,-52.30893 7.81505,-64.64969 -4.16318,-12.34075 -49.2661,-34.27313 -45.38047,-46.70407 3.88563,-12.43093 53.45022,-4.77237 63.90049,-12.54529 10.45026,-7.77293 17.37162,-57.44583 30.39487,-57.59175 13.02324,-0.14592 21.05582,49.35944 31.67762,56.89627 10.6218,7.53682 60.00236,-1.23035 64.16554,11.11041 4.16318,12.34075 -40.43701,35.27819 -44.32264,47.70912 -3.88563,12.43094 19.71187,56.68544 9.26161,64.45836 z"
-       inkscape:transform-center-x="1.3497257"
-       inkscape:transform-center-y="-1.9451934" />
+       d="m 771.55757,820.50877 c -11.14694,8.29111 -49.11709,-29.39341 -63.00855,-29.23777 -13.89147,0.15565 -51.00773,38.68146 -62.33765,30.64218 -11.32991,-8.03928 12.77678,-55.79619 8.33605,-68.95966 -4.44072,-13.16347 -52.5505,-36.55801 -48.40583,-49.81767 4.14467,-13.25967 57.01357,-5.09054 68.16052,-13.38165 11.14694,-8.29112 18.52973,-61.27555 32.42119,-61.43119 13.89147,-0.15565 22.45955,52.65006 33.78947,60.68934 11.32991,8.03928 64.00251,-1.31236 68.44323,11.85111 4.44073,13.16347 -43.1328,37.63007 -47.27748,50.88973 -4.14467,13.25966 21.026,60.46446 9.87905,68.75558 z"
+       inkscape:transform-center-x="1.4397074"
+       inkscape:transform-center-y="-2.074873" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="Overlay"
      style="display:inline"
-     transform="translate(0,-308.2677)" />
+     transform="translate(0,-328.81888)" />
 </svg>

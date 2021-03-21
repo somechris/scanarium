@@ -14,8 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="PlainBalloon-undecorated.svg"
-   viewBox="0 0 1052.3622 744.09448">
+   sodipodi:docname="PlainBalloon-undecorated.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -26,7 +25,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.1662868"
-     inkscape:cx="372.4397"
+     inkscape:cx="228.82151"
      inkscape:cy="197.70639"
      inkscape:document-units="mm"
      inkscape:current-layer="Mask"
@@ -54,10 +53,10 @@
      inkscape:groupmode="layer"
      id="Mask"
      style="display:inline"
-     transform="translate(0,-308.2677)">
+     transform="translate(0,-328.81888)">
     <path
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#808080;stroke-width:0.70866144;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker:none;enable-background:accumulate"
-       d="m 719.87826,469.67333 c -59.50111,0 -107.71875,56.73287 -107.71875,126.71875 0,34.99294 12.62673,71.47568 31.53125,101.40625 9.23053,14.61424 42.29368,49.37259 55.3125,63.3125 9.43598,10.10359 16.51543,16.19773 19.71875,18.8125 l -9.75,17.34375 8.8125,-2.1875 9,4.84375 5.6875,-3.40625 -9.9375,-16.5 c 3.54925,-2.79025 11.73965,-9.58475 21.4375,-19.96875 13.01881,-13.93991 42.86322,-47.63576 52.09375,-62.25 18.90452,-29.93057 31.5625,-66.41331 31.5625,-101.40625 0,-69.98588 -48.2489,-126.71875 -107.75,-126.71875 z"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#808080;stroke-width:0.75590551;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker:none;enable-background:accumulate"
+       d="m 767.87014,500.98489 c -63.46785,0 -114.9,60.51506 -114.9,135.16666 0,37.3258 13.46852,76.24073 33.63334,108.16667 9.8459,15.58852 45.11326,52.66409 59,67.53333 10.06504,10.77716 17.61646,17.27758 21.03333,20.06667 l -10.4,18.5 9.4,-2.33333 9.6,5.16666 6.06667,-3.63333 -10.6,-17.6 c 3.78586,-2.97627 12.52229,-10.22373 22.86666,-21.3 13.88673,-14.86924 45.72077,-50.81148 55.56667,-66.4 20.16482,-31.92594 33.66667,-70.84087 33.66667,-108.16667 0,-74.6516 -51.4655,-135.16666 -114.93334,-135.16666 z"
        id="path2991-3"
        inkscape:connector-curvature="0" />
   </g>
@@ -66,5 +65,5 @@
      id="layer1"
      inkscape:label="Overlay"
      style="display:inline"
-     transform="translate(0,-308.2677)" />
+     transform="translate(0,-328.81888)" />
 </svg>

@@ -14,8 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="balloons-undecorated.svg"
-   viewBox="0 0 1052.3622 744.09448">
+   sodipodi:docname="space-undecorated.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -26,7 +25,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.42097921"
-     inkscape:cx="-136.25297"
+     inkscape:cx="-534.13485"
      inkscape:cy="430.57811"
      inkscape:document-units="mm"
      inkscape:current-layer="Mask"
@@ -54,6 +53,5 @@
      inkscape:groupmode="layer"
      id="Mask"
      style="display:inline"
-     transform="translate(0,-308.2677)">
-  </g>
+     transform="translate(0,-328.81888)" />
 </svg>

@@ -16,3 +16,4 @@ __pycache__
 /scenes/*/actors/*/*-mask.png
 /scenes/*/actors/*/*-thumb.jpg
 /scenes/*/actors/*/*.pdf
+/scenes/*/*-thumb.jpg

@@ -514,6 +514,8 @@ def regenerate_static_content_commands(
             if not os.path.isfile(extra_decoration_name):
                 extra_decoration_name = None
             if is_actor:
+                generate_thumbnail(scanarium, command_dir, 'scene-bait.png',
+                                   force, shave=False)
                 command_dir = os.path.join(command_dir, 'actors')
             if os.path.isdir(command_dir):
                 regenerate_static_content_command_parameters(

@@ -66,6 +66,9 @@ var ScreensaverManager = {
 };
 
 var WakeLockScreensaverBackend = {
+  // wakeLock is either null, if there no lock is held. Or if a lock is held,
+  // it's either an object with a `release()` method to release the lock, or a
+  // promise to such an object.
   wakeLock: null,
 
   isUsable: function() {
@@ -78,16 +81,31 @@ var WakeLockScreensaverBackend = {
 
   allowSleep: function() {
     if (this.wakeLock != null) {
-      this.wakeLock.release();
+      var wakeLock = this.wakeLock;
       this.wakeLock = null;
+
+      try {
+        // We opportunistically try if the wakeLock is still a promise.
+        wakeLock.then((lock) => lock.release());
+      } catch (err) {
+        // As `releasing as promise` failed, it's no longer a promise, but
+        // already an object. So we release directly on that object.
+        wakeLock.release();
+      }
     }
   },
 
   keepWoken: function() {
-    try {
-      navigator.wakeLock.request();
-    } catch (err) {
-      console.error(`wakeLock request failed. ${err.name}, ${err.message}`);
+    if (this.wakeLock == null) {
+      try {
+        this.wakeLock = navigator.wakeLock.request();
+        // At this point, wakeLock is a promes. And we set the promise to
+        // replace its value when it's done. That way, `this.wakeLock` always
+        // holds a value, if we have a lock.
+        this.wakeLock.then(lock => this.wakeLock = lock);
+      } catch (err) {
+        console.error(`wakeLock request failed. ${err.name}, ${err.message}`);
+      }
     }
   },
 }

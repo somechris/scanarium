@@ -44,7 +44,7 @@ step "sample content" "dynamic/scenes/space/actors/SimpleRocket/sample.png" cp -
 step "global config" "dynamic/config.json" generate_global_config
 step "command log" "dynamic/command-log.json" generate_command_log
 step "reindexing content" "dynamic/scenes/space/actors-latest.json" ./reindex.sh
-step "regenerating static content" "scenes/space/background-thumb.jpg" ./regenerate-static-content.sh
+step "regenerating static content" "scenes/space/scene-bait-thumb.jpg" ./regenerate-static-content.sh
 
 echo
 echo "#################################################################"

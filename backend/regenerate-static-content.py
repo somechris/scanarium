@@ -15,9 +15,42 @@ del sys.path[0]
 
 logger = logging.getLogger(__name__)
 
-SVG_VARIANTS = [
-    'Detailed',
-]
+BACKGROUND_COLOR = '#ffffff'
+LIGHT_COLOR = '#c0c0c0'
+DARK_COLOR = '#808080'
+THICK_WIDTH = 0.75590551
+THIN_WIDTH = THICK_WIDTH / 2
+
+THIN_LIGHT = {
+    'stroke': LIGHT_COLOR,
+    'stroke-width': THIN_WIDTH,
+}
+THICK_DARK = {
+    'stroke': DARK_COLOR,
+    'stroke-width': THICK_WIDTH,
+}
+THICK_DARK_FILLED = {
+    'stroke': DARK_COLOR,
+    'stroke-width': THICK_WIDTH,
+    'fill': BACKGROUND_COLOR,
+}
+
+SVG_VARIANT_SETTINGS = {
+    '': {
+        'layer-settings': {
+            'Mask': THICK_DARK_FILLED,
+            'Overlay': THIN_LIGHT,
+        },
+    },
+    'Detailed': {
+        'layer-settings': {
+            'Mask': THICK_DARK_FILLED,
+            'Overlay': THICK_DARK,
+            'Detailed': THICK_DARK,
+        },
+    }
+}
+SVG_VARIANTS = [key for key in SVG_VARIANT_SETTINGS.keys() if key]
 
 
 def run_inkscape(scanarium, arguments):
@@ -302,10 +335,33 @@ def filter_svg_tree(tree, command, parameter, variant, localizer,
         return text
 
     for element in tree.iter():
+        if element.tag == '{http://www.w3.org/2000/svg}g':
+            if element.get('{http://www.inkscape.org/namespaces/inkscape}'
+                           'groupmode') == 'layer':
+                layer_name = extract_layer_name(element)
+                style_enforcings = SVG_VARIANT_SETTINGS\
+                    .get(variant, {})\
+                    .get('layer-settings', {})\
+                    .get(layer_name, {})
+
         element.text = filter_text(element.text)
         element.tail = filter_text(element.tail)
         for key in element.keys():
-            element.set(key, filter_text(element.get(key)))
+            value = filter_text(element.get(key))
+            if key == 'style' and value is not None:
+                style = {}
+                for setting in value.split(';'):
+                    k, v = setting.split(':', 1)
+                    style[k.strip()] = v
+                for k, v in style_enforcings.items():
+                    style[k] = str(v)
+                value = ';'.join(':'.join(i) for i in style.items())
+            if key == 'transform' and value is not None:
+                if value.split('(', 1)[0] not in ['translate', 'rotate']:
+                    raise ScanariumError('E_SVG_TRANSFORM_SCALE',
+                                         'SVG uses unknown transformation')
+
+            element.set(key, value)
 
     for qr_element in list(tree.iter("{http://www.w3.org/2000/svg}rect")):
         qr_pixel = qr_element.attrib.get('qr-pixel', None)
@@ -326,6 +382,14 @@ def filter_svg_tree(tree, command, parameter, variant, localizer,
 
 def extract_layers(tree):
     return tree.findall('./{http://www.w3.org/2000/svg}g')
+
+
+def extract_layer_name(layer):
+    name = layer.attrib.get('id')
+    if name.startswith('layer'):
+        name = layer.attrib.get(
+            '{http://www.inkscape.org/namespaces/inkscape}label')
+    return name
 
 
 def extract_variant_from_layer(layer):

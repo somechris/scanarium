@@ -8,7 +8,7 @@ var cgis = {
 var cgiFail = function(uuid, cgi, reason, parameters) {
   var msg = localize('{cgi_name} failed', {'cgi_name': cgi});
   msg += ': ' + localize(reason, parameters);
-  MessageManager.addMessage(uuid, 'failed', msg);
+  MessageManager.addMessage(msg, 'failed', uuid);
 };
 
 var onReadyStateChange = function(cgi) {

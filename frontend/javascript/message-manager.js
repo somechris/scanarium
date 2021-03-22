@@ -19,7 +19,7 @@ var MessageManager = {
     return ret;
   },
 
-  addMessage: function(uuid, icon, message) {
+  addMessage: function(message, icon, uuid) {
     if (game) {
       var y = this.getTargetY(this.objects.length);
       var duration = 10000;

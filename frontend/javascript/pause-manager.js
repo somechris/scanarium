@@ -20,7 +20,7 @@ var PauseManager = {
       game.scene.pause();
     }
 
-    MessageManager.addMessage(null, 'pause', localize('Paused'));
+    MessageManager.addMessage(localize('Paused'), 'pause');
 
     ScreensaverManager.allowSleep();
   },
@@ -37,7 +37,7 @@ var PauseManager = {
     }
 
     if (!silent) {
-      MessageManager.addMessage(null, 'ok', localize('Resuming scene'));
+      MessageManager.addMessage(localize('Resuming scene'), 'ok');
     }
 
     ScreensaverManager.keepWoken();

@@ -4,6 +4,7 @@ function preload() {
     game = this;
 
     this.load.image('failed', '/static/failed.png');
+    this.load.image('info', '/static/info.png');
     this.load.image('ok', '/static/ok.png');
     this.load.image('pause', '/static/pause.png');
     this.load.image('background', scene_dir + '/background.png');

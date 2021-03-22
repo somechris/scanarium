@@ -23,6 +23,9 @@ var MessageManager = {
     if (game) {
       var y = this.getTargetY(this.objects.length);
       var duration = 10000;
+      if (typeof icon == 'undefined' || icon == null) {
+        icon = 'info';
+      }
       if (icon == 'ok') {
           duration /= 2;
       } else if (icon == 'pause') {

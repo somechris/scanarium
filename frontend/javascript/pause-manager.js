@@ -22,6 +22,8 @@ var PauseManager = {
 
     MessageManager.addMessage(localize('Paused'), 'pause');
 
+    SettingsButton.show();
+
     ScreensaverManager.allowSleep();
   },
 
@@ -35,6 +37,9 @@ var PauseManager = {
     if (game != null) {
       game.scene.resume();
     }
+
+    SettingsButton.hide();
+    Settings.hide();
 
     if (!silent) {
       MessageManager.addMessage(localize('Resuming scene'), 'ok');

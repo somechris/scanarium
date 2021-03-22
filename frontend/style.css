@@ -3,3 +3,16 @@ body {
     background-color: black;
     overflow: hidden;
 }
+
+#settings {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 10%;
+  bottom: 10%;
+  background-color: white;
+  padding-left: 2em;
+  padding-right: 2em;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

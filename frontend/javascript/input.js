@@ -27,5 +27,7 @@ document.addEventListener("click", event => {
 });
 
 document.addEventListener("touchstart", event => {
-  PauseManager.toggle();
+  if (!event.handled_by_scanarium_settings) {
+    PauseManager.toggle();
+  }
 });

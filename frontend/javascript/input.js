@@ -1,3 +1,10 @@
+var cgis = {
+  ' ': 'scan',
+  'n': 'reset-dynamic-content',
+  's': 'show-source',
+  'r': 'reindex'
+};
+
 document.addEventListener("keypress", function(e) {
   if (e.key === 'f') {
     canvases = document.getElementsByTagName('canvas');

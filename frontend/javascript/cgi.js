@@ -1,10 +1,3 @@
-var cgis = {
-  ' ': 'scan',
-  'n': 'reset-dynamic-content',
-  's': 'show-source',
-  'r': 'reindex'
-};
-
 var cgiFail = function(uuid, cgi, reason, parameters) {
   var msg = localize('{cgi_name} failed', {'cgi_name': cgi});
   msg += ': ' + localize(reason, parameters);

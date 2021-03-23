@@ -182,6 +182,7 @@ var SettingsButton = {
   show: function() {
     this.hide();
     this.button = document.createElement('button');
+    this.button.id = 'settings-button';
     this.button.innerHTML = localize('Settings');
     this.button.onclick = function(e) {
         Settings.toggle();
@@ -189,11 +190,7 @@ var SettingsButton = {
         e.preventDefault();
     };
     this.button.ontouchstart = this.button.onclick;
-    this.button.style.position = 'absolute';
-    this.button.style.right = '0px';
-    this.button.style.top = '0px';
     this.button.style["font-size"] = Math.ceil(16 * window.devicePixelRatio).toString() + 'px';
-    this.button.style.padding = '1em 2em';
     document.body.appendChild(this.button);
   },
 

@@ -16,3 +16,10 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+#settings-button {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding: 0.4em 5em;
+}

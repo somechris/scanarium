@@ -4,6 +4,7 @@
     "---description---": "---Beschreibung---",
     "---key---": "---Taste---",
     "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "In der Szene \"{scene_name}\" gibt es keinen Figur \"{actor_name}\"",
+    "Actor PDFs for scene {scene_name}": "PDFs für die {scene_name} Szene",
     "Add another random actor": "Zufällige Figur zu Szene hinzufügen",
     "Calling script \"{script_name}\" as cgi is forbidden": "Skript \"{script_name}\" darf nicht als cgi gestartet werden",
     "Cannot switch to scene {scene_name}": "Kann nicht zur Szene \"{scene_name}\" wechseln",

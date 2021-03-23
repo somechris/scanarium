@@ -10,9 +10,9 @@ var Settings = {
   },
 
 
-  generateHeading: function(title) {
+  generateHeading: function(title, localization_parameters) {
       var heading = document.createElement('h2');
-      heading.innerHTML = localize(title);
+      heading.innerHTML = localize(title, localization_parameters);
       return heading;
   },
 
@@ -31,12 +31,12 @@ var Settings = {
       }
   },
 
-  loadedScenesConfig: function() {
-      var scenes = scenes_config.slice();
+  get_localized_sorted_list_copy: function(list, parameter_name) {
+      var scenes = list.slice();
 
-      scenes.sort((a, b) => {
-          a = localize_parameter('scene_name', a);
-          b = localize_parameter('scene_name', b);
+      list.sort((a, b) => {
+          a = localize_parameter(parameter_name, a);
+          b = localize_parameter(parameter_name, b);
           if (a < b) {
               return -1;
           }
@@ -46,6 +46,11 @@ var Settings = {
           return 0;
       });
 
+      return list;
+  },
+
+  loadedScenesConfig: function() {
+      var scenes = this.get_localized_sorted_list_copy(scenes_config, 'scene_name');
       this.sceneList.innerHTML = '';
       scenes.forEach(scene => {
           var sceneImage = document.createElement('img');
@@ -75,6 +80,27 @@ var Settings = {
       return [heading, sceneList];
   },
 
+  generatePdfSections: function() {
+      var heading = this.generateHeading('Actor PDFs for scene {scene_name}', {scene_name: scene});
+      var pdfList = document.createElement('p');
+      pdfList.id = 'pdf-list';
+
+      var actors = this.get_localized_sorted_list_copy(Object.keys(ScActorManager.actors_config.actors), 'actor_name');
+      actors.forEach(actor => {
+          var pdfImage = document.createElement('img');
+          pdfImage.src = 'scenes/' + scene + '/actors/' + actor + '/' + actor + '-thumb.jpg';
+          pdfImage.alt = localize_parameter('actor_name', actor);
+
+          var pdfLink = document.createElement('a');
+          pdfLink.href = 'scenes/' + scene + '/actors/' + actor + '/' + actor + '.pdf';
+          pdfLink.appendChild(pdfImage);
+
+          pdfList.appendChild(pdfLink);
+      });
+
+      return [heading, pdfList];
+  },
+
   show: function() {
     this.hide();
 
@@ -91,6 +117,7 @@ var Settings = {
 
     var sections = [];
     Array.prototype.push.apply(sections, this.generateScenesSections());
+    Array.prototype.push.apply(sections, this.generatePdfSections());
 
     this.loadScenesConfig();
     sections.forEach(section => this.panel.appendChild(section));

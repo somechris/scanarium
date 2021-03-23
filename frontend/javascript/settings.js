@@ -101,6 +101,48 @@ var Settings = {
       return [heading, pdfList];
   },
 
+  generateUploadSections: function() {
+      var heading = this.generateHeading('Upload image');
+
+      var form = document.createElement('form');
+
+      var fileInput = document.createElement('input');
+      fileInput.id = 'file-upload-data';
+      fileInput.type = 'file';
+      fileInput.style['font-size'] = this.panel.style['font-size'];
+      form.appendChild(fileInput);
+
+      var submitButton = document.createElement('input');
+      submitButton.type = 'submit';
+      submitButton.id = 'file-upload-submit';
+      submitButton.style['font-size'] = this.panel.style['font-size'];
+      submitButton.onclick = function(e) {
+          console.log(fileInput);
+          if (fileInput.files.length > 0) {
+              var i;
+              for (i = 0; i < fileInput.files.length; i++) {
+                  var file = fileInput.files[i];
+                  data = new FormData();
+                  data.append('data', file);
+                  MessageManager.addMessage(localize(
+                      'Upload of \"{image_name}\" started',
+                      {image_name: sanitize_string(file.name)}
+                  ));
+                  callCgi('scan-data', data);
+              }
+          } else {
+              MessageManager.addMessage(localize('No image selected. Upload aborted.'), 'failed');
+          }
+          e.stopPropagation();
+          e.preventDefault();
+          PauseManager.resume();
+      };
+      form.appendChild(submitButton);
+
+
+      return [heading, form];
+  },
+
   show: function() {
     this.hide();
 
@@ -114,8 +156,10 @@ var Settings = {
     this.panel.ontouchstart = this.panel.onclick;
 
     this.panel.id = 'settings';
+    this.panel.style['font-size'] = SettingsButton.button.style['font-size'];
 
     var sections = [];
+    Array.prototype.push.apply(sections, this.generateUploadSections());
     Array.prototype.push.apply(sections, this.generateScenesSections());
     Array.prototype.push.apply(sections, this.generatePdfSections());
 

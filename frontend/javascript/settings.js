@@ -101,48 +101,6 @@ var Settings = {
       return [heading, pdfList];
   },
 
-  generateUploadSections: function() {
-      var heading = this.generateHeading('Upload image');
-
-      var form = document.createElement('form');
-
-      var fileInput = document.createElement('input');
-      fileInput.id = 'file-upload-data';
-      fileInput.type = 'file';
-      fileInput.style['font-size'] = this.panel.style['font-size'];
-      form.appendChild(fileInput);
-
-      var submitButton = document.createElement('input');
-      submitButton.type = 'submit';
-      submitButton.id = 'file-upload-submit';
-      submitButton.style['font-size'] = this.panel.style['font-size'];
-      submitButton.onclick = function(e) {
-          console.log(fileInput);
-          if (fileInput.files.length > 0) {
-              var i;
-              for (i = 0; i < fileInput.files.length; i++) {
-                  var file = fileInput.files[i];
-                  data = new FormData();
-                  data.append('data', file);
-                  MessageManager.addMessage(localize(
-                      'Upload of \"{image_name}\" started',
-                      {image_name: sanitize_string(file.name)}
-                  ));
-                  callCgi('scan-data', data);
-              }
-          } else {
-              MessageManager.addMessage(localize('No image selected. Upload aborted.'), 'failed');
-          }
-          e.stopPropagation();
-          e.preventDefault();
-          PauseManager.resume();
-      };
-      form.appendChild(submitButton);
-
-
-      return [heading, form];
-  },
-
   show: function() {
     this.hide();
 
@@ -159,7 +117,6 @@ var Settings = {
     this.panel.style['font-size'] = SettingsButton.button.style['font-size'];
 
     var sections = [];
-    Array.prototype.push.apply(sections, this.generateUploadSections());
     Array.prototype.push.apply(sections, this.generateScenesSections());
     Array.prototype.push.apply(sections, this.generatePdfSections());
 
@@ -198,6 +155,86 @@ var SettingsButton = {
     if (this.button != null) {
       this.button.remove();
       this.button = null;
+    }
+  },
+
+  getWidth: function() {
+    return (this.button != null) ? this.button.offsetWidth : 0;
+  },
+
+  setWidth: function(width) {
+    if (this.button != null) {
+            this.button.style.width = width;
+    }
+  },
+};
+
+var UploadButton = {
+  container: null,
+  form: null,
+
+  show: function() {
+      this.hide();
+
+      var fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.id = 'file-upload-data';
+      fileInput.accept = 'image/*';
+
+      fileInput.onchange = function(e) {
+          if (fileInput.files.length > 0) {
+              var i;
+              for (i = 0; i < fileInput.files.length; i++) {
+                  var file = fileInput.files[i];
+                  data = new FormData();
+                  data.append('data', file);
+                  MessageManager.addMessage(localize(
+                      'Upload of \"{image_name}\" started',
+                      {image_name: sanitize_string(file.name)}
+                  ));
+                  callCgi('scan-data', data);
+              }
+          } else {
+              MessageManager.addMessage(localize('No image selected. Upload aborted.'), 'failed');
+          }
+          e.stopPropagation();
+          e.preventDefault();
+          PauseManager.resume();
+      };
+
+      var button = document.createElement('button');
+      button.id = 'file-upload-button';
+      button.textContent = localize('Upload image');
+      button.onclick = function(e) {
+          fileInput.click();
+          e.handled_by_scanarium_settings = true;
+      }
+      button.ontouchstart = button.onclick;
+      button.style["font-size"] = Math.ceil(16 * window.devicePixelRatio).toString() + 'px';
+
+      this.container = document.createElement('div');
+      this.container.id = 'file-upload-button-container';
+      this.container.appendChild(button);
+      document.body.appendChild(this.container);
+
+      if (SettingsButton.getWidth() > scanariumConfig.width / 5) {
+          // small layout:
+          this.container.className =  'file-upload-button-container-right';
+          console.log(button.offsetWidth);
+          console.log(SettingsButton.getWidth());
+          maxWidth = Math.max(button.offsetWidth, SettingsButton.getWidth()).toString() + 'px';
+          button.style.width = maxWidth;
+          SettingsButton.setWidth(maxWidth);
+      } else {
+          this.container.className =  'file-upload-button-container-top-center';
+      }
+
+  },
+
+  hide: function() {
+    if (this.container != null) {
+      this.container.remove();
+      this.container = null;
     }
   },
 };

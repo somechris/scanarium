@@ -23,6 +23,7 @@ var PauseManager = {
     MessageManager.addMessage(localize('Paused'), 'pause');
 
     SettingsButton.show();
+    UploadButton.show();
 
     ScreensaverManager.allowSleep();
   },
@@ -38,6 +39,7 @@ var PauseManager = {
       game.scene.resume();
     }
 
+    UploadButton.hide();
     SettingsButton.hide();
     Settings.hide();
 

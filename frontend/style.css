@@ -15,11 +15,39 @@ body {
   padding-right: 2em;
   overflow-x: hidden;
   overflow-y: auto;
+  z-index: 30;
+}
+
+button {
+  padding: 1em 5em;
 }
 
 #settings-button {
   position: absolute;
   right: 0px;
   top: 0px;
-  padding: 0.4em 5em;
+  z-index: 20;
+}
+
+.file-upload-button-container {
+  z-index: 10;
+}
+
+.file-upload-button-container-top-center {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.file-upload-button-container-right {
+  position: absolute;
+  top: 7em;
+  right: 0px;
+}
+
+#file-upload-form {
+    opacity: 0;
 }

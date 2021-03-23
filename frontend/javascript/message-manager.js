@@ -26,7 +26,7 @@ var MessageManager = {
       if (typeof icon == 'undefined' || icon == null) {
         icon = 'info';
       }
-      if (icon == 'ok') {
+      if (icon == 'ok' || icon == 'info') {
           duration /= 2;
       } else if (icon == 'pause') {
           duration = 100;

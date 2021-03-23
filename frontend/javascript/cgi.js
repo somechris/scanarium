@@ -31,7 +31,6 @@ var onReadyStateChange = function(cgi) {
 callCgi = function(cgi, data) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'cgi-bin/' + cgi, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = onReadyStateChange(cgi);
     xhr.send(data);
 }

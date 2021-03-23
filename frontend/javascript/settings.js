@@ -80,15 +80,12 @@ var Settings = {
 
     this.panel = document.createElement('div');
     this.panel.onclick = function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-    };
-    this.panel.ontouchstart = function(e) {
         // We need to propagate to enable scrolling. Yet we need to flag to the
         // document handler that the event is handled upstream. So we add a
         // custom property.
         e.handled_by_scanarium_settings = true;
     };
+    this.panel.ontouchstart = this.panel.onclick;
 
     this.panel.id = 'settings';
 

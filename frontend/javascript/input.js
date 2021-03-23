@@ -22,12 +22,12 @@ document.addEventListener("keypress", function(e) {
   }
 }, false);
 
-document.addEventListener("click", event => {
-  PauseManager.toggle();
-});
 
-document.addEventListener("touchstart", event => {
+function pause_manager_toggle(event) {
   if (!event.handled_by_scanarium_settings) {
     PauseManager.toggle();
   }
-});
+}
+
+document.addEventListener("click", pause_manager_toggle);
+document.addEventListener("touchstart", pause_manager_toggle);

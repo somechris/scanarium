@@ -14,11 +14,7 @@ document.addEventListener("keypress", function(e) {
     HelpPage.toggleVisibility();
   } else if (e.key in cgis) {
     var cgi = cgis[e.key];
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'cgi-bin/' + cgi, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = onReadyStateChange(cgi);
-    xhr.send();
+    callCgi(cgi);
   }
 }, false);
 

@@ -509,18 +509,19 @@ def regenerate_static_content_commands(
         commands.sort()
         for command in commands:
             command_dir = os.path.join(dir, command)
-            extra_decoration_name = os.path.join(
-                command_dir, 'extra-decoration.svg')
-            if not os.path.isfile(extra_decoration_name):
-                extra_decoration_name = None
-            if is_actor:
-                generate_thumbnail(scanarium, command_dir, 'scene-bait.png',
-                                   force, shave=False)
-                command_dir = os.path.join(command_dir, 'actors')
             if os.path.isdir(command_dir):
-                regenerate_static_content_command_parameters(
-                    scanarium, command_dir, command, parameter, is_actor,
-                    localizer, force, extra_decoration_name)
+                extra_decoration_name = os.path.join(
+                    command_dir, 'extra-decoration.svg')
+                if not os.path.isfile(extra_decoration_name):
+                    extra_decoration_name = None
+                if is_actor:
+                    generate_thumbnail(scanarium, command_dir,
+                                       'scene-bait.png', force, shave=False)
+                    command_dir = os.path.join(command_dir, 'actors')
+                if os.path.isdir(command_dir):
+                    regenerate_static_content_command_parameters(
+                        scanarium, command_dir, command, parameter, is_actor,
+                        localizer, force, extra_decoration_name)
 
 
 def regenerate_static_content(scanarium, command, parameter, localizer, force):

@@ -83,31 +83,41 @@ var Settings = {
 
   loadedActorVariants: function() {
       this.pdfList.innerHTML = '';
+      var langDir = Object.keys(localization).length ? language : 'fallback';
+      var pdfs = {}
       Object.keys(actor_variants).forEach(actor => actor_variants[actor].forEach(variant => {
           const localized_actor = localize_parameter('actor_name', actor);
-          var basename = localized_actor;
+          var name = localized_actor;
           if (variant) {
               const localized_variant = localize_parameter('parameter_variant_name', variant);
-              basename = localize('{parameter_name} ({parameter_variant_name})', {
+              name = localize('{parameter_name} ({parameter_variant_name})', {
                   parameter_name: localized_actor,
                   parameter_variant_name: localized_variant,
               });
           }
-          basename = basename.replace(/[^a-zA-Z]+/g, '-');
+          var basename = name.replace(/[^a-zA-Z]+/g, '-');
           basename = basename.replace(/^-/g, '');
           basename = basename.replace(/-$/g, '');
 
-          var langDir = Object.keys(localization).length ? language : 'fallback';
+          pdfs[basename] = {
+              name: name,
+              base_path: 'scenes/' + scene + '/actors/' + actor + '/pdfs/' + langDir + '/' + basename,
+          };
+      }));
+      Object.keys(pdfs).sort().forEach(key => {
+          const item = pdfs[key];
+          const base_path = item['base_path'];
+
           var pdfImage = document.createElement('img');
-          pdfImage.src = 'scenes/' + scene + '/actors/' + actor + '/pdfs/' + langDir + '/' + basename + '-thumb.jpg';
-          pdfImage.alt = localize_parameter('actor_name', actor);
+          pdfImage.src = base_path + '-thumb.jpg';
+          pdfImage.alt = item['name'];
 
           var pdfLink = document.createElement('a');
-          pdfLink.href = 'scenes/' + scene + '/actors/' + actor + '/pdfs/' + langDir + '/' + basename + '.pdf';
+          pdfLink.href = base_path + '.pdf';
           pdfLink.appendChild(pdfImage);
 
           this.pdfList.appendChild(pdfLink);
-      }));
+      });
   },
 
   generateScenesSections: function() {

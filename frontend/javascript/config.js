@@ -23,6 +23,7 @@ function getConfig(key) {
 }
 
 var dyn_dir = 'dynamic';
+var scenes_dir = 'scenes';
 
 var scene;         // Initialized in boot.js
 var scene_dir;     // Initialized in boot.js

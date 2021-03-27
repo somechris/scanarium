@@ -8,7 +8,7 @@ function boot_step_1(json) {
   global_config = json;
 
   scene = getUrlParameter('scene', getConfig('default_scene'));
-  scene_dir = 'scenes/' + scene;
+  scene_dir = scenes_dir + '/' + scene;
   dyn_scene_dir = dyn_dir + '/scenes/' + scene;
 
   FileLoader.load(scene_dir + '/scene.json', function(json) {sceneConfig = json;});

@@ -155,7 +155,9 @@ def generate_adapted_mask_source(scanarium, source, target):
 
 
 def get_mask_name(dir, file, suffix='png'):
-    basename = file.rsplit('.', 1)[0]
+    basename = os.path.basename(file).rsplit('.', 1)[0]
+    if basename.startswith('fallback-'):
+        basename = basename[9:]
     return os.path.join(dir, f'{basename}-mask.{suffix}')
 
 
@@ -454,7 +456,8 @@ def generate_full_svg_tree(scanarium, dir, parameter, extra_decoration_name):
 def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
                          sources, is_actor, language, force, command_label,
                          parameter_label):
-    base_name = parameter + ('-variant-' if variant else '') + variant + '.svg'
+    base_name = f'{language}-{parameter}' + ('-variant-' if variant else '') \
+        + variant + '.svg'
     full_svg_name = os.path.join(dir, base_name)
 
     if file_needs_update(full_svg_name, sources, force):
@@ -466,7 +469,7 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
     generate_pdf(scanarium, dir, full_svg_name, force)
 
     if is_actor:
-        if variant == '':
+        if variant == '' and language == 'fallback':
             generate_mask(scanarium, dir, full_svg_name, force)
         generate_thumbnail(scanarium, dir, full_svg_name, force, shave=False,
                            erode=True)
@@ -551,7 +554,7 @@ def regenerate_static_content(scanarium, command, parameter, language, force):
 def register_arguments(scanarium, parser):
     parser.add_argument('--language',
                         help='Localize for the given language '
-                        '(E.g.: \'de\' for German)')
+                        '(E.g.: \'de\' for German)', default='fallback')
     parser.add_argument('--force',
                         help='Regenerate all files, even if they are not'
                         'stale',

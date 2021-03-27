@@ -157,8 +157,6 @@ def generate_adapted_mask_source(scanarium, source, target):
 
 def get_mask_name(dir, file, suffix='png'):
     basename = os.path.basename(file).rsplit('.', 1)[0]
-    if basename.startswith('fallback-'):
-        basename = basename[9:]
     return os.path.join(dir, f'{basename}-mask.{suffix}')
 
 
@@ -287,10 +285,7 @@ def expand_qr_pixel_to_qr_code(element, data):
         del(element.attrib[attrib])
 
 
-def filter_svg_tree(tree, command, parameter, variant, language,
-                    command_label, parameter_label):
-    localizer = scanarium.get_localizer(language)
-
+def localize_command_parameter_variant(localizer, command, parameter, variant):
     def localize_parameter_with_alternative(key, value, alternative_keys=[]):
         ret = localizer.localize_parameter(key, value)
         for alternative_key in alternative_keys:
@@ -315,6 +310,16 @@ def filter_svg_tree(tree, command, parameter, variant, language,
             })
     else:
         localized_parameter_with_variant = localized_parameter
+
+    return (localized_command, localized_parameter, localized_variant,
+            localized_parameter_with_variant)
+
+
+def filter_svg_tree(tree, command, parameter, variant, localizer,
+                    command_label, parameter_label):
+    (localized_command, localized_parameter, localized_variant,
+     localized_parameter_with_variant) = localize_command_parameter_variant(
+        localizer, command, parameter, variant)
 
     localized_command_label = localizer.localize_parameter(
         'command_label', command_label)
@@ -457,13 +462,21 @@ def generate_full_svg_tree(scanarium, dir, parameter, extra_decoration_name):
 def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
                          sources, is_actor, language, force, command_label,
                          parameter_label):
-    base_name = f'{language}-{parameter}' + ('-variant-' if variant else '') \
-        + variant + '.svg'
-    full_svg_name = os.path.join(dir, base_name)
+    localizer = scanarium.get_localizer(language)
+    (_, _, _, localized_parameter_with_variant) = \
+        localize_command_parameter_variant(localizer, command, parameter,
+                                           variant)
+
+    base_name = re.sub('[^a-zA-Z]+', '-',
+                       localized_parameter_with_variant).strip('-') + '.svg'
+
+    pdf_dir = os.path.join(dir, 'pdfs', language)
+    os.makedirs(pdf_dir, exist_ok=True)
+    full_svg_name = os.path.join(pdf_dir, base_name)
 
     if file_needs_update(full_svg_name, sources, force):
         show_only_variant(tree, variant)
-        filter_svg_tree(tree, command, parameter, variant, language,
+        filter_svg_tree(tree, command, parameter, variant, localizer,
                         command_label, parameter_label)
         tree.write(full_svg_name)
 

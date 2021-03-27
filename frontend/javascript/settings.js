@@ -84,16 +84,26 @@ var Settings = {
   loadedActorVariants: function() {
       this.pdfList.innerHTML = '';
       Object.keys(actor_variants).forEach(actor => actor_variants[actor].forEach(variant => {
-          var variant_suffix = '';
+          const localized_actor = localize_parameter('actor_name', actor);
+          var basename = localized_actor;
           if (variant) {
-              variant_suffix = '-variant-' + variant;
+              const localized_variant = localize_parameter('parameter_variant_name', variant);
+              basename = localize('{parameter_name} ({parameter_variant_name})', {
+                  parameter_name: localized_actor,
+                  parameter_variant_name: localized_variant,
+              });
           }
+          basename = basename.replace(/[^a-zA-Z]+/g, '-');
+          basename = basename.replace(/^-/g, '');
+          basename = basename.replace(/-$/g, '');
+
+          var langDir = Object.keys(localization).length ? language : 'fallback';
           var pdfImage = document.createElement('img');
-          pdfImage.src = 'scenes/' + scene + '/actors/' + actor + '/' + actor + variant_suffix + '-thumb.jpg';
+          pdfImage.src = 'scenes/' + scene + '/actors/' + actor + '/pdfs/' + langDir + '/' + basename + '-thumb.jpg';
           pdfImage.alt = localize_parameter('actor_name', actor);
 
           var pdfLink = document.createElement('a');
-          pdfLink.href = 'scenes/' + scene + '/actors/' + actor + '/' + actor + variant_suffix + '.pdf';
+          pdfLink.href = 'scenes/' + scene + '/actors/' + actor + '/pdfs/' + langDir + '/' + basename + '.pdf';
           pdfLink.appendChild(pdfImage);
 
           this.pdfList.appendChild(pdfLink);

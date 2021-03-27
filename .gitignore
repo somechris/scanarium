@@ -4,6 +4,7 @@ __pycache__
 /commands/*/*/*.svg
 !/commands/*/*/*-undecorated.svg
 /commands/*/*/*.pdf
+/commands/*/*/pdfs
 /conf/scanarium.conf
 /conf/cameraParameters*.xml
 /conf/calibration*.xml
@@ -16,6 +17,7 @@ __pycache__
 /scenes/*/actors/*/*-mask.png
 /scenes/*/actors/*/*-thumb.jpg
 /scenes/*/actors/*/*.pdf
+/scenes/*/actors/*/pdfs
 /scenes/*/*-thumb.jpg
 /scenes/*/actor-variants.json
 /scenes/scenes.json

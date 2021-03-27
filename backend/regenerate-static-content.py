@@ -4,6 +4,7 @@ import copy
 import os
 import locale
 import logging
+import re
 import sys
 import xml.etree.ElementTree as ET
 import qrcode
@@ -475,6 +476,23 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
                            erode=True)
 
 
+def expand_languages(scanarium, language):
+    if language is None or language == '':
+        language = 'fallback'
+
+    if language == 'all':
+        l10n_dir = scanarium.get_localization_dir_abs()
+        languages = ['fallback']
+        for file in os.listdir(l10n_dir):
+            if file.endswith('.json'):
+                file = file[:-5]
+                if len(file) == 2 and re.match('^[a-z]*$', file):
+                    languages.append(file)
+    else:
+        languages = [language]
+    return languages
+
+
 def regenerate_static_content_command_parameter(
         scanarium, dir, command, parameter, is_actor, language, force,
         extra_decoration_name):
@@ -489,10 +507,12 @@ def regenerate_static_content_command_parameter(
                                                extra_decoration_name)
     variants = extract_variants(raw_tree)
     variants.sort()
-    for variant in variants:
-        svg_variant_pipeline(scanarium, dir, command, parameter, variant,
-                             copy.deepcopy(raw_tree), sources, is_actor,
-                             language, force, command_label, parameter_label)
+    for language in expand_languages(scanarium, language):
+        for variant in variants:
+            svg_variant_pipeline(scanarium, dir, command, parameter, variant,
+                                 copy.deepcopy(raw_tree), sources, is_actor,
+                                 language, force, command_label,
+                                 parameter_label)
     return variants
 
 
@@ -554,7 +574,8 @@ def regenerate_static_content(scanarium, command, parameter, language, force):
 def register_arguments(scanarium, parser):
     parser.add_argument('--language',
                         help='Localize for the given language '
-                        '(E.g.: \'de\' for German)', default='fallback')
+                        '(E.g.: \'de\' for German) Use `all` to localize for '
+                        'all available languages', default='all')
     parser.add_argument('--force',
                         help='Regenerate all files, even if they are not'
                         'stale',

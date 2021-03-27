@@ -16,6 +16,7 @@ var default_global_config = {
 var global_config = {};
 
 var scenes_config = []; // Initialized in settings.js
+var actor_variants = []; // Initialized in settings.js
 
 function getConfig(key) {
   return global_config[key] || default_global_config[key];

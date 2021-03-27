@@ -38,7 +38,7 @@ var sanitize_list = function(value, field) {
     return ret;
 }
 
-var sanitize_dictionary = function(value, field) {
+var sanitize_dictionary = function(value, field, allow_lists) {
     var value = sanitize_resolve(value, field);
     if (typeof(value) != 'object' || value == null) {
         value = {};
@@ -49,6 +49,8 @@ var sanitize_dictionary = function(value, field) {
         var value_sanitized = '';
         if (typeof(value[key]) == 'boolean') {
             value_sanitized = sanitize_boolean(value[key]);
+        } else if (allow_lists && Array.isArray(value[key])) {
+            value_sanitized = sanitize_list(value[key]);
         } else {
             value_sanitized = sanitize_string(value[key]);
         }

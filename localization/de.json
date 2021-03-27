@@ -29,6 +29,7 @@
     "Intentional error from the \"debug:fail\" command": "Absichtlicher Fehler vom Kommando \"debug:fail\"",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ist kein Verzeichnis",
     "Loading scene data ...": "Lade Szenen Daten ...",
+    "Loading actor data ...": "Lade Figuren Daten ...",
     "No image selected. Upload aborted.": "Kein Bild ausgewählt. Hochladen abgebrochen",
     "Pause/Resume": "Pause",
     "Paused": "Pause",

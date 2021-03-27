@@ -31,6 +31,17 @@ var Settings = {
       }
   },
 
+  loadActorVariants: function() {
+      if (actor_variants.length == 0) {
+          loadJson(scene_dir + '/actor-variants.json', function(payload) {
+              actor_variants = sanitize_dictionary(payload, undefined, true);
+              Settings.loadedActorVariants();
+          });
+      } else {
+          Settings.loadedActorVariants();
+      }
+  },
+
   get_localized_sorted_list_copy: function(list, parameter_name) {
       var scenes = list.slice();
 
@@ -70,6 +81,26 @@ var Settings = {
       });
   },
 
+  loadedActorVariants: function() {
+      this.pdfList.innerHTML = '';
+      Object.keys(actor_variants).forEach(actor => actor_variants[actor].forEach(variant => {
+          var variant_suffix = '';
+          if (variant) {
+              variant_suffix = '-variant-' + variant;
+          }
+          var pdfImage = document.createElement('img');
+          pdfImage.src = 'scenes/' + scene + '/actors/' + actor + '/' + actor + variant_suffix + '-thumb.jpg';
+          pdfImage.alt = localize_parameter('actor_name', actor);
+
+          var pdfLink = document.createElement('a');
+          pdfLink.href = 'scenes/' + scene + '/actors/' + actor + '/' + actor + variant_suffix + '.pdf';
+          pdfLink.appendChild(pdfImage);
+
+          this.pdfList.appendChild(pdfLink);
+      }));
+      console.log(actor_variants);
+  },
+
   generateScenesSections: function() {
       var heading = this.generateHeading('Switch scene');
       var sceneList = document.createElement('p');
@@ -84,20 +115,9 @@ var Settings = {
       var heading = this.generateHeading('Actor PDFs for scene {scene_name}', {scene_name: scene});
       var pdfList = document.createElement('p');
       pdfList.id = 'pdf-list';
+      pdfList.innerHTML = localize('Loading actor data ...');
 
-      var actors = this.get_localized_sorted_list_copy(Object.keys(ScActorManager.actors_config.actors), 'actor_name');
-      actors.forEach(actor => {
-          var pdfImage = document.createElement('img');
-          pdfImage.src = 'scenes/' + scene + '/actors/' + actor + '/' + actor + '-thumb.jpg';
-          pdfImage.alt = localize_parameter('actor_name', actor);
-
-          var pdfLink = document.createElement('a');
-          pdfLink.href = 'scenes/' + scene + '/actors/' + actor + '/' + actor + '.pdf';
-          pdfLink.appendChild(pdfImage);
-
-          pdfList.appendChild(pdfLink);
-      });
-
+      this.pdfList = pdfList;
       return [heading, pdfList];
   },
 
@@ -121,6 +141,7 @@ var Settings = {
     Array.prototype.push.apply(sections, this.generatePdfSections());
 
     this.loadScenesConfig();
+    this.loadActorVariants();
     sections.forEach(section => this.panel.appendChild(section));
     document.body.appendChild(this.panel);
   },

@@ -12,7 +12,7 @@ var Settings = {
 
   generateHeading: function(title, localization_parameters) {
       var heading = document.createElement('h2');
-      heading.innerHTML = localize(title, localization_parameters);
+      heading.textContent = localize(title, localization_parameters);
       return heading;
   },
 
@@ -62,7 +62,7 @@ var Settings = {
 
   loadedScenesConfig: function() {
       var scenes = this.get_localized_sorted_list_copy(scenes_config, 'scene_name');
-      this.sceneList.innerHTML = '';
+      this.sceneList.textContent = '';
       scenes.forEach(scene => {
           var sceneImage = document.createElement('img');
           sceneImage.src = 'scenes/' + scene + '/scene-bait-thumb.jpg';
@@ -82,7 +82,7 @@ var Settings = {
   },
 
   loadedActorVariants: function() {
-      this.pdfList.innerHTML = '';
+      this.pdfList.textContent = '';
       var langDir = Object.keys(localization).length ? language : 'fallback';
       var pdfs = {}
       Object.keys(actor_variants).forEach(actor => actor_variants[actor].forEach(variant => {
@@ -124,7 +124,7 @@ var Settings = {
       var heading = this.generateHeading('Switch scene');
       var sceneList = document.createElement('p');
       sceneList.id = 'section-scene-switcher';
-      sceneList.innerHTML = localize('Loading scene data ...');
+      sceneList.textContent = localize('Loading scene data ...');
 
       this.sceneList = sceneList;
       return [heading, sceneList];
@@ -134,7 +134,7 @@ var Settings = {
       var heading = this.generateHeading('Actor PDFs for scene {scene_name}', {scene_name: scene});
       var pdfList = document.createElement('p');
       pdfList.id = 'pdf-list';
-      pdfList.innerHTML = localize('Loading actor data ...');
+      pdfList.textContent = localize('Loading actor data ...');
 
       this.pdfList = pdfList;
       return [heading, pdfList];
@@ -180,7 +180,7 @@ var SettingsButton = {
     this.hide();
     this.button = document.createElement('button');
     this.button.id = 'settings-button';
-    this.button.innerHTML = localize('Settings');
+    this.button.textContent = localize('Settings');
     this.button.onclick = function(e) {
         Settings.toggle();
         e.stopPropagation();

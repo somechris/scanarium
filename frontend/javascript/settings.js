@@ -22,7 +22,7 @@ var Settings = {
 
   loadScenesConfig: function() {
       if (scenes_config.length == 0) {
-          loadDynamicConfig(dyn_dir + '/scenes.json', function(payload) {
+          loadDynamicConfig(scenes_dir + '/scenes.json', function(payload) {
               scenes_config = sanitize_list(payload);
               Settings.loadedScenesConfig();
           });

@@ -510,9 +510,10 @@ def regenerate_static_content_command_parameters(
 
 
 def regenerate_static_content_commands(
-        scanarium, dir, command, parameter, is_actor, localizer, force):
+        scanarium, dir, command_arg, parameter, is_actor, localizer, force):
+    scenes = []
     if os.path.isdir(dir):
-        commands = os.listdir(dir) if command is None else [command]
+        commands = os.listdir(dir) if command_arg is None else [command_arg]
         commands.sort()
         for command in commands:
             command_dir = os.path.join(dir, command)
@@ -525,10 +526,14 @@ def regenerate_static_content_commands(
                     generate_thumbnail(scanarium, command_dir,
                                        'scene-bait.png', force, shave=False)
                     command_dir = os.path.join(command_dir, 'actors')
+                    scenes.append(command)
                 if os.path.isdir(command_dir):
                     regenerate_static_content_command_parameters(
                         scanarium, command_dir, command, parameter, is_actor,
                         localizer, force, extra_decoration_name)
+        if is_actor and command_arg is None:
+            file = os.path.join(scanarium.get_scenes_dir_abs(), 'scenes.json')
+            scanarium.dump_json(file, scenes)
 
 
 def regenerate_static_content(scanarium, command, parameter, localizer, force):

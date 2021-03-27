@@ -284,8 +284,10 @@ def expand_qr_pixel_to_qr_code(element, data):
         del(element.attrib[attrib])
 
 
-def filter_svg_tree(tree, command, parameter, variant, localizer,
+def filter_svg_tree(tree, command, parameter, variant, language,
                     command_label, parameter_label):
+    localizer = scanarium.get_localizer(language)
+
     def localize_parameter_with_alternative(key, value, alternative_keys=[]):
         ret = localizer.localize_parameter(key, value)
         for alternative_key in alternative_keys:
@@ -450,14 +452,14 @@ def generate_full_svg_tree(scanarium, dir, parameter, extra_decoration_name):
 
 
 def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
-                         sources, is_actor, localizer, force, command_label,
+                         sources, is_actor, language, force, command_label,
                          parameter_label):
     base_name = parameter + ('-variant-' if variant else '') + variant + '.svg'
     full_svg_name = os.path.join(dir, base_name)
 
     if file_needs_update(full_svg_name, sources, force):
         show_only_variant(tree, variant)
-        filter_svg_tree(tree, command, parameter, variant, localizer,
+        filter_svg_tree(tree, command, parameter, variant, language,
                         command_label, parameter_label)
         tree.write(full_svg_name)
 
@@ -471,7 +473,7 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
 
 
 def regenerate_static_content_command_parameter(
-        scanarium, dir, command, parameter, is_actor, localizer, force,
+        scanarium, dir, command, parameter, is_actor, language, force,
         extra_decoration_name):
     command_label = 'scene' if is_actor else 'command'
     parameter_label = 'actor' if is_actor else 'parameter'
@@ -487,12 +489,12 @@ def regenerate_static_content_command_parameter(
     for variant in variants:
         svg_variant_pipeline(scanarium, dir, command, parameter, variant,
                              copy.deepcopy(raw_tree), sources, is_actor,
-                             localizer, force, command_label, parameter_label)
+                             language, force, command_label, parameter_label)
     return variants
 
 
 def regenerate_static_content_command_parameters(
-        scanarium, dir, command, parameter_arg, is_actor, localizer, force,
+        scanarium, dir, command, parameter_arg, is_actor, language, force,
         extra_decoration_name):
     parameters = os.listdir(dir) if parameter_arg is None else [parameter_arg]
     parameters.sort()
@@ -502,7 +504,7 @@ def regenerate_static_content_command_parameters(
         if os.path.isdir(parameter_dir):
             variants = regenerate_static_content_command_parameter(
                 scanarium, parameter_dir, command, parameter, is_actor,
-                localizer, force, extra_decoration_name)
+                language, force, extra_decoration_name)
             command_variants[parameter] = variants
     if is_actor and parameter_arg is None:
         scanarium.dump_json(os.path.join(dir, '..', 'actor-variants.json'),
@@ -510,7 +512,7 @@ def regenerate_static_content_command_parameters(
 
 
 def regenerate_static_content_commands(
-        scanarium, dir, command_arg, parameter, is_actor, localizer, force):
+        scanarium, dir, command_arg, parameter, is_actor, language, force):
     scenes = []
     if os.path.isdir(dir):
         commands = os.listdir(dir) if command_arg is None else [command_arg]
@@ -530,19 +532,19 @@ def regenerate_static_content_commands(
                 if os.path.isdir(command_dir):
                     regenerate_static_content_command_parameters(
                         scanarium, command_dir, command, parameter, is_actor,
-                        localizer, force, extra_decoration_name)
+                        language, force, extra_decoration_name)
         if is_actor and command_arg is None:
             file = os.path.join(scanarium.get_scenes_dir_abs(), 'scenes.json')
             scanarium.dump_json(file, scenes)
 
 
-def regenerate_static_content(scanarium, command, parameter, localizer, force):
+def regenerate_static_content(scanarium, command, parameter, language, force):
     for d in [
         {'dir': scanarium.get_commands_dir_abs(), 'is_actor': False},
         {'dir': scanarium.get_scenes_dir_abs(), 'is_actor': True},
     ]:
         regenerate_static_content_commands(
-            scanarium, d['dir'], command, parameter, d['is_actor'], localizer,
+            scanarium, d['dir'], command, parameter, d['is_actor'], language,
             force)
 
 
@@ -566,4 +568,4 @@ if __name__ == "__main__":
                                       register_arguments)
     scanarium.call_guarded(
         regenerate_static_content, args.COMMAND, args.PARAMETER,
-        scanarium.get_localizer(args.language), args.force)
+        args.language, args.force)

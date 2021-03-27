@@ -108,7 +108,6 @@ var Settings = {
 
           this.pdfList.appendChild(pdfLink);
       }));
-      console.log(actor_variants);
   },
 
   generateScenesSections: function() {

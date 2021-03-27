@@ -18,7 +18,6 @@ class Scanarium(object):
         self._environment = scanarium.Environment(
             self.get_backend_dir_abs(), self._config, self._dumper)
         self._indexer = scanarium.Indexer(self.get_dynamic_directory(),
-                                          self.get_scenes_dir_abs(),
                                           self._dumper)
         self._resetter = scanarium.Resetter(
             self.get_dynamic_directory(),

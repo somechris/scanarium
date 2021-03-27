@@ -17,3 +17,4 @@ __pycache__
 /scenes/*/actors/*/*-thumb.jpg
 /scenes/*/actors/*/*.pdf
 /scenes/*/*-thumb.jpg
+/scenes/*/actor-variants.json

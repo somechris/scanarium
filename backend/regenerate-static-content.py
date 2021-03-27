@@ -483,23 +483,30 @@ def regenerate_static_content_command_parameter(
     raw_tree, sources = generate_full_svg_tree(scanarium, dir, parameter,
                                                extra_decoration_name)
     variants = extract_variants(raw_tree)
-    for variant in sorted(variants):
+    variants.sort()
+    for variant in variants:
         svg_variant_pipeline(scanarium, dir, command, parameter, variant,
                              copy.deepcopy(raw_tree), sources, is_actor,
                              localizer, force, command_label, parameter_label)
+    return variants
 
 
 def regenerate_static_content_command_parameters(
-        scanarium, dir, command, parameter, is_actor, localizer, force,
+        scanarium, dir, command, parameter_arg, is_actor, localizer, force,
         extra_decoration_name):
-    parameters = os.listdir(dir) if parameter is None else [parameter]
+    parameters = os.listdir(dir) if parameter_arg is None else [parameter_arg]
     parameters.sort()
+    command_variants = {}
     for parameter in parameters:
         parameter_dir = os.path.join(dir, parameter)
         if os.path.isdir(parameter_dir):
-            regenerate_static_content_command_parameter(
+            variants = regenerate_static_content_command_parameter(
                 scanarium, parameter_dir, command, parameter, is_actor,
                 localizer, force, extra_decoration_name)
+            command_variants[parameter] = variants
+    if is_actor and parameter_arg is None:
+        scanarium.dump_json(os.path.join(dir, '..', 'actor-variants.json'),
+                            command_variants)
 
 
 def regenerate_static_content_commands(

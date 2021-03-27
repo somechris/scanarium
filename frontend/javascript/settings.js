@@ -107,14 +107,22 @@ var Settings = {
       Object.keys(pdfs).sort().forEach(key => {
           const item = pdfs[key];
           const base_path = item['base_path'];
+          const name = item['name'];
 
           var pdfImage = document.createElement('img');
           pdfImage.src = base_path + '-thumb.jpg';
-          pdfImage.alt = item['name'];
+          pdfImage.alt = name;
+
+          var pdfLabel = document.createElement('div');
+          pdfLabel.className = 'card-label';
+          pdfLabel.textContent = name;
 
           var pdfLink = document.createElement('a');
           pdfLink.href = base_path + '.pdf';
+          pdfLink.className = 'card';
+          console.log(pdfLink);
           pdfLink.appendChild(pdfImage);
+          pdfLink.appendChild(pdfLabel);
 
           this.pdfList.appendChild(pdfLink);
       });
@@ -132,8 +140,9 @@ var Settings = {
 
   generatePdfSections: function() {
       var heading = this.generateHeading('Actor PDFs for scene {scene_name}', {scene_name: scene});
-      var pdfList = document.createElement('p');
+      var pdfList = document.createElement('div');
       pdfList.id = 'pdf-list';
+      pdfList.className = 'card-container';
       pdfList.textContent = localize('Loading actor data ...');
 
       this.pdfList = pdfList;

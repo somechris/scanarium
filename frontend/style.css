@@ -51,3 +51,41 @@ button {
 #file-upload-form {
     opacity: 0;
 }
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+   text-align: center;
+   color: black;
+   border: 2px solid white;
+}
+
+.card:link {
+  text-decoration: none;
+}
+
+.card:visited {
+  text-decoration: none;
+}
+
+.card:hover {
+  text-decoration: none;
+  background-color: #e5f8ff;
+  border: 2px solid #35c8ff;
+}
+
+.card:active {
+  text-decoration: none;
+}
+
+.card-label {
+   padding: 0em 1em 1em 1em;
+}
+
+#pdf-list > .card {
+/*    width: max(9em, 150px);*/
+    width: 9em;
+}

@@ -64,9 +64,14 @@ var Settings = {
       var scenes = this.get_localized_sorted_list_copy(scenes_config, 'scene_name');
       this.sceneList.textContent = '';
       scenes.forEach(scene => {
+          const localized_scene_name = localize_parameter('scene_name', scene);
           var sceneImage = document.createElement('img');
           sceneImage.src = 'scenes/' + scene + '/scene-bait-thumb.jpg';
-          sceneImage.alt = localize_parameter('scene_name', scene);
+          sceneImage.alt = localized_scene_name;
+
+          var sceneLabel = document.createElement('div');
+          sceneLabel.className = 'card-label';
+          sceneLabel.textContent = localized_scene_name;
 
           var sceneLink = document.createElement('a');
           sceneLink.href = '';
@@ -75,7 +80,9 @@ var Settings = {
               e.stopPropagation();
               e.preventDefault();
           };
+          sceneLink.className = 'card';
           sceneLink.appendChild(sceneImage);
+          sceneLink.appendChild(sceneLabel);
 
           this.sceneList.appendChild(sceneLink);
       });
@@ -132,6 +139,7 @@ var Settings = {
       var heading = this.generateHeading('Switch scene');
       var sceneList = document.createElement('p');
       sceneList.id = 'section-scene-switcher';
+      sceneList.className = 'card-container';
       sceneList.textContent = localize('Loading scene data ...');
 
       this.sceneList = sceneList;

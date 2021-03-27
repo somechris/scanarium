@@ -89,3 +89,8 @@ button {
 /*    width: max(9em, 150px);*/
     width: 9em;
 }
+
+#section-scene-switcher > .card {
+/*    width: max(10em, 160px);*/
+    width: 10em;
+}

@@ -1,28 +1,42 @@
-var cgis = {
-  ' ': 'scan',
-  'n': 'reset-dynamic-content',
-  's': 'show-source',
-  'r': 'reindex'
+var keymap = {
+  ' ': 'cgi:scan',
+  '?': 'toggle-help',
+  'f': 'fullscreen',
+  'p': 'toggle-pause',
+  'n': 'cgi:reset-dynamic-content',
+  's': 'cgi:show-source',
+  'r': 'cgi:reindex',
 };
 
 document.addEventListener("keypress", function(e) {
-  if (e.key === 'f') {
-    canvases = document.getElementsByTagName('canvas');
-    if (canvases.length) {
-      canvases[0].requestFullscreen();
+    if (e.key in keymap) {
+        var command = keymap[e.key];
+        if (command.startsWith('cgi:')) {
+            callCgi(command.substring(4));
+        } else {
+            switch (command) {
+            case 'fullscreen':
+                canvases = document.getElementsByTagName('canvas');
+                if (canvases.length) {
+                    canvases[0].requestFullscreen();
+                }
+                break;
+            case 'toggle-help':
+                // Phaser does not offer a keycode for question mark, so we trigger from
+                // outside.
+                HelpPage.toggleVisibility();
+                break;
+            case 'toggle-pause':
+                // We (un)pause outside of the game itself, as a paused game did not handle
+                // keydown events reliable and hence made it tricky to unpause.
+                PauseManager.toggle();
+                break;
+            default:
+                const msg = localize('Unknown frontend command "{command}"', {command: command});
+                MessageManager.addMessage(msg, 'failed');
+            }
+        }
     }
-  } else if (e.key === 'p') {
-    // We (un)pause outside of the game itself, as a paused game did not handle
-    // keydown events reliable and hence made it tricky to unpause.
-    PauseManager.toggle();
-  } else if (e.key === '?') {
-    // Phaser does not offer a keycode for question mark, so we trigger from
-    // outside.
-    HelpPage.toggleVisibility();
-  } else if (e.key in cgis) {
-    var cgi = cgis[e.key];
-    callCgi(cgi);
-  }
 }, false);
 
 

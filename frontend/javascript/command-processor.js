@@ -98,13 +98,29 @@ var CommandProcessor = {
     processCommandReset: function(capsule) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');
-        if (is_ok) {
-            template = 'Reset all dynamic content';
-            document.location.reload();
-        } else {
-            template = 'Resetting all dynamic content failed';
+        var reset_scene = '';
+        if (parameters.length >= 2) {
+            reset_scene = parameters[1];
         }
-        return localize(template);
+        if (is_ok && parameters.length == 2 && parameters[0] == 'DynamicContent') {
+            if (reset_scene == '') {
+                template = 'All scenes got reset';
+            } else {
+                template = 'Scene \"{scene_name}\" got reset';
+            }
+
+            if (reset_scene == '' || reset_scene == scene) {
+                // The current scene got reset, so we need to reload.
+                document.location.reload();
+            }
+        } else {
+            if (reset_scene == '') {
+                template = 'Resetting all scenes failed';
+            } else {
+                template = 'Resetting scene \"{scene_name}\" failed';
+            }
+        }
+        return localize(template, {'scene_name': reset_scene});
     },
 
     processNew: function(capsule, prefix) {

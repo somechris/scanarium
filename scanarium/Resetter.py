@@ -49,7 +49,8 @@ class Resetter(object):
 
         if log:
             ret = self._command_logger.log(
-                None, exc_info, 'reset', ['DynamicContent'])
+                None, exc_info, 'reset', ['DynamicContent',
+                                          scene if scene else ''])
         else:
             if exc_info is not None:
                 raise exc_info[1]

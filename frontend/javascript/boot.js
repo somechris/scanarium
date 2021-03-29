@@ -7,6 +7,8 @@ function boot_step_2() {
 function boot_step_1(json) {
   global_config = json;
 
+  pruneForbiddenCommandsFromEventMap();
+
   scene = getUrlParameter('scene', getConfig('default_scene'));
   scene_dir = scenes_dir + '/' + scene;
   dyn_scene_dir = dyn_dir + '/scenes/' + scene;

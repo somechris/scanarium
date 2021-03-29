@@ -56,11 +56,11 @@ document.addEventListener("keypress", function(e) {
 }, false);
 
 
-function pause_manager_toggle(event) {
+function root_pointer_event(event) {
   if (!event.handled_by_scanarium_settings) {
     run_frontend_command('toggle-pause');
   }
 }
 
-document.addEventListener("click", pause_manager_toggle);
-document.addEventListener("touchstart", pause_manager_toggle);
+document.addEventListener("click", root_pointer_event);
+document.addEventListener("touchstart", root_pointer_event);

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import logging
 import sys
 
@@ -12,12 +13,22 @@ del sys.path[0]
 logger = logging.getLogger(__name__)
 
 
-def reset_dynamic_content(scanarium):
-    return scanarium.reset_dynamic_content()
+def reset_dynamic_content(scanarium, scene):
+    scene = re.sub('[^a-zA-Z]+', '-', scene)
+    return scanarium.reset_dynamic_content(scene)
+
+
+def register_arguments(scanarium, parser):
+    parser.add_argument('scene',
+                        help='The scene to reset dynamic content for. If '
+                        'empty, reset content for all scenes.',
+                        nargs='?', default='')
 
 
 if __name__ == "__main__":
     scanarium = Scanarium()
-    scanarium.handle_arguments('Resets all dynamic content '
-                               '(Deletes all scanned actors, ...)')
-    scanarium.call_guarded(reset_dynamic_content)
+    args = scanarium.handle_arguments(
+        'Resets dynamic content (Deletes scanned actors, ...)',
+        register_arguments,
+        whitelisted_cgi_fields={'scene': 1})
+    scanarium.call_guarded(reset_dynamic_content, args.scene)

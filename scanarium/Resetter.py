@@ -15,10 +15,10 @@ class Resetter(object):
         self._indexer = indexer
         self._command_logger = command_logger
 
-    def reset_dynamic_content_unlogged(self):
+    def reset_dynamic_content_unlogged(self, scene):
         exc_info = None
         scenes_dir_abs = os.path.join(self._dynamic_dir_abs, 'scenes')
-        for scene in os.listdir(scenes_dir_abs):
+        for scene in ([scene] if scene else os.listdir(scenes_dir_abs)):
             logging.debug(f'Resetting dynamic content for scene "{scene}" ...')
             scene_dir_abs = os.path.join(scenes_dir_abs, scene)
             if os.path.isdir(scene_dir_abs):
@@ -39,11 +39,11 @@ class Resetter(object):
                     self._indexer.reindex_actors_for_scene(scene)
         return exc_info
 
-    def reset_dynamic_content(self, log=True):
+    def reset_dynamic_content(self, scene, log=True):
         ret = None
         exc_info = None
         try:
-            exc_info = self.reset_dynamic_content_unlogged()
+            exc_info = self.reset_dynamic_content_unlogged(scene)
         except Exception:
             exc_info = sys.exc_info()
 

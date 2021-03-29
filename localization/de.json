@@ -67,7 +67,6 @@
     "Upload image": "Bild hochladen",
     "Upload of \"{image_name}\" started": "Hochladen von \"{image_name}\" gestartet",
     "fps: {fps}": "Bilder/s: {fps}",
-    "space": "Leertaste",
     "undefined error": "Unbekannter Fehler",
     "{cgi_name} failed": "{cgi_name} schlug fehl",
     "{cgi_name} ok": "{cgi_name} ok",
@@ -116,6 +115,9 @@
       "reset": "Zurücksetzen",
       "switchScene": "Szenenwechsel",
       "system": "System"
+    },
+    "event_name": {
+      " ": "Leertaste"
     },
     "parameter_label": {
       "actor": "Figur",

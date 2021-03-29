@@ -41,6 +41,9 @@
       "switchScene": "Switch scene",
       "system": "System"
     },
+    "event_name": {
+      " ": "space key"
+    },
     "parameter_label": {
       "actor": "Figur",
       "parameter": "Parameter"

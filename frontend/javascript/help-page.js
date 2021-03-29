@@ -13,7 +13,7 @@ var HelpPage = {
         {key: 'p', description: 'Pause/Resume'},
         {key: 'r', description: 'Reindex actors'},
         {key: 's', description: 'Show camera source image'},
-        {key: 'space', description: 'Scan image'},
+        {key: ' ', description: 'Scan image'},
     ],
 
     generateSprites: function() {
@@ -48,7 +48,7 @@ var HelpPage = {
         var keys = this.keys;
 
         this.keys.forEach(function (key_spec, index) {
-            var key = localize(key_spec['key'])
+            var key = localize_parameter('event_name', key_spec['key'])
             var description = localize(key_spec['description'])
 
             var textY = y + caption.height*(index + 4);

@@ -2,19 +2,6 @@ var HelpPage = {
     sprites: null,
     width: 100,
     height: 100,
-    keys: [
-        {key: '---key---', description: '---description---'},
-        {key: '?', description: 'Show/hide this help page'},
-        {key: 'c', description: 'Show/hide frame counter'},
-        {key: 'f', description: 'Switch to fullscreen mode'},
-        {key: 'h', description: 'Show/hide this help page'},
-        {key: 'm', description: 'Add another random actor'},
-        {key: 'n', description: 'Delete all your scanned actors'},
-        {key: 'p', description: 'Pause/Resume'},
-        {key: 'r', description: 'Reindex actors'},
-        {key: 's', description: 'Show camera source image'},
-        {key: ' ', description: 'Scan image'},
-    ],
 
     generateSprites: function() {
         var ret = [];
@@ -45,15 +32,36 @@ var HelpPage = {
 
         var ret = [background, caption];
 
-        var keys = this.keys;
+        var mapping = {};
+        var header = localize('---Action---');
+        mapping[header] = localize('---Description---');
 
-        this.keys.forEach(function (key_spec, index) {
-            var key = localize_parameter('event_name', key_spec['key'])
-            var description = localize(key_spec['description'])
+        Object.keys(eventMap).forEach(function (event, index) {
+            const description = localize(commands[eventMap[event]].description);
+            event = localize_parameter('event_name', event);
+            mapping[event] = description;
+        });
+
+
+        Object.keys(mapping).sort((a, b) => {
+            const weight = function(x) {
+                if (x == header) {
+                    return 0;
+                }
+                return Math.max(x.length, 2) + 1;
+            }
+
+            var ret = weight(a) - weight(b);
+            if (ret == 0) {
+                ret = (a < b) ? -1 : ((a>b) ? 1 : 0);
+            }
+            return ret;
+        }).forEach(function (event, index) {
+            var description = mapping[event];
 
             var textY = y + caption.height*(index + 4);
 
-            var text = game.add.text(0, textY, key);
+            var text = game.add.text(0, textY, event);
             text.x = x + width/2 - text.width - width / 80;
             ret.push(text);
 

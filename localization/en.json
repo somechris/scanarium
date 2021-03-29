@@ -42,7 +42,8 @@
       "system": "System"
     },
     "event_name": {
-      " ": "space key"
+      " ": "space key",
+      "pointer": "click/tap"
     },
     "parameter_label": {
       "actor": "Figur",

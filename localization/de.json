@@ -49,6 +49,7 @@
     "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",
     "Settings": "Einstellungen",
     "Show camera source image": "Zeige Kamerabild",
+    "Show/hide developer information": "Entwicklerinformationen ein-/ausblenden",
     "Show/hide frame counter": "Bildfrequenz (frames-per-second) ein-/ausblenden",
     "Show/hide this help page": "Diese Hilfe-Seite ein-/ausblenden",
     "Shutdown initiated": "Scanarium wird herunterfahren",

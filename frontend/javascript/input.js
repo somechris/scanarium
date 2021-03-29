@@ -13,40 +13,60 @@ var eventMap = {
   'pointer': 'toggle-pause',
 };
 
-var run_frontend_command = function(command) {
-    if (command.startsWith('cgi:')) {
-        callCgi(command.substring(4));
-    } else {
-        switch (command) {
-        case 'add-actor-random':
-            ScActorManager.addActorRandom();
-            break;
-        case 'fullscreen':
+var commands = {
+    'add-actor-random': {
+        description: 'Add another random actor',
+        implementation: ScActorManager.addActorRandom,
+    },
+    'cgi:scan': {
+        description: 'Scan image',
+        implementation: () => callCgi('scan'),
+    },
+    'cgi:show-source': {
+        description: 'Show camera source image',
+        implementation: () => callCgi('show-source'),
+    },
+    'cgi:reset-dynamic-content': {
+        description: 'Delete all your scanned actors',
+        implementation: () => callCgi('reset-dynamic-content'),
+    },
+    'cgi:reindex': {
+        description: 'Reindex actors',
+        implementation: () => callCgi('reindex'),
+    },
+    'fullscreen': {
+        description: 'Switch to fullscreen mode',
+        implementation: () => {
             canvases = document.getElementsByTagName('canvas');
             if (canvases.length) {
                 canvases[0].requestFullscreen();
             }
-            break;
-        case 'toggle-developer-information':
-            DeveloperInformation.toggleVisibility();
-            break;
-        case 'toggle-frame-counter':
-            FrameCounter.toggleVisibility();
-            break;
-        case 'toggle-help':
-            // Phaser does not offer a keycode for question mark, so we trigger from
-            // outside.
-            HelpPage.toggleVisibility();
-            break;
-        case 'toggle-pause':
-            // We (un)pause outside of the game itself, as a paused game did not handle
-            // keydown events reliable and hence made it tricky to unpause.
-            PauseManager.toggle();
-            break;
-        default:
-            const msg = localize('Unknown frontend command "{command}"', {command: command});
-            MessageManager.addMessage(msg, 'failed');
-        }
+        },
+    },
+    'toggle-developer-information': {
+        description: 'Show/hide developer information',
+        implementation: DeveloperInformation.toggleVisibility,
+    },
+    'toggle-frame-counter': {
+        description: 'Show/hide frame counter',
+        implementation: FrameCounter.toggleVisibility,
+    },
+    'toggle-help': {
+        description: 'Show/hide this help page',
+        implementation: HelpPage.toggleVisibility,
+    },
+    'toggle-pause': {
+        description: 'Pause/Resume',
+        implementation: PauseManager.toggle,
+    },
+};
+
+var run_frontend_command = function(command) {
+    if (command in commands) {
+        commands[command]['implementation']();
+    } else {
+        const msg = localize('Unknown frontend command "{command}"', {command: command});
+        MessageManager.addMessage(msg, 'failed');
     }
 }
 

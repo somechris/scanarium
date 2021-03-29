@@ -12,19 +12,19 @@ var DeveloperInformation = {
     },
 
     toggleVisibility: function() {
-        if (this.sprite) {
-            this.sprite.destroy();
-            this.sprite = null;
+        if (DeveloperInformation.sprite) {
+            DeveloperInformation.sprite.destroy();
+            DeveloperInformation.sprite = null;
         } else {
             const style =  {
               fontSize: Math.ceil(16 * window.devicePixelRatio).toString() + 'px',
             };
-            this.sprite = game.add.text(0, 0, 'Developer Information', style);
-            this.sprite.setOrigin(0, 1);
-            bringToFront(this.sprite);
-            this.relayout();
+            DeveloperInformation.sprite = game.add.text(0, 0, 'Developer Information', style);
+            DeveloperInformation.sprite.setOrigin(0, 1);
+            bringToFront(DeveloperInformation.sprite);
+            DeveloperInformation.relayout();
         }
-        setUrlParameterBoolean(this.urlParameter, this.sprite != null);
+        setUrlParameterBoolean(DeveloperInformation.urlParameter, DeveloperInformation.sprite != null);
     },
 
     formatDuration: function() {

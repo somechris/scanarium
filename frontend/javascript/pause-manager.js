@@ -6,10 +6,10 @@ var PauseManager = {
   },
 
   toggle: function() {
-    if (this.paused) {
-      this.resume();
+    if (PauseManager.paused) {
+      PauseManager.resume();
     } else {
-      this.pause();
+      PauseManager.pause();
     }
   },
 

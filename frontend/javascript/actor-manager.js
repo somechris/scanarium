@@ -162,7 +162,7 @@ var ScActorManager = {
     },
 
     addActorRandom: function() {
-        var actor_spec = this.getNewActorNameWithFlavor();
+        var actor_spec = ScActorManager.getNewActorNameWithFlavor();
         if (actor_spec === null) {
             // Configs currently do not provide good actor configs
             return;
@@ -170,7 +170,7 @@ var ScActorManager = {
 
         var actor_name = actor_spec[0];
         var flavor = actor_spec[1];
-        this.addActor(actor_name, flavor);
+        ScActorManager.addActor(actor_name, flavor);
     },
 
     addActor: function(actor_name, flavor) {

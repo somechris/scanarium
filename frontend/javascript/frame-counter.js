@@ -19,21 +19,21 @@ var FrameCounter = {
     },
 
     toggleVisibility: function() {
-        this.showFrameCount = !(this.showFrameCount);
-        if (this.showFrameCount) {
+        FrameCounter.showFrameCount = !(FrameCounter.showFrameCount);
+        if (FrameCounter.showFrameCount) {
             const style =  {
               fontSize: Math.ceil(16 * window.devicePixelRatio).toString() + 'px',
             };
-            this.frameCountSprite = game.add.text(0, 0, '', style);
-            this.relayout();
-            this.formatCount('?');
-            bringToFront(this.frameCountSprite);
+            FrameCounter.frameCountSprite = game.add.text(0, 0, '', style);
+            FrameCounter.relayout();
+            FrameCounter.formatCount('?');
+            bringToFront(FrameCounter.frameCountSprite);
         } else {
-            if (this.frameCountSprite != null) {
-                this.frameCountSprite.destroy();
+            if (FrameCounter.frameCountSprite != null) {
+                FrameCounter.frameCountSprite.destroy();
             }
         }
-        setUrlParameterBoolean(this.urlParameter, this.showFrameCount);
+        setUrlParameterBoolean(FrameCounter.urlParameter, FrameCounter.showFrameCount);
     },
 
     update: function(time, delta, lastTime) {

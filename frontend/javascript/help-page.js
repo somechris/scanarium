@@ -75,13 +75,13 @@ var HelpPage = {
     },
 
     toggleVisibility: function() {
-        if (this.isVisible()) {
-            this.sprites.forEach(function (sprite, index) {
+        if (HelpPage.isVisible()) {
+            HelpPage.sprites.forEach(function (sprite, index) {
                 sprite.destroy();
             });
-            this.sprites = null;
+            HelpPage.sprites = null;
         } else {
-            this.sprites = this.generateSprites();
+            HelpPage.sprites = HelpPage.generateSprites();
         }
     },
 

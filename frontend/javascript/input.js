@@ -1,4 +1,4 @@
-var keymap = {
+var eventMap = {
   ' ': 'cgi:scan',
   '?': 'toggle-help',
   'f': 'fullscreen',
@@ -10,6 +10,7 @@ var keymap = {
   'c': 'toggle-frame-counter',
   'h': 'toggle-help',
   'd': 'toggle-developer-information',
+  'pointer': 'toggle-pause',
 };
 
 var run_frontend_command = function(command) {
@@ -49,16 +50,20 @@ var run_frontend_command = function(command) {
     }
 }
 
-document.addEventListener("keypress", function(e) {
-    if (e.key in keymap) {
-        run_frontend_command(keymap[e.key]);
+var run_event_command = function(event) {
+    if (event in eventMap) {
+        run_frontend_command(eventMap[event]);
     }
+}
+
+document.addEventListener("keypress", function(e) {
+    run_event_command(e.key);
 }, false);
 
 
 function root_pointer_event(event) {
   if (!event.handled_by_scanarium_settings) {
-    run_frontend_command('toggle-pause');
+    run_event_command('pointer');
   }
 }
 

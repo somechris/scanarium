@@ -6,6 +6,10 @@ var keymap = {
   'n': 'cgi:reset-dynamic-content',
   's': 'cgi:show-source',
   'r': 'cgi:reindex',
+  'm': 'add-actor-random',
+  'c': 'toggle-frame-counter',
+  'h': 'toggle-help',
+  'd': 'toggle-developer-information',
 };
 
 document.addEventListener("keypress", function(e) {
@@ -15,11 +19,20 @@ document.addEventListener("keypress", function(e) {
             callCgi(command.substring(4));
         } else {
             switch (command) {
+            case 'add-actor-random':
+                ScActorManager.addActorRandom();
+                break;
             case 'fullscreen':
                 canvases = document.getElementsByTagName('canvas');
                 if (canvases.length) {
                     canvases[0].requestFullscreen();
                 }
+                break;
+            case 'toggle-developer-information':
+                DeveloperInformation.toggleVisibility();
+                break;
+            case 'toggle-frame-counter':
+                FrameCounter.toggleVisibility();
                 break;
             case 'toggle-help':
                 // Phaser does not offer a keycode for question mark, so we trigger from

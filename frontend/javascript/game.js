@@ -41,19 +41,6 @@ function create() {
     PauseManager.init();
     DeveloperInformation.init();
 
-    this.input.keyboard.on('keydown-M', function (event) {
-        ScActorManager.addActorRandom();
-    });
-    this.input.keyboard.on('keydown-C', function (event) {
-        FrameCounter.toggleVisibility();
-    });
-    this.input.keyboard.on('keydown-H', function (event) {
-        HelpPage.toggleVisibility();
-    });
-    this.input.keyboard.on('keydown-D', function (event) {
-        DeveloperInformation.toggleVisibility();
-    });
-
     this.scale.on('resize', LayoutManager.onResize, this);
     LayoutManager.onResize();
 }

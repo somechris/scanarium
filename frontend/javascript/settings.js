@@ -179,6 +179,11 @@ var Settings = {
     this.loadScenesConfig();
     this.loadActorVariants();
     sections.forEach(section => this.panel.appendChild(section));
+
+    var bottomSpacer = document.createElement('div');
+    bottomSpacer.style.padding = '1em';
+    this.panel.appendChild(bottomSpacer);
+
     document.body.appendChild(this.panel);
   },
 

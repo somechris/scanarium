@@ -1,10 +1,11 @@
 var eventMap = {
-  ' ': 'cgi:scan',
+  ' ': 'toggle-pause',
   '?': 'toggle-help',
   'f': 'fullscreen',
   'p': 'toggle-pause',
   'n': 'cgi:reset-dynamic-content',
-  's': 'cgi:show-source',
+  'i': 'cgi:show-source',
+  's': 'cgi:scan',
   'r': 'cgi:reindex',
   'm': 'add-actor-random',
   'c': 'toggle-frame-counter',

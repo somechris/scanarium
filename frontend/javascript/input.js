@@ -58,7 +58,7 @@ document.addEventListener("keypress", function(e) {
 
 function pause_manager_toggle(event) {
   if (!event.handled_by_scanarium_settings) {
-    PauseManager.toggle();
+    run_frontend_command('toggle-pause');
   }
 }
 

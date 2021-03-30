@@ -147,7 +147,7 @@ var Settings = {
   },
 
   generatePdfSections: function() {
-      var heading = this.generateHeading('Actor PDFs for scene {scene_name}', {scene_name: scene});
+      var heading = this.generateHeading('PDFs for scene {scene_name}', {scene_name: scene});
       var pdfList = document.createElement('div');
       pdfList.id = 'pdf-list';
       pdfList.className = 'card-container';
@@ -158,7 +158,7 @@ var Settings = {
   },
 
   generateActorsSections: function() {
-      var heading = this.generateHeading('Actors');
+      var heading = this.generateHeading('Delete actors');
       var resetSceneButton = document.createElement('button');
       resetSceneButton.id = 'reset-scene-button';
       resetSceneButton.textContent = localize('Reset scene "{scene_name}"', {'scene_name': scene});

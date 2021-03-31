@@ -13,3 +13,4 @@ from .Result import Result
 from .Scanner import Scanner
 from .Scanarium import Scanarium
 from .ScanariumError import ScanariumError
+from .Util import Util

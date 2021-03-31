@@ -24,6 +24,7 @@ class Scanarium(object):
             self.get_dynamic_sample_dir_abs(),
             self._indexer, self._command_logger)
         self._scanner = scanarium.Scanner(self._config, self._command_logger)
+        self._util = scanarium.Util()
 
     def get_config(self, section=None, key=None, kind='string',
                    allow_empty=False):
@@ -146,3 +147,10 @@ class Scanarium(object):
 
     def unregister_for_cleanup(self, f):
         self._environment.unregister_for_cleanup(f)
+
+    def generate_thumbnail(self, dir, file, force=False, shave=True,
+                           erode=False):
+        self._util.generate_thumbnail(self, dir, file, force, shave, erode)
+
+    def file_needs_update(self, destination, sources, force=False):
+        return self._util.file_needs_update(destination, sources, force)

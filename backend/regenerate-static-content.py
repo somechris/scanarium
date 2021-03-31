@@ -171,10 +171,10 @@ def generate_mask(scanarium, dir, file, force):
                              'generating mask {target_file}',
                              {'source_file': source, 'target_file': target})
 
-    if file_needs_update(adapted_source, [source], force):
+    if scanarium.file_needs_update(adapted_source, [source], force):
         generate_adapted_mask_source(scanarium, source, adapted_source)
 
-    if file_needs_update(target, [adapted_source], force):
+    if scanarium.file_needs_update(target, [adapted_source], force):
         contour_area = get_svg_contour_rect_area(scanarium, source)
         inkscape_args = [
             '--export-id=Mask',
@@ -187,29 +187,10 @@ def generate_mask(scanarium, dir, file, force):
         run_inkscape(scanarium, inkscape_args)
 
 
-def get_thumbnail_name(dir, file):
-    basename = file.rsplit('.', 1)[0]
-    return os.path.join(dir, basename + '-thumb.jpg')
-
-
-def generate_thumbnail(scanarium, dir, file, force, shave=True, erode=False):
-    source = os.path.join(dir, file)
-    target = get_thumbnail_name(dir, file)
-
-    if file_needs_update(target, [source], force):
-        command = [scanarium.get_config('programs', 'convert'), source]
-        if shave:
-            command += ['-shave', '20%']
-        if erode:
-            command += ['-morphology', 'Erode', 'Octagon']
-        command += ['-resize', '150x100', target]
-        scanarium.run(command)
-
-
 def generate_pdf(scanarium, dir, file, force):
     source = os.path.join(dir, file)
     target = os.path.join(dir, file.rsplit('.', 1)[0] + '.pdf')
-    if file_needs_update(target, [source], force):
+    if scanarium.file_needs_update(target, [source], force):
         inkscape_args = [
             '--export-area-page',
             '--export-pdf=%s' % (target),
@@ -232,14 +213,6 @@ def register_svg_namespaces():
     }
     for k, v in namespaces.items():
         ET.register_namespace(k, v)
-
-
-def file_needs_update(destination, sources, force=False):
-    ret = True
-    if os.path.isfile(destination) and not force:
-        ret = any(os.stat(destination).st_mtime < os.stat(source).st_mtime
-                  for source in sources)
-    return ret
 
 
 def get_qr_path_string(x, y, x_unit, y_unit, data):
@@ -474,7 +447,7 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
     os.makedirs(pdf_dir, exist_ok=True)
     full_svg_name = os.path.join(pdf_dir, base_name)
 
-    if file_needs_update(full_svg_name, sources, force):
+    if scanarium.file_needs_update(full_svg_name, sources, force):
         show_only_variant(tree, variant)
         filter_svg_tree(tree, command, parameter, variant, localizer,
                         command_label, parameter_label)
@@ -485,8 +458,8 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
     if is_actor:
         if variant == '' and language == 'fallback':
             generate_mask(scanarium, dir, full_svg_name, force)
-        generate_thumbnail(scanarium, dir, full_svg_name, force, shave=False,
-                           erode=True)
+        scanarium.generate_thumbnail(dir, full_svg_name, force, shave=False,
+                                     erode=True)
 
 
 def expand_languages(scanarium, language):
@@ -561,8 +534,8 @@ def regenerate_static_content_commands(
                 if not os.path.isfile(extra_decoration_name):
                     extra_decoration_name = None
                 if is_actor:
-                    generate_thumbnail(scanarium, command_dir,
-                                       'scene-bait.png', force, shave=False)
+                    scanarium.generate_thumbnail(
+                        command_dir, 'scene-bait.png', force, shave=False)
                     command_dir = os.path.join(command_dir, 'actors')
                     scenes.append(command)
                 if os.path.isdir(command_dir):

@@ -446,8 +446,11 @@ def save_image(scanarium, image, scene, actor):
     dynamic_dir = scanarium.get_dynamic_directory()
     image_dir = os.path.join(dynamic_dir, 'scenes', actor_path)
     os.makedirs(image_dir, exist_ok=True)
-    image_file = os.path.join(image_dir, '%s.png' % timestamp)
+    basename = f'{timestamp}.png'
+    image_file = os.path.join(image_dir, basename)
     cv2.imwrite(image_file, image)
+    scanarium.generate_thumbnail(image_dir, basename, shave=False,
+                                 erode=False)
 
     return timestamp
 

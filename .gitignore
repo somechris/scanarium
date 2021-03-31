@@ -18,6 +18,6 @@ __pycache__
 /scenes/*/actors/*/*-thumb.jpg
 /scenes/*/actors/*/*.pdf
 /scenes/*/actors/*/pdfs
-/scenes/*/*-thumb.jpg
 /scenes/*/actor-variants.json
 /scenes/scenes.json
+*-thumb.jpg

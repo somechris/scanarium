@@ -36,11 +36,19 @@ generate_command_log() {
   echo "[]" >"dynamic/command-log.json"
 }
 
+generate_sample_content() {
+    cp -a "dynamic.sample/"* "dynamic"
+    local FILE=
+    while read FILE
+    do
+        convert "$FILE" -resize 150x100 "${FILE%.png}-thumb.jpg"
+    done < <(find -iname 'sample.png')
+}
 
 step "phaser ${PHASER_VERSION}" "$PHASER_TARGET" curl --output "$PHASER_TARGET" "https://cdn.jsdelivr.net/npm/phaser@${PHASER_VERSION}/dist/phaser.min.js"
 step "example configuration" "$CONF_TARGET" cp "conf/scanarium.conf.example" "$CONF_TARGET"
 step "content directory" "dynamic" mkdir -p "dynamic"
-step "sample content" "dynamic/scenes/space/actors/SimpleRocket/sample.png" cp -a "dynamic.sample/"* "dynamic"
+step "sample content" "dynamic/scenes/space/actors/SimpleRocket/sample.png" generate_sample_content
 step "global config" "dynamic/config.json" generate_global_config
 step "command log" "dynamic/command-log.json" generate_command_log
 step "reindexing content" "dynamic/scenes/space/actors-latest.json" ./reindex.sh

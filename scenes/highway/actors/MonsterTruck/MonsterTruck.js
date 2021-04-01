@@ -12,7 +12,7 @@ class MonsterTruck extends Vehicle {
           ];
         const angularShake = 0.2;
         const yShake = 3;
-        super('MonsterTruck', flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
+        super(flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
     }
 }
 

@@ -12,7 +12,7 @@ class Bus extends Vehicle {
           ];
         const angularShake = 0.1;
         const yShake = 1.5;
-        super('Bus', flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
+        super(flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
     }
 }
 

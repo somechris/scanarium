@@ -12,7 +12,7 @@ class OldFamilyCar extends Vehicle {
           ];
         const angularShake = 0.2;
         const yShake = 1.5;
-        super('OldFamilyCar', flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
+        super(flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
     }
 }
 

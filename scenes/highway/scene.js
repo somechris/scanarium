@@ -48,13 +48,14 @@ class Tire extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Vehicle extends Phaser.GameObjects.Container {
-    constructor(actor, flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, undercarriage, angularShake, yShake) {
+    constructor(flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, undercarriage, angularShake, yShake) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;
 
         super(game, x, 0);
 
         this.setDepth(lane.scale*100);
+        const actor = this.constructor.name;
         var image_name = actor + '-' + flavor;
         this.createTextures(image_name, tires, undercarriage);
         var body = game.add.image(0, 0, image_name + '-body');

@@ -13,7 +13,7 @@ class Truck extends Vehicle {
           ];
         const angularShake = 0.2;
         const yShake = 1.5;
-        super('Truck', flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
+        super(flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
     }
 }
 

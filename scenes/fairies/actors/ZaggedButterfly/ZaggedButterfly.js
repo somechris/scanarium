@@ -20,7 +20,7 @@ class ZaggedButterfly extends Creature {
         const wiggleAngle = 10;
         const minFlapCycleLength = 130;
         const maxFlapCycleLength = 170;
-        super('ZaggedButterfly', flavor, x, y, minWidthRef, maxWidthRef, body,
+        super(flavor, x, y, minWidthRef, maxWidthRef, body,
               wiggleX, wiggleY, wiggleAngle,
               minFlapCycleLength, maxFlapCycleLength);
     }

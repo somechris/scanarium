@@ -34,7 +34,7 @@ class WaterElf extends Creature {
         const wiggleAngle = 2;
         const minFlapCycleLength = 150;
         const maxFlapCycleLength = 190;
-        super('WaterElf', flavor, x, y, minWidthRef, maxWidthRef, body,
+        super(flavor, x, y, minWidthRef, maxWidthRef, body,
               wiggleX, wiggleY, wiggleAngle,
               minFlapCycleLength, maxFlapCycleLength);
     }

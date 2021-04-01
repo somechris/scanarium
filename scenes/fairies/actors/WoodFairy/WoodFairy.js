@@ -39,7 +39,7 @@ class WoodFairy extends Creature {
         const wiggleAngle = 2;
         const minFlapCycleLength = 120;
         const maxFlapCycleLength = 150;
-        super('WoodFairy', flavor, x, y, minWidthRef, maxWidthRef, body,
+        super(flavor, x, y, minWidthRef, maxWidthRef, body,
               wiggleX, wiggleY, wiggleAngle,
               minFlapCycleLength, maxFlapCycleLength);
     }

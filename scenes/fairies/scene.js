@@ -60,12 +60,13 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Creature extends Phaser.GameObjects.Container {
-  constructor(actor, flavor, x, y, minWidthRef, maxWidthRef, bodySpec, wiggleX, wiggleY, wiggleAngle, minFlapCycleLength, maxFlapCycleLength) {
+  constructor(flavor, x, y, minWidthRef, maxWidthRef, bodySpec, wiggleX, wiggleY, wiggleAngle, minFlapCycleLength, maxFlapCycleLength) {
     super(game, 0, 0);
     this.wiggleX = wiggleX / 2;
     this.wiggleY = wiggleY / 2;
     this.wiggleAngle = wiggleAngle / 2;
 
+    const actor = this.constructor.name;
     var flavored_actor = actor + '-' + flavor;
     this.createTextures(flavored_actor, bodySpec);
 

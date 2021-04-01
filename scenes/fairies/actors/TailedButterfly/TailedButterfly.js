@@ -20,7 +20,7 @@ class TailedButterfly extends Creature {
         const wiggleAngle = 10;
         const minFlapCycleLength = 180;
         const maxFlapCycleLength = 220;
-        super('TailedButterfly', flavor, x, y, minWidthRef, maxWidthRef, body,
+        super(flavor, x, y, minWidthRef, maxWidthRef, body,
               wiggleX, wiggleY, wiggleAngle,
               minFlapCycleLength, maxFlapCycleLength);
     }

@@ -51,7 +51,7 @@
       "pointer": "click/tap"
     },
     "parameter_label": {
-      "actor": "Figur",
+      "actor": "Actor",
       "parameter": "Parameter"
     },
     "parameter_name": {

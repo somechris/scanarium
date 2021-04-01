@@ -26,7 +26,7 @@ function spawnClouds(immediate = false) {
 
 function scene_create() {
     Wind.init();
-    ScActorManager.registerActor('Cloud', Cloud);
+    ScActorManager.registerActor(Cloud);
     ScActorManager.onActorDestroy(function(actor) {spawnClouds();}, 'Cloud');
     LayoutManager.register(function() {spawnClouds(true)});
 }

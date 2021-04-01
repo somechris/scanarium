@@ -242,8 +242,8 @@ var ScActorManager = {
         });
     },
 
-    registerActor(name, stencil) {
-        this.registeredActors[name] = stencil;
+    registerActor(clazz) {
+        this.registeredActors[clazz.name] = clazz;
     },
 
     actorInfo: function() {

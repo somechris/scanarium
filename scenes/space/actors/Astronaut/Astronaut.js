@@ -12,4 +12,4 @@ class Astronaut extends SpaceshipBase {
     }
 }
 
-ScActorManager.registerActor('Astronaut', Astronaut);
+ScActorManager.registerActor(Astronaut);

@@ -16,4 +16,4 @@ class OldFamilyCar extends Vehicle {
     }
 }
 
-ScActorManager.registerActor('OldFamilyCar', OldFamilyCar);
+ScActorManager.registerActor(OldFamilyCar);

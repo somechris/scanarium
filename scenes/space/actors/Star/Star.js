@@ -51,4 +51,4 @@ class Star extends SpaceshipBase {
   }
 }
 
-ScActorManager.registerActor('Star', Star);
+ScActorManager.registerActor(Star);

@@ -26,4 +26,4 @@ class ZaggedButterfly extends Creature {
     }
 }
 
-ScActorManager.registerActor('ZaggedButterfly', ZaggedButterfly);
+ScActorManager.registerActor(ZaggedButterfly);

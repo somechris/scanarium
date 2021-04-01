@@ -16,4 +16,4 @@ class SportsCar extends Vehicle {
     }
 }
 
-ScActorManager.registerActor('SportsCar', SportsCar);
+ScActorManager.registerActor(SportsCar);

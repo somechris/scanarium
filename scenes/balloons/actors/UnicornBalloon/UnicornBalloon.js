@@ -4,4 +4,4 @@ class UnicornBalloon extends BaseBalloon {
     }
 }
 
-ScActorManager.registerActor('UnicornBalloon', UnicornBalloon);
+ScActorManager.registerActor(UnicornBalloon);

@@ -57,13 +57,14 @@ class Thruster extends Phaser.Physics.Arcade.Sprite {
 }
 
 class SpaceshipBase extends Phaser.GameObjects.Container {
-    constructor(actor, flavor, x, y, angle, widthMin, widthMax) {
+    constructor(flavor, x, y, angle, widthMin, widthMax) {
         super(game, x, y);
 
         this.thrusters = [];
         this.nextMotionPlanningUpdate = 0;
 
         this.base_scale = Math.pow(Math.random(), 5);
+        const actor = this.constructor.name;
         var ship = game.add.image(0, 0, actor + '-' + flavor);
         var width = scaleBetween(widthMin, widthMax, this.base_scale) * refToScreen;
         var height = ship.height / ship.width * width;

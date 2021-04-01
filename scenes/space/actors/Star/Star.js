@@ -3,7 +3,7 @@ class Star extends SpaceshipBase {
     var lengthMin = 50;
     var lengthMax = 200;
 
-    super('Star', flavor, x, y, 90, lengthMin, lengthMax);
+    super(flavor, x, y, 90, lengthMin, lengthMax);
 
     this.body.setVelocityX(0);
     this.body.setVelocityY(0);

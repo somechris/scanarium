@@ -3,7 +3,7 @@ class FlyingSaucer extends SpaceshipBase {
         var lengthMin = 50;
         var lengthMax = 350;
 
-        super('FlyingSaucer', flavor, x, y, 90, lengthMin, lengthMax);
+        super(flavor, x, y, 90, lengthMin, lengthMax);
 
         var thrustScale = scaleBetween(0.06, 0.4, this.base_scale);
 

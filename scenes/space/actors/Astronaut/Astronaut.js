@@ -3,7 +3,7 @@ class Astronaut extends SpaceshipBase {
         var lengthMin = 50;
         var lengthMax = 200;
 
-        super('Astronaut', flavor, x, y, 90, lengthMin, lengthMax);
+        super(flavor, x, y, 90, lengthMin, lengthMax);
 
         var thrustScale = scaleBetween(0.10, 0.30, this.base_scale);
 

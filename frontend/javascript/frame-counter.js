@@ -36,7 +36,7 @@ var FrameCounter = {
         setUrlParameterBoolean(FrameCounter.urlParameter, FrameCounter.showFrameCount);
     },
 
-    update: function(time, delta, lastTime) {
+    update: function(time, lastTime) {
         if (this.showFrameCount) {
             if (Math.floor(lastTime / this.frameCountInterval) == Math.floor(time / this.frameCountInterval)) {
                 this.frameCount++;

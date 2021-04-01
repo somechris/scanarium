@@ -54,7 +54,7 @@ var DeveloperInformation = {
         return ret;
     },
 
-    update: function(time, delta, lastTime) {
+    update: function() {
         if (this.sprite) {
             var text = '';
             this.providers.forEach((provider) => {

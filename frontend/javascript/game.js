@@ -51,9 +51,9 @@ function update (time, delta) {
     // delta is way too often off. Especially, if the tab is in the
     // background. So we compute our own.
     delta = time - updateLastTime;
-    FrameCounter.update(time, delta, updateLastTime);
-    PageInsertionHint.update(time, delta, updateLastTime);
-    DeveloperInformation.update(time, delta, updateLastTime);
+    FrameCounter.update(time, updateLastTime);
+    PageInsertionHint.update(time);
+    DeveloperInformation.update();
 
     scene_update(time, delta);
 

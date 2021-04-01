@@ -73,7 +73,7 @@ var PageInsertionHint = {
     }
   },
 
-  update: function(time, delta, lastTime) {
+  update: function(time) {
     this.time = time;
     this.reposition();
   },

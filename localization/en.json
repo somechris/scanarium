@@ -1,5 +1,8 @@
 {
   "__comment__": "Mostly empty localization on purpose, as the default is text representation is English anyways",
+  "messages": {
+    "{PoliceCar-Decal}": "P O L I C E  "
+  },
   "parameters": {
     "actor_name": {
       "Astronaut": "Astronaut",
@@ -12,6 +15,7 @@
       "MonsterTruck": "Monster Truck",
       "OldFamilyCar": "Old Family Car",
       "PlainBalloon": "Plain Balloon",
+      "PoliceCar": "Police Car",
       "QuadBike": "Quad Bike",
       "SimpleButterfly": "Simple Butterfly",
       "SimpleRocket": "Simple Rocket",

@@ -79,6 +79,7 @@
     "{command_name} command failed": "Kommando {command_name} schlug fehl",
     "{command_name} command ok": "Kommando {command_name} ok",
     "{parameter_name} ({parameter_variant_name})": "{parameter_name} mit {parameter_variant_name}",
+    "{PoliceCar-Decal}": "P O L I Z E I",
     "↓↓↓ Insert coloring pages below ↓↓↓": "↓↓↓ Ausgemalte Bilder hier unten ins Fach einlegen ↓↓↓"
   },
   "parameters": {
@@ -92,6 +93,7 @@
       "HeartBalloon": "Herz-Luftballon",
       "MonsterTruck": "Monster-Truck",
       "OldFamilyCar": "Altes Familienauto",
+      "PoliceCar": "Polizeiauto",
       "PlainBalloon": "Einfacher Luftballon",
       "QuadBike": "Quad",
       "SimpleButterfly": "Schlichter Schmetterling",

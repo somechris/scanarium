@@ -334,8 +334,10 @@ def filter_svg_tree(tree, command, parameter, variant, localizer,
             if key == 'style' and value is not None:
                 style = {}
                 for setting in value.split(';'):
-                    k, v = setting.split(':', 1)
-                    style[k.strip()] = v
+                    setting = setting.strip()
+                    if setting:
+                        k, v = setting.split(':', 1)
+                        style[k.strip()] = v
                 for k, v in style_enforcings.items():
                     style[k] = str(v)
                 value = ';'.join(':'.join(i) for i in style.items())

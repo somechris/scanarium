@@ -79,17 +79,17 @@ class Vehicle extends Phaser.GameObjects.Container {
         game.physics.world.enable(this);
 
         if (decal && lane.leftToRight) {
-            const x = decal.x1 / decal.w * width;
-            const y = decal.y1 / decal.h * height;
-            const decal_sprite = game.add.image(x, y, image_name + '-decal');
-            const decal_width = (decal.x2 - decal.x1) / decal.w * width;
-            const decal_height = (decal.y2 - decal.y1) / decal.h * height;
-            decal_sprite.x = -decal.x1 / decal.w * width;
-            decal_sprite.y = -decal.y1 / decal.h * height;
-            decal_sprite.setOrigin(1, 0);
+            const decal_sprite = game.add.image(0, 0, image_name + '-decal');
+            const decal_width = decal_sprite.width / body_unscaled_width * width;
+            const decal_height = decal_sprite.height / body_unscaled_height * height;
+            decal_sprite.setOrigin(
+                decal.x1 / decal_sprite.width + 1,
+                decal.y1 / decal_sprite.height,
+            );
             decal_sprite.setSize(decal_width, decal_height);
             decal_sprite.setDisplaySize(decal_width, decal_height);
             this.add(decal_sprite);
+            this.decal = decal_sprite;
         }
 
         var that = this;
@@ -286,6 +286,10 @@ class Vehicle extends Phaser.GameObjects.Container {
     update(time, delta) {
       this.vehicle_body.angle = randomBetween(-this.angularShake, this.angularShake);
       this.vehicle_body.y = randomBetween(-this.yShake, this.yShake);
+      if (this.decal) {
+          this.decal.angle = this.vehicle_body.angle;
+          this.decal.y = this.vehicle_body.y;
+      }
 
       this.updateVelocity();
     }

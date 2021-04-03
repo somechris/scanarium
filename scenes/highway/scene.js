@@ -1,6 +1,7 @@
 // Scene: highway
 
 var lanes=[];
+var beaconColor={};
 
 function add_lane(yMinRef, yMaxRef, leftToRight, scale) {
   var width = (yMaxRef - yMinRef);
@@ -24,6 +25,7 @@ function relayoutLanes(width, height) {
 LayoutManager.register(relayoutLanes);
 
 function scene_preload() {
+    game.load.image('flare', scene_dir + '/flare.png');
 }
 
 function scene_create() {
@@ -48,7 +50,7 @@ class Tire extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Vehicle extends Phaser.GameObjects.Container {
-    constructor(flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, undercarriage, angularShake, yShake, decal) {
+    constructor(flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, undercarriage, angularShake, yShake, decal, beacon) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;
 
@@ -57,7 +59,7 @@ class Vehicle extends Phaser.GameObjects.Container {
         this.setDepth(lane.scale*100);
         const actor = this.constructor.name;
         var image_name = actor + '-' + flavor;
-        this.createTextures(image_name, tires, undercarriage, decal);
+        this.createTextures(image_name, tires, undercarriage, decal, beacon);
         var body = game.add.image(0, 0, image_name + '-body');
         const body_unscaled_width = body.width;
         const body_unscaled_height = body.height;
@@ -110,8 +112,28 @@ class Vehicle extends Phaser.GameObjects.Container {
         this.lane = lane;
         lane.vehicles.push(this);
 
+        var beaconSpeedFactor = 1;
+        if (beacon && Math.random() <= beacon.chance) {
+            const beacon_width = (beacon.x2 - beacon.x1) / beacon.w * width;
+            const flare = game.add.image(0, 0, 'flare');
+            const flare_width = (beacon.x2 - beacon.x1) / beacon.w * width / 32 * flare.width;
+            const flare_height = flare.height / flare.width * flare_width;
+            flare.setSize(flare_width, flare_height);
+            flare.setDisplaySize(flare_width, flare_height);
+            flare.x = ((beacon.x1 + beacon.x2) / 2)  / beacon.w * width * (lane.leftToRight ? -1 : 1);
+            flare.y = - (1 - (beacon.y1 + beacon.y2) / 2 / beacon.h) * height;
+            flare.setTint(beaconColor[image_name]);
+            this.add(flare);
+
+            beacon.sprite = flare;
+            beacon.phaseShift = Math.random() * beacon.phaseLength;
+            beacon.phaseSlotLength *= randomBetween(0.95, 1.05);
+            this.beacon = beacon;
+            beaconSpeedFactor = beacon.speedFactor;
+        }
+
         // Setting velocity
-        this.desired_velocity = randomBetween(initialMinSpeed, initialMaxSpeed) * lane.scale * (lane.leftToRight ? 1 : -1) * refToScreen;
+        this.desired_velocity = randomBetween(initialMinSpeed, initialMaxSpeed) * lane.scale * (lane.leftToRight ? 1 : -1) * refToScreen * beaconSpeedFactor;
         this.updateVelocity(this.desired_velocity);
 
         this.yRef = randomBetween(lane.yMinRef, lane.yMaxRef);
@@ -122,9 +144,9 @@ class Vehicle extends Phaser.GameObjects.Container {
       this.y = this.yRef / refHeight * scanariumConfig.height;
     }
 
-    createTextures(image_name, tires, undercarriage, decal) {
+    createTextures(image_name, tires, undercarriage, decal, beacon) {
       if (!game.textures.exists(image_name + '-body')) {
-        this.createTexturesForce(image_name, tires, undercarriage, decal);
+        this.createTexturesForce(image_name, tires, undercarriage, decal, beacon);
       }
     }
 
@@ -158,7 +180,7 @@ class Vehicle extends Phaser.GameObjects.Container {
         };
     }
 
-    createTexturesForce(image_name, tires, undercarriage, decal) {
+    createTexturesForce(image_name, tires, undercarriage, decal, beacon) {
       const that = this;
       const full_texture = game.textures.get(image_name);
       const full_texture_source_index = 0;
@@ -259,6 +281,26 @@ class Vehicle extends Phaser.GameObjects.Container {
         decal_texture.saveTexture(image_name + '-decal');
       }
 
+      if (beacon) {
+          const xStart = beacon.x1 / beacon.w * full_width;
+          const xStep = (beacon.x2 - beacon.x1) / beacon.w * full_width / 2;
+          const yStart = beacon.y1 / beacon.h * full_height;
+          const yStep = (beacon.y2 - beacon.y1) / beacon.h * full_height / 2;
+          var r=0;
+          var g=0;
+          var b=0;
+          for (var i=0; i<3; i++) {
+              for (var j=0; j<3; j++) {
+                  const color = game.textures.getPixel(xStart + i*xStep, yStart + j*yStep, image_name, '__BASE');
+                  r += color.red;
+                  g += color.green;
+                  b += color.blue;
+              }
+          }
+          var blended = Phaser.Display.Color.IntegerToColor(Phaser.Display.Color.GetColor(r/9, g/9, b/9));
+          blended.brighten(35);
+          beaconColor[image_name] = blended.color;
+      }
     }
 
     updateVelocity() {
@@ -292,6 +334,11 @@ class Vehicle extends Phaser.GameObjects.Container {
       }
 
       this.updateVelocity();
+
+      if (this.beacon) {
+          const slot = Math.floor(((time + this.beacon.phaseShift) % this.beacon.phaseLength) / this.beacon.phaseSlotLength);
+          this.beacon.sprite.visible = (this.beacon.litSlots.indexOf(slot) != -1);
+      }
     }
 
     destroy() {

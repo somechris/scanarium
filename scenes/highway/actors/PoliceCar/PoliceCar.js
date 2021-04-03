@@ -12,7 +12,8 @@ class PoliceCar extends Vehicle {
           ];
         const angularShake = 0.1;
         const yShake = 1.5;
-        super(flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake);
+        const decal = {x1: 311, y1: 239, x2: 805, y2: 318, w: 1000, h: 473};
+        super(flavor, x, y, initialMinSpeed, initialMaxSpeed, width, tires, undercarriage, angularShake, yShake, decal);
     }
 }
 ScActorManager.registerActor(PoliceCar);

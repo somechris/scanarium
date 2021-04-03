@@ -48,7 +48,7 @@ class Tire extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Vehicle extends Phaser.GameObjects.Container {
-    constructor(flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, undercarriage, angularShake, yShake) {
+    constructor(flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, undercarriage, angularShake, yShake, decal) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;
 
@@ -57,7 +57,7 @@ class Vehicle extends Phaser.GameObjects.Container {
         this.setDepth(lane.scale*100);
         const actor = this.constructor.name;
         var image_name = actor + '-' + flavor;
-        this.createTextures(image_name, tires, undercarriage);
+        this.createTextures(image_name, tires, undercarriage, decal);
         var body = game.add.image(0, 0, image_name + '-body');
         const body_unscaled_width = body.width;
         const body_unscaled_height = body.height;
@@ -77,6 +77,20 @@ class Vehicle extends Phaser.GameObjects.Container {
         this.yShake = yShake * lane.scale * refToScreen;
 
         game.physics.world.enable(this);
+
+        if (decal && lane.leftToRight) {
+            const x = decal.x1 / decal.w * width;
+            const y = decal.y1 / decal.h * height;
+            const decal_sprite = game.add.image(x, y, image_name + '-decal');
+            const decal_width = (decal.x2 - decal.x1) / decal.w * width;
+            const decal_height = (decal.y2 - decal.y1) / decal.h * height;
+            decal_sprite.x = -decal.x1 / decal.w * width;
+            decal_sprite.y = -decal.y1 / decal.h * height;
+            decal_sprite.setOrigin(1, 0);
+            decal_sprite.setSize(decal_width, decal_height);
+            decal_sprite.setDisplaySize(decal_width, decal_height);
+            this.add(decal_sprite);
+        }
 
         var that = this;
         tires.forEach((tire, i) => {
@@ -108,9 +122,9 @@ class Vehicle extends Phaser.GameObjects.Container {
       this.y = this.yRef / refHeight * scanariumConfig.height;
     }
 
-    createTextures(image_name, tires, undercarriage) {
+    createTextures(image_name, tires, undercarriage, decal) {
       if (!game.textures.exists(image_name + '-body')) {
-        this.createTexturesForce(image_name, tires, undercarriage);
+        this.createTexturesForce(image_name, tires, undercarriage, decal);
       }
     }
 
@@ -144,7 +158,7 @@ class Vehicle extends Phaser.GameObjects.Container {
         };
     }
 
-    createTexturesForce(image_name, tires, undercarriage) {
+    createTexturesForce(image_name, tires, undercarriage, decal) {
       const that = this;
       const full_texture = game.textures.get(image_name);
       const full_texture_source_index = 0;
@@ -226,6 +240,25 @@ class Vehicle extends Phaser.GameObjects.Container {
       });
       body.draw(platform);
       body.saveTexture(image_name + '-body');
+
+      if (decal) {
+        const decal_texture = game.make.renderTexture({
+          width: (decal.x2 - decal.x1) / decal.w * full_width,
+          height: (decal.y2 - decal.y1) / decal.h * full_height,
+        }, false);
+
+        const decalFrame = full_texture.add(
+            'decal', full_texture_source_index,
+            decal.x1 / decal.w * full_width,
+            decal.y1 / decal.h * full_height,
+            (decal.x2 - decal.x1) / decal.w * full_width,
+            (decal.y2 - decal.y1) / decal.h * full_height,
+        );
+
+        decal_texture.drawFrame(image_name, 'decal');
+        decal_texture.saveTexture(image_name + '-decal');
+      }
+
     }
 
     updateVelocity() {

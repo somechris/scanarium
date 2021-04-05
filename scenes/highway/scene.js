@@ -85,8 +85,8 @@ class Vehicle extends Phaser.GameObjects.Container {
             const decal_width = decal_sprite.width / body_unscaled_width * width;
             const decal_height = decal_sprite.height / body_unscaled_height * height;
             decal_sprite.setOrigin(
-                decal.x1 / decal_sprite.width + 1,
-                decal.y1 / decal_sprite.height,
+                decal.x1 / decal.w * width / decal_width + 1,
+                decal.y1 / decal.h * height / decal_height,
             );
             decal_sprite.setSize(decal_width, decal_height);
             decal_sprite.setDisplaySize(decal_width, decal_height);

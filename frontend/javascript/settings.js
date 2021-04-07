@@ -127,7 +127,6 @@ var Settings = {
           var pdfLink = document.createElement('a');
           pdfLink.href = base_path + '.pdf';
           pdfLink.className = 'card';
-          console.log(pdfLink);
           pdfLink.appendChild(pdfImage);
           pdfLink.appendChild(pdfLabel);
 
@@ -301,8 +300,6 @@ var UploadButton = {
       if (SettingsButton.getWidth() > scanariumConfig.width / 5) {
           // small layout:
           this.container.className =  'file-upload-button-container-right';
-          console.log(button.offsetWidth);
-          console.log(SettingsButton.getWidth());
           maxWidth = Math.max(button.offsetWidth, SettingsButton.getWidth()).toString() + 'px';
           button.style.width = maxWidth;
           SettingsButton.setWidth(maxWidth);

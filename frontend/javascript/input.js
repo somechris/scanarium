@@ -1,7 +1,7 @@
 var eventMap = {
   ' ': 'toggle-pause',
   '?': 'toggle-help',
-  'f': 'fullscreen',
+  'f': 'toggle-fullscreen',
   'p': 'toggle-pause',
   'n': 'cgi:reset-dynamic-content',
   'i': 'cgi:show-source',
@@ -35,14 +35,9 @@ var commands = {
         description: 'Reindex actors',
         implementation: () => callCgi('reindex'),
     },
-    'fullscreen': {
-        description: 'Switch to fullscreen mode',
-        implementation: () => {
-            canvases = document.getElementsByTagName('canvas');
-            if (canvases.length) {
-                canvases[0].requestFullscreen();
-            }
-        },
+    'toggle-fullscreen': {
+        description: 'Enter/leave fullscreen mode',
+        implementation: FullscreenManager.toggle,
     },
     'toggle-developer-information': {
         description: 'Show/hide developer information',

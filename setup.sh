@@ -41,7 +41,7 @@ generate_sample_content() {
     local FILE=
     while read FILE
     do
-        convert "$FILE" -resize 150x100 "${FILE%.png}-thumb.jpg"
+        convert "$FILE" -resize 150x100 -background white -flatten "${FILE%.png}-thumb.jpg"
     done < <(find -iname 'sample.png')
 }
 

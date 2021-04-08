@@ -22,7 +22,12 @@ def generate_thumbnail(scanarium, dir, file, force, shave=True, erode=False):
             command += ['-shave', '20%']
         if erode:
             command += ['-morphology', 'Erode', 'Octagon']
-        command += ['-resize', '150x100', target]
+        command += [
+            '-resize', '150x100',
+            '-background', 'white',
+            '-flatten',
+            target
+        ]
         scanarium.run(command)
 
 

@@ -41,7 +41,13 @@ generate_sample_content() {
     local FILE=
     while read FILE
     do
-        convert "$FILE" -resize 150x100 -background white -flatten "${FILE%.png}-thumb.jpg"
+        /usr/bin/env python3 - "${FILE%/*}" "${FILE##.*/}" <<EOF
+import sys
+from scanarium import Scanarium
+dir = sys.argv[1]
+file = sys.argv[2]
+Scanarium().generate_thumbnail(dir, file, shave=False, erode=False)
+EOF
     done < <(find -iname 'sample.png')
 }
 

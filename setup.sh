@@ -48,7 +48,7 @@ dir = sys.argv[1]
 file = sys.argv[2]
 Scanarium().generate_thumbnail(dir, file, shave=False, erode=False)
 EOF
-    done < <(find -iname 'sample.png')
+    done < <(find dynamic/scenes/*/actors -iname '*.png' ! -iname '*thumbnail.*')
 }
 
 step "phaser ${PHASER_VERSION}" "$PHASER_TARGET" curl --output "$PHASER_TARGET" "https://cdn.jsdelivr.net/npm/phaser@${PHASER_VERSION}/dist/phaser.min.js"

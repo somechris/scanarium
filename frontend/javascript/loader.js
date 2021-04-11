@@ -5,7 +5,7 @@ function loadJs(url, callback) {
     document.head.appendChild(element);
 }
 
-function loadJson(url, callback, method, param) {
+function loadJson(url, callback, method, param, error) {
     var xhr = new XMLHttpRequest();
 
     method = (typeof method !== 'undefined') ? method : 'GET';
@@ -15,6 +15,10 @@ function loadJson(url, callback, method, param) {
             if (this.status == 200) {
                 if (typeof callback != 'undefined') {
                     callback(JSON.parse(this.responseText));
+                }
+            } else {
+                if (typeof error != 'undefined') {
+                    error(this, url, method, param);
                 }
             }
         }

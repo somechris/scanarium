@@ -157,21 +157,28 @@ var Settings = {
   },
 
   generateActorsSections: function() {
-      var heading = this.generateHeading('Delete actors');
-      var resetSceneButton = document.createElement('button');
-      resetSceneButton.id = 'reset-scene-button';
-      resetSceneButton.textContent = localize('Reset scene "{scene_name}"', {'scene_name': scene});
-      resetSceneButton.style['font-size'] = SettingsButton.button.style['font-size'];
-      resetSceneButton.onclick = function(e) {
-          if (confirm(localize('Really reset the scene "{scene_name}", delete this scenes\' scanned actors, and start afresh? (This cannot be undone)', {'scene_name': scene}))) {
-              data = new FormData();
-              data.append('scene', scene);
-              callCgi('reset-dynamic-content', data);
-          }
-          e.stopPropagation();
-          e.preventDefault();
-      };
-      return [heading, resetSceneButton];
+      var sections = [];
+      const cgi = 'reset-dynamic-content';
+      if (!isCgiForbidden(cgi)) {
+          var heading = this.generateHeading('Delete actors');
+          sections.push(heading)
+
+          var resetSceneButton = document.createElement('button');
+          resetSceneButton.id = 'reset-scene-button';
+          resetSceneButton.textContent = localize('Reset scene "{scene_name}"', {'scene_name': scene});
+          resetSceneButton.style['font-size'] = SettingsButton.button.style['font-size'];
+          resetSceneButton.onclick = function(e) {
+              if (confirm(localize('Really reset the scene "{scene_name}", delete this scenes\' scanned actors, and start afresh? (This cannot be undone)', {'scene_name': scene}))) {
+                  data = new FormData();
+                  data.append('scene', scene);
+                  callCgi(cgi, data);
+              }
+              e.stopPropagation();
+              e.preventDefault();
+          };
+          sections.push(resetSceneButton);
+      }
+      return sections;
   },
 
   show: function() {

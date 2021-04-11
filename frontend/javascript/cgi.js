@@ -34,3 +34,7 @@ callCgi = function(cgi, data) {
     xhr.onreadystatechange = onReadyStateChange(cgi);
     xhr.send(data);
 }
+
+function isCgiForbidden(cgi) {
+    return isCommandForbidden('cgi:' + cgi);
+}

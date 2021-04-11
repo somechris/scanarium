@@ -11,6 +11,9 @@ var default_global_config = {
   // If true, the page insertion hint gets removed after the first actor image
   // got scanned.
   'drop_page_insertion_hint_after_scan': true,
+
+  // If true, make the actor cards in the settings dialog links to pdfs.
+  'offer-pdf-downloads': true,
 };
 
 var global_config = {};

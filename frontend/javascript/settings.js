@@ -92,6 +92,7 @@ var Settings = {
       this.actorList.textContent = '';
       var langDir = Object.keys(localization).length ? language : 'fallback';
       var actors = {}
+      var offerPdfs = getConfig('offer-pdf-downloads');
       Object.keys(actor_variants).forEach(actor => actor_variants[actor].forEach(variant => {
           const localized_actor = localize_parameter('actor_name', actor);
           var name = localized_actor;
@@ -124,8 +125,10 @@ var Settings = {
           actorLabel.className = 'card-label';
           actorLabel.textContent = name;
 
-          var actorCard = document.createElement('a');
-          actorCard.href = base_path + '.pdf';
+          var actorCard = document.createElement(offerPdfs ? 'a' : 'span');
+          if (offerPdfs) {
+              actorCard.href = base_path + '.pdf';
+          }
           actorCard.className = 'card';
           actorCard.appendChild(actorImage);
           actorCard.appendChild(actorLabel);

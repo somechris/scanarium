@@ -71,7 +71,7 @@ button {
   text-decoration: none;
 }
 
-.card:hover {
+a.card:hover {
   text-decoration: none;
   background-color: #e5f8ff;
   border: 2px solid #35c8ff;

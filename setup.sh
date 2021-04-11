@@ -41,11 +41,11 @@ generate_sample_content() {
     local FILE=
     while read FILE
     do
-        /usr/bin/env python3 - "${FILE%/*}" "${FILE##.*/}" <<EOF
+        /usr/bin/env python3 - "$FILE" <<EOF
+import os
 import sys
 from scanarium import Scanarium
-dir = sys.argv[1]
-file = sys.argv[2]
+dir, file = os.path.split(sys.argv[1])
 Scanarium().generate_thumbnail(dir, file, shave=False, erode=False)
 EOF
     done < <(find dynamic/scenes/*/actors -iname '*.png' ! -iname '*thumbnail.*')

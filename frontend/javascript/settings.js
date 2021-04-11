@@ -259,8 +259,16 @@ var SettingsButton = {
 var UploadButton = {
   container: null,
   form: null,
+  cgi: 'scan-data',
 
   show: function() {
+      this.hide();
+      if (!isCgiForbidden(this.cgi)) {
+          this._showForce();
+      }
+  },
+
+  _showForce: function() {
       this.hide();
 
       var fileInput = document.createElement('input');
@@ -279,7 +287,7 @@ var UploadButton = {
                       'Upload of \"{image_name}\" started',
                       {image_name: sanitize_string(file.name)}
                   ));
-                  callCgi('scan-data', data);
+                  callCgi(this.cgi, data);
               }
           } else {
               MessageManager.addMessage(localize('No image selected. Upload aborted.'), 'failed');

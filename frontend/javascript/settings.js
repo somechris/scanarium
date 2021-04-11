@@ -89,9 +89,9 @@ var Settings = {
   },
 
   loadedActorVariants: function() {
-      this.pdfList.textContent = '';
+      this.actorList.textContent = '';
       var langDir = Object.keys(localization).length ? language : 'fallback';
-      var pdfs = {}
+      var actors = {}
       Object.keys(actor_variants).forEach(actor => actor_variants[actor].forEach(variant => {
           const localized_actor = localize_parameter('actor_name', actor);
           var name = localized_actor;
@@ -106,31 +106,31 @@ var Settings = {
           basename = basename.replace(/^-/g, '');
           basename = basename.replace(/-$/g, '');
 
-          pdfs[basename] = {
+          actors[basename] = {
               name: name,
               base_path: 'scenes/' + scene + '/actors/' + actor + '/pdfs/' + langDir + '/' + basename,
           };
       }));
-      Object.keys(pdfs).sort().forEach(key => {
-          const item = pdfs[key];
+      Object.keys(actors).sort().forEach(key => {
+          const item = actors[key];
           const base_path = item['base_path'];
           const name = item['name'];
 
-          var pdfImage = document.createElement('img');
-          pdfImage.src = base_path + '-thumb.jpg';
-          pdfImage.alt = name;
+          var actorImage = document.createElement('img');
+          actorImage.src = base_path + '-thumb.jpg';
+          actorImage.alt = name;
 
-          var pdfLabel = document.createElement('div');
-          pdfLabel.className = 'card-label';
-          pdfLabel.textContent = name;
+          var actorLabel = document.createElement('div');
+          actorLabel.className = 'card-label';
+          actorLabel.textContent = name;
 
-          var pdfLink = document.createElement('a');
-          pdfLink.href = base_path + '.pdf';
-          pdfLink.className = 'card';
-          pdfLink.appendChild(pdfImage);
-          pdfLink.appendChild(pdfLabel);
+          var actorCard = document.createElement('a');
+          actorCard.href = base_path + '.pdf';
+          actorCard.className = 'card';
+          actorCard.appendChild(actorImage);
+          actorCard.appendChild(actorLabel);
 
-          this.pdfList.appendChild(pdfLink);
+          this.actorList.appendChild(actorCard);
       });
   },
 
@@ -145,15 +145,15 @@ var Settings = {
       return [heading, sceneList];
   },
 
-  generatePdfSections: function() {
-      var heading = this.generateHeading('PDFs for scene {scene_name}', {scene_name: scene});
-      var pdfList = document.createElement('div');
-      pdfList.id = 'pdf-list';
-      pdfList.className = 'card-container';
-      pdfList.textContent = localize('Loading actor data ...');
+  generateActorSections: function() {
+      var heading = this.generateHeading('Coloring pages for scene {scene_name}', {scene_name: scene});
+      var actorList = document.createElement('div');
+      actorList.id = 'actor-list';
+      actorList.className = 'card-container';
+      actorList.textContent = localize('Loading actor data ...');
 
-      this.pdfList = pdfList;
-      return [heading, pdfList];
+      this.actorList = actorList;
+      return [heading, actorList];
   },
 
   generateActorsSections: function() {
@@ -198,7 +198,7 @@ var Settings = {
 
     var sections = [];
     Array.prototype.push.apply(sections, this.generateScenesSections());
-    Array.prototype.push.apply(sections, this.generatePdfSections());
+    Array.prototype.push.apply(sections, this.generateActorSections());
     Array.prototype.push.apply(sections, this.generateActorsSections());
 
     this.loadScenesConfig();

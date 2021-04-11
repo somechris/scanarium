@@ -85,7 +85,7 @@ button {
    padding: 0em 1em 1em 1em;
 }
 
-#pdf-list > .card {
+#actor-list > .card {
 /*    width: max(9em, 150px);*/
     width: 9em;
 }

@@ -19,7 +19,11 @@ var scenes_config = []; // Initialized in settings.js
 var actor_variants = []; // Initialized in settings.js
 
 function getConfig(key) {
-  return global_config[key] || default_global_config[key];
+    var ret = default_global_config[key];
+    if (key in global_config) {
+        ret = global_config[key];
+    }
+    return ret;
 }
 
 var dyn_dir = 'dynamic';

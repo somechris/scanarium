@@ -89,7 +89,7 @@ document.addEventListener("touchstart", root_pointer_event);
 
 function isCommandForbidden(command) {
     const key = command + '.allow';
-    return (key in global_config && !global_config[key]);
+    return !getConfig(key, true);
 }
 
 function pruneForbiddenCommandsFromEventMap() {

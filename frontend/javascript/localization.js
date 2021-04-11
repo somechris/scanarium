@@ -1,4 +1,5 @@
 var localization = {};
+var language = 'fallback';
 var formatTemplate = function(string, parameters) {
     split = string.split('{');
     for (i=1; i<split.length; i++) {
@@ -31,17 +32,29 @@ var localize = function(template, parameters) {
     return formatTemplate(template, localized_parameters);
 };
 
-var stripLanguage = function(lang) {
-  return lang.split(/[;,._-]/)[0].toLowerCase();
+var language_candidates = [];
+
+var addLanguageCandidate = function(lang) {
+  var candidate = lang.split(/[;,._-]/)[0].toLowerCase();
+  if (candidate) {
+      language_candidates.push(candidate);
+  }
 }
 
-var language = stripLanguage(getUrlParameter('language', ''));
-if (!language) {
-  language = stripLanguage(navigator.language);
-}
-if (language) {
-  loadJson('localization/' + language + '.json', function(data) {
-    localization = data;
-  });
-}
+addLanguageCandidate(getUrlParameter('language', ''));
+addLanguageCandidate(navigator.language);
+addLanguageCandidate('en');
 
+function loadLanguage() {
+    if (language_candidates.length) {
+        const candidate = language_candidates.shift();
+
+        loadJson('localization/' + candidate + '.json', function(data) {
+            localization = data;
+            language = candidate;
+        }, undefined, undefined, function() {
+            loadLanguage();
+        });
+    }
+}
+loadLanguage();

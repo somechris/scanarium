@@ -20,6 +20,7 @@ var global_config = {};
 
 var scenes_config = []; // Initialized in settings.js
 var actor_variants = []; // Initialized in settings.js
+var localizations_config = {}; // Initialized in settings.js
 
 function getConfig(key, defaultValue) {
     var ret = defaultValue;

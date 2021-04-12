@@ -94,3 +94,8 @@ a.card:hover {
 /*    width: max(10em, 160px);*/
     width: 10em;
 }
+
+#scene-settings {
+    display: grid;
+    grid-template-columns: 9em 1fr;
+}

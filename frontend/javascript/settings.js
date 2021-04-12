@@ -20,6 +20,17 @@ var Settings = {
       setUrlParameter('scene', scene, true);
   },
 
+  loadLocalizationsConfig: function() {
+      if (Object.keys(localizations_config).length == 0) {
+          loadDynamicConfig('localization/localizations.json', function(payload) {
+              localizations_config = sanitize_dictionary(payload, undefined, true);
+              Settings.loadedLocalizationsConfig();
+          });
+      } else {
+          Settings.loadedLocalizationsConfig();
+      }
+  },
+
   loadScenesConfig: function() {
       if (scenes_config.length == 0) {
           loadDynamicConfig(scenes_dir + '/scenes.json', function(payload) {
@@ -58,6 +69,40 @@ var Settings = {
       });
 
       return list;
+  },
+
+  loadedLocalizationsConfig: function() {
+      var select = document.createElement('select');
+      select.id = 'l10n-select';
+      select.name = 'localization';
+      select.style['font-size'] = SettingsButton.button.style['font-size'];
+
+      localizations_config['localizations'].sort().forEach(key => {
+          const selected = (key == language);
+          var l10n_in_same_l10n = localizations_config[key + '-' + key] || key;
+          var l10n_localized = localize_parameter('language', key);
+          var text = key;
+          if (l10n_in_same_l10n != key) {
+              text += ' - ' + l10n_in_same_l10n;
+              if (l10n_localized != key && l10n_localized != l10n_in_same_l10n) {
+                  text += ' (' + l10n_localized + ')';
+              }
+          }
+
+          const option = new Option(text, key, selected, selected);
+          select.appendChild(option)
+          });
+
+      select.oninput = function(e) {
+          if (select.selectedOptions.length == 1) {
+              selected = select.selectedOptions[0].value;
+              setUrlParameter('language', selected, selected != language);
+          }
+      };
+
+      this.l10nCell.textContent = undefined;
+      this.l10nCell.appendChild(select);
+      return
   },
 
   loadedScenesConfig: function() {
@@ -156,6 +201,29 @@ var Settings = {
       });
   },
 
+  generateSceneSettingsSections: function() {
+      var heading = this.generateHeading('Scene settings');
+      var form = document.createElement('form');
+      form.id = 'scene-settings';
+
+      var addControl = function(caption, control) {
+          var label = document.createElement('label');
+          label.for = control.id;
+          label.textContent = localize(caption);
+
+          form.appendChild(label);
+          form.appendChild(control);
+      }
+
+      var l10nCell = document.createElement('span');
+      l10nCell.id = 'l10n-cell';
+      l10nCell.textContent = localize('Loading localization data ...');
+      addControl('Language', l10nCell);
+
+      this.l10nCell = l10nCell;
+      return [heading, form];
+  },
+
   generateScenesSections: function() {
       var heading = this.generateHeading('Switch scene');
       var sceneList = document.createElement('p');
@@ -219,10 +287,12 @@ var Settings = {
     this.panel.style['font-size'] = SettingsButton.button.style['font-size'];
 
     var sections = [];
+    Array.prototype.push.apply(sections, this.generateSceneSettingsSections());
     Array.prototype.push.apply(sections, this.generateScenesSections());
     Array.prototype.push.apply(sections, this.generateActorSections());
     Array.prototype.push.apply(sections, this.generateActorsSections());
 
+    this.loadLocalizationsConfig();
     this.loadScenesConfig();
     this.loadActorVariants();
     sections.forEach(section => this.panel.appendChild(section));

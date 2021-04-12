@@ -198,6 +198,7 @@ def generate_pdf(scanarium, dir, file, force):
         ]
 
         run_inkscape(scanarium, inkscape_args)
+    return target
 
 
 def register_svg_namespaces():
@@ -434,6 +435,13 @@ def generate_full_svg_tree(scanarium, dir, parameter, extra_decoration_name):
     return (tree, sources)
 
 
+def to_save_filename(name):
+    ret = re.sub('[^a-zA-Z]+', '-', name).strip('-')
+    if not ret:
+        ret = 'unnamed'
+    return ret
+
+
 def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
                          sources, is_actor, language, force, command_label,
                          parameter_label):
@@ -442,8 +450,7 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
         localize_command_parameter_variant(localizer, command, parameter,
                                            variant)
 
-    base_name = re.sub('[^a-zA-Z]+', '-',
-                       localized_parameter_with_variant).strip('-') + '.svg'
+    base_name = to_save_filename(localized_parameter_with_variant) + '.svg'
 
     pdf_dir = os.path.join(dir, 'pdfs', language)
     os.makedirs(pdf_dir, exist_ok=True)
@@ -455,13 +462,14 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
                         command_label, parameter_label)
         tree.write(full_svg_name)
 
-    generate_pdf(scanarium, dir, full_svg_name, force)
+    pdf_name = generate_pdf(scanarium, dir, full_svg_name, force)
 
     if is_actor:
         if variant == '' and language == 'fallback':
             generate_mask(scanarium, dir, full_svg_name, force)
         scanarium.generate_thumbnail(dir, full_svg_name, force, shave=False,
                                      erode=True)
+    return pdf_name
 
 
 def expand_languages(scanarium, language):
@@ -481,6 +489,32 @@ def expand_languages(scanarium, language):
     return languages
 
 
+def regenerate_pdf_actor_books_for_language(scanarium, dir, scene, language,
+                                            pdfs, force):
+    def keyer(pdf_name):
+        return os.path.basename(pdf_name).rsplit('.', 1)[0]
+
+    localizer = scanarium.get_localizer(language)
+    target_dir = os.path.join(os.path.dirname(dir), 'pdfs', language)
+    target_file = os.path.join(target_dir, to_save_filename(localizer.localize(
+        'All {scene_name} coloring pages', {
+            'scene_name': scene})) + '.pdf')
+
+    if scanarium.file_needs_update(target_file, pdfs, force):
+        os.makedirs(target_dir, exist_ok=True)
+        pdfs.sort(key=keyer)
+        command = [scanarium.get_config('programs', 'pdfunite')]
+        command += pdfs
+        command.append(target_file)
+        scanarium.run(command)
+
+
+def regenerate_pdf_actor_books(scanarium, dir, scene, pdfs_by_language, force):
+    for language, pdfs in pdfs_by_language.items():
+        regenerate_pdf_actor_books_for_language(scanarium, dir, scene,
+                                                language, pdfs, force)
+
+
 def regenerate_static_content_command_parameter(
         scanarium, dir, command, parameter, is_actor, language, force,
         extra_decoration_name):
@@ -495,13 +529,16 @@ def regenerate_static_content_command_parameter(
                                                extra_decoration_name)
     variants = extract_variants(raw_tree)
     variants.sort()
+    pdfs_by_language = {}
     for language in expand_languages(scanarium, language):
         for variant in variants:
-            svg_variant_pipeline(scanarium, dir, command, parameter, variant,
-                                 copy.deepcopy(raw_tree), sources, is_actor,
-                                 language, force, command_label,
-                                 parameter_label)
-    return variants
+            variant_pdf_name = svg_variant_pipeline(
+                scanarium, dir, command, parameter, variant,
+                copy.deepcopy(raw_tree), sources, is_actor, language, force,
+                command_label, parameter_label)
+            pdfs_by_language[language] = pdfs_by_language.get(language, []) + \
+                [variant_pdf_name]
+    return variants, pdfs_by_language
 
 
 def regenerate_static_content_command_parameters(
@@ -510,16 +547,23 @@ def regenerate_static_content_command_parameters(
     parameters = os.listdir(dir) if parameter_arg is None else [parameter_arg]
     parameters.sort()
     command_variants = {}
+    command_pdfs = {}
     for parameter in parameters:
         parameter_dir = os.path.join(dir, parameter)
         if os.path.isdir(parameter_dir):
-            variants = regenerate_static_content_command_parameter(
-                scanarium, parameter_dir, command, parameter, is_actor,
-                language, force, extra_decoration_name)
+            variants, pdfs_by_language = \
+                regenerate_static_content_command_parameter(
+                    scanarium, parameter_dir, command, parameter, is_actor,
+                    language, force, extra_decoration_name)
             command_variants[parameter] = variants
+            for pdf_language, pdfs in pdfs_by_language.items():
+                command_pdfs[pdf_language] = \
+                    command_pdfs.get(pdf_language, []) + pdfs
     if is_actor and parameter_arg is None:
         scanarium.dump_json(os.path.join(dir, '..', 'actor-variants.json'),
                             command_variants)
+        regenerate_pdf_actor_books(scanarium, dir, command, command_pdfs,
+                                   force)
 
 
 def regenerate_static_content_commands(

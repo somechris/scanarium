@@ -90,6 +90,11 @@ convert = convert
 
 
 
+# The binary for Poppler's pdfunite
+pdfunite = pdfunite
+
+
+
 #-------------------------------------------------------------------------------
 # Configuration for directories
 #-------------------------------------------------------------------------------

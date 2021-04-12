@@ -6,6 +6,7 @@
     "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "In der Szene \"{scene_name}\" gibt es keinen Figur \"{actor_name}\"",
     "Add another random actor": "Zufällige Figur zu Szene hinzufügen",
     "All scenes got reset": "Alle Szenen wurden zurückgesetzt",
+    "All {scene_name} coloring pages": "Alle {scene_name} Ausmalbilder",
     "Calling script \"{script_name}\" as cgi is forbidden": "Skript \"{script_name}\" darf nicht als cgi gestartet werden",
     "Cannot switch to scene {scene_name}": "Kann nicht zur Szene \"{scene_name}\" wechseln",
     "Coloring pages for scene {scene_name}": "Ausmalbilder für die {scene_name} Szene",

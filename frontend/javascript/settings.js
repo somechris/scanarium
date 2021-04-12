@@ -121,13 +121,15 @@ var Settings = {
       }));
       var item_keys = Object.keys(items).sort();
 
-      all_actors_name = localize('All {scene_name} coloring pages', {scene_name: scene});
-      items['all'] = {
-          name: all_actors_name,
-          pdf_file: scene_dir + '/pdfs/' + language + '/' + this.toSaveFilename(all_actors_name) + '.pdf',
-          thumb_file: scene_dir + '/scene-book-thumb.jpg',
-      };
-      item_keys.unshift('all');
+      if (offerPdfs) {
+          all_actors_name = localize('All {scene_name} coloring pages', {scene_name: scene});
+          items['all'] = {
+              name: all_actors_name,
+              pdf_file: scene_dir + '/pdfs/' + language + '/' + this.toSaveFilename(all_actors_name) + '.pdf',
+              thumb_file: scene_dir + '/scene-book-thumb.jpg',
+          };
+          item_keys.unshift('all');
+      }
 
       item_keys.forEach(key => {
           const item = items[key];

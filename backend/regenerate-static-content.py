@@ -566,6 +566,24 @@ def regenerate_static_content_command_parameters(
                                    force)
 
 
+def regenerate_static_scene_content(scanarium, dir, force):
+    scanarium.generate_thumbnail(dir, 'scene-bait.png', force, shave=False)
+
+    book_svg_file = os.path.join(scanarium.get_images_dir_abs(), 'book.svg')
+    book_png_file = os.path.join(dir, 'scene-book.png')
+    bait_png_file = os.path.join(dir, 'scene-bait.png')
+    sources = [book_svg_file, bait_png_file]
+    if scanarium.file_needs_update(book_png_file, sources, force):
+        cwd_old = os.getcwd()
+        os.chdir(dir)
+        scanarium.run([scanarium.get_config('programs', 'convert'),
+                       book_svg_file, book_png_file])
+        os.chdir(cwd_old)
+
+    scanarium.generate_thumbnail(dir, book_png_file, force, shave=False,
+                                 erode=False)
+
+
 def regenerate_static_content_commands(
         scanarium, dir, command_arg, parameter, is_actor, language, force):
     scenes = []
@@ -580,8 +598,8 @@ def regenerate_static_content_commands(
                 if not os.path.isfile(extra_decoration_name):
                     extra_decoration_name = None
                 if is_actor:
-                    scanarium.generate_thumbnail(
-                        command_dir, 'scene-bait.png', force, shave=False)
+                    regenerate_static_scene_content(scanarium, command_dir,
+                                                    force)
                     command_dir = os.path.join(command_dir, 'actors')
                     scenes.append(command)
                 if os.path.isdir(command_dir):

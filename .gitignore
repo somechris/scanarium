@@ -20,5 +20,6 @@ __pycache__
 /scenes/*/actors/*/pdfs
 /scenes/*/actor-variants.json
 /scenes/*/pdfs
+/scenes/*/scene-book.png
 /scenes/scenes.json
 *-thumb.jpg

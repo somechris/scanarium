@@ -72,6 +72,9 @@ class Scanarium(object):
     def get_dynamic_sample_dir_abs(self):
         return self.get_relative_dir_abs('dynamic.sample')
 
+    def get_images_dir_abs(self):
+        return self.get_relative_dir_abs('images')
+
     def reindex_actors_for_scene(self, scene):
         self._indexer.reindex_actors_for_scene(scene)
 

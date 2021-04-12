@@ -88,10 +88,17 @@ var Settings = {
       });
   },
 
+  toSaveFilename: function(name) {
+      var name = name.replace(/[^a-zA-Z]+/g, '-');
+      name = name.replace(/^-/g, '');
+      name = name.replace(/-$/g, '');
+      return name;
+  },
+
   loadedActorVariants: function() {
       this.actorList.textContent = '';
       var langDir = Object.keys(localization).length ? language : 'fallback';
-      var actors = {}
+      var items = {}
       var offerPdfs = getConfig('offer-pdf-downloads');
       Object.keys(actor_variants).forEach(actor => actor_variants[actor].forEach(variant => {
           const localized_actor = localize_parameter('actor_name', actor);
@@ -103,22 +110,32 @@ var Settings = {
                   parameter_variant_name: localized_variant,
               });
           }
-          var basename = name.replace(/[^a-zA-Z]+/g, '-');
-          basename = basename.replace(/^-/g, '');
-          basename = basename.replace(/-$/g, '');
+          var basename = this.toSaveFilename(name);
+          const base_path = 'scenes/' + scene + '/actors/' + actor + '/pdfs/' + langDir + '/' + basename;
 
-          actors[basename] = {
+          items[basename] = {
               name: name,
-              base_path: 'scenes/' + scene + '/actors/' + actor + '/pdfs/' + langDir + '/' + basename,
+              pdf_file: base_path + '.pdf',
+              thumb_file: base_path + '-thumb.jpg',
           };
       }));
-      Object.keys(actors).sort().forEach(key => {
-          const item = actors[key];
+      var item_keys = Object.keys(items).sort();
+
+      all_actors_name = localize('All {scene_name} coloring pages', {scene_name: scene});
+      items['all'] = {
+          name: all_actors_name,
+          pdf_file: scene_dir + '/pdfs/' + language + '/' + this.toSaveFilename(all_actors_name) + '.pdf',
+          thumb_file: scene_dir + '/scene-book-thumb.jpg',
+      };
+      item_keys.unshift('all');
+
+      item_keys.forEach(key => {
+          const item = items[key];
           const base_path = item['base_path'];
           const name = item['name'];
 
           var actorImage = document.createElement('img');
-          actorImage.src = base_path + '-thumb.jpg';
+          actorImage.src = item['thumb_file'];
           actorImage.alt = name;
 
           var actorLabel = document.createElement('div');
@@ -127,7 +144,7 @@ var Settings = {
 
           var actorCard = document.createElement(offerPdfs ? 'a' : 'span');
           if (offerPdfs) {
-              actorCard.href = base_path + '.pdf';
+              actorCard.href = item['pdf_file'];
           }
           actorCard.className = 'card';
           actorCard.appendChild(actorImage);

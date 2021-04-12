@@ -130,6 +130,10 @@
       " ": "Leertaste",
       "pointer": "Klick/Berührung"
     },
+    "language": {
+      "de": "Deutsch",
+      "en": "Englisch"
+    },
     "parameter_label": {
       "actor": "Figur",
       "parameter": "Parameter"

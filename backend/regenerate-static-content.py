@@ -611,6 +611,26 @@ def regenerate_static_content_commands(
             scanarium.dump_json(file, scenes)
 
 
+def regenerate_language_matrix(scanarium):
+    logging.debug('Regenerating language matrix ...')
+    l10ns = []
+    data = {}
+    data_file = 'localizations.json'
+    l10n_dir = scanarium.get_localization_dir_abs()
+
+    for l10n_file in os.listdir(l10n_dir):
+        if l10n_file.endswith('.json') and l10n_file != data_file:
+            l10ns.append(l10n_file[:-5])
+
+    for ui_l10ns in l10ns:
+        localizer = scanarium.get_localizer(ui_l10ns)
+        for target_l10n in l10ns:
+            data[f'{ui_l10ns}-{target_l10n}'] = localizer.localize_parameter(
+                'language', target_l10n)
+    data['localizations'] = l10ns
+    scanarium.dump_json(os.path.join(l10n_dir, data_file), data)
+
+
 def regenerate_static_content(scanarium, command, parameter, language, force):
     for d in [
         {'dir': scanarium.get_commands_dir_abs(), 'is_actor': False},
@@ -619,6 +639,9 @@ def regenerate_static_content(scanarium, command, parameter, language, force):
         regenerate_static_content_commands(
             scanarium, d['dir'], command, parameter, d['is_actor'], language,
             force)
+
+    if not command and not parameter:
+        regenerate_language_matrix(scanarium)
 
 
 def register_arguments(scanarium, parser):

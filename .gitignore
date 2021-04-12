@@ -22,4 +22,5 @@ __pycache__
 /scenes/*/pdfs
 /scenes/*/scene-book.png
 /scenes/scenes.json
+/localization/localizations.json
 *-thumb.jpg

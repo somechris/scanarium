@@ -50,6 +50,10 @@
       " ": "space key",
       "pointer": "click/tap"
     },
+    "language": {
+      "de": "German",
+      "en": "English"
+    },
     "parameter_label": {
       "actor": "Actor",
       "parameter": "Parameter"

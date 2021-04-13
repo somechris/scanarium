@@ -1,5 +1,8 @@
 {
-  "__comment__": "Mostly empty localization on purpose, as the default is text representation is English anyways",
+  "__meta__": {
+    "comment": "Mostly empty localization on purpose, as the default is text representation is English anyways",
+    "maintainer": "christian@scanarium.com"
+  },
   "messages": {
     "{PoliceCar-Decal}": "P O L I C E  "
   },

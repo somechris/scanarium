@@ -1,4 +1,7 @@
 {
+  "__meta__": {
+    "maintainer": "christian@scanarium.com"
+  },
   "messages": {
     "(This is useful to get rid of unwanted images)": "(Das ist nützlich um unerwünschte Bilder wieder zu entfernen)",
     "---Action---": "---Aktion---",

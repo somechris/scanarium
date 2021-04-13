@@ -1,13 +1,9 @@
 #!/bin/bash
 
-set -e
-set -o pipefail
+source "$(dirname "$0")/common.inc"
 
-cd "$(dirname "$0")"
-cd ..
-
-for L10N_FILE in localization/*.json
-do
-    echo "$L10N_FILE ..."
+sort_file() {
     jq -S . <"$L10N_FILE" >"$L10N_FILE.tmp" && mv "$L10N_FILE.tmp" "$L10N_FILE"
-done
+}
+
+for_all_json_files sort_file

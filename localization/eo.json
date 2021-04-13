@@ -1,0 +1,12 @@
+{
+  "__meta__": {
+    "maintainer": "christian@scanarium.com"
+  },
+  "parameters": {
+    "language": {
+      "de": "Germana",
+      "en": "Angla",
+      "eo": "Esperanto"
+    }
+  }
+}

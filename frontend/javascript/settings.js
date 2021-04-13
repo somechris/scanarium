@@ -287,14 +287,14 @@ var Settings = {
     this.panel.style['font-size'] = SettingsButton.button.style['font-size'];
 
     var sections = [];
-    Array.prototype.push.apply(sections, this.generateUiSections());
     Array.prototype.push.apply(sections, this.generateScenesSections());
     Array.prototype.push.apply(sections, this.generateActorSections());
     Array.prototype.push.apply(sections, this.generateActorsSections());
+    Array.prototype.push.apply(sections, this.generateUiSections());
 
-    this.loadLocalizationsConfig();
     this.loadScenesConfig();
     this.loadActorVariants();
+    this.loadLocalizationsConfig();
     sections.forEach(section => this.panel.appendChild(section));
 
     var bottomSpacer = document.createElement('div');

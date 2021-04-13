@@ -3,10 +3,75 @@
     "maintainer": "christian@scanarium.com"
   },
   "parameters": {
+    "actor_name": {
+      "Astronaut": "Kosmonaŭto",
+      "BunnyBalloon": "Leporobalono",
+      "Bus": "Buso",
+      "CompactMpv": "Kompaktbuseto",
+      "DragonBalloon": "Drakobalono",
+      "FlowerFairy": "Florofeino",
+      "FlyingSaucer": "Fluganta subtaso",
+      "HeartBalloon": "Korobalono",
+      "MonsterTruck": "Monstrokamiono",
+      "OldFamilyCar": "Aĝa familiaŭto",
+      "PlainBalloon": "Simpla balono",
+      "PoliceCar": "Policaŭto",
+      "QuadBike": "Kvado",
+      "SimpleButterfly": "Simpla papilo",
+      "SimpleRocket": "Simpla raketo",
+      "SportsCar": "Sportaŭto",
+      "Star": "Stelo",
+      "TailedButterfly": "Vostita papilo",
+      "Tractor": "Traktoro",
+      "Truck": "Kamiono",
+      "UnicornBalloon": "Unukornulobalono",
+      "WaterElf": "Akvoelfo",
+      "WoodFairy": "Arbarofeino",
+      "ZaggedButterfly": "Denta papilo"
+    },
+    "cgi_name": {
+      "regenerate-static-content": "re-generu nevariablaj enhavoj",
+      "reindex": "Re-indeksu",
+      "reset-dynamic-content": "Forigu skanaĵoj",
+      "scan": "Skanu",
+      "show-source": "Motru bild-fonton"
+    },
+    "command_label": {
+      "command": "Komando",
+      "scene": "Sceno"
+    },
+    "command_name": {
+      "reset": "Forigu",
+      "switchScene": "Ŝangu scenon",
+      "system": "Sistemo"
+    },
+    "event_name": {
+      " ": "Spacetklavo",
+      "pointer": "Klako/Tuŝo"
+    },
     "language": {
       "de": "Germana",
       "en": "Angla",
       "eo": "Esperanto"
+    },
+    "parameter_label": {
+      "actor": "Aganto",
+      "parameter": "Parametro"
+    },
+    "parameter_name": {
+      "DynamicContent": "Ĉiuj desegnoj",
+      "poweroff": "Malŝaltu",
+      "toggleDevInfo": "(Mal)montru programistajn informojn",
+      "toggleFps": "(Mal)montru vidigfrekvencon"
+    },
+    "parameter_variant_name": {
+      "Detailed": "detaloj"
+    },
+    "scene_name": {
+      "balloons": "Balonoj",
+      "fairies": "Fearo",
+      "highway": "Ŝoseo",
+      "space": "Kosmo"
     }
   }
 }

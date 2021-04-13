@@ -201,8 +201,8 @@ var Settings = {
       });
   },
 
-  generateSceneSettingsSections: function() {
-      var heading = this.generateHeading('Scene settings');
+  generateUiSections: function() {
+      var heading = this.generateHeading('User interface');
       var form = document.createElement('form');
       form.id = 'scene-settings';
 
@@ -287,7 +287,7 @@ var Settings = {
     this.panel.style['font-size'] = SettingsButton.button.style['font-size'];
 
     var sections = [];
-    Array.prototype.push.apply(sections, this.generateSceneSettingsSections());
+    Array.prototype.push.apply(sections, this.generateUiSections());
     Array.prototype.push.apply(sections, this.generateScenesSections());
     Array.prototype.push.apply(sections, this.generateActorSections());
     Array.prototype.push.apply(sections, this.generateActorsSections());

@@ -676,6 +676,17 @@ def store_raw_image(config, image):
                 'scan', 'raw_image_period', 'float')
 
 
+def get_raw_image_from_file(config, file_path):
+    image = cv2.imread(file_path)
+
+    if image is None:
+        raise ScanariumError(
+            'SE_SCAN_STATIC_UNREADABLE_IMAGE_TYPE',
+            'Failed to parse file. Only JPG files are supported.')
+
+    return image
+
+
 def get_raw_image(config, camera=None):
     manage_camera = camera is None
     if manage_camera:
@@ -703,11 +714,7 @@ def get_raw_image(config, camera=None):
     elif camera_type == 'STATIC-IMAGE-CAMERA':
         file_path = config.get('scan', 'source')[6:]
         if os.path.isfile(file_path):
-            image = cv2.imread(file_path)
-            if image is None:
-                raise ScanariumError(
-                    'SE_SCAN_STATIC_UNREADABLE_IMAGE_TYPE',
-                    'Failed to parse file. Only JPG files are supported.')
+            image = get_raw_image_from_file(config, file_path)
         else:
             raise ScanariumError('SE_SCAN_STATIC_SOURCE_MISSING',
                                  'The static source "{file}" does not exist',

@@ -35,3 +35,6 @@ class Config(object):
 
     def set(self, section, key, value):
         self._config.set(section, key, value)
+
+    def get_keys(self, section):
+        return [pair[0] for pair in self._config.items(section)]

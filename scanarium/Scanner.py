@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import time
+import tempfile
 import random
 
 import cv2
@@ -16,6 +17,8 @@ from .ScanariumError import ScanariumError
 logger = logging.getLogger(__name__)
 
 NEXT_RAW_IMAGE_STORE = 0  # Timestamp of when to store the next raw image.
+
+PDF_MAGIC = bytes('%PDF', 'utf-8')
 
 
 def debug_show_image(title, image, config):
@@ -676,18 +679,61 @@ def store_raw_image(config, image):
                 'scan', 'raw_image_period', 'float')
 
 
-def get_raw_image_from_file(config, file_path):
+def guess_image_format(file_path):
+    guessed_type = None
+    if os.path.getsize(file_path) >= 4:
+        with open(file_path, mode='rb') as file:
+            header = file.read(4)
+
+            if header == PDF_MAGIC:
+                guessed_type = 'pdf'
+
+    return guessed_type
+
+
+def convert_and_get_raw_image(scanarium, file_path):
+    image = None
+
+    with tempfile.TemporaryDirectory(prefix='scanarium-conversion-') as dir:
+        converted_path = os.path.join(dir, 'converted.jpg')
+        command = [scanarium.get_config('programs', 'convert_untrusted'),
+                   '-units', 'pixelsperinch',
+                   '-background', 'white',
+                   '-density', '150',
+                   file_path + '[0]',  # [0] is first page
+                   converted_path]
+        scanarium.run(command)
+
+        image = cv2.imread(converted_path)
+    return image
+
+
+def get_raw_image_from_file(scanarium, config, file_path):
     image = cv2.imread(file_path)
 
     if image is None:
+        format = guess_image_format(file_path)
+        if format is not None and \
+                config.get('scan', f'permit_file_type_{format}',
+                           kind='boolean'):
+            image = convert_and_get_raw_image(scanarium, file_path)
+
+    if image is None:
+        supported_formats = ', '.join(
+            ['JPG'] + [key[17:].upper()
+                       for key in config.get_keys('scan')
+                       if key.startswith('permit_file_type_') and config.get(
+                'scan', key, kind='boolean')])
         raise ScanariumError(
             'SE_SCAN_STATIC_UNREADABLE_IMAGE_TYPE',
-            'Failed to parse file. Only JPG files are supported.')
+            'Failed to parse file. Only {supported_formats} files are '
+            'supported.',
+            {'supported_formats': supported_formats})
 
     return image
 
 
-def get_raw_image(config, camera=None):
+def get_raw_image(scanarium, config, camera=None):
     manage_camera = camera is None
     if manage_camera:
         camera = open_camera(config)
@@ -714,7 +760,7 @@ def get_raw_image(config, camera=None):
     elif camera_type == 'STATIC-IMAGE-CAMERA':
         file_path = config.get('scan', 'source')[6:]
         if os.path.isfile(file_path):
-            image = get_raw_image_from_file(config, file_path)
+            image = get_raw_image_from_file(scanarium, config, file_path)
         else:
             raise ScanariumError('SE_SCAN_STATIC_SOURCE_MISSING',
                                  'The static source "{file}" does not exist',
@@ -774,7 +820,7 @@ class Scanner(object):
         return close_camera(self._config, camera)
 
     def get_image(self, scanarium, camera=None):
-        image = get_raw_image(self._config, camera)
+        image = get_raw_image(scanarium, self._config, camera)
         (image, _) = scale_image_from_config(scanarium, image, 'raw')
         return undistort_image(image, self._config)
 

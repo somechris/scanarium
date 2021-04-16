@@ -90,6 +90,12 @@ convert = convert
 
 
 
+# The binary for ImageMagick's convert used for untrusted files (E.g.: To
+# convert uploaded PDFs to JPGs)
+convert_untrusted = convert
+
+
+
 # The binary for Poppler's pdfunite
 pdfunite = pdfunite
 
@@ -381,6 +387,17 @@ max_final_height_trip =
 # setting allows how specify long to wait (in seconds) before grabbing
 # the frame from cameras. Leave empty for no waiting.
 delay =
+
+
+# Permit conversion from PDF
+#
+# OpenCV cannot read PDFs on it's own, so they need to be converted before
+# scanning them. As PDF is a complex format, it is a potential security issue to
+# accept PDFs from unknown sources and we deny them per default. If you however
+# can either trust the PDFs or you can run a hardened version of `convert`, set
+# this value to `True` to accept them for scanning and automatically convert
+# them upon need.
+permit_file_type_pdf = False
 
 
 

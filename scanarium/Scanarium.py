@@ -33,6 +33,9 @@ class Scanarium(object):
     def set_config(self, section, key, value):
         self._config.set(section, key, value)
 
+    def get_config_keys(self, section):
+        return self._config.get_keys(section)
+
     def get_scanarium_dir_abs(self):
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

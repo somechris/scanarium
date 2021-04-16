@@ -711,6 +711,7 @@ def guess_image_format(file_path):
 def convert_and_get_raw_image(scanarium, file_path, pipeline):
     image = None
     dpi = 150
+    quality = 75
 
     with tempfile.TemporaryDirectory(prefix='scanarium-conversion-') as dir:
         converted_path_base = os.path.join(dir, 'converted')
@@ -721,6 +722,7 @@ def convert_and_get_raw_image(scanarium, file_path, pipeline):
                        '-jpeg',
                        '-singlefile',
                        '-r', str(dpi),
+                       '-jpegopt', f'quality={quality}',
                        file_path,
                        converted_path_base]
         elif pipeline == 'convert':
@@ -728,6 +730,7 @@ def convert_and_get_raw_image(scanarium, file_path, pipeline):
                        '-units', 'pixelsperinch',
                        '-background', 'white',
                        '-density', str(dpi),
+                       '-quality', str(quality),
                        file_path + '[0]',  # [0] is first page
                        converted_path]
         else:

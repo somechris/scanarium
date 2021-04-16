@@ -400,6 +400,15 @@ delay =
 permit_file_type_pdf = False
 
 
+# Permit conversion from HEIC
+#
+# OpenCV cannot read HEICs on it's own. Yet it's what recent Apple phones use as
+# default format. So we want to be able to support it. As it depends on the
+# (not-yet everywhere available) HEIC support in ImageMagick, we allow prohibit
+# uploading per default, but allow to permit it.
+permit_file_type_heic = False
+
+
 
 #-------------------------------------------------------------------------------
 # Configuration for image masks

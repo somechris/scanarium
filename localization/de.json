@@ -29,6 +29,7 @@
     "Failed to load parameters for undistortion from \"{file_name}\"": "Konnte Entzerr-Parameter nicht von \"{file_name}\" laden",
     "Failed to open camera \"{source}\"": "Konnte Kamera \"{source}\" nicht öffnen",
     "Failed to parse \"{stripped}\" of source \"{source}\" to number": "Konnte \"{stripped}\" von \"{source}\" nicht als Zahl lesen",
+    "Failed to parse file. Only JPG files are supported.": "Einlesen der Datei schlug fehl. Es werden nur JPG Dateien werden unterstützt.",
     "Failed to scan new actor drawing for {actor_name}": "Einscannen von Zeichnung \"{actor_name}\" schlug fehl",
     "Failed to scan new actor drawing for {actor_name} for scene {scene_name}": "Einscannen von Zeichnung \"{actor_name}\" für Szene \"{scene_name}\" schlug fehl",
     "Forbidden characters in cgi name": "cgi Name enthält verbotene Zeichen",

@@ -29,6 +29,7 @@
     "Failed to load parameters for undistortion from \"{file_name}\"": "Malsukcesis ŝargi maldistord-parametro el \"{file_name}\"",
     "Failed to open camera \"{source}\"": "Malsukcesis malfermi camerao \"{source}\"",
     "Failed to parse \"{stripped}\" of source \"{source}\" to number": "Malsukcesis legi \"{stripped}\" el fonto \"{source}\" kiel nombro",
+    "Failed to parse file. Only JPG files are supported.": "Malsukcesis konsumi la dosieron. Nur JPG dosieroj estas taŭgaj.",
     "Failed to scan new actor drawing for {actor_name}": "Malsukcesis scani novan \"{actor_name}\" aganton",
     "Failed to scan new actor drawing for {actor_name} for scene {scene_name}": "Malsukcesis scani novan \"{actor_name}\" aganton de sceno \"{scene_name}\"",
     "Forbidden characters in cgi name": "Nomo de cgi enhavas malpermesitajn signojn",

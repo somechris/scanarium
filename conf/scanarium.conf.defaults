@@ -96,6 +96,11 @@ convert_untrusted = convert
 
 
 
+# The binary to convert PDFs to JPGs for pipeline pdftoppm
+pdftoppm_untrusted = pdftoppm
+
+
+
 # The binary for Poppler's pdfunite
 pdfunite = pdfunite
 
@@ -398,6 +403,24 @@ delay =
 # this value to `True` to accept them for scanning and automatically convert
 # them upon need.
 permit_file_type_pdf = False
+
+
+# The pipeline to convert PDFs to images
+#
+# This stetting selects the pipeline to convert PDFs to images and is only used
+# if `permit_file_type_pdf` is True.
+#
+# Use `convert` (this is the default) to convert PDFs using ImageMagick's
+# `convert`. As Scanarium relies on ImageMagick anyways, it allow to convert
+# PDFs to images without additional software. The downside is that ImageMagick's
+# `convert` is slow.
+#
+# Use `pdftoppm` to convert PDFs using the `pdftoppm` program from
+# `poppler-utils`. `pdftoppm` shaves off about 70% runtime compared to the
+# `convert` pipeline. But if you choose `pdftoppm`, you have to install
+# `poppler-utils` (or whatever package provides `pdftoppm` on your
+# distribution).
+pipeline_file_type_pdf = convert
 
 
 # Permit conversion from HEIC

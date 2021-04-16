@@ -708,20 +708,38 @@ def guess_image_format(file_path):
     return guessed_type
 
 
-def convert_and_get_raw_image(scanarium, file_path):
+def convert_and_get_raw_image(scanarium, file_path, pipeline):
     image = None
+    dpi = 150
 
     with tempfile.TemporaryDirectory(prefix='scanarium-conversion-') as dir:
-        converted_path = os.path.join(dir, 'converted.jpg')
-        command = [scanarium.get_config('programs', 'convert_untrusted'),
-                   '-units', 'pixelsperinch',
-                   '-background', 'white',
-                   '-density', '150',
-                   file_path + '[0]',  # [0] is first page
-                   converted_path]
+        converted_path_base = os.path.join(dir, 'converted')
+        converted_path = converted_path_base + '.jpg'
+
+        if pipeline == 'pdftoppm':
+            command = [scanarium.get_config('programs', 'pdftoppm_untrusted'),
+                       '-jpeg',
+                       '-singlefile',
+                       '-r', str(dpi),
+                       file_path,
+                       converted_path_base]
+        elif pipeline == 'convert':
+            command = [scanarium.get_config('programs', 'convert_untrusted'),
+                       '-units', 'pixelsperinch',
+                       '-background', 'white',
+                       '-density', str(dpi),
+                       file_path + '[0]',  # [0] is first page
+                       converted_path]
+        else:
+            raise ScanariumError('SE_SCAN_UNKNOWN_PIPELINE',
+                                 'Unknown conversion pipeline \"{pipeline}\"',
+                                 {'pipeline': pipeline})
+
         scanarium.run(command)
 
-        image = cv2.imread(converted_path)
+        if os.path.isfile(converted_path):
+            image = cv2.imread(converted_path)
+
     return image
 
 
@@ -733,7 +751,13 @@ def get_raw_image_from_file(scanarium, config, file_path):
         if format is not None and \
                 config.get('scan', f'permit_file_type_{format}',
                            kind='boolean'):
-            image = convert_and_get_raw_image(scanarium, file_path)
+            pipeline = None
+            if format == 'pdf':
+                pipeline = config.get('scan', 'pipeline_file_type_pdf')
+            if pipeline is None:
+                pipeline = 'convert'
+
+            image = convert_and_get_raw_image(scanarium, file_path, pipeline)
 
     if image is None:
         supported_formats = ', '.join(

@@ -4,7 +4,7 @@ var cgiFail = function(uuid, cgi, reason, parameters) {
   MessageManager.addMessage(msg, 'failed', uuid);
 };
 
-var onReadyStateChange = function(cgi) {
+var onReadyStateChange = function(cgi, finishedCallback) {
   return function() {
     if (this.readyState === XMLHttpRequest.DONE) {
       var capsule = {};
@@ -24,14 +24,16 @@ var onReadyStateChange = function(cgi) {
       var status = (is_ok ? 'ok' : 'failed')
       prefix = localize('{cgi_name} ' + status, {'cgi_name': cgi});
       CommandProcessor.process(capsule, prefix);
+
+      finishedCallback();
     }
   };
 };
 
-callCgi = function(cgi, data) {
+callCgi = function(cgi, data, finishedCallback) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'cgi-bin/' + cgi, true);
-    xhr.onreadystatechange = onReadyStateChange(cgi);
+    xhr.onreadystatechange = onReadyStateChange(cgi, finishedCallback);
     xhr.send(data);
 }
 

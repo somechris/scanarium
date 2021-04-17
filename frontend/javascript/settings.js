@@ -372,6 +372,7 @@ var UploadButton = {
           if (fileInput.files.length > 0) {
               var i;
               for (i = 0; i < fileInput.files.length; i++) {
+                  UploadButton.addUpload();
                   var file = fileInput.files[i];
                   data = new FormData();
                   data.append('data', file);
@@ -379,7 +380,7 @@ var UploadButton = {
                       'Upload of \"{image_name}\" started',
                       {image_name: sanitize_string(file.name)}
                   ));
-                  callCgi(UploadButton.cgi, data);
+                  callCgi(UploadButton.cgi, data, UploadButton.removeUpload);
               }
           } else {
               MessageManager.addMessage(localize('No image selected. Upload aborted.'), 'failed');
@@ -427,4 +428,15 @@ var UploadButton = {
       this.container = null;
     }
   },
+
+  currentUploads: 0,
+  addUpload: function() {
+      UploadButton.currentUploads += 1;
+  },
+  removeUpload: function() {
+      UploadButton.currentUploads -= 1;
+  },
+  isUploading: function() {
+      return this.currentUploads > 0;
+  }
 };

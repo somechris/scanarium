@@ -392,9 +392,14 @@ var UploadButton = {
       var button = document.createElement('button');
       button.id = 'file-upload-button';
       button.textContent = localize('Upload image');
+      var lastUploadButtonClick = 0;
       button.onclick = function(e) {
-          fileInput.click();
-          e.handled_by_scanarium_settings = true;
+          const now = Date.now();
+          if (now - lastUploadButtonClick > 400) {
+              fileInput.click();
+              e.handled_by_scanarium_settings = true;
+          }
+          lastUploadButtonClick = now;
       }
       button.ontouchstart = button.onclick;
       button.style["font-size"] = Math.ceil(16 * window.devicePixelRatio).toString() + 'px';

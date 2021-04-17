@@ -43,6 +43,15 @@ function create() {
 
     this.scale.on('resize', LayoutManager.onResize, this);
     LayoutManager.onResize();
+
+    // Ideally, we would listen on Phaser.Core.Events.CONTEXT_LOST and be
+    // portable. But this failed to work. So we wire it up manually.
+    var canvas = game.renderer.canvas;
+    if (canvas) {
+        canvas.addEventListener('webglcontextlost', () => {
+            updateLocation(true);
+        });
+    }
 }
 scanariumConfig.scene["create"] = create;
 

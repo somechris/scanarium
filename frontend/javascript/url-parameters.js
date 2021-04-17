@@ -11,6 +11,17 @@ function parseUrlParameters()
     return parameters;
 }
 
+function updateLocation(reload) {
+    const target = '?' + urlParameters.toString();
+    if (document.location.search == target) {
+        if (reload) {
+            window.location.reload()
+        }
+    } else {
+        document.location.search = '?' + urlParameters.toString();
+    }
+}
+
 function getUrlParameter(name, defaultValue) {
     var ret = defaultValue;
     if (urlParameters.has(name)) {
@@ -31,7 +42,7 @@ function getUrlParameterBoolean(name, defaultValue) {
 function setUrlParameter(key, value, follow) {
     urlParameters.set(key, value);
     if (follow) {
-      document.location.search = '?' + urlParameters.toString();
+      updateLocation();
     }
 }
 

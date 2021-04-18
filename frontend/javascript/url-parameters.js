@@ -22,7 +22,7 @@ function updateLocation(reload, reason) {
         }
     } else {
         action = () => {
-            document.location.search = '?' + urlParameters.toString();
+            document.location.search = target;
         };
     }
 

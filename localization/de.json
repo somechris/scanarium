@@ -3,6 +3,12 @@
     "maintainer": "christian@scanarium.com"
   },
   "messages": {
+    " All uploads done.": " Alle Bilder wurden hochgeladen.",
+    " But {uploads} upload is still in progress.": " Aber {uploads} Bild wird gerade hochgeladen.",
+    " But {uploads} uploads are still in progress.": " Aber {uploads} Bilder werden gerade hochgeladen.",
+    " Proceeding...": " Setze fort ...",
+    " Waiting period is over.": " Wartezeit ist abgelaufen.",
+    " Waiting {secondsLeft} seconds before continuing anyways.": " Warte noch {secondsLeft} Sekunden.",
     "(This is useful to get rid of unwanted images)": "(Das ist nützlich um unerwünschte Bilder wieder zu entfernen)",
     "---Action---": "---Aktion---",
     "---Description---": "---Beschreibung---",
@@ -10,6 +16,7 @@
     "Add another random actor": "Zufällige Figur zu Szene hinzufügen",
     "All scenes got reset": "Alle Szenen wurden zurückgesetzt",
     "All {scene_name} coloring pages": "Alle {scene_name} Ausmalbilder",
+    "Applying the changes requires to automatically reload the page": "Um die Änderungen anwenden zu können, ist ein automatisches Neu-laden der Seite notwendig.",
     "Calling script \"{script_name}\" as cgi is forbidden": "Skript \"{script_name}\" darf nicht als cgi gestartet werden",
     "Cannot switch to scene {scene_name}": "Kann nicht zur Szene \"{scene_name}\" wechseln",
     "Coloring pages for scene {scene_name}": "Ausmalbilder für die {scene_name} Szene",
@@ -70,6 +77,7 @@
     "Switch scene": "Szenenwechsel",
     "Switching to scene {scene_name}": "Wechsle zur Szene \"{scene_name}\"",
     "Taken too many extraction tries from scanned image": "Zu viele Versuche gebraucht um Daten aus Bild zu extrahieren",
+    "The browser lost the graphics context, which is typically fixed by automatically reloading the page.": "Der Browser hat die Grafik-Umgebung verloren, was mit einem automatischen Neu-laden der Seite behoben werden kann.",
     "The command \"{command}\" did not finish within {timeout} seconds": "Das Kommando \"{command}\" wurde nicht innerhalb von {timeout} Sekunden fertig",
     "The command \"{command}\" did not return 0": "Rückgabewert von \"{command}\" war nicht 0",
     "Toggled frames-per-second counter": "Bildfrequenz-Anzeige umgeschaltet",

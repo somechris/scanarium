@@ -3,6 +3,12 @@
     "maintainer": "christian@scanarium.com"
   },
   "messages": {
+    " All uploads done.": " Ĉiuj alŝutadoj finis.",
+    " But {uploads} upload is still in progress.": " Sed {uploads} alŝutado ankoraŭ ne finiĝis.",
+    " But {uploads} uploads are still in progress.": " Sed {uploads} alŝutadoj ankoraŭ ne finiĝis.",
+    " Proceeding...": " Kontinuigante...",
+    " Waiting period is over.": " Atendotempo pasis.",
+    " Waiting {secondsLeft} seconds before continuing anyways.": " Atendante {secondsLeft} sekunkojn antaŭ kontinuigo.",
     "(This is useful to get rid of unwanted images)": "(Tio ĉi estas komforta por forigi malbonvenajn agantojn)",
     "---Action---": "---Ago---",
     "---Description---": "---Priskribo---",
@@ -10,6 +16,7 @@
     "Add another random actor": "Aldonu plian hazardan aganton",
     "All scenes got reset": "Ĉuij agantoj de ĉiuj scenoj estis forigita",
     "All {scene_name} coloring pages": "Ĉiuj kolorigaj bildoj de {scene_name}",
+    "Applying the changes requires to automatically reload the page": "Apliki la ŝanĝojn necesas aŭtomate reŝargi la pagon.",
     "Calling script \"{script_name}\" as cgi is forbidden": "Uzado de \"{script_name}\" kiel cgi malpermesita",
     "Cannot switch to scene {scene_name}": "Ne povas ŝanĝi al sceno \"{scene_name}\"",
     "Coloring pages for scene {scene_name}": "Kolorigaj bildoj de la sceno {scene_name}",
@@ -70,6 +77,7 @@
     "Switch scene": "Scen-ŝanĝado",
     "Switching to scene {scene_name}": "Ŝangado al sceno \"{scene_name}\"",
     "Taken too many extraction tries from scanned image": "Tro multaj provoj por ekstrakti datumoj el bildo",
+    "The browser lost the graphics context, which is typically fixed by automatically reloading the page.": "La retumilo perdis la bild-kunteksto. Nun necesas aŭtomate reŝargi la pagon.",
     "The command \"{command}\" did not finish within {timeout} seconds": "La komando \"{command}\" ne finis en {timeout} sekundoj",
     "The command \"{command}\" did not return 0": "La komando \"{command}\" ne donis la numero 0",
     "Toggled frames-per-second counter": "(Mal)ŝaltita vidigfrekvenco",

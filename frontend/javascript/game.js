@@ -49,7 +49,16 @@ function create() {
     var canvas = game.renderer.canvas;
     if (canvas) {
         canvas.addEventListener('webglcontextlost', () => {
-            updateLocation(true);
+            // WebGL Context typically gets lost only on device under memory
+            // pressure, and if the device switched to another application.
+            //
+            // This includes switching to the camera app to take a picture.  In
+            // this case there is a race between the upload to start and the
+            // WebGL context to get lost. So we sleep 100ms to make sure the
+            // upload can start before we try to reload the scene.
+            setTimeout(() => {
+                updateLocation(true, 'The browser lost the graphics context, which is typically fixed by automatically reloading the page.');
+            }, 100);
         });
     }
 }

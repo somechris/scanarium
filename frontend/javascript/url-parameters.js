@@ -11,14 +11,23 @@ function parseUrlParameters()
     return parameters;
 }
 
-function updateLocation(reload) {
+function updateLocation(reload, reason) {
     const target = '?' + urlParameters.toString();
+    var action;
     if (document.location.search == target) {
         if (reload) {
-            window.location.reload()
+            action = () => {
+                window.location.reload();
+            }
         }
     } else {
-        document.location.search = '?' + urlParameters.toString();
+        action = () => {
+            document.location.search = '?' + urlParameters.toString();
+        };
+    }
+
+    if (action) {
+        UploadButton.runOnceUploadsFinished(action, reason);
     }
 }
 
@@ -42,7 +51,7 @@ function getUrlParameterBoolean(name, defaultValue) {
 function setUrlParameter(key, value, follow) {
     urlParameters.set(key, value);
     if (follow) {
-      updateLocation();
+      updateLocation(false, 'Applying the changes requires to automatically reload the page');
     }
 }
 

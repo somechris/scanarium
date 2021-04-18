@@ -18,6 +18,7 @@ var Settings = {
 
   switchScene: function(scene) {
       setUrlParameter('scene', scene, true);
+      PauseManager.resume();
   },
 
   loadLocalizationsConfig: function() {
@@ -437,7 +438,61 @@ var UploadButton = {
   removeUpload: function() {
       UploadButton.currentUploads -= 1;
   },
-  isUploading: function() {
-      return this.currentUploads > 0;
-  }
+  _runOnceUploadsFinishedTry: function(action, reason, waitingEnd, notice) {
+      var uploads = UploadButton.currentUploads;
+      var timeLeft = Math.max(waitingEnd - Date.now(), 0);
+      var message = reason;
+      var stillWaiting = true;
+      if (uploads > 0) {
+          message += localize(' But {uploads} upload' + (uploads == 1 ? ' is': 's are') + ' still in progress.', {
+              uploads: uploads,
+          });
+          if (timeLeft > 0) {
+              message += localize(' Waiting {secondsLeft} seconds before continuing anyways.', {
+                  secondsLeft: Math.floor(timeLeft / 1000),
+              });
+          } else {
+              message += localize(' Waiting period is over.');
+              stillWaiting = false;
+          }
+      } else {
+          message += localize(' All uploads done.');
+          stillWaiting = false;
+      }
+
+      if (!stillWaiting) {
+          message += localize(' Proceeding...');
+      }
+
+      notice.textContent = localize(message, {
+          uploads: uploads,
+          secondsLeft: Math.floor(timeLeft / 1000),
+      });
+
+      if (stillWaiting) {
+          setTimeout(UploadButton._runOnceUploadsFinishedTry, 200, action, reason, waitingEnd, notice);
+      } else {
+          action();
+      }
+  },
+  runOnceUploadsFinished: function(action, reason) {
+      var uploads = UploadButton.currentUploads;
+      var waitingEnd = Date.now();
+      var notice = {};
+      if (UploadButton.currentUploads > 0) {
+          notice = document.createElement('div');
+          notice.id = 'wait-notice';
+          notice.className = 'window';
+          notice.style['font-size'] = Math.ceil(16 * window.devicePixelRatio).toString() + 'px';
+          notice.onclick = function(e) {
+              e.stopPropagation();
+              e.preventDefault();
+          };
+          notice.ontouchstart = notice.onclick;
+          document.body.appendChild(notice);
+
+          waitingEnd += 10000;
+      }
+      UploadButton._runOnceUploadsFinishedTry(action, localize(reason ? reason : 'A reload is necessary.'), waitingEnd, notice);
+  },
 };

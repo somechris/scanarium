@@ -25,6 +25,7 @@
     "Delete actors": "Forigu agantojn",
     "Delete all your scanned actors": "Forigu ĉiujn agantojn",
     "Directory to store file in does not exist, or is no directory": "Dosierujo por konservado maleksistas aŭ ne estas dosierujo",
+    "Downloading coloring page \"{actor_name}\" might close this page.": "Elŝuti la kolorigan bildon \"{actor_name}\" povus fermi tiun ĉi paĝon.",
     "Dynamic config \"{file}\" cannot be read": "Malsukzedis legi la ŝanĝigeman agordan dosieron \"{file}\"",
     "Dynamic config \"{file}\" is not available": "Ŝanĝigema agordan dosiero \"{file}\" ne estas disponebla",
     "Enter/leave fullscreen mode": "(Mal)montru plenekrane",

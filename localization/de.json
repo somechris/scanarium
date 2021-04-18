@@ -25,6 +25,7 @@
     "Delete actors": "Figuren löschen",
     "Delete all your scanned actors": "Alle gespeicherten Zeichnungen löschen",
     "Directory to store file in does not exist, or is no directory": "Verzeichnis zum Speichern existiert nicht, oder ist kein Verzeichnis",
+    "Downloading coloring page \"{actor_name}\" might close this page.": "Das Herunterladen des Ausmalbilds \"{actor_name}\" kann unter Umständen diese Seite schließen.",
     "Dynamic config \"{file}\" cannot be read": "Dynamische Konfigurationsdatei \"{file}\" kann nicht gelesen werden",
     "Dynamic config \"{file}\" is not available": "Dynamische Konfigurationsdatei \"{file}\" ist nicht verfügbar",
     "Enter/leave fullscreen mode": "Vollbild-Modus umschalten",

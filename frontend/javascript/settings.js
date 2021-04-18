@@ -438,7 +438,7 @@ var UploadButton = {
   removeUpload: function() {
       UploadButton.currentUploads -= 1;
   },
-  _runOnceUploadsFinishedTry: function(action, reason, waitingEnd, notice) {
+  _runOnceUploadsFinishedTry: function(action, reason, waitingEnd, notice, cleanup) {
       var uploads = UploadButton.currentUploads;
       var timeLeft = Math.max(waitingEnd - Date.now(), 0);
       var message = reason;
@@ -470,12 +470,16 @@ var UploadButton = {
       });
 
       if (stillWaiting) {
-          setTimeout(UploadButton._runOnceUploadsFinishedTry, 200, action, reason, waitingEnd, notice);
+          setTimeout(UploadButton._runOnceUploadsFinishedTry, 200, action, reason, waitingEnd, notice, cleanup);
       } else {
           action();
+          if (cleanup) {
+              notice.parentNode.removeChild(notice);
+              notice = {};
+          }
       }
   },
-  runOnceUploadsFinished: function(action, reason) {
+  runOnceUploadsFinished: function(action, reason, cleanup) {
       var uploads = UploadButton.currentUploads;
       var waitingEnd = Date.now();
       var notice = {};
@@ -493,6 +497,6 @@ var UploadButton = {
 
           waitingEnd += 10000;
       }
-      UploadButton._runOnceUploadsFinishedTry(action, reason ? reason : localize('A reload is necessary.'), waitingEnd, notice);
+      UploadButton._runOnceUploadsFinishedTry(action, reason ? reason : localize('A reload is necessary.'), waitingEnd, notice, cleanup);
   },
 };

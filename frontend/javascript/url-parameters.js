@@ -11,8 +11,12 @@ function parseUrlParameters()
     return parameters;
 }
 
-function updateLocation(reload, reason) {
-    const target = '?' + urlParameters.toString();
+function updateLocation(reload, reason, target, isDownload) {
+    if (!target) {
+        const location = document.location;
+        target = location.protocol + '//' + location.host + location.pathname + '?' + urlParameters.toString();
+    }
+
     var action;
     if (document.location.search == target) {
         if (reload) {
@@ -22,12 +26,12 @@ function updateLocation(reload, reason) {
         }
     } else {
         action = () => {
-            document.location.search = target;
+            document.location.href = target;
         };
     }
 
     if (action) {
-        UploadButton.runOnceUploadsFinished(action, reason);
+        UploadButton.runOnceUploadsFinished(action, reason, isDownload);
     }
 }
 

@@ -16,6 +16,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   border: 2px solid black;
+  box-shadow: 1em 1em 1em black;
   z-index: 100;
 }
 

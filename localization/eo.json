@@ -12,6 +12,7 @@
     "(This is useful to get rid of unwanted images)": "(Tio ĉi estas komforta por forigi malbonvenajn agantojn)",
     "---Action---": "---Ago---",
     "---Description---": "---Priskribo---",
+    "A reload is necessary.": "Reŝargi la pagon necesas.",
     "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "Aganto \"{actor_name}\" malekzistas en la sceno \"{scene_name}\"",
     "Add another random actor": "Aldonu plian hazardan aganton",
     "All scenes got reset": "Ĉuij agantoj de ĉiuj scenoj estis forigita",

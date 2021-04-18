@@ -284,6 +284,7 @@ var Settings = {
     this.panel.ontouchstart = this.panel.onclick;
 
     this.panel.id = 'settings';
+    this.panel.className = 'window';
     this.panel.style['font-size'] = SettingsButton.button.style['font-size'];
 
     var sections = [];

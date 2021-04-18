@@ -4,7 +4,7 @@ body {
     overflow: hidden;
 }
 
-#settings {
+.window {
   position: absolute;
   left: 10%;
   right: 10%;
@@ -15,6 +15,9 @@ body {
   padding-right: 2em;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+#settings {
   z-index: 30;
 }
 

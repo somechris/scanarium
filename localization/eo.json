@@ -17,6 +17,7 @@
     "All scenes got reset": "Ĉuij agantoj de ĉiuj scenoj estis forigita",
     "All {scene_name} coloring pages": "Ĉiuj kolorigaj bildoj de {scene_name}",
     "Applying the changes requires to automatically reload the page": "Apliki la ŝanĝojn necesas aŭtomate reŝargi la pagon.",
+    "Automatic page reload required to finish resetting the scene.": "Por fini forigado da ĉiuj agantoj de sceno necesas aŭtomate reŝargi la pagon.",
     "Calling script \"{script_name}\" as cgi is forbidden": "Uzado de \"{script_name}\" kiel cgi malpermesita",
     "Cannot switch to scene {scene_name}": "Ne povas ŝanĝi al sceno \"{scene_name}\"",
     "Coloring pages for scene {scene_name}": "Kolorigaj bildoj de la sceno {scene_name}",

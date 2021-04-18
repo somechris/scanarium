@@ -15,6 +15,7 @@ body {
   padding-right: 2em;
   overflow-x: hidden;
   overflow-y: auto;
+  border: 2px solid black;
   z-index: 100;
 }
 

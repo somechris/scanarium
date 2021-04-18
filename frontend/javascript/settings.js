@@ -493,6 +493,6 @@ var UploadButton = {
 
           waitingEnd += 10000;
       }
-      UploadButton._runOnceUploadsFinishedTry(action, localize(reason ? reason : 'A reload is necessary.'), waitingEnd, notice);
+      UploadButton._runOnceUploadsFinishedTry(action, reason ? reason : localize('A reload is necessary.'), waitingEnd, notice);
   },
 };

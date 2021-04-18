@@ -15,10 +15,11 @@ body {
   padding-right: 2em;
   overflow-x: hidden;
   overflow-y: auto;
+  z-index: 100;
 }
 
-#settings {
-  z-index: 30;
+#settings.window {
+  z-index: 110;
 }
 
 button {

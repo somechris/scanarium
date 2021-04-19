@@ -19,14 +19,14 @@ var MessageManager = {
     return ret;
   },
 
-  addMessage: function(message, icon) {
+  addMessage: function(message, icon, is_long) {
     if (game) {
       var y = this.getTargetY(this.objects.length);
       var duration = 10000;
       if (typeof icon == 'undefined' || icon == null) {
         icon = 'info';
       }
-      if (icon == 'ok' || icon == 'info') {
+      if (icon == 'ok' || icon == 'info' || is_long === false) {
           duration /= 2;
       } else if (icon == 'pause') {
           duration = 100;

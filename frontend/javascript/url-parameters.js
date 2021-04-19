@@ -44,7 +44,7 @@ function getUrlParameter(name, defaultValue) {
 }
 
 function getUrlParameterTrimmedLowerCaseString(name, defaultValue) {
-        return String(getUrlParameter(name, false)).toLowerCase().trim();
+        return String(getUrlParameter(name, defaultValue)).toLowerCase().trim();
 }
 
 function getUrlParameterBoolean(name, defaultValue) {

@@ -40,6 +40,7 @@ function create() {
     ScreensaverManager.init();
     PauseManager.init();
     DeveloperInformation.init();
+    Greeter.init();
 
     this.scale.on('resize', LayoutManager.onResize, this);
     LayoutManager.onResize();

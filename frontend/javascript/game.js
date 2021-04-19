@@ -8,6 +8,7 @@ function preload() {
     this.load.image('none', '/static/none.png');
     this.load.image('ok', '/static/ok.png');
     this.load.image('pause', '/static/pause.png');
+    this.load.image('smile', '/static/smile.png');
     this.load.image('background', scene_dir + '/background.png');
 
     scene_preload();

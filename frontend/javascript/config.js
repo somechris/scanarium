@@ -14,6 +14,9 @@ var default_global_config = {
 
   // If true, make the actor cards in the settings dialog links to pdfs.
   'offer-pdf-downloads': true,
+
+  // Title of the Scanarium instance
+  'title': 'Scanarium',
 };
 
 var global_config = {};

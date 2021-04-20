@@ -16,6 +16,8 @@ function boot_step_1(json) {
   FileLoader.load(scene_dir + '/scene.json', function(json) {sceneConfig = json;});
   FileLoader.load(scene_dir + '/scene.js');
   FileLoader.whenAllLoaded(boot_step_2);
+
+  document.title = getConfig('title');
 }
 
 function boot_step_0() {

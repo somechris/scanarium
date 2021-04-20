@@ -585,10 +585,6 @@ def regenerate_static_scene_content(scanarium, dir, force):
 
     background_file = os.path.join(dir, 'background')
     background_jpg_file = os.path.join(dir, 'background.jpg')
-    if os.path.islink(background_file):
-        print(dir)
-        print(os.readlink(background_file))
-        print(background_jpg_file)
     if os.path.islink(background_file) and \
             os.path.join(dir,
                          os.readlink(background_file)) == background_jpg_file:

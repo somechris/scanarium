@@ -3,13 +3,14 @@ function preload() {
     // `Phaser.Game` initialization can set it.
     game = this;
 
+    this.load.image('background', scene_dir + '/background');
+
     this.load.image('failed', '/static/failed.png');
     this.load.image('info', '/static/info.png');
     this.load.image('none', '/static/none.png');
     this.load.image('ok', '/static/ok.png');
     this.load.image('pause', '/static/pause.png');
     this.load.image('smile', '/static/smile.png');
-    this.load.image('background', scene_dir + '/background');
 
     scene_preload();
 

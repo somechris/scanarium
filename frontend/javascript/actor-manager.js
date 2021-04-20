@@ -124,26 +124,35 @@ var ScActorManager = {
         // If we find one that we have not tried yet, we try it.
         // If we have already tried all, we pick a random one.
         var all = [];
+        var untried = [];
+        var untriedFirsts = [];
         var names = Object.keys(config != null ? config['actors'] : []);
         var i;
         for (i=0; i < names.length; i++) {
             var flavors = config['actors'][names[i]];
             var j;
             for (j=0; j < flavors.length; j++) {
-                item = [names[i], flavors[j]];
-                if (forceUntried) {
-                    if (names[i] in this.triedActors) {
-                        if (!(this.triedActors[names[i]].includes(flavors[j]))) {
-                            return item;
-                        }
-                    } else {
-                        return item;
+                var actorSpec = [names[i], flavors[j]];
+                var hasBeenTried = false;
+                if (names[i] in this.triedActors) {
+                    hasBeenTried = this.triedActors[names[i]].includes(flavors[j]);
+                }
+                if (!hasBeenTried) {
+                    untried.push(actorSpec);
+                    if (j == 0) {
+                        untriedFirsts.push(actorSpec);
                     }
                 }
-                all.push(item);
+                all.push(actorSpec);
             }
         }
-        return all.length ? all[Math.floor(Math.random() * all.length)] : null;
+        var candidates = [];
+        [untriedFirsts, (forceUntried ? untried : []), all].forEach(actors => {
+            if (!candidates.length) {
+                candidates = actors;
+            }
+        });
+        return candidates.length ? candidates[Math.min(Math.floor(Math.random() * candidates.length), candidates.length - 1)] : null;
     },
 
     getNewActorNameWithFlavor: function() {

@@ -9,7 +9,7 @@ function preload() {
     this.load.image('ok', '/static/ok.png');
     this.load.image('pause', '/static/pause.png');
     this.load.image('smile', '/static/smile.png');
-    this.load.image('background', scene_dir + '/background.png');
+    this.load.image('background', scene_dir + '/background');
 
     scene_preload();
 

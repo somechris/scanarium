@@ -583,6 +583,21 @@ def regenerate_static_scene_content(scanarium, dir, force):
     scanarium.generate_thumbnail(dir, book_png_file, force, shave=False,
                                  erode=False)
 
+    background_file = os.path.join(dir, 'background')
+    background_jpg_file = os.path.join(dir, 'background.jpg')
+    if os.path.islink(background_file):
+        print(dir)
+        print(os.readlink(background_file))
+        print(background_jpg_file)
+    if os.path.islink(background_file) and \
+            os.path.join(dir,
+                         os.readlink(background_file)) == background_jpg_file:
+        background_png_file = os.path.join(dir, 'background.png')
+        if scanarium.file_needs_update(background_jpg_file,
+                                       [background_png_file], force):
+            scanarium.run([scanarium.get_config('programs', 'convert'),
+                           background_png_file, background_jpg_file])
+
 
 def regenerate_static_content_commands(
         scanarium, dir, command_arg, parameter, is_actor, language, force):

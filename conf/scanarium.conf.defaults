@@ -87,6 +87,10 @@ hide_image_masked_0_01 = False
 cgi_results = False
 
 
+# If `True`, raw images get logged to the log directory.
+raw_image_files = False
+
+
 
 
 #-------------------------------------------------------------------------------

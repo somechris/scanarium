@@ -113,7 +113,7 @@ class Environment(object):
         else:
             result = Result(payload, exc_info)
         if IS_CGI:
-            print(self._dumper.dump_json_string(result.as_dict()))
+            ret = result.as_dict()
         else:
             if exc_info is not None:
                 if self._config.get('general', 'debug', 'boolean'):
@@ -121,7 +121,9 @@ class Environment(object):
                 print('ERROR: %s' % result.error_code)
                 print(result.error_message)
                 print()
-            print(self._dumper.dump_json_string(result.payload))
+            ret = result.payload
+
+        print(self._dumper.dump_json_string(ret))
         self.cleanup(exit_code=0)
 
     def _inject_cgi_arguments(self, fields):

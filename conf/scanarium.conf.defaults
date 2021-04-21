@@ -75,6 +75,20 @@ hide_image_masked_0_6 = False
 hide_image_masked_0_01 = False
 
 
+
+
+#-------------------------------------------------------------------------------
+# Logging configuration for workflow
+#-------------------------------------------------------------------------------
+[log]
+
+
+# If `True`, CGI results get logged to the log directory.
+cgi_results = False
+
+
+
+
 #-------------------------------------------------------------------------------
 # Configuration for where to find which binary
 #-------------------------------------------------------------------------------

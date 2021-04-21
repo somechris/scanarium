@@ -15,8 +15,9 @@ class Scanarium(object):
             self.get_localization_dir_abs())
         self._command_logger = scanarium.CommandLogger(
             self.get_dynamic_directory(), self._dumper)
+        self._util = scanarium.Util(self)
         self._environment = scanarium.Environment(
-            self.get_backend_dir_abs(), self._config, self._dumper)
+            self.get_backend_dir_abs(), self._config, self._dumper, self._util)
         self._indexer = scanarium.Indexer(self.get_dynamic_directory(),
                                           self._dumper)
         self._resetter = scanarium.Resetter(
@@ -24,7 +25,6 @@ class Scanarium(object):
             self.get_dynamic_sample_dir_abs(),
             self._indexer, self._command_logger)
         self._scanner = scanarium.Scanner(self._config, self._command_logger)
-        self._util = scanarium.Util()
 
     def get_config(self, section=None, key=None, kind='string',
                    allow_empty=False):
@@ -77,6 +77,9 @@ class Scanarium(object):
 
     def get_images_dir_abs(self):
         return self.get_relative_dir_abs('images')
+
+    def get_log_dir_abs(self):
+        return self.get_relative_dir_abs('log')
 
     def reindex_actors_for_scene(self, scene):
         self._indexer.reindex_actors_for_scene(scene)
@@ -160,3 +163,6 @@ class Scanarium(object):
 
     def file_needs_update(self, destination, sources, force=False):
         return self._util.file_needs_update(destination, sources, force)
+
+    def get_log_filename(self, name):
+        return self._util.get_log_filename(name)

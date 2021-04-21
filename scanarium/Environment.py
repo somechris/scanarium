@@ -32,11 +32,12 @@ if IS_CGI:
 
 
 class Environment(object):
-    def __init__(self, backend_dir_abs, config, dumper):
+    def __init__(self, backend_dir_abs, config, dumper, util):
         super(Environment, self).__init__()
         self._backend_dir_abs = backend_dir_abs
         self._config = config
         self._dumper = dumper
+        self._util = util
         self._cleanup_functions = set()
         self.set_signal_handlers()
 
@@ -124,6 +125,15 @@ class Environment(object):
             ret = result.payload
 
         print(self._dumper.dump_json_string(ret))
+
+        if self._config.get('log', 'cgi_results', kind='boolean'):
+            try:
+                log_filename = self._util.get_log_filename('cgi-result.json')
+                self._dumper.dump_json(log_filename, ret)
+            except Exception:
+                # Logging failed. There's not much we can do here.
+                pass
+
         self.cleanup(exit_code=0)
 
     def _inject_cgi_arguments(self, fields):

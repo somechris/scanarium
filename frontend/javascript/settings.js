@@ -112,6 +112,7 @@ var Settings = {
       scenes.forEach(scene => {
           const localized_scene_name = localize_parameter('scene_name', scene);
           var sceneImage = document.createElement('img');
+          sceneImage.className = 'card-image';
           sceneImage.src = 'scenes/' + scene + '/scene-bait-thumb.jpg';
           sceneImage.alt = localized_scene_name;
 
@@ -183,6 +184,7 @@ var Settings = {
           const name = item['name'];
 
           var actorImage = document.createElement('img');
+          actorImage.className = 'card-image';
           actorImage.src = item['thumb_file'];
           actorImage.alt = name;
 

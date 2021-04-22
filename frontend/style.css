@@ -88,8 +88,12 @@ a.card:hover {
   text-decoration: none;
 }
 
+.card-image {
+   padding: 0.5em 0.2em 0em 0.2em;
+}
+
 .card-label {
-   padding: 0em 1em 1em 1em;
+   padding: 0em 1em 0.5em 1em;
 }
 
 #actor-list > .card {

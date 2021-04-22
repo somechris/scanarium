@@ -264,6 +264,8 @@ var Settings = {
           var heading = this.generateHeading('Delete actors');
           sections.push(heading)
 
+          var controls = document.createElement('p');
+
           var resetSceneButton = document.createElement('button');
           resetSceneButton.id = 'reset-scene-button';
           resetSceneButton.textContent = localize('Reset scene "{scene_name}"', {'scene_name': scene});
@@ -277,7 +279,9 @@ var Settings = {
               e.stopPropagation();
               e.preventDefault();
           };
-          sections.push(resetSceneButton);
+          controls.appendChild(resetSceneButton);
+
+          sections.push(controls);
       }
       return sections;
   },
@@ -354,10 +358,6 @@ var Settings = {
     this.loadActorVariants();
     this.loadLocalizationsConfig();
     sections.forEach(section => this.panel.appendChild(section));
-
-    var bottomSpacer = document.createElement('div');
-    bottomSpacer.style.padding = '1em';
-    this.panel.appendChild(bottomSpacer);
 
     document.body.appendChild(this.panel);
   },

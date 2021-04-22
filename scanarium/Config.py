@@ -18,8 +18,12 @@ class Config(object):
 
         self._config = config
 
-    def get(self, section, key, kind='string', allow_empty=False):
-        if allow_empty and self._config.get(section, key) == '':
+    def get(self, section, key, kind='string', allow_empty=False,
+            allow_missing=False):
+        try:
+            if self._config.get(section, key) == '' and allow_empty:
+                return None
+        except (configparser.NoSectionError, configparser.NoOptionError):
             return None
         if kind == 'string':
             func = self._config.get

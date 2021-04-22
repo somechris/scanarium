@@ -27,8 +27,8 @@ class Scanarium(object):
         self._scanner = scanarium.Scanner(self._config, self._command_logger)
 
     def get_config(self, section=None, key=None, kind='string',
-                   allow_empty=False):
-        return self._config.get(section, key, kind, allow_empty)
+                   allow_empty=False, allow_missing=False):
+        return self._config.get(section, key, kind, allow_empty, allow_missing)
 
     def set_config(self, section, key, value):
         self._config.set(section, key, value)

@@ -282,6 +282,51 @@ var Settings = {
       return sections;
   },
 
+  generateNewsSections: function() {
+      var sections = [];
+      var news = getConfig('news');
+      if (news.length) {
+          var heading = this.generateHeading('More about Scanarium');
+          sections.push(heading)
+
+          var newsList = document.createElement('div');
+          newsList.id = 'news-list';
+          newsList.className = 'card-container';
+
+          news.forEach(config => {
+              const name = localize_parameter('site', config['name']);
+
+
+              var image = document.createElement('img');
+              image.className = 'card-image';
+              image.src = config['icon'];
+              image.alt = name;
+
+              var label = document.createElement('div');
+              label.className = 'card-label';
+              label.textContent = name;
+
+              var link = document.createElement('a');
+              link.href = config['url'];
+              link.onclick = function(e) {
+                  updateLocation(true,
+                                 localize('Forwarding to {url-description}.', {'url-description': name}),
+                                 config['url'], false);
+                  e.stopPropagation();
+                  e.preventDefault();
+              };
+              link.className = 'card';
+              link.appendChild(image);
+              link.appendChild(label);
+
+              newsList.appendChild(link);
+          });
+
+          sections.push(newsList);
+      }
+      return sections;
+  },
+
   show: function() {
     this.hide();
 
@@ -303,6 +348,7 @@ var Settings = {
     Array.prototype.push.apply(sections, this.generateActorSections());
     Array.prototype.push.apply(sections, this.generateActorsSections());
     Array.prototype.push.apply(sections, this.generateUiSections());
+    Array.prototype.push.apply(sections, this.generateNewsSections());
 
     this.loadScenesConfig();
     this.loadActorVariants();

@@ -17,6 +17,9 @@ var default_global_config = {
 
   // Title of the Scanarium instance
   'title': 'Scanarium',
+
+  // News sites
+  'news': [],
 };
 
 var global_config = {};

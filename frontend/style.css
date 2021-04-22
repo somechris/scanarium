@@ -106,6 +106,14 @@ a.card:hover {
     width: 10em;
 }
 
+#news-list > .card {
+    width: 8em;
+}
+
+#news-list img {
+    height: 2em;
+}
+
 #scene-settings {
     display: grid;
     grid-template-columns: 9em 1fr;

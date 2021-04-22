@@ -43,6 +43,7 @@
     "Failed to scan new actor drawing for {actor_name}": "Malsukcesis scani novan \"{actor_name}\" aganton",
     "Failed to scan new actor drawing for {actor_name} for scene {scene_name}": "Malsukcesis scani novan \"{actor_name}\" aganton de sceno \"{scene_name}\"",
     "Forbidden characters in cgi name": "Nomo de cgi enhavas malpermesitajn signojn",
+    "Forwarding to {url-description}.": "Plusendado al {url-description}.",
     "Help Page": "Helpopaĝo",
     "Intentional error from the \"debug:fail\" command": "Intenca eraro de komando \"debug:fail\"",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ne estas dosierujo",
@@ -50,6 +51,7 @@
     "Loading actor data ...": "Ŝargante datumojn pri agantaj ...",
     "Loading localization data ...": "Ŝargante datumojn pri tradukaĵoj ...",
     "Loading scene data ...": "Ŝargante datumojn pri scenoj ...",
+    "More about Scanarium": "Pli pri Scanarium",
     "No image selected. Upload aborted.": "Neniu bildo elektita. Alŝutado nuligita",
     "Pause/Resume": "(Mal)paŭzu",
     "Paused": "Paŭzita",
@@ -173,6 +175,13 @@
       "fairies": "Fearo",
       "highway": "Ŝoseo",
       "space": "Kosmo"
+    },
+    "site": {
+      "Blog": "Blogo",
+      "Facebook": "Fejsbuko",
+      "Homepage": "Hejmpaĝo",
+      "Instagram": "Instagram",
+      "Twitter": "Tvitero"
     }
   }
 }

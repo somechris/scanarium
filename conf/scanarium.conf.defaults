@@ -48,7 +48,7 @@ hide_image_scaled_image_final = False
 
 
 # Whether to hide the image used for feature detection during debugging
-hide_image_prepared_for_detection = False
+hide_image_prepared_for_detection_contrast_1_0 = True
 
 
 # Whether to hide the image with found contours during debugging
@@ -212,6 +212,15 @@ raw_image_period = 60
 # interactive camera calibration tool. See
 # https://docs.opencv.org/3.2.0/d7/d21/tutorial_interactive_calibration.html
 calibration_xml_file =
+
+
+# Contrast adjustments for contour detection
+#
+# This is a comma separated list of contrast factors to try for
+# contour detection. First entry that allows to find a suitable
+# rectangle wins. The factor is multiplied to all pixel values. So a
+# contrast factor 1 means no contrast change.
+contrasts = 1
 
 
 # Image of maximum achievable brightness

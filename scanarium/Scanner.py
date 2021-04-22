@@ -41,10 +41,11 @@ def debug_show_image(title, image, config):
     if image_hide_key[-1] == '_':
         image_hide_key = image_hide_key[:-1]
     if config.get('general', 'debug', 'boolean') and \
-            not config.get('debug', 'hide_images', 'boolean') and \
-            not config.get('debug', image_hide_key, 'boolean'):
-        cv2.imshow(title, image)
-        locale.resetlocale()
+            not config.get('debug', 'hide_images', 'boolean'):
+        if not config.get('debug', image_hide_key, 'boolean',
+                          allow_missing=True):
+            cv2.imshow(title, image)
+            locale.resetlocale()
 
 
 def get_cv_major_version():
@@ -174,9 +175,6 @@ def find_rect_points(scanarium, image, decreasingArea=True,
             good_approx = approx
             break
 
-    if good_approx is None:
-        raise ScanariumError('SE_SCAN_NO_APPROX',
-                             'Failed to find rectangle contour')
     return good_approx
 
 
@@ -257,7 +255,7 @@ def correct_image_brightness(scanarium, image):
     return image
 
 
-def prepare_image(scanarium, image):
+def prepare_image(scanarium, image, contrast=1):
     # If the picture is too big (E.g.: from a proper photo camera), edge
     # detection won't work reliably, as the sheet's contour will exhibit too
     # much detail and would get broken down into more than 4 segments. So we
@@ -266,10 +264,17 @@ def prepare_image(scanarium, image):
     (prepared_image, scale_factor) = scale_image(
         scanarium, image, 'preparation', scaled_height=1000, trip_height=1300)
 
+    if contrast != 1:
+        shift = - 127.5 * (contrast - 1)
+        prepared_image = np.clip(
+            prepared_image.astype(np.float32) * contrast + shift, 0, 255
+        ).astype(np.uint8)
+
     prepared_image = cv2.cvtColor(prepared_image, cv2.COLOR_BGR2GRAY)
     prepared_image = correct_image_brightness(scanarium, prepared_image)
 
-    scanarium.debug_show_image('Prepared for detection', prepared_image)
+    scanarium.debug_show_image(
+        f'Prepared for detection (contrast: {contrast})', prepared_image)
 
     return (prepared_image, scale_factor)
 
@@ -294,13 +299,25 @@ def refine_corners(scanarium, prepared_image, points):
 
 def rectify(scanarium, image, decreasingArea=True, required_points=[],
             yield_only_points=False):
-    (prepared_image, scale_factor) = prepare_image(scanarium, image)
+    found_points_scaled = None
+    contrasts = [float(contrast.strip())
+                 for contrast in
+                 scanarium.get_config('scan', 'contrasts').split(',')]
+    for contrast in contrasts:
+        if contrast and found_points_scaled is None:
+            (prepared_image, scale_factor) = prepare_image(scanarium, image,
+                                                           contrast)
 
-    scaled_points = [(int(point[0] * scale_factor),
-                      int(point[1] * scale_factor)
-                      ) for point in required_points]
-    found_points_scaled = find_rect_points(scanarium, prepared_image,
-                                           decreasingArea, scaled_points)
+            scaled_points = [(int(point[0] * scale_factor),
+                              int(point[1] * scale_factor)
+                              ) for point in required_points]
+            found_points_scaled = find_rect_points(
+                scanarium, prepared_image, decreasingArea, scaled_points)
+
+    if found_points_scaled is None:
+        raise ScanariumError('SE_SCAN_NO_APPROX',
+                             'Failed to find rectangle contour')
+
     found_points = (found_points_scaled / scale_factor).astype('float32')
 
     rectify_points = refine_corners(scanarium, prepared_image, found_points)

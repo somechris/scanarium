@@ -15,6 +15,7 @@
     "A reload is necessary.": "Ein Neu-laden der Seite ist notwendig.",
     "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "In der Szene \"{scene_name}\" gibt es keinen Figur \"{actor_name}\"",
     "Add another random actor": "Zufällige Figur zu Szene hinzufügen",
+    "All coloring pages": "Alle Ausmalbilder",
     "All scenes got reset": "Alle Szenen wurden zurückgesetzt",
     "All {scene_name} coloring pages": "Alle {scene_name} Ausmalbilder",
     "Applying the changes requires to automatically reload the page": "Um die Änderungen anwenden zu können, ist ein automatisches Neu-laden der Seite notwendig.",

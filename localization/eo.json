@@ -15,6 +15,7 @@
     "A reload is necessary.": "Reŝargi la pagon necesas.",
     "Actor \"{actor_name}\" does not exist in scene \"{scene_name}\"": "Aganto \"{actor_name}\" malekzistas en la sceno \"{scene_name}\"",
     "Add another random actor": "Aldonu plian hazardan aganton",
+    "All coloring pages": "Ĉiuj kolorigaj bildoj",
     "All scenes got reset": "Ĉuij agantoj de ĉiuj scenoj estis forigita",
     "All {scene_name} coloring pages": "Ĉiuj kolorigaj bildoj de {scene_name}",
     "Applying the changes requires to automatically reload the page": "Apliki la ŝanĝojn necesas aŭtomate reŝargi la pagon.",

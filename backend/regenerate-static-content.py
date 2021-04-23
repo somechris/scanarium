@@ -642,6 +642,25 @@ def regenerate_language_matrix(scanarium):
     scanarium.dump_json(os.path.join(l10n_dir, data_file), data)
 
 
+def regenerate_static_images(scanarium, force):
+    logging.debug('Regenerating static images ...')
+    images_dir_abs = scanarium.get_images_dir_abs()
+    book_svg_file = os.path.join(images_dir_abs, 'book.svg')
+    book_png_file = os.path.join(images_dir_abs, 'book.png')
+
+    if scanarium.file_needs_update(book_png_file, [book_svg_file], force):
+        run_inkscape(scanarium, [
+            '--export-png=%s' % (book_png_file),
+            '--export-id=Book',
+            '--export-id-only',
+            '--export-area-page',
+            book_svg_file
+        ])
+
+    scanarium.generate_thumbnail(images_dir_abs, book_png_file, force,
+                                 shave=False, erode=False)
+
+
 def regenerate_static_content(scanarium, command, parameter, language, force):
     for d in [
         {'dir': scanarium.get_commands_dir_abs(), 'is_actor': False},
@@ -653,6 +672,7 @@ def regenerate_static_content(scanarium, command, parameter, language, force):
 
     if not command and not parameter:
         regenerate_language_matrix(scanarium)
+        regenerate_static_images(scanarium, force)
 
 
 def register_arguments(scanarium, parser):

@@ -12,6 +12,7 @@ __pycache__
 /conf/max-brightness*.png
 /dynamic
 /frontend/phaser-3.*.js
+/images/book.png
 /scenes/*/actors/*/*.svg
 !/scenes/*/actors/*/*-undecorated.svg
 /scenes/*/actors/*/*-mask.png

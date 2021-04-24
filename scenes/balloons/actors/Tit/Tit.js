@@ -21,6 +21,10 @@ class Tit extends Bird {
                 glideScale: -0.1,
             },
             center: [86, 437],
+            beak: [
+                [0, 445],
+                [142, 460],
+            ],
             width: 690,
             height: 582,
         };

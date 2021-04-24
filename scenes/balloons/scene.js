@@ -28,7 +28,9 @@ function spawnClouds(immediate = false) {
 }
 
 function birdBalloonCollision(balloon, bird) {
-    ScActorManager.deleteActor(balloon);
+    if (Math.abs(balloon.depth - bird.depth) < 0.3) {
+        ScActorManager.deleteActor(balloon);
+    }
 }
 
 function scene_create() {
@@ -280,7 +282,7 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Beak extends Phaser.GameObjects.Rectangle {
-  constructor(bodySpec, birdWidth, birdHeight, flippedFactor) {
+  constructor(bodySpec, birdWidth, birdHeight, flippedFactor, depth) {
       const x1 = (bodySpec.beak[0][0] - bodySpec.center[0]) / bodySpec.width * birdWidth;
       const y1 = (bodySpec.beak[0][1] - bodySpec.center[1]) / bodySpec.height * birdHeight;
       const x2 = (bodySpec.beak[1][0] - bodySpec.center[0]) / bodySpec.width * birdWidth;
@@ -291,6 +293,7 @@ class Beak extends Phaser.GameObjects.Rectangle {
       const height = y2 - y1 + 1;
       super(game, xc, yc, width, height, 0x808080, 0);
       this.setOrigin(0.5, 0.5);
+      this.depth = depth;
   }
 }
 
@@ -339,7 +342,7 @@ class Bird extends Phaser.GameObjects.Container {
     this.x = this.flipped ? 0 : scanariumConfig.width;
     this.y = scanariumConfig.height * randomBetween(0.1, 0.9);
 
-    var beak = new Beak(bodySpec, body.displayWidth, body.displayHeight, this.flippedFactor);
+    var beak = new Beak(bodySpec, body.displayWidth, body.displayHeight, this.flippedFactor, this.depth);
     game.physics.world.enable(beak);
     beak.body.syncBounds=true;
     this.add(beak);

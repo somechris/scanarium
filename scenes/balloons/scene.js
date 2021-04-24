@@ -275,13 +275,16 @@ class Bird extends Phaser.GameObjects.Container {
     var flavored_actor = actor + '-' + flavor;
     this.createTextures(flavored_actor, bodySpec);
     this.depth = Math.random();
+    this.flipped = Math.random() > 0.5;
+    this.flippedFactor = this.flipped ? -1 : 1;
 
     var body = game.add.image(0, 0, flavored_actor + '-body');
 
     var scale = scaleBetween(minScale, maxScale, this.depth) * refToScreen;
     var height = body.height / body.width * width * scale;
     var width = width * scale;
-    body.setOrigin(bodySpec.center[0] / bodySpec.width, bodySpec.center[1] / bodySpec.height);
+    body.setOrigin((this.flipped ? bodySpec.width - bodySpec.center[0] : bodySpec.center[0]) / bodySpec.width, bodySpec.center[1] / bodySpec.height);
+    body.setFlipX(this.flipped);
     body.setDisplaySize(width, height);
     body.setSize(width, height);
 
@@ -297,16 +300,17 @@ class Bird extends Phaser.GameObjects.Container {
     this.coordinateCorrectionFactor = depthCorrectionFactor(this.depth) * refToScreen;
 
     var wing = new Wings(0, 0, flavored_actor + '-wing', this, body, bodySpec);
+    wing.setFlipX(this.flipped);
     this.add(wing);
     this.wing = wing;
 
     game.physics.world.enable(this);
 
-    this.body.setGravityX(5);
+    this.body.setGravityX(5 * this.flippedFactor);
     this.body.setGravityY(140);
-    this.body.setVelocityX(-startSpeed * randomBetween(0.9, 1.1) * this.coordinateCorrectionFactor);
+    this.body.setVelocityX(-startSpeed * randomBetween(0.9, 1.1) * this.coordinateCorrectionFactor * this.flippedFactor);
     this.body.setVelocityY(randomBetween(-0.2, 0.1) * startSpeed * randomBetween(0.9, 1.1) * this.coordinateCorrectionFactor);
-    this.x = scanariumConfig.width;
+    this.x = this.flipped ? 0 : scanariumConfig.width;
     this.y = scanariumConfig.height * randomBetween(0.1, 0.9);
   }
 
@@ -363,7 +367,7 @@ class Bird extends Phaser.GameObjects.Container {
   }
 
   update(time, delta) {
-    const xRate = this.x / scanariumConfig.width;
+    const xRate = (this.flipped ? scanariumConfig.width - this.x : this.x) / scanariumConfig.width;
     var phase = 0;
     while (phase < this.phaseBorders.length && xRate > this.phaseBorders[phase]) {
         phase++;
@@ -377,9 +381,9 @@ class Bird extends Phaser.GameObjects.Container {
     }
     this.wing.update(time, delta, desiredDirection);
 
-    this.body.setAccelerationX(-this.wing.wingAccelerationX);
+    this.body.setAccelerationX(-this.wing.wingAccelerationX * this.flippedFactor);
     this.body.setAccelerationY(this.wing.wingAccelerationY);
 
-    this.rotation = Math.atan2(-this.body.velocity.y/3, -this.body.velocity.x);
+    this.rotation = Math.atan2(-this.body.velocity.y * this.flippedFactor, -this.body.velocity.x * this.flippedFactor);
   }
 }

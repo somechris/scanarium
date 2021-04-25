@@ -28,9 +28,7 @@ function spawnClouds(immediate = false) {
 }
 
 function birdBalloonCollision(balloon, bird) {
-    if (Math.abs(balloon.depth - bird.depth) < 0.3) {
-        ScActorManager.deleteActor(balloon);
-    }
+    ScActorManager.deleteActor(this);
 }
 
 function scene_create() {

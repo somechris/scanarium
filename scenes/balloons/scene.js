@@ -27,8 +27,8 @@ function spawnClouds(immediate = false) {
     }
 }
 
-function birdBalloonCollision(balloon, bird) {
-    ScActorManager.deleteActor(this);
+function birdBalloonCollision(balloon, beak) {
+    balloon.pop();
 }
 
 function scene_create() {
@@ -54,7 +54,8 @@ class WindAffectedSprite extends Phaser.Physics.Arcade.Sprite {
     constructor(x, y, flavor, width, minScale, maxScale) {
         super(game);
         const actor = this.constructor.name;
-        this.setTexture(actor + '-' + flavor);
+        this.flavored_actor = actor + '-' + flavor
+        this.setTexture(this.flavored_actor, '__BASE');
         this.setPosition(x, y);
         game.physics.world.enable(this);
         this.depth = Math.random();
@@ -95,17 +96,135 @@ class Cloud extends WindAffectedSprite {
     }
 }
 
+class Shred extends Phaser.Physics.Arcade.Sprite {
+    constructor(x, y, texture, spec, balloonSpec, depth, balloonWidth, balloonHeight) {
+        super(game, x, y, texture);
+        game.sys.displayList.add(this);
+        game.physics.world.enableBody(this);
+
+        var width = 2 * spec.r / balloonSpec.width * balloonWidth;
+        var height =  2 * spec.r / balloonSpec.height * balloonHeight;
+        this.setDisplaySize(width, height);
+
+        this.depth = depth;
+
+        var velocity = new Phaser.Math.Vector2(spec.x - balloonSpec.width/2, spec.y - balloonSpec.height/2);
+        velocity.normalize()
+            .scale(4000 * depthCorrectionFactor(this.depth) * refToScreen * randomBetween(0.8, 2))
+            .rotate(randomBetween(-Math.PI/4, Math.PI/4));
+        this.body.setVelocity(velocity.x, velocity.y);
+        this.body.setAngularVelocity(randomBetween(-10000, 10000));
+        this.body.setGravityY(140);
+
+
+        const tweenDurationMin = 20;
+        const tweenDurationMax = 100;
+
+        var tweens = [];
+        for (var i=0; i<5; i++) {
+            const isNarrow = Math.random() > 0.5
+            tweens.push({
+                displayWidth: width * (isNarrow ? randomBetween(0.1, 0.3) : randomBetween(0.6, 0.9)),
+                displayHeight: height * (isNarrow ? randomBetween(0.6, 0.9) : randomBetween(0.1, 0.3)),
+                duration: randomBetween(tweenDurationMin, tweenDurationMax),
+            });
+        }
+        tweens.push({
+            displayWidth: 1,
+            displayHeight: 1,
+            duration: randomBetween(tweenDurationMin, tweenDurationMax),
+        });
+        this.timeline = game.tweens.timeline({
+            targets: this,
+            ease: 'Bounce.easeOut',
+            onComplete: () => {
+                this.destroy();
+            },
+            tweens: tweens,
+        });
+
+  }
+}
+
 class BaseBalloon extends WindAffectedSprite {
-    constructor(flavor, width, x, y) {
+    constructor(flavor, width, x, y, spec) {
         super(x, y, flavor, width, 0.4, 1);
+        this.spec = spec;
         this.y = scanariumConfig.height + this.displayHeight/2;
         this.setVelocityY(-20 * depthCorrectionFactor(this.depth) * refToScreen);
         groupBalloons.add(this);
+        this.createTextures();
+    }
+
+    createTextures() {
+        if (this.spec.shreds.length > 0) {
+            if (!game.textures.exists(this.flavored_actor + '-shred-0')) {
+                this.createTexturesForce();
+            }
+        }
+    }
+
+    createTexturesForce() {
+      const that = this;
+      const full_texture = game.textures.get(this.flavored_actor);
+      const full_texture_source_index = 0;
+      const full_source = full_texture.source[full_texture_source_index];
+      const full_width = full_source.width;
+      const full_height = full_source.height;
+
+      this.spec.shreds.forEach((shredSpec, i) => {
+          const x = shredSpec.x / this.spec.width * full_width;
+          const y = shredSpec.y / this.spec.height * full_height;
+          const r = shredSpec.r / this.spec.width * full_width;
+
+          const frame_name = 'shred-' + String(i);
+          var frame = full_texture.add(
+              frame_name, full_texture_source_index,
+              x - r, y - r, 2 * r, 2 * r);
+
+          var eraserEraser = game.make.graphics();
+          eraserEraser.fillStyle(0xffffff, 1);
+          for (var i = 0; i < 360; i += 30) {
+              const eR = randomBetween(0.5, 1) * r
+              const eX = r + Math.cos(i * degToRadian) * eR;
+              const eY = r - Math.sin(i * degToRadian) * eR;
+              if (i == 0) {
+                  eraserEraser.moveTo(eX, eY);
+              } else {
+                  eraserEraser.lineTo(eX, eY);
+              }
+          }
+          eraserEraser.closePath();
+          eraserEraser.fillPath();
+
+          var eraser = game.make.renderTexture({
+              width: 2 * r,
+              height: 2 * r,
+          }, false);
+          eraser.fill(0xffffff, 1);
+          eraser.erase(eraserEraser);
+
+          var texture = game.make.renderTexture({
+              width: 2 * r,
+              height: 2 * r,
+          }, false);
+          texture.drawFrame(this.flavored_actor, frame_name);
+          texture.erase(eraser);
+          texture.saveTexture(this.flavored_actor + '-' + frame_name);
+      });
     }
 
     update(time, delta) {
         super.update(time, delta);
         this.setAngle(this.body.velocity.x * screenToRef);
+    }
+
+    pop() {
+        this.spec.shreds.forEach((shredSpec, i) => {
+            const texture = this.flavored_actor + '-shred-' + String(i);
+            var shred = new Shred(this.x, this.y, texture, shredSpec, this.spec, this.depth, this.displayWidth, this.displayHeight);
+        });
+        ScActorManager.deleteActor(this);
     }
 }
 

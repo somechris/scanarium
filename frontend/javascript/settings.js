@@ -195,7 +195,6 @@ var Settings = {
           var actorCard = document.createElement(offerPdfs ? 'a' : 'span');
           if (offerPdfs) {
               actorCard.href = item['pdf_file'];
-              actorCard.href = '';
               actorCard.onclick = function(e) {
                   updateLocation(true,
                                  localize('Downloading coloring page "{actor_name}" might close this page.', {actor_name: name}),

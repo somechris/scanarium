@@ -206,25 +206,15 @@ var Settings = {
 
   generateUiSections: function() {
       var heading = this.generateHeading('User interface');
-      var form = document.createElement('form');
-      form.id = 'scene-settings';
-
-      var addControl = function(caption, control) {
-          var label = document.createElement('label');
-          label.for = control.id;
-          label.textContent = localize(caption);
-
-          form.appendChild(label);
-          form.appendChild(control);
-      }
+      var form = new ManagedForm('scene-settings');
 
       var l10nCell = document.createElement('span');
       l10nCell.id = 'l10n-cell';
       l10nCell.textContent = localize('Loading localization data ...');
-      addControl('Language', l10nCell);
+      form.addControl('Language', l10nCell);
 
       this.l10nCell = l10nCell;
-      return [heading, form];
+      return [heading, form.getElement()];
   },
 
   generateScenesSections: function() {

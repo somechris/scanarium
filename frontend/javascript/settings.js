@@ -334,6 +334,7 @@ var Settings = {
         e.handled_by_scanarium_settings = true;
     };
     this.panel.ontouchstart = this.panel.onclick;
+    this.panel.onkeypress = this.panel.onclick;
 
     this.panel.id = 'settings';
     this.panel.className = 'window';

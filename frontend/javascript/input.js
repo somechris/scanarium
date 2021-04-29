@@ -73,7 +73,9 @@ var run_event_command = function(event) {
 }
 
 document.addEventListener("keypress", function(e) {
+  if (!e.handled_by_scanarium_settings) {
     run_event_command(e.key);
+  }
 }, false);
 
 

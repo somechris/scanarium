@@ -28,7 +28,7 @@ class ManagedForm {
 
         var label = document.createElement('label');
         label.for = control.id;
-        label.textContent = localize(caption);
+        label.textContent = caption;
 
         if (validation) {
             control.scValidation = validation;

@@ -78,3 +78,4 @@ var sceneConfig = {
 
 var dynamicConfigMethod = 'GET';
 
+const minimum_password_length = 6;

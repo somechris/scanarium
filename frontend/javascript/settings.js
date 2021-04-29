@@ -268,6 +268,59 @@ var Settings = {
       return sections;
   },
 
+  generatePasswordSections: function() {
+      var sections = [];
+      const cgi = 'update-password';
+      if (!isCgiForbidden(cgi)) {
+          var heading = this.generateHeading('Change password');
+          sections.push(heading)
+
+          var oldPasswordInput;
+          var newPasswordInput;
+          var submit = function(event) {
+              var data = new FormData();
+              data.append('old-password', oldPasswordInput.value);
+              data.append('new-password', newPasswordInput.value);
+              callCgi(cgi, data);
+
+              event.stopPropagation();
+              event.preventDefault();
+              PauseManager.resume();
+          }
+          var form = new ManagedForm('update-password-form', submit, localize('Change password'));
+
+          var old_password_validator = function(node) {
+              const password = node.value;
+
+              if (password.length == '') {
+                  return localize('This field may not be empty');
+              }
+
+              return true;
+          }
+
+          var new_password_validator = function(node) {
+              const password = node.value;
+
+              if (password.length < minimum_password_length) {
+                  return localize('Password is too short (minimum: {count} characters)', {count: minimum_password_length});
+              }
+
+              if (document.getElementById('new-password').value != document.getElementById('confirm-password').value) {
+                  return localize('New password and its confirmation do not match');
+              }
+              return true;
+          }
+
+          oldPasswordInput = form.addPassword(localize('Current password'), 'current-password', old_password_validator);
+          newPasswordInput = form.addPassword(localize('New password'), 'new-password', new_password_validator);
+          form.addPassword(localize('Confirm new password'), 'confirm-password', new_password_validator);
+
+          sections.push(form.getElement());
+      }
+      return sections;
+  },
+
   generateNewsSections: function() {
       var sections = [];
       var news = getConfig('news');
@@ -335,6 +388,7 @@ var Settings = {
     Array.prototype.push.apply(sections, this.generateActorSections());
     Array.prototype.push.apply(sections, this.generateActorsSections());
     Array.prototype.push.apply(sections, this.generateUiSections());
+    Array.prototype.push.apply(sections, this.generatePasswordSections());
     Array.prototype.push.apply(sections, this.generateNewsSections());
 
     this.loadScenesConfig();

@@ -54,6 +54,18 @@ class ManagedForm {
         }
     }
 
+    addPassword(caption, id, validation) {
+        var input = document.createElement('input');
+        input.type = 'password';
+        input.id = id;
+        input.name = id;
+        input.placeholder = caption;
+        input.required = true;
+        this.addControl(caption, input, validation);
+
+        return input;
+    }
+
     _validateNode(node) {
         var result = true;
 

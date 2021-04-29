@@ -29,6 +29,10 @@ body {
   margin-block-end: 4em;
 }
 
+form button {
+  margin-top: 1em;
+}
+
 button {
   padding: 1em 5em;
 }
@@ -126,4 +130,36 @@ a.card:hover {
 #wait-notice.window {
     padding-top: 2em;
     z-index: 120;
+}
+
+form {
+    display: block;
+    width: 100%;
+}
+.form-row {
+    display: block;
+    width: 100%;
+}
+
+label {
+    width: 12em;
+}
+
+.validation-message {
+    margin: 0em 0em 0em 1em;
+    padding: 0em 0.5em 0em 0.5em;
+    background-color: #ffc0c0;
+    border-radius: 0.3em;
+}
+
+label, input, .validation-message {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0.3em 0em 0.3em 1em;
+}
+
+@media screen and (max-width: 600px) {
+  label, input, .validation-message {
+    width: 100%;
+  }
 }

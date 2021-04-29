@@ -47,6 +47,7 @@
     "Forwarding to {url-description}.": "Weiterleitung zu {url-description}.",
     "Help Page": "Hilfe-Seite",
     "Intentional error from the \"debug:fail\" command": "Absichtlicher Fehler vom Kommando \"debug:fail\"",
+    "Invalid value": "Ungültiger Wert",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ist kein Verzeichnis",
     "Language": "Sprache",
     "Loading actor data ...": "Lade Figuren Daten ...",

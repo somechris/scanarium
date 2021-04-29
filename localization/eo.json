@@ -47,6 +47,7 @@
     "Forwarding to {url-description}.": "Plusendado al {url-description}.",
     "Help Page": "Helpopaĝo",
     "Intentional error from the \"debug:fail\" command": "Intenca eraro de komando \"debug:fail\"",
+    "Invalid value": "Malvalida enigaĵo",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ne estas dosierujo",
     "Language": "Lingvo",
     "Loading actor data ...": "Ŝargante datumojn pri agantaj ...",

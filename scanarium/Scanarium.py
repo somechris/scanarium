@@ -139,8 +139,8 @@ class Scanarium(object):
         return self._scanner.rectify_to_qr_parent_rect(
             self, image, qr_rect, yield_only_points=yield_only_points)
 
-    def run(self, command, check=True, timeout=10):
-        return self._environment.run(command, check, timeout)
+    def run(self, command, check=True, timeout=10, input=None):
+        return self._environment.run(command, check, timeout, input)
 
     def call_guarded(self, func, *args, check_caller=True, **kwargs):
         return self._environment.call_guarded(

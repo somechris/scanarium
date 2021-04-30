@@ -41,14 +41,15 @@ class Environment(object):
         self._cleanup_functions = set()
         self.set_signal_handlers()
 
-    def run(self, command, check=True, timeout=10):
+    def run(self, command, check=True, timeout=10, input=None):
         sep = "\" \""
         logger.debug(f'Running external command with check={check}, '
                      f'timeout={timeout}: "{sep.join(command)}"')
         try:
             process = subprocess.run(
-                command, check=check, timeout=timeout, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE, universal_newlines=True)
+                command, check=check, timeout=timeout, input=input,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                universal_newlines=True)
         except subprocess.TimeoutExpired as e:
             raise ScanariumError(
                 'SE_TIMEOUT', 'The command "{command}" did not finish within '

@@ -1,6 +1,8 @@
 import configparser
 import os
 
+from .ScanariumError import ScanariumError
+
 
 class Config(object):
     def __init__(self, config_dir_abs):
@@ -23,10 +25,13 @@ class Config(object):
         try:
             if self._config.get(section, key) == '' and allow_empty:
                 return None
-        except (configparser.NoSectionError, configparser.NoOptionError) as e:
+        except (configparser.NoSectionError, configparser.NoOptionError):
             if allow_missing:
                 return None
-            raise e
+            raise ScanariumError(
+                'SE_CONFIG_MISSING',
+                'Missing configuration entry at "{key}" in "{section}"',
+                {'section': section, 'key': key})
         if kind == 'string':
             func = self._config.get
         elif kind == 'boolean':

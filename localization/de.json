@@ -53,6 +53,7 @@
     "Loading actor data ...": "Lade Figuren Daten ...",
     "Loading localization data ...": "Lade Übersetzungs-Daten ...",
     "Loading scene data ...": "Lade Szenen Daten ...",
+    "Missing configuration entry at \"{key}\" in \"{section}\"": "Konfiguration von \"{key}\" in \"{section}\" fehlt",
     "More about Scanarium": "Mehr zu Scanarium",
     "No image selected. Upload aborted.": "Kein Bild ausgewählt. Hochladen abgebrochen",
     "Pause/Resume": "Pause",

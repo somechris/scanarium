@@ -53,6 +53,7 @@
     "Loading actor data ...": "Ŝargante datumojn pri agantaj ...",
     "Loading localization data ...": "Ŝargante datumojn pri tradukaĵoj ...",
     "Loading scene data ...": "Ŝargante datumojn pri scenoj ...",
+    "Missing configuration entry at \"{key}\" in \"{section}\"": "Mankas agordo de \"{key}\" en \"{section}\"",
     "More about Scanarium": "Pli pri Scanarium",
     "No image selected. Upload aborted.": "Neniu bildo elektita. Alŝutado nuligita",
     "Pause/Resume": "(Mal)paŭzu",

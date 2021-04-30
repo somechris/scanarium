@@ -48,15 +48,29 @@ class Environment(object):
         try:
             process = subprocess.run(
                 command, check=check, timeout=timeout, stdout=subprocess.PIPE,
-                universal_newlines=True)
-        except subprocess.TimeoutExpired:
-            raise ScanariumError('SE_TIMEOUT', 'The command "{command}" did '
-                                 'not finish within {timeout} seconds',
-                                 {'command': str(command), timeout: timeout})
-        except subprocess.CalledProcessError:
-            raise ScanariumError('SE_RETURN_VALUE', 'The command "{command}" '
-                                 'did not return 0', {'command': str(command)})
-        return process.stdout
+                stderr=subprocess.PIPE, universal_newlines=True)
+        except subprocess.TimeoutExpired as e:
+            raise ScanariumError(
+                'SE_TIMEOUT', 'The command "{command}" did not finish within '
+                '{timeout} seconds',
+                {'command': str(command), timeout: timeout},
+                private_parameters={
+                    'stdout': e.stdout,
+                    'stderr': e.stderr,
+                })
+        except subprocess.CalledProcessError as e:
+            raise ScanariumError(
+                'SE_RETURN_VALUE', 'The command "{command}" did not return 0',
+                {'command': str(command)},
+                private_parameters={
+                    'stdout': e.stdout,
+                    'stderr': e.stderr,
+                })
+
+        return {
+            'stdout': process.stdout,
+            'stderr': process.stderr,
+        }
 
     def _set_display(self):
         if IS_CGI:

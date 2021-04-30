@@ -107,7 +107,8 @@ def get_svg_contour_rect_area(scanarium, svg_path):
     y = None
     width = None
     height = None
-    element_sizes = run_inkscape(scanarium, inkscape_args).split('\n')
+    element_sizes = run_inkscape(
+        scanarium, inkscape_args)['stdout'].split('\n')
     for element_size in element_sizes:
         if x is None or element_size.startswith('contour,'):
             # We're at either the first element (ie.: page), or the contour

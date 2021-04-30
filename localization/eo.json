@@ -57,6 +57,7 @@
     "Missing configuration entry at \"{key}\" in \"{section}\"": "Mankas agordo de \"{key}\" en \"{section}\"",
     "More about Scanarium": "Pli pri Scanarium",
     "No image selected. Upload aborted.": "Neniu bildo elektita. Alŝutado nuligita",
+    "Password is not correct": "Pasvorto estas malkorekta",
     "Pause/Resume": "(Mal)paŭzu",
     "Paused": "Paŭzita",
     "Really reset the scene \"{scene_name}\", delete this scenes' scanned actors, and start afresh? (This cannot be undone)": "Ĉu vere forigi skanaĵoj kaj re-komenci? (Vi ne povas malfari tion ĉi)",
@@ -142,7 +143,8 @@
       "reindex": "Re-indeksu",
       "reset-dynamic-content": "Forigu skanaĵoj",
       "scan": "Skanu",
-      "show-source": "Motru bild-fonton"
+      "show-source": "Motru bild-fonton",
+      "update-password": "Pasvort-ŝanĝo"
     },
     "command_label": {
       "command": "Komando",

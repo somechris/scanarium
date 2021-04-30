@@ -517,6 +517,15 @@ allow = False
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False
 
+[cgi:update-password]
+# Whether or not to allow updating passwords
+allow = False
+
+# The script to call to update the password. It gets called with pod, user,
+# current password, and new password on separate lines in stdin. If it
+# returns 0, it's considered ok. Otherwise, it's considered failed.
+delegate =
+
 [cgi:regenerate-static-content]
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False

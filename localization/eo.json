@@ -30,6 +30,7 @@
     "Downloading coloring page \"{actor_name}\" might close this page.": "Elŝuti la kolorigan bildon \"{actor_name}\" povus fermi tiun ĉi paĝon.",
     "Dynamic config \"{file}\" cannot be read": "Malsukzedis legi la ŝanĝigeman agordan dosieron \"{file}\"",
     "Dynamic config \"{file}\" is not available": "Ŝanĝigema agordan dosiero \"{file}\" ne estas disponebla",
+    "Empty configuration entry at \"{key}\" in \"{section}\"": "Agordo de \"{key}\" en \"{section}\" estas malplena",
     "Enter/leave fullscreen mode": "(Mal)montru plenekrane",
     "Exception marked as skipped": "Escepto markita ellasite",
     "Failed to find mask {file_name}": "Malsukcesis trovi mask-dosieron \"{file_name}\"",

@@ -30,6 +30,7 @@
     "Downloading coloring page \"{actor_name}\" might close this page.": "Das Herunterladen des Ausmalbilds \"{actor_name}\" kann unter Umständen diese Seite schließen.",
     "Dynamic config \"{file}\" cannot be read": "Dynamische Konfigurationsdatei \"{file}\" kann nicht gelesen werden",
     "Dynamic config \"{file}\" is not available": "Dynamische Konfigurationsdatei \"{file}\" ist nicht verfügbar",
+    "Empty configuration entry at \"{key}\" in \"{section}\"": "Konfiguration von \"{key}\" in \"{section}\" is leer",
     "Enter/leave fullscreen mode": "Vollbild-Modus umschalten",
     "Exception marked as skipped": "Ausnahme ist übersprungen markiert",
     "Failed to find mask {file_name}": "Konnte Masken-Datei \"{file_name}\" nicht finden",

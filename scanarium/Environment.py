@@ -74,7 +74,8 @@ class Environment(object):
 
     def _set_display(self):
         if IS_CGI:
-            display = self._config.get('cgi', 'display')
+            display = self._config.get('cgi', 'display', allow_empty=True,
+                                       allow_missing=True)
             if display:
                 os.environ['DISPLAY'] = display
 

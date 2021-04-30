@@ -23,8 +23,14 @@ class Config(object):
     def get(self, section, key, kind='string', allow_empty=False,
             allow_missing=False):
         try:
-            if self._config.get(section, key) == '' and allow_empty:
-                return None
+            if self._config.get(section, key) == '':
+                if allow_empty:
+                    return None
+                else:
+                    raise ScanariumError(
+                        'SE_CONFIG_EMPTY',
+                        'Empty configuration entry at "{key}" in "{section}"',
+                        {'section': section, 'key': key})
         except (configparser.NoSectionError, configparser.NoOptionError):
             if allow_missing:
                 return None

@@ -15,7 +15,7 @@ class Result(object):
         self.error_code = None
         self.error_message = None
         self.error_template = None
-        self.error_parameters = []
+        self.error_parameters = {}
 
         if exc_info is not None and len(exc_info) > 1:
             e = exc_info[1]

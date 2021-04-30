@@ -4,7 +4,7 @@ from .MessageFormatter import MessageFormatter
 
 
 class ScanariumError(RuntimeError):
-    def __init__(self, code, template, parameters=[], *args, **kwargs):
+    def __init__(self, code, template, parameters={}, *args, **kwargs):
         super(ScanariumError, self).__init__(*args, **kwargs)
         self.code = code
         self.template = template

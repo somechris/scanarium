@@ -3,6 +3,7 @@ class ManagedForm {
         var self = this;
         var form = document.createElement('form');
         var button;
+        var font_size = Math.ceil(16 * window.devicePixelRatio).toString() + 'px';
 
         form.id = id;
         form.novalidate = true; // lowercase V according to MDN
@@ -14,12 +15,14 @@ class ManagedForm {
             button = document.createElement('button');
             button.id = form.id + '-submit-button';
             button.textContent = submit_button_caption;
+            button.style['font-size'] = font_size;
 
             form.appendChild(button);
         }
         this.form = form;
         this.submit_action = submit_action;
         this.submit_button = button;
+        this.font_size = font_size;
         this.validate();
     }
 
@@ -61,6 +64,7 @@ class ManagedForm {
         input.name = id;
         input.placeholder = caption;
         input.required = true;
+        input.style['font-size'] = this.font_size;
         this.addControl(caption, input, validation);
 
         return input;

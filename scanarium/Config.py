@@ -23,8 +23,10 @@ class Config(object):
         try:
             if self._config.get(section, key) == '' and allow_empty:
                 return None
-        except (configparser.NoSectionError, configparser.NoOptionError):
-            return None
+        except (configparser.NoSectionError, configparser.NoOptionError) as e:
+            if allow_missing:
+                return None
+            raise e
         if kind == 'string':
             func = self._config.get
         elif kind == 'boolean':

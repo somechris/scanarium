@@ -706,7 +706,6 @@ def store_raw_image(config, image):
             file_path = os.path.join(dir_path, '%f.png' % (now))
             os.makedirs(dir_path, exist_ok=True)
             cv2.imwrite(file_path, image)
-            config.get('scan', 'raw_image_period')
             NEXT_RAW_IMAGE_STORE = now + config.get(
                 'scan', 'raw_image_period', 'float')
 

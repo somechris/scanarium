@@ -851,7 +851,7 @@ def get_raw_image(scanarium, config, camera=None):
 
 def undistort_image(image, config):
     ret = image
-    param_file = config.get('scan', 'calibration_xml_file')
+    param_file = config.get('scan', 'calibration_xml_file', allow_empty=True)
     if param_file:
         try:
             storage = cv2.FileStorage(param_file, cv2.FileStorage_READ)

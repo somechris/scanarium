@@ -25,7 +25,9 @@ var onReadyStateChange = function(cgi, finishedCallback) {
       prefix = localize('{cgi_name} ' + status, {'cgi_name': cgi});
       CommandProcessor.process(capsule, prefix);
 
-      finishedCallback();
+      if (finishedCallback) {
+          finishedCallback();
+      }
     }
   };
 };

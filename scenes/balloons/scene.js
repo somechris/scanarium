@@ -302,7 +302,12 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
         bodySpec.wing.durations.downToGlide,
         bodySpec.wing.durations.downToUp,
     ];
-    this.glideScale = bodySpec.wing.glideScale;
+    const scales = (bodySpec.wing.scales || {});
+    this.targetScales = {
+        'up': scales.up || 1,
+        'glide': scales.center || -0.1,
+        'down': scales.down || -1,
+    };
     this.wingScale = 0;
     this.wingAccelerationX = 0;
     this.wingAccelerationY = 0;
@@ -354,19 +359,19 @@ class Wings extends Phaser.Physics.Arcade.Sprite {
           var targetAccelerationY = 0;
           var ease = 'Sine.easeInOut';
           if (this.phase == 0) {
-              targetScale = this.glideScale;
+              targetScale = this.targetScales['glide'];
           } else if (this.phase == 1) {
-              targetScale = 1;
+              targetScale = this.targetScales['up'];
               ease = 'Cubic.easeOut';
           } else if (this.phase == 2) {
-              targetScale = -1;
+              targetScale = this.targetScales['down'];
               targetAccelerationX = this.flapAccelerationX;
               targetAccelerationY = this.flapAccelerationY;
               ease = 'Quint.easeOut';
           } else if (this.phase == 3) {
-              targetScale = this.glideScale;
+              targetScale = this.targetScales['glide'];
           } else if (this.phase == 4) {
-              targetScale = 1;
+              targetScale = this.targetScales['up'];
               ease = 'Cubic.easeOut';
           }
 

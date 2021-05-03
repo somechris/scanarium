@@ -18,7 +18,6 @@ class Tit extends Bird {
                 },
                 flapY: 409,
                 flapAcceleration: [2000, 1000],
-                glideScale: -0.1,
             },
             center: [86, 437],
             beak: [

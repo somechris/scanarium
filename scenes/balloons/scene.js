@@ -424,6 +424,7 @@ class Bird extends Phaser.GameObjects.Container {
     this.depth = Math.random();
     this.flipped = Math.random() > 0.5;
     this.flippedFactor = this.flipped ? -1 : 1;
+    this.rotationFactor = bodySpec.rotationFactor || 1;
 
     var body = game.add.image(0, 0, flavored_actor + '-body');
 
@@ -537,6 +538,6 @@ class Bird extends Phaser.GameObjects.Container {
     this.body.setAccelerationX(-this.wing.wingAccelerationX * this.flippedFactor);
     this.body.setAccelerationY(this.wing.wingAccelerationY);
 
-    this.rotation = Math.atan2(-this.body.velocity.y * this.flippedFactor, -this.body.velocity.x * this.flippedFactor);
+    this.rotation = this.rotationFactor * Math.atan2(-this.body.velocity.y * this.flippedFactor, -this.body.velocity.x * this.flippedFactor);
   }
 }

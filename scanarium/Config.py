@@ -1,5 +1,6 @@
 import configparser
 import os
+import sys
 
 from .ScanariumError import ScanariumError
 
@@ -19,6 +20,37 @@ class Config(object):
             config.read(config_file_abs)
 
         self._config = config
+
+        if len(sys.argv) >= 2 and sys.argv[1] == '--debug-config-override':
+            if self.get('debug',
+                        'enable_debug_config_override_command_line_argument',
+                        kind='boolean'):
+                if len(sys.argv) >= 3:
+                    # Unconditionally loading the file. (Passing the parameter
+                    # to a file that does not exist is a hard error)
+                    override_file = sys.argv[2]
+                    if os.path.isfile(override_file):
+                        config.read(override_file)
+                        config.read(override_file)
+                        del sys.argv[2]
+                        del sys.argv[1]
+                    else:
+                        raise ScanariumError(
+                            'SE_OVERRIDE_FILE_DOES_NOT_EXIST',
+                            'Override file `{override_file}` does not exist',
+                            {'override_file': override_file})
+                else:
+                    raise ScanariumError(
+                        'SE_ARGUMENT_ERROR',
+                        'This program was called with '
+                        '`--debug-config-override`, but no file with '
+                        'overrides was specified')
+            else:
+                raise ScanariumError(
+                    'SE_CONFIG_USED_BUT_FORBIDDEN',
+                    'This program was called with `--debug-config-override`, '
+                    'but the configuration at `debug.enable_debug_config_'
+                    'override_command_line_argument` is not `True`.')
 
     def get(self, section, key, kind='string', allow_empty=False,
             allow_missing=False):

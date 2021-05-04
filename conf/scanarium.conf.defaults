@@ -75,6 +75,13 @@ hide_image_masked_0_6 = False
 hide_image_masked_0_01 = False
 
 
+# If true, and the first argument of the invocation is
+# `--debug-config-override` followed by a file name, then this file is
+# read and can ovveride config settings. This is mostly useful for
+# testing.
+enable_debug_config_override_command_line_argument = False
+
+
 
 
 #-------------------------------------------------------------------------------

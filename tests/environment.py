@@ -50,6 +50,7 @@ class CanaryTestCase(unittest.TestCase):
                 'max_raw_height': 1000,
                 'max_final_width': 1000,
                 'max_final_height': 1000,
+                'permit_file_type_heic': True,
             },
         }
 

@@ -1,3 +1,4 @@
+import unittest
 import base64
 import os
 import cv2
@@ -86,3 +87,9 @@ class ScanDataCanaryTestCase(CanaryTestCase):
 
     def test_ok_jpg(self):
         self.template_test_file_type('jpg')
+
+    @unittest.skipIf('TEST_SKIP_HEIC' in os.environ
+                     and os.environ['TEST_SKIP_HEIC'].lower() == 'yes',
+                     'Environment variable TEST_SKIP_HEIC is True')
+    def test_ok_heic(self):
+        self.template_test_file_type('heic')

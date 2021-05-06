@@ -24,7 +24,10 @@ class CanaryTestCase(unittest.TestCase):
     def add_fixture(self, name, dir):
         src = os.path.join(FIXTURE_DIR, name)
         dest = os.path.join(dir, name)
-        shutil.copytree(src, dest)
+        if os.path.isdir(src):
+            shutil.copytree(src, dest)
+        else:
+            shutil.copy(src, dest)
 
     def prepared_environment(self, name=None, cleanup=True):
         temp_dir_cls = tempfile.TemporaryDirectory if cleanup \
@@ -35,12 +38,19 @@ class CanaryTestCase(unittest.TestCase):
         dynamic_dir = os.path.join(dir, 'dynamic')
 
         if name:
-            self.add_fixture(name, ctx)
+            self.add_fixture(name, ctx.name)
 
         overrides = {
             'directories': {
                 'dynamic': dynamic_dir,
-            }
+            },
+            'scan': {
+                'source': '/dev/null',
+                'max_raw_width': 1000,
+                'max_raw_height': 1000,
+                'max_final_width': 1000,
+                'max_final_height': 1000,
+            },
         }
 
         config = configparser.ConfigParser()

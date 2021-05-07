@@ -1,4 +1,5 @@
 import unittest
+import collections.abc
 import configparser
 import json
 import os
@@ -29,7 +30,19 @@ class CanaryTestCase(unittest.TestCase):
         else:
             shutil.copy(src, dest)
 
-    def prepared_environment(self, name=None, cleanup=True):
+    def update_dict(self, target, source, merge_lists=False):
+        for key, value in source.items():
+            if isinstance(value, collections.abc.Mapping):
+                repl = self.update_dict(target.get(key, {}), value)
+                target[key] = repl
+            elif merge_lists and isinstance(value, list) \
+                    and isinstance(target.get(key, 0), list):
+                target[key] += value
+            else:
+                target[key] = source[key]
+        return target
+
+    def prepared_environment(self, name=None, cleanup=True, test_config={}):
         temp_dir_cls = tempfile.TemporaryDirectory if cleanup \
             else NotCleanedUpTemporaryDirectory
         ctx = temp_dir_cls(prefix='scanarium-test-')
@@ -50,9 +63,9 @@ class CanaryTestCase(unittest.TestCase):
                 'max_raw_height': 1000,
                 'max_final_width': 1000,
                 'max_final_height': 1000,
-                'permit_file_type_heic': True,
             },
         }
+        overrides = self.update_dict(overrides, test_config)
 
         config = configparser.ConfigParser()
         for section, options in overrides.items():

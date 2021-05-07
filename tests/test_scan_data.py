@@ -69,18 +69,30 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         for marker in markers:
             self.assertMarker(image, marker, x_factor, y_factor)
 
-    def template_test_file_type(self, file_type):
+    def template_test_file_type(self, file_type, pipeline=None):
         fixture = f'space-SimpleRocket-optimal.{file_type}'
-        with self.prepared_environment(fixture) as dir:
+        config = {'scan': {f'permit_file_type_{file_type}': True}}
+        if pipeline is not None:
+            config['scan'][f'pipeline_file_type_{file_type}'] = pipeline
+        with self.prepared_environment(fixture, test_config=config) as dir:
             self.run_scan_data(dir, fixture)
 
-            self.assertScanOk(dir,
-                              dimension=[455, 313],
-                              markers=[
-                                  [3, 155, 5, 'red'],
-                                  [451, 3, 5, 'green'],
-                                  [451, 308, 5, 'blue'],
-                              ])
+            if pipeline is None:
+                self.assertScanOk(dir,
+                                  dimension=[455, 313],
+                                  markers=[
+                                      [3, 155, 5, 'red'],
+                                      [451, 3, 5, 'green'],
+                                      [451, 308, 5, 'blue'],
+                                  ])
+            else:
+                self.assertScanOk(dir,
+                                  dimension=[539, 371],
+                                  markers=[
+                                      [4, 185, 5, 'red'],
+                                      [335, 365, 5, 'green'],
+                                      [335, 5, 5, 'blue'],
+                                  ])
 
     def test_ok_png(self):
         self.template_test_file_type('png')
@@ -93,3 +105,9 @@ class ScanDataCanaryTestCase(CanaryTestCase):
                      'Environment variable TEST_SKIP_HEIC is True')
     def test_ok_heic(self):
         self.template_test_file_type('heic')
+
+    def test_ok_pdf_convert(self):
+        self.template_test_file_type('pdf', pipeline='convert')
+
+    def test_ok_pdf_pdftoppm(self):
+        self.template_test_file_type('pdf', pipeline='pdftoppm')

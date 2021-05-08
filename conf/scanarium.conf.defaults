@@ -428,6 +428,30 @@ max_final_height_trip =
 delay =
 
 
+# Permit loading JPG files
+#
+# JPG is supported directly by OpenCV and can be used without manual
+# conversion. It is enabled by default and probably used by most
+# users.
+#
+# Note that disabling JPG files only affects scanning of images.
+# JPG scene backgrounds etc. are still loaded, even if this setting is
+# False.
+permit_file_type_jpg = True
+
+
+# Permit loading PNG files
+#
+# PNG is supported directly by OpenCV and can be used without manual
+# conversion. It is enabled by default and probably used by most
+# users.
+#
+# Note that disabling PNG files only affects scanning of images.
+# PNG scene backgrounds etc. are still loaded, even if this setting is
+# False.
+permit_file_type_png = True
+
+
 # Permit conversion from PDF
 #
 # OpenCV cannot read PDFs on it's own, so they need to be converted before

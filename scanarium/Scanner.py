@@ -19,8 +19,9 @@ logger = logging.getLogger(__name__)
 
 NEXT_RAW_IMAGE_STORE = 0  # Timestamp of when to store the next raw image.
 
+JPG_MAGIC = b'\xff\xd8\xff'
 PDF_MAGIC = bytes('%PDF', 'utf-8')
-
+PNG_MAGIC = bytes('PNG\r\n', 'utf-8')
 HEIC_MAGIC = bytes('ftyp', 'utf-8')
 HEIC_MAJOR_BRANDS = [bytes(brand, 'utf-8') for brand in [
     # See https://github.com/strukturag/libheif/issues/83
@@ -716,7 +717,11 @@ def guess_image_format(file_path):
         with open(file_path, mode='rb') as file:
             header = file.read(12)
 
-            if header[0:4] == PDF_MAGIC:
+            if header[0:3] == JPG_MAGIC:
+                guessed_type = 'jpg'
+            elif header[1:6] == PNG_MAGIC:
+                guessed_type = 'png'
+            elif header[0:4] == PDF_MAGIC:
                 guessed_type = 'pdf'
             elif header[4:8] == HEIC_MAGIC and \
                     header[8:12] in HEIC_MAJOR_BRANDS:
@@ -725,45 +730,64 @@ def guess_image_format(file_path):
     return guessed_type
 
 
-def convert_and_get_raw_image(scanarium, file_path, pipeline):
+def run_get_raw_image_pipeline(scanarium, file_path, pipeline):
     image = None
     dpi = 150
     quality = 75
 
-    with tempfile.TemporaryDirectory(prefix='scanarium-conversion-') as dir:
-        converted_path_base = os.path.join(dir, 'converted')
-        converted_path = converted_path_base + '.jpg'
+    if pipeline == 'native':
+        image = cv2.imread(file_path)
+    else:
+        with tempfile.TemporaryDirectory(prefix='scanarium-conv-') as dir:
+            converted_path_base = os.path.join(dir, 'converted')
+            converted_path = converted_path_base + '.jpg'
 
-        if pipeline == 'pdftoppm':
-            command = [scanarium.get_config('programs', 'pdftoppm_untrusted'),
-                       '-jpeg',
-                       '-singlefile',
-                       '-r', str(dpi),
-                       '-jpegopt', f'quality={quality}',
-                       file_path,
-                       converted_path_base]
-        elif pipeline == 'convert':
-            command = [scanarium.get_config('programs', 'convert_untrusted'),
-                       '-units', 'pixelsperinch',
-                       '-background', 'white',
-                       '-density', str(dpi),
-                       '-quality', str(quality),
-                       file_path + '[0]',  # [0] is first page
-                       converted_path]
-        else:
-            raise ScanariumError('SE_SCAN_UNKNOWN_PIPELINE',
-                                 'Unknown conversion pipeline \"{pipeline}\"',
-                                 {'pipeline': pipeline})
+            if pipeline == 'pdftoppm':
+                command = [scanarium.get_config('programs',
+                                                'pdftoppm_untrusted'),
+                           '-jpeg',
+                           '-singlefile',
+                           '-r', str(dpi),
+                           '-jpegopt', f'quality={quality}',
+                           file_path,
+                           converted_path_base]
+            elif pipeline == 'convert':
+                command = [scanarium.get_config('programs',
+                                                'convert_untrusted'),
+                           '-units', 'pixelsperinch',
+                           '-background', 'white',
+                           '-density', str(dpi),
+                           '-quality', str(quality),
+                           file_path + '[0]',  # [0] is first page
+                           converted_path]
+            else:
+                raise ScanariumError(
+                    'SE_SCAN_UNKNOWN_PIPELINE',
+                    'Unknown conversion pipeline \"{pipeline}\"',
+                    {'pipeline': pipeline})
 
-        scanarium.run(command)
+            scanarium.run(command)
 
-        if os.path.isfile(converted_path):
-            image = cv2.imread(converted_path)
+            if os.path.isfile(converted_path):
+                image = cv2.imread(converted_path)
 
     return image
 
 
-def get_raw_image_from_file(scanarium, config, file_path):
+def get_image_loading_pipeline(config, format):
+    pipeline = None
+    if format in ['jpg', 'png']:
+        pipeline = 'native'
+    elif format == 'pdf':
+        pipeline = config.get('scan', 'pipeline_file_type_pdf')
+
+    if pipeline is None:
+        pipeline = 'convert'
+
+    return pipeline
+
+
+def log_raw_image(scanarium, file_path):
     if scanarium.get_config('log', 'raw_image_files', kind='boolean'):
         try:
             log_filename = scanarium.get_log_filename('raw-image-file')
@@ -773,27 +797,24 @@ def get_raw_image_from_file(scanarium, config, file_path):
             # here, so we simply pass.
             pass
 
-    image = cv2.imread(file_path)
 
-    if image is None:
-        format = guess_image_format(file_path)
-        if format is not None and \
-                config.get('scan', f'permit_file_type_{format}',
-                           kind='boolean'):
-            pipeline = None
-            if format == 'pdf':
-                pipeline = config.get('scan', 'pipeline_file_type_pdf')
-            if pipeline is None:
-                pipeline = 'convert'
+def get_raw_image_from_file(scanarium, config, file_path):
+    image = None
+    log_raw_image(scanarium, file_path)
 
-            image = convert_and_get_raw_image(scanarium, file_path, pipeline)
+    format = guess_image_format(file_path)
+    if format is not None and \
+            config.get('scan', f'permit_file_type_{format}', kind='boolean',
+                       allow_missing=True):
+        pipeline = get_image_loading_pipeline(config, format)
+        image = run_get_raw_image_pipeline(scanarium, file_path, pipeline)
 
     if image is None:
         supported_formats = ', '.join(
-            ['JPG'] + [key[17:].upper()
-                       for key in config.get_keys('scan')
-                       if key.startswith('permit_file_type_') and config.get(
-                'scan', key, kind='boolean')])
+            [key[17:].upper()
+             for key in config.get_keys('scan')
+             if key.startswith('permit_file_type_') and config.get(
+                    'scan', key, kind='boolean')])
         raise ScanariumError(
             'SE_SCAN_STATIC_UNREADABLE_IMAGE_TYPE',
             'Failed to parse file. Only {supported_formats} files are '

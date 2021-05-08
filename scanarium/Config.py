@@ -53,11 +53,11 @@ class Config(object):
                     'override_command_line_argument` is not `True`.')
 
     def get(self, section, key, kind='string', allow_empty=False,
-            allow_missing=False):
+            allow_missing=False, default=None):
         try:
             if self._config.get(section, key) == '':
                 if allow_empty:
-                    return None
+                    return default
                 else:
                     raise ScanariumError(
                         'SE_CONFIG_EMPTY',
@@ -65,7 +65,7 @@ class Config(object):
                         {'section': section, 'key': key})
         except (configparser.NoSectionError, configparser.NoOptionError):
             if allow_missing:
-                return None
+                return default
             raise ScanariumError(
                 'SE_CONFIG_MISSING',
                 'Missing configuration entry at "{key}" in "{section}"',

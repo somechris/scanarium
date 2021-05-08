@@ -440,6 +440,15 @@ delay =
 permit_file_type_jpg = True
 
 
+# The pipeline to load pngs for scanning
+#
+# Use `native` (the default) to load them without conversion directly
+# through OpenCV.
+#
+# Use `convert` to pass them through ImageMagick before loading.
+pipeline_file_type_jpg = native
+
+
 # Permit loading PNG files
 #
 # PNG is supported directly by OpenCV and can be used without manual
@@ -450,6 +459,15 @@ permit_file_type_jpg = True
 # PNG scene backgrounds etc. are still loaded, even if this setting is
 # False.
 permit_file_type_png = True
+
+
+# The pipeline to load pngs for scanning
+#
+# Use `native` (the default) to load them without conversion directly
+# through OpenCV.
+#
+# Use `convert` to pass them through ImageMagick before loading.
+pipeline_file_type_png = native
 
 
 # Permit conversion from PDF

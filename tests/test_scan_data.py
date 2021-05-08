@@ -77,15 +77,7 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         with self.prepared_environment(fixture, test_config=config) as dir:
             self.run_scan_data(dir, fixture)
 
-            if pipeline is None:
-                self.assertScanOk(dir,
-                                  dimension=[455, 313],
-                                  markers=[
-                                      [3, 155, 5, 'red'],
-                                      [451, 3, 5, 'green'],
-                                      [451, 308, 5, 'blue'],
-                                  ])
-            else:
+            if file_type == 'pdf':
                 self.assertScanOk(dir,
                                   dimension=[539, 371],
                                   markers=[
@@ -93,12 +85,26 @@ class ScanDataCanaryTestCase(CanaryTestCase):
                                       [335, 365, 5, 'green'],
                                       [335, 5, 5, 'blue'],
                                   ])
+            else:
+                self.assertScanOk(dir,
+                                  dimension=[455, 313],
+                                  markers=[
+                                      [3, 155, 5, 'red'],
+                                      [451, 3, 5, 'green'],
+                                      [451, 308, 5, 'blue'],
+                                  ])
 
-    def test_ok_png(self):
-        self.template_test_file_type('png')
+    def test_ok_png_native(self):
+        self.template_test_file_type('png', pipeline='native')
 
-    def test_ok_jpg(self):
-        self.template_test_file_type('jpg')
+    def test_ok_png_convert(self):
+        self.template_test_file_type('png', pipeline='convert')
+
+    def test_ok_jpg_native(self):
+        self.template_test_file_type('jpg', pipeline='native')
+
+    def test_ok_jpg_convert(self):
+        self.template_test_file_type('jpg', pipeline='convert')
 
     @unittest.skipIf('TEST_SKIP_HEIC' in os.environ
                      and os.environ['TEST_SKIP_HEIC'].lower() == 'yes',

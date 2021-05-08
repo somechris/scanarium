@@ -787,10 +787,11 @@ def get_image_loading_pipeline(config, format):
     return pipeline
 
 
-def log_raw_image(scanarium, file_path):
+def log_raw_image(scanarium, format, file_path):
     if scanarium.get_config('log', 'raw_image_files', kind='boolean'):
         try:
-            log_filename = scanarium.get_log_filename('raw-image-file')
+            file_base = f'raw-image-file.{format}'
+            log_filename = scanarium.get_log_filename(file_base)
             shutil.copy2(file_path, log_filename)
         except Exception:
             # Logging the file failed. There's not much that we can do
@@ -800,9 +801,9 @@ def log_raw_image(scanarium, file_path):
 
 def get_raw_image_from_file(scanarium, config, file_path):
     image = None
-    log_raw_image(scanarium, file_path)
-
     format = guess_image_format(file_path)
+    log_raw_image(scanarium, format, file_path)
+
     if format is not None and \
             config.get('scan', f'permit_file_type_{format}', kind='boolean',
                        allow_missing=True):

@@ -116,8 +116,8 @@ class Vehicle extends Phaser.GameObjects.Container {
         if (beacon && Math.random() <= beacon.chance) {
             const beacon_width = (beacon.x2 - beacon.x1) / beacon.w * width;
             const flare = game.add.image(0, 0, 'flare');
-            const flare_width = (beacon.x2 - beacon.x1) / beacon.w * width / 32 * flare.width;
-            const flare_height = flare.height / flare.width * flare_width;
+            const flare_width = (beacon.x2 - beacon.x1) / beacon.w * width / 32 * flare.width * (beacon.scale || 1);
+            const flare_height = flare.height / flare.width * flare_width * (beacon.scale_extra_y || 1);
             flare.setSize(flare_width, flare_height);
             flare.setDisplaySize(flare_width, flare_height);
             flare.x = ((beacon.x1 + beacon.x2) / 2)  / beacon.w * width * (lane.leftToRight ? -1 : 1);

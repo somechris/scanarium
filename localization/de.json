@@ -119,6 +119,7 @@
   },
   "parameters": {
     "actor_name": {
+      "Ambulance": "Rettungsauto",
       "Astronaut": "Astronaut",
       "BunnyBalloon": "Hasen-Luftballon",
       "Bus": "Autobus",

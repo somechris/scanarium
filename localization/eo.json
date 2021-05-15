@@ -119,6 +119,7 @@
   },
   "parameters": {
     "actor_name": {
+      "Ambulance": "Ambulanco",
       "Astronaut": "Kosmonaŭto",
       "BunnyBalloon": "Leporobalono",
       "Bus": "Buso",

@@ -8,6 +8,7 @@
   },
   "parameters": {
     "actor_name": {
+      "Ambulance": "Ambulance",
       "Astronaut": "Astronaut",
       "BunnyBalloon": "Bunny Balloon",
       "Bus": "Bus",

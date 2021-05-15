@@ -50,6 +50,29 @@ class Tire extends Phaser.Physics.Arcade.Sprite {
 }
 
 class Vehicle extends Phaser.GameObjects.Container {
+    /**
+     * beacon: object with the following key/values:
+     *   x1: x-coordinate of left border of the rect that defines the beacon.
+     *   x2: x-coordinate of right border of the rect that defines the beacon.
+     *   y1: y-coordinate of lower border of the rect that defines the beacon.
+     *   y2: y-coordinate of lower border of the rect that defines the beacon.
+     *   w: total width of image from which x1 and x2 were read off.
+     *   h: total height of image from which y1 and y2 were read off.
+     *   chance: Chance of the beacon being on as value between 0 and 1. 0 means
+     *     the beacon is never on. 1 means the beacon is always on.
+     *   speedFactor: Multiply the speed of the vehicle by this value, if the
+     *     beacon is on.
+     *   phaseLength: The total length (in ms) of a single beacon flashing
+     *     series.
+     *   phaseSlotLength: Length of the slots in a single beacon flashing
+     *     series.
+     *   litSlots: List of slot numbers when a beacon is lit in a single beacon
+     *     flashing series.
+     *   scale: A factor by which to scale the flare.
+     *   angle: Angle (in degrees) by which to rotate the flare.
+     *   scale_extra_y: A scale factor to apply to the flare in y direction (on
+     *     top of `scale`).
+     */
     constructor(flavor, x, y, initialMinSpeed, initialMaxSpeed, widthRef, tires, undercarriage, angularShake, yShake, decal, beacon) {
         var lane = lanes[tunnel(Math.floor(Math.random()*lanes.length), 0, lanes.length-1)];
         var x = lane.leftToRight ? 0 : scanariumConfig.width;

@@ -122,6 +122,7 @@ class Vehicle extends Phaser.GameObjects.Container {
             flare.setDisplaySize(flare_width, flare_height);
             flare.x = ((beacon.x1 + beacon.x2) / 2)  / beacon.w * width * (lane.leftToRight ? -1 : 1);
             flare.y = - (1 - (beacon.y1 + beacon.y2) / 2 / beacon.h) * height;
+            flare.angle = (beacon.angle || 0) * (lane.leftToRight ? -1 : 1);
             flare.setTint(beaconColor[image_name]);
             this.add(flare);
 

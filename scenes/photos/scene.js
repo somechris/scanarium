@@ -49,6 +49,8 @@ class Photo extends Phaser.GameObjects.Container {
         this.depth = -this.y;
         this.angle = randomBetween(-10, 10);
         this.destroyOffset = 2*width;
+        this.willFall = Math.random() < (1/30);
+        this.fallX = Math.random() * scanariumConfig.width * 3 / 4;
 
         game.physics.world.enableBody(this);
 
@@ -126,5 +128,11 @@ class Photo extends Phaser.GameObjects.Container {
     }
 
     update() {
+        if (this.willFall && this.x < this.fallX) {
+            this.willFall = false;
+            this.body.setVelocityY(200);
+            this.body.setGravityY(2000);
+            this.body.setAngularAcceleration(500 * (Math.random() > 0.5 ? 1 : -1));
+        }
     }
 }

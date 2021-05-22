@@ -87,7 +87,11 @@ class Photo extends Phaser.GameObjects.Container {
         const height = strip.height / strip.width * width;
         const x = relX * this.photo.width;
         const y = relY * this.photo.height
-        angle += randomBetween(-10, 10) + (Math.random() < 0.99 ? 0 : 90);
+        const flipX = (Math.random() < 0.5);
+        const flipY = (Math.random() < 0.5);
+        angle += randomBetween(-10, 10)
+            + (Math.random() < 0.99 ? 0 : 90) // Accidentally misaligned tape
+            + (Math.random() < 0.5 ? 0 : 180) // Add half rotation to make tapes lok more divers.
         var that = this;
         var strips = [strip];
         if (stripDefinition.overlay > 0) {
@@ -97,6 +101,8 @@ class Photo extends Phaser.GameObjects.Container {
             sprite.setSize(width, height);
             sprite.setDisplaySize(width, height);
             sprite.setPosition(x, y);
+            sprite.setFlipX(flipX);
+            sprite.setFlipY(flipY);
             sprite.setTint(stripDefinition.colors[index]);
             sprite.angle = angle;
             sprite.alpha = stripDefinition.alpha;

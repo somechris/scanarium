@@ -36,7 +36,7 @@ class Photo extends Phaser.GameObjects.Container {
         const width = widthMm * 1.8 * refToScreen;
         const height = photo_unscaled_height / photo_unscaled_width * width;
 
-        photo.setOrigin(0.5, 0);
+        photo.setOrigin(0.5, 0.5);
         photo.setSize(width, height);
         photo.setDisplaySize(width, height);
 
@@ -60,7 +60,7 @@ class Photo extends Phaser.GameObjects.Container {
         for (var loop = 0;
              loop < 5 && y + height >= BLOCK_Y_START && BLOCK_Y_END >= y;
              loop++) {
-            y = randomBetween(0, scanariumConfig.height - height);
+            y = randomBetween(0, scanariumConfig.height - height) + height / 2;
         }
         BLOCK_Y_START = y + 10 * 1.8 * refToScreen; // Inset by 10 mm to allow a bit of overlay.
         BLOCK_Y_END = y + height - 10 * 1.8 * refToScreen; // Inset by 10 mm to allow a bit of overlay.
@@ -107,20 +107,20 @@ class Photo extends Phaser.GameObjects.Container {
         switch (chooseInt(0, 2)) {
         case 0:
             // Only top
-            this.addStrip(0, 0, 90);
+            this.addStrip(0, -0.5, 90);
             break;
         case 1:
             // Top and lower corners
-            this.addStrip(0, 0, 90);
-            this.addStrip(-0.5, 1, -45);
-            this.addStrip(0.5, 1, 45);
+            this.addStrip(0, -0.5, 90);
+            this.addStrip(-0.5, 0.5, -45);
+            this.addStrip(0.5, 0.5, 45);
             break;
         case 2:
             // All four corners
-            this.addStrip(-0.5, 0, 45);
-            this.addStrip(-0.5, 1, -45);
-            this.addStrip(0.5, 0, -45);
-            this.addStrip(0.5, 1, 45);
+            this.addStrip(-0.5, -0.5, 45);
+            this.addStrip(-0.5, 0.5, -45);
+            this.addStrip(0.5, -0.5, -45);
+            this.addStrip(0.5, 0.5, 45);
             break;
         }
     }

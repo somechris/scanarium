@@ -15,6 +15,9 @@ function scene_update(time, delta) {
 const STRIP_KINDS=5;
 const STRIP_OVERLAYS=4;
 
+var BLOCK_Y_START=0;
+var BLOCK_Y_END=0;
+
 class Photo extends Phaser.GameObjects.Container {
     /* flavor - actor's flavor
        x - desired initial x position
@@ -42,7 +45,7 @@ class Photo extends Phaser.GameObjects.Container {
 
         this.addStrips();
 
-        this.setPosition(scanariumConfig.width + width / 2 * 1.2, randomBetween(0, scanariumConfig.height - height));
+        this.setPosition(scanariumConfig.width + width / 2 * 1.2, this.computeY(height));
         this.depth = -this.y;
         this.angle = randomBetween(-10, 10);
         this.destroyOffset = 2*width;
@@ -50,6 +53,18 @@ class Photo extends Phaser.GameObjects.Container {
         game.physics.world.enableBody(this);
 
         this.body.setVelocityX(-30);
+    }
+
+    computeY(height) {
+        var y = BLOCK_Y_START;
+        for (var loop = 0;
+             loop < 5 && y + height >= BLOCK_Y_START && BLOCK_Y_END >= y;
+             loop++) {
+            y = randomBetween(0, scanariumConfig.height - height);
+        }
+        BLOCK_Y_START = y + 10 * 1.8 * refToScreen; // Inset by 10 mm to allow a bit of overlay.
+        BLOCK_Y_END = y + height - 10 * 1.8 * refToScreen; // Inset by 10 mm to allow a bit of overlay.
+        return y;
     }
 
     getStripDefinition() {

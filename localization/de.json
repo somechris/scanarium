@@ -133,6 +133,7 @@
       "OldFamilyCar": "Altes Familienauto",
       "Parrot": "Papagei",
       "PlainBalloon": "Einfacher Luftballon",
+      "PlainPhoto10x15cm": "Freies Foto 10x15cm",
       "PoliceCar": "Polizeiauto",
       "QuadBike": "Quad",
       "SimpleButterfly": "Schlichter Schmetterling",
@@ -191,6 +192,7 @@
       "balloons": "Luftballons",
       "fairies": "Feenwelt",
       "highway": "Landstraße",
+      "photos": "Fotos",
       "space": "Weltall"
     },
     "site": {

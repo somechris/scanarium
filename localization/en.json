@@ -21,6 +21,7 @@
       "MonsterTruck": "Monster Truck",
       "OldFamilyCar": "Old Family Car",
       "PlainBalloon": "Plain Balloon",
+      "PlainPhoto10x15cm": "Plain Photo 10x15cm",
       "PoliceCar": "Police Car",
       "QuadBike": "Quad Bike",
       "SimpleButterfly": "Simple Butterfly",
@@ -77,6 +78,7 @@
       "balloons": "Balloons",
       "fairies": "Fairies",
       "highway": "Highway",
+      "photos": "Photos",
       "space": "Space"
     }
   }

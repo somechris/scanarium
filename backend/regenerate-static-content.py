@@ -291,7 +291,7 @@ def localize_command_parameter_variant(localizer, command, parameter, variant):
 
 
 def filter_svg_tree(tree, command, parameter, variant, localizer,
-                    command_label, parameter_label):
+                    command_label, parameter_label, href_adjustment=None):
     (localized_command, localized_parameter, localized_variant,
      localized_parameter_with_variant) = localize_command_parameter_variant(
         localizer, command, parameter, variant)
@@ -347,7 +347,10 @@ def filter_svg_tree(tree, command, parameter, variant, localizer,
                 if value.split('(', 1)[0] not in ['translate', 'rotate']:
                     raise ScanariumError('E_SVG_TRANSFORM_SCALE',
                                          'SVG uses unknown transformation')
-
+            if key == '{http://www.w3.org/1999/xlink}href':
+                if value and not value.startswith('/') and '://' not in value \
+                        and href_adjustment:
+                    value = href_adjustment + '/' + value
             element.set(key, value)
 
     for qr_element in list(tree.iter("{http://www.w3.org/2000/svg}rect")):
@@ -460,7 +463,7 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
     if scanarium.file_needs_update(full_svg_name, sources, force):
         show_only_variant(tree, variant)
         filter_svg_tree(tree, command, parameter, variant, localizer,
-                        command_label, parameter_label)
+                        command_label, parameter_label, '../..')
         tree.write(full_svg_name)
 
     pdf_name = generate_pdf(scanarium, dir, full_svg_name, force)

@@ -22,6 +22,10 @@ function tunnel(value, min, max) {
     return Math.max(Math.min(value, max), min);
 }
 
+function chooseInt(min, max) {
+    return tunnel(Math.floor(randomBetween(min, max+1)), min, max);
+}
+
 function bringToFront(sprite) {
   sprite.setDepth(999999);
 }

@@ -71,7 +71,6 @@ class Photo extends Phaser.GameObjects.Container {
 
     getStripDefinition() {
         return {
-            kind: chooseInt(0, STRIP_KINDS - 1),
             overlay: chooseInt(0, STRIP_OVERLAYS - 1),
             alpha: randomBetween(0.5, 1),
             colors: [Math.random()*0xffffff, Math.random()*0xffffff],
@@ -80,7 +79,7 @@ class Photo extends Phaser.GameObjects.Container {
 
     addStrip(relX, relY, angle) {
         var stripDefinition = this.stripDefinition;
-        var stripNr = stripDefinition.kind;
+        var stripNr = chooseInt(0, STRIP_KINDS - 1);
         var strip = game.add.image(0, 0, 'strips', stripNr);
         const unscaled_width = strip.width;
         const width = 15 * 1.8 * refToScreen;

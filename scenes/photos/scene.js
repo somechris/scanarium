@@ -43,7 +43,7 @@ class Photo extends Phaser.GameObjects.Container {
         this.addStrips();
 
         this.setPosition(scanariumConfig.width + width / 2 * 1.2, randomBetween(0, scanariumConfig.height - height));
-        this.depth = -y;
+        this.depth = -this.y;
         this.angle = randomBetween(-10, 10);
         this.destroyOffset = 2*width;
 

@@ -437,7 +437,7 @@ def generate_full_svg_tree(scanarium, dir, parameter, extra_decoration_name):
 
 
 def to_save_filename(name):
-    ret = re.sub('[^a-zA-Z]+', '-', name).strip('-')
+    ret = re.sub('[^a-zA-Z0-9]+', '-', name).strip('-')
     if not ret:
         ret = 'unnamed'
     return ret

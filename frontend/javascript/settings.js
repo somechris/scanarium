@@ -136,7 +136,7 @@ var Settings = {
   },
 
   toSaveFilename: function(name) {
-      var name = name.replace(/[^a-zA-Z]+/g, '-');
+      var name = name.replace(/[^a-zA-Z0-9]+/g, '-');
       name = name.replace(/^-/g, '');
       name = name.replace(/-$/g, '');
       return name;

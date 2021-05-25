@@ -471,8 +471,7 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
     if is_actor:
         if variant == '' and language == 'fallback':
             generate_mask(scanarium, dir, full_svg_name, force)
-        scanarium.generate_thumbnail(dir, full_svg_name, force, shave=False,
-                                     erode=True)
+        scanarium.generate_thumbnail(dir, full_svg_name, force, erode=True)
     return pdf_name
 
 
@@ -571,7 +570,7 @@ def regenerate_static_content_command_parameters(
 
 
 def regenerate_static_scene_content(scanarium, dir, force):
-    scanarium.generate_thumbnail(dir, 'scene-bait.png', force, shave=False)
+    scanarium.generate_thumbnail(dir, 'scene-bait.png', force)
 
     book_svg_file = os.path.join(scanarium.get_images_dir_abs(), 'book.svg')
     book_png_file = os.path.join(dir, 'scene-book.png')
@@ -584,8 +583,7 @@ def regenerate_static_scene_content(scanarium, dir, force):
                        book_svg_file, book_png_file])
         os.chdir(cwd_old)
 
-    scanarium.generate_thumbnail(dir, book_png_file, force, shave=False,
-                                 erode=False)
+    scanarium.generate_thumbnail(dir, book_png_file, force)
 
     background_file = os.path.join(dir, 'background')
     background_jpg_file = os.path.join(dir, 'background.jpg')
@@ -661,8 +659,7 @@ def regenerate_static_images(scanarium, force):
             book_svg_file
         ])
 
-    scanarium.generate_thumbnail(images_dir_abs, book_png_file, force,
-                                 shave=False, erode=False)
+    scanarium.generate_thumbnail(images_dir_abs, book_png_file, force)
 
 
 def regenerate_static_content(scanarium, command, parameter, language, force):

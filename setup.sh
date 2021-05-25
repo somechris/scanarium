@@ -46,7 +46,7 @@ import os
 import sys
 from scanarium import Scanarium
 dir, file = os.path.split(sys.argv[1])
-Scanarium().generate_thumbnail(dir, file, shave=False, erode=False)
+Scanarium().generate_thumbnail(dir, file)
 EOF
     done < <(find dynamic/scenes/*/actors -iname '*.png' ! -iname '*thumbnail.*')
 }

@@ -485,8 +485,7 @@ def save_image(scanarium, image, scene, actor):
     basename = f'{timestamp}.png'
     image_file = os.path.join(image_dir, basename)
     cv2.imwrite(image_file, image)
-    scanarium.generate_thumbnail(image_dir, basename, shave=False,
-                                 erode=False)
+    scanarium.generate_thumbnail(image_dir, basename)
 
     return timestamp
 

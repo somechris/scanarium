@@ -158,8 +158,8 @@ class Scanarium(object):
     def unregister_for_cleanup(self, f):
         self._environment.unregister_for_cleanup(f)
 
-    def generate_thumbnail(self, dir, file, force=False, erode=False):
-        self._util.generate_thumbnail(self, dir, file, force, erode)
+    def generate_thumbnail(self, dir, file, force=False, level=[]):
+        self._util.generate_thumbnail(self, dir, file, force, level)
 
     def file_needs_update(self, destination, sources, force=False):
         return self._util.file_needs_update(destination, sources, force)

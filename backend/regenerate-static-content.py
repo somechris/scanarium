@@ -471,7 +471,8 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
     if is_actor:
         if variant == '' and language == 'fallback':
             generate_mask(scanarium, dir, full_svg_name, force)
-        scanarium.generate_thumbnail(dir, full_svg_name, force, erode=True)
+        scanarium.generate_thumbnail(dir, full_svg_name, force,
+                                     level=['90%', '100%'])
     return pdf_name
 
 

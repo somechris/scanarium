@@ -13,14 +13,14 @@ def file_needs_update(destination, sources, force=False):
     return ret
 
 
-def generate_thumbnail(scanarium, dir, file, force, erode=False):
+def generate_thumbnail(scanarium, dir, file, force, levels=[]):
     source = os.path.join(dir, file)
     target = os.path.join(dir, file.rsplit('.', 1)[0] + '-thumb.jpg')
 
     if file_needs_update(target, [source], force):
         command = [scanarium.get_config('programs', 'convert'), source]
-        if erode:
-            command += ['-morphology', 'Erode', 'Octagon']
+        if levels:
+            command += ['-level', ','.join(level.strip() for level in levels)]
         command += [
             '-resize', '150x100',
             '-background', 'white',
@@ -44,8 +44,8 @@ class Util(object):
     def __init__(self, scanarium):
         self._scanarium = scanarium
 
-    def generate_thumbnail(self, scanarium, dir, file, force, erode=False):
-        return generate_thumbnail(scanarium, dir, file, force, erode)
+    def generate_thumbnail(self, scanarium, dir, file, force, level=[]):
+        return generate_thumbnail(scanarium, dir, file, force, level)
 
     def file_needs_update(self, destination, sources, force=False):
         return file_needs_update(destination, sources, force)

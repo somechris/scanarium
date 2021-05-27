@@ -372,7 +372,8 @@ def extract_qr(image):
     code = codes[0]
 
     rect = code.rect
-    data_raw = code.data.decode('utf-8')
+    data_raw = code.data.decode('utf-8')\
+        .rsplit('/', 1)[-1].rsplit('?', 1)[-1].rsplit('=', 1)[-1]
     data = re.sub('[^0-9a-zA-Z:_]+', '_', data_raw)
     return (rect, data)
 

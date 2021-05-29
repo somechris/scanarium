@@ -113,11 +113,11 @@ class Photo extends Phaser.GameObjects.Container {
         this.stripDefinition = this.getStripDefinition();
         switch (chooseInt(0, 3)) {
         case 0:
-            // Only top
+            // Only top side
             this.addStrip(0, -0.5, 90);
             break;
         case 1:
-            // Top and lower corners
+            // Top side and lower corners
             this.addStrip(0, -0.5, 90);
             this.addStrip(-0.5, 0.5, -45);
             this.addStrip(0.5, 0.5, 45);

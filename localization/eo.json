@@ -189,6 +189,10 @@
       "en": "Angla",
       "eo": "Esperanto"
     },
+    "page_title": {
+      "Administration": "Administrado",
+      "General": "Ĉefaĵoj"
+    },
     "parameter_label": {
       "actor": "Aganto",
       "parameter": "Parametro"

@@ -62,3 +62,21 @@ function loadLanguage() {
     }
 }
 loadLanguage();
+
+function get_localized_sorted_list_copy(list, parameter_name) {
+    var scenes = list.slice();
+
+    list.sort((a, b) => {
+        a = localize_parameter(parameter_name, a);
+        b = localize_parameter(parameter_name, b);
+        if (a < b) {
+            return -1;
+        }
+        if (a > b) {
+            return 1;
+        }
+        return 0;
+    });
+
+    return list;
+};

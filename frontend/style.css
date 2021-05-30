@@ -4,7 +4,7 @@ body {
     overflow: hidden;
 }
 
-.window {
+.window, .tabbed-page {
   position: absolute;
   left: 10%;
   right: 10%;
@@ -20,13 +20,11 @@ body {
   z-index: 100;
 }
 
-#settings.window {
+#settings.tabbed-page {
   z-index: 110;
   bottom: 10%;
-}
-
-#settings.window > p, #settings.window > div, #settings.window > form {
-  margin-block-end: 4em;
+  overflow-y: hidden;
+  padding: 0em;
 }
 
 form button {
@@ -162,4 +160,43 @@ label, input, .validation-message {
   label, input, .validation-message {
     width: 100%;
   }
+}
+
+.tabbed-page-tab-container {
+    flex: 0 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #35c8ff;
+}
+
+.tabbed-page-tab {
+    margin: 0.2em 0.2em;
+    padding: 0.3em 0.8em;
+    color: white;
+}
+
+.tabbed-page-tab-selected {
+    background-color: #027dfd;
+    margin: 0em;
+    padding: 0.5em 1em;
+}
+
+.tabbed-page-tab:hover {
+    background-color: #027dfd;
+    border-radius: 2em;
+}
+
+.tabbed-page-tab-selected:hover {
+    border-radius: 0px;
+}
+
+.tabbed-page-content {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    padding: 0em 2em 0em 2em;
+}
+
+.tabbed-page {
+    display: flex;
+    flex-flow: column;
 }

@@ -189,6 +189,10 @@
       "en": "Englisch",
       "eo": "Esperanto"
     },
+    "page_title": {
+      "Administration": "Verwaltung",
+      "General": "Allgemein"
+    },
     "parameter_label": {
       "actor": "Figur",
       "parameter": "Parameter"

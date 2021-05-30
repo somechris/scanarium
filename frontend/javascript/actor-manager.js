@@ -68,7 +68,7 @@ var ScActorManager = {
           ScActorManager.actors_latest_config = payload;
           });
 
-        if ((ScActorManager.configFetches % 60) == 0) {
+        if ((ScActorManager.configFetches % 10) == 0) {
           load('actors.json', function(payload) {
             ScActorManager.actors_config = payload;
             });

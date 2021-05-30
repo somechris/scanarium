@@ -18,6 +18,29 @@ function scene_create()
 function scene_update(time, delta) {
 }
 
+class SpaceObject extends Phaser.GameObjects.Container {
+    constructor(flavor, x, y, angle, widthMin, widthMax) {
+        super(game, x, y);
+
+        this.base_scale = Math.pow(Math.random(), 5);
+        const actor = this.constructor.name;
+        var mainSprite = game.add.image(0, 0, actor + '-' + flavor);
+        var width = scaleBetween(widthMin, widthMax, this.base_scale) * refToScreen;
+        var height = mainSprite.height / mainSprite.width * width;
+        mainSprite.setSize(width, height);
+        mainSprite.setDisplaySize(width, height);
+        mainSprite.angle = angle;
+        this.destroyOffset = 2 * (width + height);
+        this.add([mainSprite]);
+        this.mainSprite = mainSprite;
+
+        game.physics.world.enable(this);
+    }
+
+    update(time, delta) {
+    }
+}
+
 class Thruster extends Phaser.Physics.Arcade.Sprite {
     constructor(xCorr, yCorr, angleCorr, scale) {
         super(game, xCorr, yCorr, 'spaceship-thrust');
@@ -56,26 +79,12 @@ class Thruster extends Phaser.Physics.Arcade.Sprite {
     }
 }
 
-class SpaceshipBase extends Phaser.GameObjects.Container {
+class SpaceshipBase extends SpaceObject {
     constructor(flavor, x, y, angle, widthMin, widthMax) {
-        super(game, x, y);
+        super(flavor, x, y, angle, widthMin, widthMax);
 
         this.thrusters = [];
         this.nextMotionPlanningUpdate = 0;
-
-        this.base_scale = Math.pow(Math.random(), 5);
-        const actor = this.constructor.name;
-        var ship = game.add.image(0, 0, actor + '-' + flavor);
-        var width = scaleBetween(widthMin, widthMax, this.base_scale) * refToScreen;
-        var height = ship.height / ship.width * width;
-        ship.setSize(width, height);
-        ship.setDisplaySize(width, height);
-        ship.angle = angle;
-        this.destroyOffset = 2 * (width + height);
-        this.add([ship]);
-        this.ship = ship;
-
-        game.physics.world.enable(this);
 
         var speed = Math.random() * 40 * refToScreen;
         var angle = Math.random() * 2 * Math.PI;
@@ -85,13 +94,13 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
     }
 
     addThruster(xFactor, yFactor, angle, scale, angularFactor, accelerationFactor) {
-        var xPreRot = xFactor * this.ship.width / 2;
-        var yPreRot = yFactor * this.ship.height / 2;
+        var xPreRot = xFactor * this.mainSprite.width / 2;
+        var yPreRot = yFactor * this.mainSprite.height / 2;
 
-        var angleRad = this.ship.angle * degToRadian;
+        var angleRad = this.mainSprite.angle * degToRadian;
         var x = Math.cos(angleRad) * xPreRot - Math.sin(angleRad) * yPreRot;
         var y = Math.sin(angleRad) * xPreRot + Math.cos(angleRad) * yPreRot;
-        var thruster = new Thruster(x, y, this.ship.angle + angle, scale);
+        var thruster = new Thruster(x, y, this.mainSprite.angle + angle, scale);
         thruster.angularFactor = angularFactor;
         thruster.accelerationFactor = accelerationFactor;
         this.addAt(thruster, 0);
@@ -123,4 +132,38 @@ class SpaceshipBase extends Phaser.GameObjects.Container {
         this.body.setAccelerationX(Math.cos(this.rotation) * acceleration)
         this.body.setAccelerationY(Math.sin(this.rotation) * acceleration)
     }
+}
+
+class PlanetBase extends SpaceObject {
+    constructor(flavor, x, y, widthMin, widthMax) {
+        super(flavor, x, y, randomBetween(0, 360), widthMin, widthMax);
+
+        const startOffset = Math.random() * 2 * (scanariumConfig.width + scanariumConfig.height);
+        if (startOffset < scanariumConfig.width) {
+            this.setPosition(startOffset, -this.mainSprite.height/2);
+        } else if (startOffset < scanariumConfig.width + scanariumConfig.height) {
+            this.setPosition(scanariumConfig.width + this.mainSprite.width/2, startOffset - scanariumConfig.width);
+        } else if (startOffset < 2*scanariumConfig.width + scanariumConfig.height) {
+            this.setPosition(2*scanariumConfig.width + scanariumConfig.height - startOffset, scanariumConfig.height + this.mainSprite.height/2);
+        } else {
+            this.setPosition(-this.mainSprite.width/2, 2*scanariumConfig.width + 2 * scanariumConfig.height - startOffset);
+        }
+        const targetX = scanariumConfig.width * randomDeviationFactor(0.2) / 2;
+        const targetY = scanariumConfig.height * randomDeviationFactor(0.2) / 2;
+        const v = new Phaser.Math.Vector2(targetX - this.x, targetY - this.y);
+        v.normalize();
+        v.rotate(randomPlusMinus(0.3));
+        v.scale((50 + randomPlusMinus(10)) * refToScreen);
+        this.body.setVelocity(v.x, v.y);
+
+        this.angularVelocityFactor = randomPlusMinus(0.05);
+
+        game.physics.world.enable(this.mainSprite);
+        this.mainSprite.body.setAngularVelocity(randomPlusMinus(7));
+    }
+
+    update(time, delta) {
+        this.body.setAcceleration(this.body.velocity.y * this.angularVelocityFactor, -this.body.velocity.x * this.angularVelocityFactor);
+    }
+
 }

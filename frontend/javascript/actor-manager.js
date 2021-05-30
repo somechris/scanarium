@@ -123,31 +123,37 @@ var ScActorManager = {
         // We iterate over all entries in actors_latest_config.
         // If we find one that we have not tried yet, we try it.
         // If we have already tried all, we pick a random one.
-        var all = [];
-        var untried = [];
-        var untriedFirsts = [];
+        var samples = [];
+        var allProper = [];
+        var untriedProper = [];
+        var untriedFirstsProper = [];
         var names = Object.keys(config != null ? config['actors'] : []);
         var i;
         for (i=0; i < names.length; i++) {
             var flavors = config['actors'][names[i]];
             var j;
             for (j=0; j < flavors.length; j++) {
-                var actorSpec = [names[i], flavors[j]];
-                var hasBeenTried = false;
-                if (names[i] in this.triedActors) {
-                    hasBeenTried = this.triedActors[names[i]].includes(flavors[j]);
-                }
-                if (!hasBeenTried) {
-                    untried.push(actorSpec);
-                    if (j == 0) {
-                        untriedFirsts.push(actorSpec);
+                const flavor = flavors[j];
+                var actorSpec = [names[i], flavor];
+                if (flavor == "sample") {
+                    samples.push(actorSpec);
+                } else {
+                    var hasBeenTried = false;
+                    if (names[i] in this.triedActors) {
+                        hasBeenTried = this.triedActors[names[i]].includes(flavors[j]);
                     }
+                    if (!hasBeenTried) {
+                        untriedProper.push(actorSpec);
+                        if (j == 0) {
+                            untriedFirstsProper.push(actorSpec);
+                        }
+                    }
+                    allProper.push(actorSpec);
                 }
-                all.push(actorSpec);
             }
         }
         var candidates = [];
-        [untriedFirsts, (forceUntried ? untried : []), all].forEach(actors => {
+        [untriedFirstsProper, (forceUntried ? untriedProper : []), allProper, samples].forEach(actors => {
             if (!candidates.length) {
                 candidates = actors;
             }

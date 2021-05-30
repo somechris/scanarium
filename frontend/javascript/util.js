@@ -18,6 +18,18 @@ function randomBetween(min, max) {
     return scaleBetween(min, max, Math.random());
 }
 
+function randomPlusMinus(max) {
+    return scaleBetween(-max, max, Math.random());
+}
+
+function randomAround(base, maxDeviation) {
+    return scaleBetween(base - maxDeviation, base + maxDeviation, Math.random());
+}
+
+function randomDeviationFactor(maxDeviation) {
+    return scaleBetween(1 - maxDeviation, 1 + maxDeviation, Math.random());
+}
+
 function tunnel(value, min, max) {
     return Math.max(Math.min(value, max), min);
 }

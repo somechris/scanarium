@@ -19,14 +19,21 @@ function scene_update(time, delta) {
 }
 
 class SpaceObject extends Phaser.GameObjects.Container {
-    constructor(flavor, x, y, angle, widthMin, widthMax) {
+    constructor(flavor, x, y, angle, widthMin, widthMax, frames, mainFrame) {
         super(game, x, y);
 
-        this.base_scale = Math.pow(Math.random(), 5);
         const actor = this.constructor.name;
-        var mainSprite = game.add.image(0, 0, actor + '-' + flavor);
+        const image_name = actor + '-' + flavor;
+
+        if (frames) {
+            this.createFrames(image_name, frames);
+        }
+
+        this.base_scale = Math.pow(Math.random(), 5);
+        var mainSprite = game.add.image(0, 0, image_name, mainFrame);
         var width = scaleBetween(widthMin, widthMax, this.base_scale) * refToScreen;
-        var height = mainSprite.height / mainSprite.width * width;
+        this.textureScaleFactor =  width / mainSprite.width;
+        var height = mainSprite.height * this.textureScaleFactor;
         mainSprite.setSize(width, height);
         mainSprite.setDisplaySize(width, height);
         mainSprite.angle = angle;
@@ -35,6 +42,28 @@ class SpaceObject extends Phaser.GameObjects.Container {
         this.mainSprite = mainSprite;
 
         game.physics.world.enable(this);
+    }
+
+    createFrames(image_name, frames) {
+        if (game.textures.get(image_name).frameTotal == 1) {
+            this.createFramesForce(image_name, frames);
+        }
+    }
+
+    createFramesForce(image_name, frames) {
+        const full_texture = game.textures.get(image_name);
+        const full_texture_source_index = 0;
+        const full_source = full_texture.source[full_texture_source_index];
+        const xFactor = full_source.width / 100;
+        const yFactor = full_source.height / 100;
+
+        Object.keys(frames).forEach(key => {
+            const conf = frames[key];
+            full_texture.add(
+                key, full_texture_source_index,
+                conf.x * xFactor, conf.y * yFactor,
+                conf.width * xFactor, conf.height * yFactor);
+        });
     }
 
     update(time, delta) {
@@ -135,8 +164,8 @@ class SpaceshipBase extends SpaceObject {
 }
 
 class PlanetBase extends SpaceObject {
-    constructor(flavor, x, y, widthMin, widthMax) {
-        super(flavor, x, y, randomBetween(0, 360), widthMin, widthMax);
+    constructor(flavor, x, y, widthMin, widthMax, frames, mainFrame) {
+        super(flavor, x, y, randomBetween(0, 360), widthMin, widthMax, frames, mainFrame);
 
         const startOffset = Math.random() * 2 * (scanariumConfig.width + scanariumConfig.height);
         if (startOffset < scanariumConfig.width) {

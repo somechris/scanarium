@@ -166,6 +166,7 @@ class SpaceshipBase extends SpaceObject {
 class PlanetBase extends SpaceObject {
     constructor(flavor, x, y, widthMin, widthMax, frames, mainFrame) {
         super(flavor, x, y, randomBetween(0, 360), widthMin, widthMax, frames, mainFrame);
+        this.setDepth(-10);
 
         const startOffset = Math.random() * 2 * (scanariumConfig.width + scanariumConfig.height);
         if (startOffset < scanariumConfig.width) {

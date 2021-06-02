@@ -190,7 +190,12 @@ class PlanetBase extends SpaceObject {
 
         game.physics.world.enable(this.mainSprite);
         this.mainSprite.body.setAngularVelocity(randomPlusMinus(7));
-        this.angle = Math.random() * 360;
+
+        // Rotating the whole PlanetBase would allow to have planets with moon
+        // etc where the moon's rotation axis is not the vertical line. When
+        // trying that out, it made the whole scene too noisy and less
+        // harmonic. So we keep the main sprite straight and have moons rotate
+        // around the vertical line to ease the eye.
     }
 
     update(time, delta) {

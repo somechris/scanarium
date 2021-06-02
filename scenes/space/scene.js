@@ -183,7 +183,7 @@ class PlanetBase extends SpaceObject {
         const v = new Phaser.Math.Vector2(targetX - this.x, targetY - this.y);
         v.normalize();
         v.rotate(randomPlusMinus(0.3));
-        v.scale((50 + randomPlusMinus(10)) * refToScreen);
+        v.scale((30 + randomPlusMinus(10)) * refToScreen);
         this.body.setVelocity(v.x, v.y);
 
         this.angularVelocityFactor = randomPlusMinus(0.05);

@@ -23,7 +23,7 @@ class PlanetWithMoon extends PlanetBase {
         this.moon = moon;
         this.moonR = randomBetween(this.mainSprite.width, 2*this.mainSprite.width);
         this.moonRYScale = randomBetween(0.2, 0.8);
-        this.moonTimeFactor = 0.002 * randomBetween(0.5, 1) * (Math.random() > 0.5 ? 1 : -1);
+        this.moonTimeFactor = 0.001 * randomBetween(0.5, 1) * (Math.random() > 0.5 ? 1 : -1);
         this.moonTimeOffset = 2 * Math.PI * Math.random();
         this.moonRotationFactor = randomPlusMinus(0.0002);
     }

@@ -190,6 +190,7 @@ class PlanetBase extends SpaceObject {
 
         game.physics.world.enable(this.mainSprite);
         this.mainSprite.body.setAngularVelocity(randomPlusMinus(7));
+        this.angle = Math.random() * 360;
     }
 
     update(time, delta) {

@@ -23,7 +23,14 @@ var Settings = {
           new SettingsPageHelp(),
       ];
 
-      this.tabbedPage = new TabbedPage('settings', pages);
+      var pagesWithContent = []
+      pages.forEach(page => {
+          if (page.content.children.length) {
+              pagesWithContent.push(page);
+          }
+      });
+
+      this.tabbedPage = new TabbedPage('settings', pagesWithContent);
       this.tabbedPage.getElement().style['font-size'] = SettingsButton.button.style['font-size'];
 
     }

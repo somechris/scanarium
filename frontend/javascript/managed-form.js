@@ -74,6 +74,20 @@ class ManagedForm {
         return input;
     }
 
+    addTextArea(caption, id, validation) {
+        var textarea = document.createElement('textarea');
+        textarea.id = id;
+        textarea.name = id;
+        textarea.placeholder = caption;
+        textarea.required = true;
+        textarea.cols = 30;
+        textarea.rows = 8;
+        textarea.style['font-size'] = this.font_size;
+        this.addControl(caption, textarea, validation);
+
+        return textarea;
+    }
+
     _validateNode(node) {
         var result = true;
 

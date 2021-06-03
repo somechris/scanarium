@@ -20,7 +20,7 @@ class SettingsPageHelp extends NamedPage {
             p.appendChild(document.createTextNode(localize(text_before_address)));
 
             var a = document.createElement('a');
-            const subject = localize('Scanarium issues on {hostname}', {hostname: document.location.hostname});
+            const subject = localize('Scanarium feedback for {hostname}', {hostname: document.location.hostname});
             a.href = 'mailto:' + help_email_address + '?subject=' + encodeURIComponent(subject);
             a.textContent = help_email_address;
             p.appendChild(a);

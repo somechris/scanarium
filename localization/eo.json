@@ -80,7 +80,7 @@
     "Scan this page to show/hide the frames-per-second counter": "Skanu tiun ĉi paĝon por (mal)montri vidigfrekvenco",
     "Scan this page to shut Scanarium down savely": "Skanu tuin ĉi paĝon por malŝaltado",
     "Scan this page to switch to scene": "Skanu tuin ĉi paĝon por ŝangi scenon",
-    "Scanarium issues on {hostname}": "Scanarium fuŝas je {hostname}",
+    "Scanarium feedback for {hostname}": "Scanarium demando je {hostname}",
     "Scanned new actor drawing for {actor_name}": "Nova \"{actor_name}\" aganto skanita",
     "Scanned new actor drawing for {actor_name} for scene {scene_name}": "Nova \"{actor_name}\" aganto de sceno \"{scene_name}\" skanita",
     "Scene \"{scene_name}\" does not exist": "Sceno \"{scene_name}\" malekzistas",

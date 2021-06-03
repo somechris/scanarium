@@ -80,7 +80,7 @@
     "Scan this page to show/hide the frames-per-second counter": "Lege diese Seite ein um die Bildfrequenz-Anzeige umzuschalten",
     "Scan this page to shut Scanarium down savely": "Lege diese Seite ein um Scanarium auszuschalten",
     "Scan this page to switch to scene": "Lege diese Seite ein um zur Szene {parameter_name} zu wechseln",
-    "Scanarium issues on {hostname}": "Scanarium mag nicht auf {hostname}",
+    "Scanarium feedback for {hostname}": "Scanarium Rückmeldung für {hostname}",
     "Scanned new actor drawing for {actor_name}": "Neue \"{actor_name}\" Zeichnung gescannt",
     "Scanned new actor drawing for {actor_name} for scene {scene_name}": "Neue \"{actor_name}\" Zeichnung aus der Szene \"{scene_name}\" gescannt",
     "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",

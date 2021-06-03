@@ -50,10 +50,15 @@ class SettingsPageHelp extends NamedPage {
 
             if (cgi_allowed) {
                 var description;
+                var includeLastFailedCheckBox;
+                var lastFailedUpload;
                 var submit = function(event) {
                     if (description && description.value) {
                         var data = new FormData();
                         data.append('description', description.value);
+                        if (includeLastFailedCheckBox.checked && lastFailedUpload) {
+                            data.append('lastFailedUpload', lastFailedUpload);
+                        }
                         callCgi(cgi, data);
                     }
                     event.stopPropagation();
@@ -62,6 +67,18 @@ class SettingsPageHelp extends NamedPage {
                 }
                 var form = new ManagedForm('feedback-form', submit, localize('Submit'));
                 description = form.addTextArea(localize('Description'), 'feedback-description');
+
+                includeLastFailedCheckBox = form.addCheckbox(localize('Attachment'), 'feedback-attach-last-failed-upload', undefined, localize('Include last failed upload'));
+                includeLastFailedCheckBox.checked = true;
+                includeLastFailedCheckBox.rowElement.classList.add('hidden');
+                includeLastFailedCheckBox.uploadListener = function(file, is_ok) {
+                    if (!is_ok) {
+                        includeLastFailedCheckBox.rowElement.classList.remove('hidden');
+                        lastFailedUpload = file;
+                    }
+                };
+                UploadButton.registerUploadListener(includeLastFailedCheckBox.uploadListener);
+
                 this.appendElement(form.getElement());
             }
         }

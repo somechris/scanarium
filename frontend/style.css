@@ -212,3 +212,7 @@ textarea, .form-element {
     display: flex;
     flex-flow: column;
 }
+
+.hidden {
+    display: none;
+}

@@ -116,7 +116,9 @@ var UploadButton = {
                       'Upload of \"{image_name}\" started',
                       {image_name: sanitize_string(file.name)}
                   ));
-                  callCgi(UploadButton.cgi, data, UploadButton.removeUpload);
+                  callCgi(UploadButton.cgi, data, function(is_ok) {
+                      UploadButton.removeUpload()
+                  });
               }
           } else {
               MessageManager.addMessage(localize('No image selected. Upload aborted.'), 'failed');

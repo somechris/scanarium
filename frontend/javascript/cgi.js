@@ -30,7 +30,7 @@ var onReadyStateChange = function(cgi, finishedCallback) {
       CommandProcessor.process(capsule, prefix);
 
       if (finishedCallback) {
-          finishedCallback();
+          finishedCallback(is_ok);
       }
     }
   };

@@ -88,6 +88,7 @@ var UploadButton = {
   container: null,
   form: null,
   cgi: 'scan-data',
+  uploadListeners: [],
 
   show: function() {
       this.hide();
@@ -117,6 +118,9 @@ var UploadButton = {
                       {image_name: sanitize_string(file.name)}
                   ));
                   callCgi(UploadButton.cgi, data, function(is_ok) {
+                      UploadButton.uploadListeners.forEach(callback => {
+                          callback(file, is_ok);
+                      });
                       UploadButton.removeUpload()
                   });
               }
@@ -235,4 +239,8 @@ var UploadButton = {
       }
       UploadButton._runOnceUploadsFinishedTry(action, reason ? reason : localize('A reload is necessary.'), waitingEnd, notice, cleanup);
   },
+
+  registerUploadListener: function(callback) {
+      this.uploadListeners.push(callback);
+  }
 };

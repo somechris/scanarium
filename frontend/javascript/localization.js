@@ -12,6 +12,9 @@ var formatTemplate = function(string, parameters) {
             param_name = split[i].substring(0, closingIdx);
             rest = split[i].substring(closingIdx+1);
             param_value = parameters[param_name];
+            if (typeof param_value === 'undefined') {
+                param_value = '{' + split[i].substring(0, closingIdx + 1);
+            }
             split[i] = param_value + rest;
         } else {
             split[i] = '{' + split[i];

@@ -20,11 +20,10 @@ var Settings = {
       var pages = [
           new SettingsPageGeneral(),
           new SettingsPageAdministration(),
-
       ];
 
-     this.tabbedPage = new TabbedPage('settings', pages);
-     this.tabbedPage.getElement().style['font-size'] = SettingsButton.button.style['font-size'];
+      this.tabbedPage = new TabbedPage('settings', pages);
+      this.tabbedPage.getElement().style['font-size'] = SettingsButton.button.style['font-size'];
 
     }
 

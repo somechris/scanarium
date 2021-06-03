@@ -142,6 +142,11 @@ label {
     width: 12em;
 }
 
+.form-element label, .form-element input {
+    width: auto;
+    margin: 0em;
+}
+
 .validation-message {
     margin: 0em 0em 0em 1em;
     padding: 0em 0.5em 0em 0.5em;
@@ -149,18 +154,18 @@ label {
     border-radius: 0.3em;
 }
 
-label, input, select, textarea, .validation-message {
+label, input, select, textarea, .form-element, .validation-message {
     display: inline-block;
     vertical-align: top;
     margin: 0.3em 0em 0.3em 1em;
 }
 
-textarea {
+textarea, .form-element {
     width: 80%;
 }
 
 @media screen and (max-width: 600px) {
-  label, input, select, textarea, .validation-message {
+  label, input, select, textarea, .form-element, .validation-message {
     width: 100%;
   }
 }

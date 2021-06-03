@@ -88,6 +88,31 @@ class ManagedForm {
         return textarea;
     }
 
+    addCheckbox(caption, id, validation, text) {
+        var span = document.createElement('span');
+        span.className = 'form-element';
+
+        var input = document.createElement('input');
+        input.type = 'checkbox';
+        input.id = id;
+        input.name = id;
+        span.appendChild(input);
+
+        if (text) {
+            var label = document.createElement('label');
+            label.for = id;
+            label.textContent = text;
+            label.onclick = function(e) {
+                input.checked = !input.checked;
+            }
+            span.appendChild(label);
+        }
+
+        this.addControl(caption, span, validation);
+
+        return input;
+    }
+
     _validateNode(node) {
         var result = true;
 

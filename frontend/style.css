@@ -27,6 +27,10 @@ body {
   padding: 0em;
 }
 
+h2:nth-of-type(n+2) {
+    margin-top: 3em;
+}
+
 form button {
   margin-top: 1em;
 }

@@ -9,51 +9,16 @@
 #   export SKIP_PRE_COMMIT=y
 #
 
-WARNINGS=0
-
-warn() {
-    echo "WARNING:" "$@" >&2
-    echo >&2
-    WARNINGS=$((WARNINGS+1))
-}
+set -e
+set -o pipefail
 
 sort_localizations() {
   maintenance/localization/sort.sh
   git add $(find localization -type f -name '*.json' ! -name 'localizations.json')
 }
 
-check_copyright_headers_type() {
-    local FILE_SUFFIX="$1"
-    local COMMENT_MARKER="$2"
-    local SKIP_RE="$3"
-
-    local EXPECTED_COPYRIGHT_MARKER="\
-$COMMENT_MARKER This file is part of Scanarium https://scanarium.com/ and licensed under the
-$COMMENT_MARKER GNU Affero General Public License v3.0 (See LICENSE.md)
-$COMMENT_MARKER SPDX-License-Identifier: AGPL-3.0-only"
-    local EXPECTED_COPYRIGHT_MARKER_LINES="$(echo "$EXPECTED_COPYRIGHT_MARKER" | wc -l)"
-    while read FILE ;
-    do
-        if [ "$(grep -v '^#!' "$FILE" | head -n "$EXPECTED_COPYRIGHT_MARKER_LINES")" \
-            != "$EXPECTED_COPYRIGHT_MARKER" ]
-        then
-            if [[ ! "$FILE" =~ ^\./$SKIP_RE$ ]]
-            then
-                warn "Failed to find the following copyright marker in '$FILE':
-$EXPECTED_COPYRIGHT_MARKER"
-            fi
-        fi
-    done < <(find \
-        -name '.tox' -prune \
-        -o -type f -name "*$FILE_SUFFIX" -print \
-            | sort)
-}
-
 check_copyright_headers() {
-    check_copyright_headers_type .py '#'
-    check_copyright_headers_type .js '//' 'frontend/phaser-.*'
-    check_copyright_headers_type .sh '#'
-    check_copyright_headers_type .inc '#'
+  maintenance/copyright/check-headers.sh
 }
 
 pre_commit() {
@@ -63,8 +28,7 @@ pre_commit() {
 
 if [ -z "$SKIP_PRE_COMMIT" ]
 then
-    pre_commit
-    if [ "$WARNINGS" != 0 ]
+    if ! pre_commit
     then
         echo "Found $WARNINGS warnings. Aborting. Set SKIP_PRE_COMMIT to a non-empty value to skip tests" >&2
         exit 1

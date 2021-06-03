@@ -120,11 +120,6 @@ a.card:hover {
     height: 2em;
 }
 
-#scene-settings {
-    display: grid;
-    grid-template-columns: 9em 1fr;
-}
-
 #wait-notice.window {
     padding-top: 2em;
     z-index: 120;

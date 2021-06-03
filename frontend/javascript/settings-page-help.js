@@ -14,18 +14,56 @@ class SettingsPageHelp extends NamedPage {
 
     initContentHelp() {
         const help_email_address = getConfig('help_email_address');
-        if (help_email_address) {
-            var p = document.createElement('p');
-            const text_before_address = 'If you run into issues, or your pictures fail to scan, feel free to reach out via email to ';
-            p.appendChild(document.createTextNode(localize(text_before_address)));
+        const cgi = 'report-feedback';
+        const cgi_allowed = !isCgiForbidden(cgi);
+        if (help_email_address || cgi_allowed) {
+            this.appendSectionHeader('Feedback / Comments / Issue Reports');
 
-            var a = document.createElement('a');
-            const subject = localize('Scanarium feedback for {hostname}', {hostname: document.location.hostname});
-            a.href = 'mailto:' + help_email_address + '?subject=' + encodeURIComponent(subject);
-            a.textContent = help_email_address;
-            p.appendChild(a);
+            var text = '';
+            if (help_email_address) {
+                if (cgi_allowed) {
+                    text = 'If you run into issues, or your pictures fail to scan please let us know through email to {email} or use this form:';
+                } else {
+                    text = 'If you run into issues, or your pictures fail to scan please let us know through email to {email}';
+                }
+            } else {
+                text = 'If you run into issues, or your pictures fail to scan please report them using this form:';
+            }
 
-            this.appendElement(p);
+            if (text) {
+                var p = document.createElement('p');
+                localize(text).split('{email}').forEach((part, i, array) => {
+                    if (part) {
+                        p.appendChild(document.createTextNode(part));
+                    }
+
+                    if (i + 1 < array.length) {
+                        var a = document.createElement('a');
+                        const subject = localize('Scanarium feedback for {hostname}', {hostname: document.location.hostname});
+                        a.href = 'mailto:' + help_email_address + '?subject=' + encodeURIComponent(subject);
+                        a.textContent = help_email_address;
+                        p.appendChild(a);
+                    }
+                });
+                this.appendElement(p);
+            }
+
+            if (cgi_allowed) {
+                var description;
+                var submit = function(event) {
+                    if (description && description.value) {
+                        var data = new FormData();
+                        data.append('description', description.value);
+                        callCgi(cgi, data);
+                    }
+                    event.stopPropagation();
+                    event.preventDefault();
+                    PauseManager.resume();
+                }
+                var form = new ManagedForm('feedback-form', submit, localize('Submit'));
+                description = form.addTextArea(localize('Description'), 'feedback-description');
+                this.appendElement(form.getElement());
+            }
         }
     }
 }

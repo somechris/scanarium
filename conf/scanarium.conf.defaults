@@ -587,6 +587,10 @@ allow = False
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False
 
+[cgi:report-feedback]
+# Whether or not to allow calling the script as cgi through the webserver.
+allow = False
+
 [cgi:dump-dynamic-config]
 # Whether or not to allow calling the script as cgi through the webserver.
 # If you cannot control the webserver caching headers to disable caching of

@@ -53,6 +53,7 @@ check_copyright_headers() {
     check_copyright_headers_type .py '#'
     check_copyright_headers_type .js '//' 'frontend/phaser-.*'
     check_copyright_headers_type .sh '#'
+    check_copyright_headers_type .inc '#'
 }
 
 pre_commit() {

@@ -50,6 +50,7 @@
     "Forbidden characters in cgi name": "cgi Name enthält verbotene Zeichen",
     "Forwarding to {url-description}.": "Weiterleitung zu {url-description}.",
     "Help Page": "Hilfe-Seite",
+    "If you run into issues, or your pictures fail to scan, feel free to reach out via email to ": "Wenn etwas nicht funktioniert oder das Scannen deiner Bilder nicht klappt, schick uns eine Email an ",
     "Intentional error from the \"debug:fail\" command": "Absichtlicher Fehler vom Kommando \"debug:fail\"",
     "Invalid value": "Ungültiger Wert",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ist kein Verzeichnis",
@@ -191,7 +192,8 @@
     },
     "page_title": {
       "Administration": "Verwaltung",
-      "General": "Allgemein"
+      "General": "Allgemein",
+      "Help": "Hilfe"
     },
     "parameter_label": {
       "actor": "Figur",

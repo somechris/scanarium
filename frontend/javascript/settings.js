@@ -20,6 +20,7 @@ var Settings = {
       var pages = [
           new SettingsPageGeneral(),
           new SettingsPageAdministration(),
+          new SettingsPageHelp(),
       ];
 
       this.tabbedPage = new TabbedPage('settings', pages);

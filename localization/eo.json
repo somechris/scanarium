@@ -50,6 +50,7 @@
     "Forbidden characters in cgi name": "Nomo de cgi enhavas malpermesitajn signojn",
     "Forwarding to {url-description}.": "Plusendado al {url-description}.",
     "Help Page": "Helpopaĝo",
+    "If you run into issues, or your pictures fail to scan, feel free to reach out via email to ": "Se io ajn malfunkcias aŭ viaj bildoj mal-skanas, sciigu al ni per retmesaĝo al ",
     "Intentional error from the \"debug:fail\" command": "Intenca eraro de komando \"debug:fail\"",
     "Invalid value": "Malvalida enigaĵo",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ne estas dosierujo",
@@ -191,7 +192,8 @@
     },
     "page_title": {
       "Administration": "Administrado",
-      "General": "Ĉefaĵoj"
+      "General": "Ĉefaĵoj",
+      "Help": "Helpo"
     },
     "parameter_label": {
       "actor": "Aganto",

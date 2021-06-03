@@ -16,6 +16,10 @@ var default_global_config = {
   // got scanned.
   'drop_page_insertion_hint_after_scan': true,
 
+  // If not empty, advertise this email address on the help page for users to
+  // reach out to.
+  'help_email_address': '',
+
   // If true, make the actor cards in the settings dialog links to pdfs.
   'offer-pdf-downloads': true,
 

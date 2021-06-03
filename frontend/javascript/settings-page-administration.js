@@ -149,7 +149,7 @@ class SettingsPageAdministration extends NamedPage {
             }
         };
 
-        this.l10nCell.textContent = undefined;
-        this.l10nCell.appendChild(select);
+        this.l10nCell.parentElement.replaceChild(select, this.l10nCell);
+        this.l10nCell = select;
     }
 }

@@ -59,6 +59,7 @@ class ManagedForm {
         } else {
             this.form.appendChild(row);
         }
+        control.rowElement = row;
     }
 
     addPassword(caption, id, validation) {
@@ -109,6 +110,8 @@ class ManagedForm {
         }
 
         this.addControl(caption, span, validation);
+
+        input.rowElement = span.rowElement;
 
         return input;
     }

@@ -591,6 +591,13 @@ allow = False
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False
 
+# The target where to report the feedback to
+#
+# Possible values are:
+# stderr - dump to stderr
+# log - log into the log directory
+target = stderr
+
 [cgi:dump-dynamic-config]
 # Whether or not to allow calling the script as cgi through the webserver.
 # If you cannot control the webserver caching headers to disable caching of

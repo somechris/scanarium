@@ -9,14 +9,24 @@ import sys
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
-from scanarium import Scanarium
+from scanarium import Scanarium, ScanariumError
 del sys.path[0]
 
 logger = logging.getLogger(__name__)
 
 
 def report_feedback(scanarium, description):
-    print(description, file=sys.stderr)
+    target = scanarium.get_config('cgi:report-feedback', 'target')
+    if target == 'stderr':
+        print(description, file=sys.stderr)
+    elif target == 'log':
+        log_filename = scanarium.get_log_filename('feedback.txt')
+        with open(log_filename, 'wt') as f:
+            f.write(description)
+    else:
+        raise ScanariumError('SE_UNKNOWN_FEEDBACK_TARGET',
+                             'Unknown feedback target "{feedback_target}"',
+                             {'feedback_target': target})
     return True
 
 

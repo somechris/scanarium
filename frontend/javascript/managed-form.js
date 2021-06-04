@@ -129,13 +129,17 @@ class ManagedForm {
             }
 
             if (result === true) {
-                node.setCustomValidity('');
+                if (node.setCustomValidity) {
+                    node.setCustomValidity('');
+                }
             } else {
                 var message = localize('Invalid value');
                 if (result !== false && result !== '' && result !== null) {
                     message = result;
                 }
-                node.setCustomValidity(message);
+                if (node.setCustomValidity) {
+                    node.setCustomValidity(message);
+                }
 
                 if (validationContainer) {
                     validationContainer.textContent = message;

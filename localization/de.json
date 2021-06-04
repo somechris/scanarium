@@ -28,6 +28,7 @@
     "Command \"{command}\" does not allow a parameter \"{parameter}\"": "Kommando \"{command}\" erlaubt keinen Parameter \"{parameter}\"",
     "Confirm new password": "Neues Passwort bestätigen",
     "Current password": "Aktuelles Passwort",
+    "Dear Scanarium Team,\\n\\nThe attached picture failed to scan, but I cannot see why. Could you please have a look?\\n\\nThanks and best regards": "Liebes Scanarium Team,\\n\\nDas mitgeschickte Bild lässt sich nicht scannen. Aber warum nicht?\\n\\nBesten Dank und liebe Grüße",
     "Delete actors": "Figuren löschen",
     "Delete all your scanned actors": "Alle gespeicherten Zeichnungen löschen",
     "Directory to store file in does not exist, or is no directory": "Verzeichnis zum Speichern existiert nicht, oder ist kein Verzeichnis",

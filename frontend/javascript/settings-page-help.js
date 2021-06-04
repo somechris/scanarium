@@ -89,6 +89,10 @@ class SettingsPageHelp extends NamedPage {
                         includeLastFailedCheckBox.rowElement.classList.remove('hidden');
                         lastFailedUploadPreview.src = URL.createObjectURL(file);
                         lastFailedUpload = file;
+                        if (!message.value) {
+                            var text = 'Dear Scanarium Team,\\n\\nThe attached picture failed to scan, but I cannot see why. Could you please have a look?\\n\\nThanks and best regards';
+                            message.value = localize(text).split('\\n').join('\n');
+                        }
                     }
                 };
                 UploadButton.registerUploadListener(includeLastFailedCheckBox.uploadListener);

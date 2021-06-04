@@ -28,6 +28,7 @@
     "Command \"{command}\" does not allow a parameter \"{parameter}\"": "Komando \"{command}\" malpermesas parametron \"{parameter}\"",
     "Confirm new password": "Konfirmo de nova pasvorto",
     "Current password": "Nuna pasvorto",
+    "Dear Scanarium Team,\\n\\nThe attached picture failed to scan, but I cannot see why. Could you please have a look?\\n\\nThanks and best regards": "Kara Scanarium Teamo!\\n\\nSkanado de la kunsendita bildo malsukcesis. Sed kial ne?\\n\\nKore salutas",
     "Delete actors": "Forigu agantojn",
     "Delete all your scanned actors": "Forigu ĉiujn agantojn",
     "Directory to store file in does not exist, or is no directory": "Dosierujo por konservado maleksistas aŭ ne estas dosierujo",

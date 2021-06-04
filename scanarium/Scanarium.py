@@ -71,11 +71,14 @@ class Scanarium(object):
     def get_scenes_dir_abs(self):
         return self.get_relative_dir_abs('scenes')
 
+    def get_directory_from_config(self, key):
+        dir = self.get_config('directories', key)
+        if not os.path.isabs(dir):
+            dir = os.path.join(self.get_scanarium_dir_abs(), dir)
+        return dir
+
     def get_dynamic_directory(self):
-        dyn_dir = self.get_config('directories', 'dynamic')
-        if not os.path.isabs(dyn_dir):
-            dyn_dir = os.path.join(self.get_scanarium_dir_abs(), dyn_dir)
-        return dyn_dir
+        return self.get_directory_from_config('dynamic')
 
     def get_dynamic_sample_dir_abs(self):
         return self.get_relative_dir_abs('dynamic.sample')
@@ -84,7 +87,7 @@ class Scanarium(object):
         return self.get_relative_dir_abs('images')
 
     def get_log_dir_abs(self):
-        return self.get_relative_dir_abs('log')
+        return self.get_directory_from_config('log')
 
     def reindex_actors_for_scene(self, scene):
         self._indexer.reindex_actors_for_scene(scene)

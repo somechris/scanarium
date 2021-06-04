@@ -142,6 +142,11 @@ pdfunite = pdfunite
 dynamic = dynamic
 
 
+# Directory for user logged content (feedback, images, ...), relative
+# to the Scanarium repo root directory.
+log = log
+
+
 
 #-------------------------------------------------------------------------------
 # Configuration for image scanning

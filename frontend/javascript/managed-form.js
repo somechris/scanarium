@@ -77,6 +77,19 @@ class ManagedForm {
         return input;
     }
 
+    addEmail(caption, id, validation) {
+        var input = document.createElement('input');
+        input.type = 'email';
+        input.id = id;
+        input.name = id;
+        input.placeholder = caption;
+        input.required = true;
+        input.style['font-size'] = this.font_size;
+        this.addControl(caption, input, validation);
+
+        return input;
+    }
+
     addTextArea(caption, id, validation) {
         var textarea = document.createElement('textarea');
         textarea.id = id;

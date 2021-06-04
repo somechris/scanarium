@@ -49,13 +49,13 @@ class SettingsPageHelp extends NamedPage {
             }
 
             if (cgi_allowed) {
-                var description;
+                var message;
                 var includeLastFailedCheckBox;
                 var lastFailedUpload;
                 var submit = function(event) {
-                    if (description && description.value) {
+                    if (message && message.value) {
                         var data = new FormData();
-                        data.append('description', description.value);
+                        data.append('message', message.value);
                         if (includeLastFailedCheckBox.checked && lastFailedUpload) {
                             data.append('lastFailedUpload', lastFailedUpload);
                         }
@@ -66,7 +66,7 @@ class SettingsPageHelp extends NamedPage {
                     PauseManager.resume();
                 }
                 var form = new ManagedForm('feedback-form', submit, localize('Submit'));
-                description = form.addTextArea(localize('Description'), 'feedback-description');
+                message = form.addTextArea(localize('Message'), 'feedback-message');
 
                 includeLastFailedCheckBox = form.addCheckbox(localize('Attachment'), 'feedback-attach-last-failed-upload', undefined, localize('Include last failed upload'));
                 includeLastFailedCheckBox.checked = true;

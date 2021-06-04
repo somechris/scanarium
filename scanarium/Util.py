@@ -8,6 +8,23 @@ import os
 
 logger = logging.getLogger(__name__)
 
+JPG_MAGIC = b'\xff\xd8\xff'
+PDF_MAGIC = bytes('%PDF', 'utf-8')
+PNG_MAGIC = bytes('PNG\r\n', 'utf-8')
+HEIC_MAGIC = bytes('ftyp', 'utf-8')
+HEIC_MAJOR_BRANDS = [bytes(brand, 'utf-8') for brand in [
+    # See https://github.com/strukturag/libheif/issues/83
+    'heic',
+    'heim',
+    'heis',
+    'heix',
+    'hevc',
+    'hevm',
+    'hevs',
+    'mif1',
+    'msf1',
+]]
+
 
 def file_needs_update(destination, sources, force=False):
     ret = True
@@ -44,6 +61,25 @@ def get_log_filename(scanarium, name):
     return full_file
 
 
+def guess_image_format(file_path):
+    guessed_type = None
+    if os.path.getsize(file_path) >= 12:
+        with open(file_path, mode='rb') as file:
+            header = file.read(12)
+
+            if header[0:3] == JPG_MAGIC:
+                guessed_type = 'jpg'
+            elif header[1:6] == PNG_MAGIC:
+                guessed_type = 'png'
+            elif header[0:4] == PDF_MAGIC:
+                guessed_type = 'pdf'
+            elif header[4:8] == HEIC_MAGIC and \
+                    header[8:12] in HEIC_MAJOR_BRANDS:
+                guessed_type = 'heic'
+
+    return guessed_type
+
+
 class Util(object):
     def __init__(self, scanarium):
         self._scanarium = scanarium
@@ -56,3 +92,6 @@ class Util(object):
 
     def get_log_filename(self, name):
         return get_log_filename(self._scanarium, name)
+
+    def guess_image_format(self, file_path):
+        return guess_image_format(file_path)

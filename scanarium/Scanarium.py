@@ -170,3 +170,6 @@ class Scanarium(object):
 
     def get_log_filename(self, name):
         return self._util.get_log_filename(name)
+
+    def guess_image_format(self, file_path):
+        return self._util.guess_image_format(file_path)

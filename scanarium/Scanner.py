@@ -23,23 +23,6 @@ logger = logging.getLogger(__name__)
 
 NEXT_RAW_IMAGE_STORE = 0  # Timestamp of when to store the next raw image.
 
-JPG_MAGIC = b'\xff\xd8\xff'
-PDF_MAGIC = bytes('%PDF', 'utf-8')
-PNG_MAGIC = bytes('PNG\r\n', 'utf-8')
-HEIC_MAGIC = bytes('ftyp', 'utf-8')
-HEIC_MAJOR_BRANDS = [bytes(brand, 'utf-8') for brand in [
-    # See https://github.com/strukturag/libheif/issues/83
-    'heic',
-    'heim',
-    'heis',
-    'heix',
-    'hevc',
-    'hevm',
-    'hevs',
-    'mif1',
-    'msf1',
-]]
-
 
 def debug_show_image(title, image, config):
     image_hide_key = re.sub('[^0-9a-z_]+', '_', 'hide_image_' + title.lower())
@@ -715,25 +698,6 @@ def store_raw_image(config, image):
                 'scan', 'raw_image_period', 'float')
 
 
-def guess_image_format(file_path):
-    guessed_type = None
-    if os.path.getsize(file_path) >= 12:
-        with open(file_path, mode='rb') as file:
-            header = file.read(12)
-
-            if header[0:3] == JPG_MAGIC:
-                guessed_type = 'jpg'
-            elif header[1:6] == PNG_MAGIC:
-                guessed_type = 'png'
-            elif header[0:4] == PDF_MAGIC:
-                guessed_type = 'pdf'
-            elif header[4:8] == HEIC_MAGIC and \
-                    header[8:12] in HEIC_MAJOR_BRANDS:
-                guessed_type = 'heic'
-
-    return guessed_type
-
-
 def run_get_raw_image_pipeline(scanarium, file_path, pipeline):
     image = None
     dpi = 150
@@ -792,7 +756,7 @@ def log_raw_image(scanarium, format, file_path):
 
 def get_raw_image_from_file(scanarium, config, file_path):
     image = None
-    format = guess_image_format(file_path)
+    format = scanarium.guess_image_format(file_path)
     log_raw_image(scanarium, format, file_path)
 
     if format is not None and \

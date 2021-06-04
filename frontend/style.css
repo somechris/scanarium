@@ -161,7 +161,7 @@ label, input, select, textarea, .form-element, .validation-message {
 }
 
 textarea, .form-element {
-    width: 80%;
+    width: 40em;
 }
 
 @media screen and (max-width: 600px) {

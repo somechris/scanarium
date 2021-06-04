@@ -42,6 +42,7 @@ class ManagedForm {
             control.oninput = function() {
                 self.validate();
             }
+            control.onchange = control.oninput;
         }
 
         var validationContainer = document.createElement('div');

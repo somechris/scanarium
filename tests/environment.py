@@ -123,12 +123,23 @@ class CanaryTestCase(unittest.TestCase):
         if mtime is not None:
             os.utime(flat_file_name, (mtime, mtime))
 
-    def get_file_contents(self, file_name):
+    def get_file_contents(self, file_name, text=True):
         flat_file_name = os.path.join(*self.flatten(file_name))
-        with open(flat_file_name, 'rt') as file:
+        with open(flat_file_name, 'r' + ('t' if text else 'b')) as file:
             contents = file.read()
         return contents
 
     def assertFileJsonContents(self, file_name, expected):
         actual = json.loads(self.get_file_contents(file_name))
         self.assertEqual(actual, expected)
+
+    def assertFileContents(self, file_name, expected):
+        actual = self.get_file_contents(file_name)
+        self.assertEqual(actual, expected)
+
+    def assertSameFileContents(self, fileA, fileB):
+        contentsA = self.get_file_contents(fileA, text=False)
+        contentsB = self.get_file_contents(fileB, text=False)
+        # no 'assertEqual' as we're typically using this method for
+        # binary data
+        self.assertTrue(contentsA == contentsB)

@@ -126,6 +126,6 @@ class CanaryTestCase(unittest.TestCase):
             contents = file.read()
         return contents
 
-    def assertFileContents(self, file_name, expected):
+    def assertFileJsonContents(self, file_name, expected):
         actual = json.loads(self.get_file_contents(file_name))
         self.assertEqual(actual, expected)

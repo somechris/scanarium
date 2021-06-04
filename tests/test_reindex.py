@@ -13,12 +13,12 @@ class ReindexCanaryTestCase(CanaryTestCase):
         with self.prepared_environment() as dir:
             self.run_reindex(dir)
 
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors.json'],
-                                    {'actors': {}})
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors-latest.json'],
-                                    {'actors': {}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors.json'],
+                                        {'actors': {}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors-latest.json'],
+                                        {'actors': {}})
 
     def test_ok_single_actor(self):
         with self.prepared_environment() as dir:
@@ -26,12 +26,12 @@ class ReindexCanaryTestCase(CanaryTestCase):
                           'bar.png'])
 
             self.run_reindex(dir)
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors.json'],
-                                    {'actors': {'foo': ['bar']}})
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors-latest.json'],
-                                    {'actors': {'foo': ['bar']}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors.json'],
+                                        {'actors': {'foo': ['bar']}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors-latest.json'],
+                                        {'actors': {'foo': ['bar']}})
 
     def test_ok_multiple_actors(self):
         with self.prepared_environment() as dir:
@@ -44,14 +44,14 @@ class ReindexCanaryTestCase(CanaryTestCase):
                           'quuux.png'])
 
             self.run_reindex(dir)
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors.json'],
-                                    {'actors': {'foo': ['bar', 'baz'],
-                                                'quux': ['quuux']}})
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors-latest.json'],
-                                    {'actors': {'foo': ['bar', 'baz'],
-                                                'quux': ['quuux']}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors.json'],
+                                        {'actors': {'foo': ['bar', 'baz'],
+                                                    'quux': ['quuux']}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors-latest.json'],
+                                        {'actors': {'foo': ['bar', 'baz'],
+                                                    'quux': ['quuux']}})
 
     def test_ok_mtime_sorting(self):
         with self.prepared_environment() as dir:
@@ -63,12 +63,12 @@ class ReindexCanaryTestCase(CanaryTestCase):
                           'C.png'], mtime=200)
 
             self.run_reindex(dir)
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors.json'],
-                                    {'actors': {'foo': ['B', 'C', 'A']}})
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors-latest.json'],
-                                    {'actors': {'foo': ['B', 'C', 'A']}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors.json'],
+                                        {'actors': {'foo': ['B', 'C', 'A']}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors-latest.json'],
+                                        {'actors': {'foo': ['B', 'C', 'A']}})
 
     def test_ok_last_cutoff(self):
         with self.prepared_environment() as dir:
@@ -78,8 +78,8 @@ class ReindexCanaryTestCase(CanaryTestCase):
 
             self.run_reindex(dir)
             expected = {'actors': {'foo': [str(x) for x in range(10, -1, -1)]}}
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors.json'], expected)
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors.json'], expected)
             expected = {'actors': {'foo': [str(x) for x in range(10, 0, -1)]}}
-            self.assertFileContents([dir, 'dynamic', 'scenes', 'space',
-                                     'actors-latest.json'], expected)
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors-latest.json'], expected)

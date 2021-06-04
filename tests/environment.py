@@ -56,6 +56,7 @@ class CanaryTestCase(unittest.TestCase):
         dir = ctx.name
 
         dynamic_dir = os.path.join(dir, 'dynamic')
+        log_dir = os.path.join(dir, 'log')
 
         if name:
             self.add_fixture(name, ctx.name)
@@ -63,6 +64,7 @@ class CanaryTestCase(unittest.TestCase):
         overrides = {
             'directories': {
                 'dynamic': dynamic_dir,
+                'log': log_dir,
             },
             'scan': {
                 'source': '/dev/null',

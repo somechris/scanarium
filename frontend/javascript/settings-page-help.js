@@ -50,12 +50,14 @@ class SettingsPageHelp extends NamedPage {
 
             if (cgi_allowed) {
                 var message;
+                var email;
                 var includeLastFailedCheckBox;
                 var lastFailedUpload;
                 var submit = function(event) {
                     if (message && message.value) {
                         var data = new FormData();
                         data.append('message', message.value);
+                        data.append('email', email.value);
                         if (includeLastFailedCheckBox.checked && lastFailedUpload) {
                             data.append('lastFailedUpload', lastFailedUpload);
                         }
@@ -80,6 +82,8 @@ class SettingsPageHelp extends NamedPage {
                     return true;
                 };
                 message = form.addTextArea(localize('Message'), 'feedback-message', textAreaValidator);
+
+                email = form.addEmail(localize('Email'), 'feedback-email');
 
                 var checkBoxValidator = function (node) {
                     const isVisible = includeLastFailedCheckBox && !includeLastFailedCheckBox.rowElement.className.includes('hidden');

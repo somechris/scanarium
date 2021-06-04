@@ -16,16 +16,21 @@ del sys.path[0]
 logger = logging.getLogger(__name__)
 
 
-def report_feedback(scanarium, message, lastFailedUpload):
+def report_feedback(scanarium, message, email, lastFailedUpload):
     target = scanarium.get_config('cgi:report-feedback', 'target')
     if target == 'stderr':
         print(message, file=sys.stderr)
     elif target == 'log':
-        log_filename = scanarium.get_log_filename('feedback.txt')
+        filename_base = scanarium.get_log_filename('feedback')
+        log_filename = filename_base + '.txt'
         with open(log_filename, 'wt') as f:
             f.write(message)
+        if email:
+            email_filename = filename_base + '-email.txt'
+            with open(email_filename, 'wt') as f:
+                f.write(email)
         if lastFailedUpload:
-            img_filename = log_filename[:-4] + '-last-failed-upload'
+            img_filename = filename_base + '-last-failed-upload'
             with open(img_filename, 'wb') as f:
                 f.write(base64.standard_b64decode(lastFailedUpload))
             format = scanarium.guess_image_format(img_filename)
@@ -40,6 +45,7 @@ def report_feedback(scanarium, message, lastFailedUpload):
 
 def register_arguments(scanarium, parser):
     parser.add_argument('MESSAGE', help='The textual part of the feedback')
+    parser.add_argument('EMAIL', help='The email to send the answer to')
     parser.add_argument('LAST_FAILED_UPLOAD', nargs='?',
                         help='The last failed upload')
 
@@ -49,6 +55,7 @@ if __name__ == "__main__":
     args = scanarium.handle_arguments(
         'Reports feedback',
         register_arguments,
-        whitelisted_cgi_fields={'message': 1, 'lastFailedUpload': 2})
-    scanarium.call_guarded(report_feedback, args.MESSAGE,
+        whitelisted_cgi_fields={
+            'message': 1, 'email': 2, 'lastFailedUpload': 3})
+    scanarium.call_guarded(report_feedback, args.MESSAGE, args.EMAIL,
                            args.LAST_FAILED_UPLOAD)

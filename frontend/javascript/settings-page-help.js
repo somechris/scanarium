@@ -69,7 +69,7 @@ class SettingsPageHelp extends NamedPage {
                 message = form.addTextArea(localize('Message'), 'feedback-message');
 
                 includeLastFailedCheckBox = form.addCheckbox(localize('Attachment'), 'feedback-attach-last-failed-upload', undefined, localize('Include last failed upload'));
-                includeLastFailedCheckBox.checked = true;
+                includeLastFailedCheckBox.checked = false;
                 includeLastFailedCheckBox.rowElement.classList.add('hidden');
 
                 var lastFailedUploadPreview = document.createElement('img');
@@ -86,6 +86,7 @@ class SettingsPageHelp extends NamedPage {
 
                 includeLastFailedCheckBox.uploadListener = function(file, is_ok) {
                     if (!is_ok) {
+                        includeLastFailedCheckBox.checked = true;
                         includeLastFailedCheckBox.rowElement.classList.remove('hidden');
                         lastFailedUploadPreview.src = URL.createObjectURL(file);
                         lastFailedUpload = file;

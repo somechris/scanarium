@@ -98,15 +98,25 @@ class ManagedForm {
         input.type = 'checkbox';
         input.id = id;
         input.name = id;
+        input.setChecked = function(checked) {
+            if (input.checked != checked) {
+                input.checked = checked;
+
+                var event = document.createEvent('Event');
+                event.initEvent('change', true, true);
+                input.dispatchEvent(event);
+            }
+        }
+        input.toggle = function() {
+            input.setChecked(!input.checked);
+        }
         span.appendChild(input);
 
         if (text) {
             var label = document.createElement('label');
             label.for = id;
             label.textContent = text;
-            label.onclick = function(e) {
-                input.checked = !input.checked;
-            }
+            label.onclick = input.toggle;
             span.appendChild(label);
         }
 

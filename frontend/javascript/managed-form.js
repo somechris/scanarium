@@ -61,6 +61,7 @@ class ManagedForm {
             this.form.appendChild(row);
         }
         control.rowElement = row;
+        this.validate();
     }
 
     addPassword(caption, id, validation) {

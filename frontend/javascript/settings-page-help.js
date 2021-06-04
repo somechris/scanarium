@@ -79,6 +79,9 @@ class SettingsPageHelp extends NamedPage {
                         URL.revokeObjectURL(this.src);
                     }
                 }
+                lastFailedUploadPreview.onclick = function() {
+                    includeLastFailedCheckBox.checked = !includeLastFailedCheckBox.checked;
+                }
                 includeLastFailedCheckBox.parentNode.appendChild(lastFailedUploadPreview)
 
                 includeLastFailedCheckBox.uploadListener = function(file, is_ok) {

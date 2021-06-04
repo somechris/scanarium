@@ -28,6 +28,9 @@ def report_feedback(scanarium, description, lastFailedUpload):
             img_filename = log_filename[:-4] + '-last-failed-upload'
             with open(img_filename, 'wb') as f:
                 f.write(base64.standard_b64decode(lastFailedUpload))
+            format = scanarium.guess_image_format(img_filename)
+            if format:
+                os.rename(img_filename, f'{img_filename}.{format}')
     else:
         raise ScanariumError('SE_UNKNOWN_FEEDBACK_TARGET',
                              'Unknown feedback target "{feedback_target}"',

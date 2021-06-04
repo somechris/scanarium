@@ -66,9 +66,29 @@ class SettingsPageHelp extends NamedPage {
                     PauseManager.resume();
                 }
                 var form = new ManagedForm('feedback-form', submit, localize('Submit'));
-                message = form.addTextArea(localize('Message'), 'feedback-message');
+                var textAreaValidator = function (node) {
+                    if (!node.value) {
+                        const checkboxVisible = includeLastFailedCheckBox && !includeLastFailedCheckBox.rowElement.className.includes('hidden');
+                        if (checkboxVisible) {
+                            if (!includeLastFailedCheckBox.checked) {
+                                return localize('No content provided for feedback. Either provide a message, or attach the last failed image.');
+                            }
+                        } else {
+                            return localize('This field may not be empty');
+                        }
+                    }
+                    return true;
+                };
+                message = form.addTextArea(localize('Message'), 'feedback-message', textAreaValidator);
 
-                includeLastFailedCheckBox = form.addCheckbox(localize('Attachment'), 'feedback-attach-last-failed-upload', undefined, localize('Include last failed upload'));
+                var checkBoxValidator = function (node) {
+                    const isVisible = includeLastFailedCheckBox && !includeLastFailedCheckBox.rowElement.className.includes('hidden');
+                    if (isVisible && !includeLastFailedCheckBox.checked && !message.value) {
+                        return localize('No content provided for feedback. Either provide a message, or attach the last failed image.');
+                    }
+                    return true;
+                };
+                includeLastFailedCheckBox = form.addCheckbox(localize('Attachment'), 'feedback-attach-last-failed-upload', checkBoxValidator, localize('Include last failed upload'));
                 includeLastFailedCheckBox.setChecked(false);
                 includeLastFailedCheckBox.rowElement.classList.add('hidden');
 
@@ -84,7 +104,6 @@ class SettingsPageHelp extends NamedPage {
 
                 includeLastFailedCheckBox.uploadListener = function(file, is_ok) {
                     if (!is_ok) {
-                        includeLastFailedCheckBox.setChecked(true);
                         includeLastFailedCheckBox.rowElement.classList.remove('hidden');
                         lastFailedUploadPreview.src = URL.createObjectURL(file);
                         lastFailedUpload = file;
@@ -92,6 +111,9 @@ class SettingsPageHelp extends NamedPage {
                             var text = 'Dear Scanarium Team,\\n\\nThe attached picture failed to scan, but I cannot see why. Could you please have a look?\\n\\nThanks and best regards';
                             message.value = localize(text).split('\\n').join('\n');
                         }
+                        // Setting the checkbox last, as this most reliably
+                        // triggers re-validation.
+                        includeLastFailedCheckBox.setChecked(true);
                     }
                 };
                 UploadButton.registerUploadListener(includeLastFailedCheckBox.uploadListener);

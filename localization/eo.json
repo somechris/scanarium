@@ -69,6 +69,7 @@
     "More about Scanarium": "Pli pri Scanarium",
     "New password": "Nova pasvorto",
     "New password and its confirmation do not match": "Nova pasvorto kaj ĝia konfirmo malsamas",
+    "No content provided for feedback. Either provide a message, or attach the last failed image.": "Neniu enhavo por komento. Enmetu mesaĝon aŭ kunsendu la lastan, malsukcesan bildon.",
     "No image selected. Upload aborted.": "Neniu bildo elektita. Alŝutado nuligita",
     "Password is not correct": "Pasvorto estas malkorekta",
     "Password is too short (minimum: {count} characters)": "Pasvorto estast tro mallonga (minimume: {count} signoj)",

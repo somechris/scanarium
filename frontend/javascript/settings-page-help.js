@@ -71,9 +71,20 @@ class SettingsPageHelp extends NamedPage {
                 includeLastFailedCheckBox = form.addCheckbox(localize('Attachment'), 'feedback-attach-last-failed-upload', undefined, localize('Include last failed upload'));
                 includeLastFailedCheckBox.checked = true;
                 includeLastFailedCheckBox.rowElement.classList.add('hidden');
+
+                var lastFailedUploadPreview = document.createElement('img');
+                lastFailedUploadPreview.id = 'feedback-last-failed-upload-preview';
+                lastFailedUploadPreview.onload = function() {
+                    if (this.src) {
+                        URL.revokeObjectURL(this.src);
+                    }
+                }
+                includeLastFailedCheckBox.parentNode.appendChild(lastFailedUploadPreview)
+
                 includeLastFailedCheckBox.uploadListener = function(file, is_ok) {
                     if (!is_ok) {
                         includeLastFailedCheckBox.rowElement.classList.remove('hidden');
+                        lastFailedUploadPreview.src = URL.createObjectURL(file);
                         lastFailedUpload = file;
                     }
                 };

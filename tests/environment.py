@@ -26,8 +26,11 @@ class NotCleanedUpTemporaryDirectory(object):
 
 
 class CanaryTestCase(unittest.TestCase):
+    def get_fixture_file_name(self, name):
+        return os.path.join(FIXTURE_DIR, name)
+
     def add_fixture(self, name, dir):
-        src = os.path.join(FIXTURE_DIR, name)
+        src = self.get_fixture_file_name(name)
         dest = os.path.join(dir, name)
         if os.path.isdir(src):
             shutil.copytree(src, dest)

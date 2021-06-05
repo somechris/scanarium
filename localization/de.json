@@ -75,7 +75,7 @@
     "Password is too short (minimum: {count} characters)": "Passwort ist zu kurz (mindestens {count} Zeichen)",
     "Pause/Resume": "Pause",
     "Paused": "Pause",
-    "Really reset the scene \"{scene_name}\", delete this scenes' scanned actors, and start afresh? (This cannot be undone)": "Die Szene \"{scene_name}\" wirklich zurücksetzen, eingescannte Figuren löschen und neu starten? (Die kann nicht rückgängig gemacht werden)",
+    "Really reset the scene \"{scene_name}\", delete this scenes' scanned actors, and start afresh? (This cannot be undone)": "Die Szene \"{scene_name}\" wirklich zurücksetzen, eingescannte Figuren löschen und neu starten? (Dies kann nicht rückgängig gemacht werden)",
     "Reindex actors": "Gespeicherte Zeichnungen neu indexieren",
     "Reset scene \"{scene_name}\"": "Szene \"{scene_name}\" zurücksetzen",
     "Resetting all scenes failed": "Zurücksetzen der Szenen schlug fehl",

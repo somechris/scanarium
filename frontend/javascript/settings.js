@@ -55,6 +55,7 @@ var SettingsButton = {
     this.hide();
     this.button = document.createElement('button');
     this.button.id = 'settings-button';
+    this.button.className = 'big-button';
     this.button.textContent = localize('Settings');
     this.button.onclick = function(e) {
         Settings.toggle();
@@ -134,6 +135,7 @@ var UploadButton = {
 
       var button = document.createElement('button');
       button.id = 'file-upload-button';
+      button.className = 'big-button';
       button.textContent = localize('Upload image');
       var lastUploadButtonClick = 0;
       button.onclick = function(e) {

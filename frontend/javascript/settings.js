@@ -4,6 +4,7 @@
 
 var Settings = {
   element: null,
+  tabbedPage: null,
 
   toggle: function() {
       if (this.element == null) {

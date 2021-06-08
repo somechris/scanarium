@@ -136,8 +136,9 @@ class Environment(object):
         if IS_CGI:
             ret = result.as_dict()
         else:
-            if exc_info is not None:
-                if self._config.get('general', 'debug', 'boolean'):
+            if exc_info is not None or not result.is_ok:
+                if exc_info is not None and \
+                        self._config.get('general', 'debug', 'boolean'):
                     traceback.print_exception(*exc_info)
                 print('ERROR: %s' % result.error_code)
                 print(result.error_message)

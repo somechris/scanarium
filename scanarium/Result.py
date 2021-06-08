@@ -49,3 +49,11 @@ class Result(object):
             'error_template': self.error_template,
             'error_parameters': self.error_parameters,
         }
+
+    def __str__(self):
+        ret = f'Result(uuid={self.uuid}, command={self.command}' \
+            f', parameters={self.parameters}, payload={self.payload}'
+        if not self.is_ok:
+            ret += f', error_code={self.error_code}'
+        ret += ')'
+        return ret

@@ -135,6 +135,15 @@ class ManagedForm {
         return input;
     }
 
+    addFixedTextField(caption, text) {
+        var span = document.createElement('span');
+        span.className = 'form-fixed-text-element';
+        span.textContent = text;
+
+        this.addControl(caption, span);
+        return span;
+    }
+
     _validateNode(node) {
         var result = true;
 

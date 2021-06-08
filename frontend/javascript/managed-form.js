@@ -64,15 +64,18 @@ class ManagedForm {
         this.validate();
     }
 
+    initStandardControl(control, id, placeholder) {
+        control.id = id;
+        control.name = id;
+        control.placeholder = placeholder;
+        control.required = true;
+        control.style['font-size'] = this.font_size;
+    }
 
     addInput(caption, id, validation, type) {
         var input = document.createElement('input');
         input.type = type ? type : 'text';
-        input.id = id;
-        input.name = id;
-        input.placeholder = caption;
-        input.required = true;
-        input.style['font-size'] = this.font_size;
+        this.initStandardControl(input, id, caption);
         this.addControl(caption, input, validation);
 
         return input;
@@ -88,13 +91,9 @@ class ManagedForm {
 
     addTextArea(caption, id, validation) {
         var textarea = document.createElement('textarea');
-        textarea.id = id;
-        textarea.name = id;
-        textarea.placeholder = caption;
-        textarea.required = true;
+        this.initStandardControl(textarea, id, caption);
         textarea.cols = 30;
         textarea.rows = 8;
-        textarea.style['font-size'] = this.font_size;
         this.addControl(caption, textarea, validation);
 
         return textarea;
@@ -106,8 +105,7 @@ class ManagedForm {
 
         var input = document.createElement('input');
         input.type = 'checkbox';
-        input.id = id;
-        input.name = id;
+        this.initStandardControl(input, id, caption);
         input.setChecked = function(checked) {
             if (input.checked != checked) {
                 input.checked = checked;

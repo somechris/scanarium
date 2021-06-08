@@ -81,9 +81,10 @@ class SettingsPageHelp extends NamedPage {
                     }
                     return true;
                 };
-                message = form.addTextArea(localize('Message'), 'feedback-message', textAreaValidator);
+                const placeholder = 'Feedback, comments, issue reports, ...';
+                message = form.addTextArea(localize('Message'), 'feedback-message', textAreaValidator, localize(placeholder));
 
-                email = form.addEmail(localize('Email'), 'feedback-email');
+                email = form.addEmail(localize('Email'), 'feedback-email', undefined, localize('your.address@example.org'));
 
                 var checkBoxValidator = function (node) {
                     const isVisible = includeLastFailedCheckBox && !includeLastFailedCheckBox.rowElement.className.includes('hidden');

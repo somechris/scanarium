@@ -68,6 +68,15 @@ class SettingsPageHelp extends NamedPage {
                     PauseManager.resume();
                 }
                 var form = new ManagedForm('feedback-form', submit, localize('Submit'));
+
+                email = form.addEmail(localize('From'), 'feedback-email', undefined, localize('your.address@example.org'));
+
+                var scanariumTeamText = localize('Scanarium-Team');
+                if (help_email_address) {
+                    scanariumTeamText = help_email_address;
+                }
+                form.addFixedTextField(localize('To'), scanariumTeamText);
+
                 var textAreaValidator = function (node) {
                     if (!node.value) {
                         const checkboxVisible = includeLastFailedCheckBox && !includeLastFailedCheckBox.rowElement.className.includes('hidden');
@@ -83,8 +92,6 @@ class SettingsPageHelp extends NamedPage {
                 };
                 const placeholder = 'Feedback, comments, issue reports, ...';
                 message = form.addTextArea(localize('Message'), 'feedback-message', textAreaValidator, localize(placeholder));
-
-                email = form.addEmail(localize('Email'), 'feedback-email', undefined, localize('your.address@example.org'));
 
                 var checkBoxValidator = function (node) {
                     const isVisible = includeLastFailedCheckBox && !includeLastFailedCheckBox.rowElement.className.includes('hidden');

@@ -43,7 +43,7 @@ def scan_image(scanarium):
                 # is too skew. We try to rectify on the images biggest rect
                 # (probably the paper sheet). This should undistort the QR
                 # code to be scanable in the next round.
-                image = scanarium.rectify_to_biggest_rect(scanarium, image)
+                image = scanarium.rectify_to_biggest_rect(image)
             else:
                 raise e
 

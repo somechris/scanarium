@@ -121,3 +121,10 @@ class ScanDataCanaryTestCase(CanaryTestCase):
 
     def test_ok_pdf_pdftoppm(self):
         self.template_test_file_type('pdf', pipeline='pdftoppm')
+
+    def test_fail_no_rectangle(self):
+        fixture = 'blank-white.png'
+        config = {'scan': {'permit_file_type_png': True}}
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertIn('SE_SCAN_NO_APPROX', ret['stdout'])

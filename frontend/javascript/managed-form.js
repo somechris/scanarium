@@ -64,9 +64,10 @@ class ManagedForm {
         this.validate();
     }
 
-    addPassword(caption, id, validation) {
+
+    addInput(caption, id, validation, type) {
         var input = document.createElement('input');
-        input.type = 'password';
+        input.type = type ? type : 'text';
         input.id = id;
         input.name = id;
         input.placeholder = caption;
@@ -77,17 +78,12 @@ class ManagedForm {
         return input;
     }
 
-    addEmail(caption, id, validation) {
-        var input = document.createElement('input');
-        input.type = 'email';
-        input.id = id;
-        input.name = id;
-        input.placeholder = caption;
-        input.required = true;
-        input.style['font-size'] = this.font_size;
-        this.addControl(caption, input, validation);
+    addPassword(caption, id, validation) {
+        return this.addInput(caption, id, validation, 'password');
+    }
 
-        return input;
+    addEmail(caption, id, validation) {
+        return this.addInput(caption, id, validation, 'email');
     }
 
     addTextArea(caption, id, validation) {

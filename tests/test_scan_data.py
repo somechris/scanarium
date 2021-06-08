@@ -142,3 +142,17 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
             self.assertIn('SE_SCAN_IMAGE_TOO_MANY_ITERATIONS', ret['stdout'])
+
+    def test_fail_qr_foo_bar_baz(self):
+        fixture = 'qr-foo-bar-baz.png'
+        config = {'scan': {'permit_file_type_png': True}}
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertIn('SE_UNKNOWN_SCENE', ret['stdout'])
+
+    def test_fail_qr_space_foo(self):
+        fixture = 'qr-space-foo.png'
+        config = {'scan': {'permit_file_type_png': True}}
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertIn('SE_UNKNOWN_ACTOR', ret['stdout'])

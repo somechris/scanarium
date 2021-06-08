@@ -14,9 +14,7 @@ var Settings = {
       }
   },
 
-  show: function() {
-    this.hide();
-
+  prepare: function() {
     if (!this.tabbedPage) {
       var pages = [
           new SettingsPageGeneral(),
@@ -33,9 +31,12 @@ var Settings = {
 
       this.tabbedPage = new TabbedPage('settings', pagesWithContent);
       this.tabbedPage.getElement().style['font-size'] = SettingsButton.button.style['font-size'];
-
     }
+  },
 
+  show: function() {
+    this.hide();
+    this.prepare();
     this.element = this.tabbedPage.getElement();
 
     document.body.appendChild(this.tabbedPage.getElement());
@@ -66,6 +67,7 @@ var SettingsButton = {
     this.button.ontouchstart = this.button.onclick;
     this.button.style["font-size"] = Math.ceil(16 * window.devicePixelRatio).toString() + 'px';
     document.body.appendChild(this.button);
+    Settings.prepare();
   },
 
   hide: function() {
@@ -165,6 +167,7 @@ var UploadButton = {
           this.container.className =  'file-upload-button-container-top-center';
       }
 
+      Settings.prepare();
   },
 
   hide: function() {

@@ -64,34 +64,34 @@ class ManagedForm {
         this.validate();
     }
 
-    initStandardControl(control, id, placeholder) {
+    initStandardControl(control, id, explanation, caption) {
         control.id = id;
         control.name = id;
-        control.placeholder = placeholder;
+        control.placeholder = (typeof(explanation) !== 'undefined' ? explanation : caption);
         control.required = true;
         control.style['font-size'] = this.font_size;
     }
 
-    addInput(caption, id, validation, type) {
+    addInput(caption, id, validation, type, explanation) {
         var input = document.createElement('input');
         input.type = type ? type : 'text';
-        this.initStandardControl(input, id, caption);
+        this.initStandardControl(input, id, explanation, caption);
         this.addControl(caption, input, validation);
 
         return input;
     }
 
-    addPassword(caption, id, validation) {
-        return this.addInput(caption, id, validation, 'password');
+    addPassword(caption, id, validation, explanation) {
+        return this.addInput(caption, id, validation, 'password', explanation);
     }
 
-    addEmail(caption, id, validation) {
-        return this.addInput(caption, id, validation, 'email');
+    addEmail(caption, id, validation, explanation) {
+        return this.addInput(caption, id, validation, 'email', explanation);
     }
 
-    addTextArea(caption, id, validation) {
+    addTextArea(caption, id, validation, explanation) {
         var textarea = document.createElement('textarea');
-        this.initStandardControl(textarea, id, caption);
+        this.initStandardControl(textarea, id, explanation, caption);
         textarea.cols = 30;
         textarea.rows = 8;
         this.addControl(caption, textarea, validation);
@@ -99,13 +99,13 @@ class ManagedForm {
         return textarea;
     }
 
-    addCheckbox(caption, id, validation, text) {
+    addCheckbox(caption, id, validation, explanation) {
         var span = document.createElement('span');
         span.className = 'form-element';
 
         var input = document.createElement('input');
         input.type = 'checkbox';
-        this.initStandardControl(input, id, caption);
+        this.initStandardControl(input, id, explanation, caption);
         input.setChecked = function(checked) {
             if (input.checked != checked) {
                 input.checked = checked;
@@ -120,10 +120,10 @@ class ManagedForm {
         }
         span.appendChild(input);
 
-        if (text) {
+        if (explanation) {
             var label = document.createElement('label');
             label.for = id;
-            label.textContent = text;
+            label.textContent = explanation;
             label.onclick = input.toggle;
             span.appendChild(label);
         }

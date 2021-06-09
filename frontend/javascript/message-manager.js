@@ -35,7 +35,6 @@ var MessageManager = {
       } else if (icon == 'pause') {
           duration = 100;
       }
-      var len = this.objects.length;
       var sprites = [
           game.add.image(20 * window.devicePixelRatio, y, icon)
             .setScale(window.devicePixelRatio, window.devicePixelRatio)

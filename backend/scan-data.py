@@ -23,7 +23,15 @@ def scan_data(scanarium, data):
         image_file = os.path.join(dir, 'image')
         with open(image_file, 'wb') as f:
             f.write(base64.standard_b64decode(data))
+        # Temporarily switching the image source to the new image for scanning
         scanarium.set_config('scan', 'source', f'image:{image_file}')
+
+        # As we switched from the configured image source to the passed image,
+        # the calibration data for the configured image source no longer fits,
+        # and we drop it as it may otherwise distort colors/geometry.
+        scanarium.set_config('scan', 'calibration_xml_file', '')
+        scanarium.set_config('scan', 'max_brightness', '')
+
         return scan_image(scanarium)
 
 

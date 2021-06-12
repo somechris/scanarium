@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 var MessageManager = {
-  objects: [],
+  messages: [],
   offsetY: 10 * window.devicePixelRatio,
   spaceY: 22 * window.devicePixelRatio,
   fontStyle: {
@@ -13,11 +13,11 @@ var MessageManager = {
         },
     },
 
-  getTargetY: function(i) {
+  getMessageTargetY: function(i) {
     var ret = this.offsetY;
-    if (i >= 2) {
-      var prevTextIdx = Math.floor(i/2 - 1) * 2 + 1;
-      var prevTextSprite = this.objects[prevTextIdx].sprite;
+    if (i > 0) {
+      const prevMessage = this.messages[i - 1];
+      var prevTextSprite = prevMessage.sprites[1];
       ret = prevTextSprite.y + prevTextSprite.height + this.offsetY * 0.2;
     }
     return ret;
@@ -25,7 +25,7 @@ var MessageManager = {
 
   addMessage: function(message, icon, is_long) {
     if (game) {
-      var y = this.getTargetY(this.objects.length);
+      var y = this.getMessageTargetY(this.messages.length);
       var duration = 10000;
       if (typeof icon == 'undefined' || icon == null) {
         icon = 'info';
@@ -43,29 +43,30 @@ var MessageManager = {
       ];
       sprites.forEach((sprite) => {
         bringToFront(sprite);
-        this.objects.push({'sprite': sprite, duration: duration, expire: null});
       });
+      this.messages.push({'sprites': sprites, duration: duration, expire: null});
     }
   },
 
   update: function(time, delta) {
-    var len = this.objects.length;
+    var len = this.messages.length;
     var i;
     for (i=len - 1; i >= 0; i--) {
-      var obj = this.objects[i];
-      if (obj.expire == null) {
-        obj.expire = time + obj.duration;
+      var message = this.messages[i];
+      if (message.expire == null) {
+        message.expire = time + message.duration;
       }
 
-      var targetY = this.getTargetY(i);
-      var sprite = obj.sprite;
-      sprite.y = Math.max(sprite.y - Math.min(delta, 1000)/25, targetY);
-
-      if (obj.expire <= time) {
-        this.objects.splice(i, 1);
-        sprite.destroy();
+      if (message.expire <= time) {
+        this.messages.splice(i, 1);
+        message.sprites.forEach(sprite => sprite.destroy());
+      } else {
+        var targetY = this.getMessageTargetY(i);
+        message.sprites.forEach(sprite => {
+          sprite.y = Math.max(sprite.y - Math.min(delta, 1000)/25, targetY);
+        });
       }
-    };
+    }
   },
 };
 

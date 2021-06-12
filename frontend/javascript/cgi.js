@@ -27,10 +27,10 @@ var onReadyStateChange = function(cgi, finishedCallback) {
 
       var status = (is_ok ? 'ok' : 'failed')
       prefix = localize('{cgi_name} ' + status, {'cgi_name': cgi});
-      CommandProcessor.process(capsule, prefix);
+      var message = CommandProcessor.process(capsule, prefix);
 
       if (finishedCallback) {
-          finishedCallback(is_ok);
+          finishedCallback(is_ok, message);
       }
     }
   };

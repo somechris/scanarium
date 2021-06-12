@@ -65,6 +65,7 @@ var MessageManager = {
   },
 
   addMessage: function(message, icon, is_long) {
+    var ret = null;
     if (game) {
       var y = this.getMessageTargetY(this.messages.length);
       var duration = 10000;
@@ -85,8 +86,10 @@ var MessageManager = {
       sprites.forEach((sprite) => {
         bringToFront(sprite);
       });
-      this.messages.push({'sprites': sprites, duration: duration, expire: null});
+      ret = {'sprites': sprites, duration: duration, expire: null};
+      this.messages.push(ret);
     }
+    return ret;
   },
 
   update: function(time, delta) {

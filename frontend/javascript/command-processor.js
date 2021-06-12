@@ -164,15 +164,17 @@ var CommandProcessor = {
         if (prefix) {
             msg = prefix + (msg ? (': ' + msg) : '');
         }
-        MessageManager.addMessage(msg, is_ok ? 'ok' : 'failed');
+        return MessageManager.addMessage(msg, is_ok ? 'ok' : 'failed');
     },
 
     process: function(capsule, prefix) {
+        var ret = null;
         var uuid = sanitize_string(capsule, 'uuid');
         if (this.isNew(uuid)) {
             this.markOld(uuid);
-            this.processNew(capsule, prefix);
+            ret = this.processNew(capsule, prefix);
         }
+        return ret;
     }
 };
 

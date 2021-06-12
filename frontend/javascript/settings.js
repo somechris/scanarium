@@ -127,9 +127,9 @@ var UploadButton = {
                       'Upload of \"{image_name}\" started',
                       {image_name: sanitize_string(file.name)}
                   ));
-                  callCgi(UploadButton.cgi, data, function(is_ok) {
+                  callCgi(UploadButton.cgi, data, function(is_ok, message) {
                       UploadButton.uploadListeners.forEach(callback => {
-                          callback(file, is_ok);
+                          callback(file, is_ok, message);
                       });
                       UploadButton.removeUpload()
                   });

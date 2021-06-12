@@ -13,6 +13,7 @@ class SettingsPageHelp extends NamedPage {
     }
 
     initContentHelp() {
+        const pageId = this.id;
         const help_email_address = getConfig('help_email_address');
         const cgi = 'report-feedback';
         const cgi_allowed = !isCgiForbidden(cgi);
@@ -114,7 +115,7 @@ class SettingsPageHelp extends NamedPage {
                 lastFailedUploadPreview.onclick = includeLastFailedCheckBox.toggle;
                 includeLastFailedCheckBox.parentNode.appendChild(lastFailedUploadPreview)
 
-                includeLastFailedCheckBox.uploadListener = function(file, is_ok) {
+                includeLastFailedCheckBox.uploadListener = function(file, is_ok, MessageManagerMessage) {
                     if (!is_ok) {
                         includeLastFailedCheckBox.rowElement.classList.remove('hidden');
                         lastFailedUploadPreview.src = URL.createObjectURL(file);
@@ -126,6 +127,12 @@ class SettingsPageHelp extends NamedPage {
                         // Setting the checkbox last, as this most reliably
                         // triggers re-validation.
                         includeLastFailedCheckBox.setChecked(true);
+
+                        if (MessageManagerMessage) {
+                            MessageManager.addButtonToMessage(MessageManagerMessage, localize_parameter('page_title', 'Help'), () => {
+                                Settings.show(pageId);
+                            });
+                        }
                     }
                 };
                 UploadButton.registerUploadListener(includeLastFailedCheckBox.uploadListener);

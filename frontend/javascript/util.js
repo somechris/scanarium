@@ -50,3 +50,11 @@ function sendToBack(sprite) {
   sprite.setDepth(-999999);
 }
 
+function isPhaserGameObject(obj) {
+  return (obj instanceof Phaser.GameObjects.GameObject);
+}
+
+function computedPxLength(element, property) {
+  const lengthStr = window.getComputedStyle(element)[property];
+  return parseFloat(lengthStr.substring(0, lengthStr.length - 2));
+}

@@ -17,10 +17,51 @@ var MessageManager = {
     var ret = this.offsetY;
     if (i > 0) {
       const prevMessage = this.messages[i - 1];
-      var prevTextSprite = prevMessage.sprites[1];
-      ret = prevTextSprite.y + prevTextSprite.height + this.offsetY * 0.2;
+      if (prevMessage.sprites.length > 2) {
+        var prevButton = prevMessage.sprites[2];
+        ret = Math.ceil(prevButton.MessageManagerTop + prevButton.MessageManagerTopOffset + computedPxLength(prevButton, 'height'));
+      } else {
+        var prevTextSprite = prevMessage.sprites[1];
+        ret = prevTextSprite.y + prevTextSprite.height;
+      }
+      ret += this.offsetY * 0.2;
     }
     return ret;
+  },
+
+  addButtonToMessage: function(message, caption, callback, extra_params) {
+    var button = document.createElement('button');
+    button.className = 'message-button';
+    var left = (32 * window.devicePixelRatio) + 'px';
+    if (message.sprites.length > 2) {
+      var lastButton = message.sprites[message.sprites.length - 1];
+      button.MessageManagerTopOffset = lastButton.MessageManagerTopOffset;
+      button.MessageManagerTop = lastButton.MessageManagerTop;
+      left = Math.ceil(computedPxLength(lastButton, 'left') + computedPxLength(lastButton, 'width') + 2*0.2*this.offsetY) + 'px';
+    } else {
+      const idx = this.messages.indexOf(message);
+      button.MessageManagerTop = this.getMessageTargetY(idx);
+      button.MessageManagerTopOffset = this.getMessageTargetY(idx + 1) - button.MessageManagerTop;
+    }
+    button.style['left'] = left;
+    button.style['top'] = (button.MessageManagerTop + button.MessageManagerTopOffset) + 'px';
+    button.textContent = caption;
+    button.lastClick = 0;
+    button.onclick = (event) => {
+      const now = Date.now();
+      if (now - button.lastClick > 400) {
+          callback(message, extra_params);
+      }
+      lastUploadButtonClick = now;
+      event.stopPropagation();
+      event.preventDefault();
+      event.handled_by_scanarium_settings = true;
+      return false;
+    }
+    button.ontouchstart = button.onclick;
+    document.body.append(button);
+
+    message.sprites.push(button);
   },
 
   addMessage: function(message, icon, is_long) {
@@ -59,11 +100,26 @@ var MessageManager = {
 
       if (message.expire <= time) {
         this.messages.splice(i, 1);
-        message.sprites.forEach(sprite => sprite.destroy());
+        message.sprites.forEach(sprite => {
+          if (isPhaserGameObject(sprite)) {
+            sprite.destroy();
+          } else {
+            sprite.remove();
+          }
+        });
       } else {
         var targetY = this.getMessageTargetY(i);
         message.sprites.forEach(sprite => {
-          sprite.y = Math.max(sprite.y - Math.min(delta, 1000)/25, targetY);
+          if (isPhaserGameObject(sprite)) {
+            sprite.y = Math.max(sprite.y - Math.min(delta, 1000)/25, targetY);
+          } else {
+            const currentTop = sprite.MessageManagerTop;
+            const newTop = Math.max(currentTop - Math.min(delta, 1000)/25, targetY);
+            if (currentTop != newTop) {
+              sprite.MessageManagerTop = newTop;
+              sprite.style['top'] = (newTop + sprite.MessageManagerTopOffset) + 'px';
+            }
+          }
         });
       }
     }

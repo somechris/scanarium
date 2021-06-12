@@ -47,10 +47,19 @@ button {
   padding: 1em 3em;
 }
 
+.message-button {
+  position: fixed;
+  z-index: 15;
+}
+
 #settings-button {
   position: absolute;
   right: 0px;
   top: 0px;
+  z-index: 30;
+}
+
+#file-upload-button {
   z-index: 20;
 }
 

@@ -34,9 +34,15 @@ var Settings = {
     }
   },
 
-  show: function() {
+  show: function(pageId) {
+    PauseManager.pause();
     this.hide();
     this.prepare();
+
+    if (pageId) {
+        this.tabbedPage.showPage(pageId);
+    }
+
     this.element = this.tabbedPage.getElement();
 
     document.body.appendChild(this.tabbedPage.getElement());

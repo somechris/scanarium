@@ -25,7 +25,7 @@ class NotCleanedUpTemporaryDirectory(object):
         pass
 
 
-class CanaryTestCase(unittest.TestCase):
+class BasicTestCase(unittest.TestCase):
     def get_fixture_file_name(self, name):
         return os.path.join(FIXTURE_DIR, name)
 
@@ -85,29 +85,6 @@ class CanaryTestCase(unittest.TestCase):
 
         return ctx
 
-    def run_command(self, command):
-        process = subprocess.run(command,
-                                 check=True,
-                                 timeout=3,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE,
-                                 universal_newlines=True)
-        return {
-            'stdout': process.stdout,
-            'stderr': process.stderr,
-        }
-
-    def run_cgi(self, dir, cgi, arguments=[]):
-        cgi_file = os.path.join('.', 'backend', f'{cgi}.py')
-
-        standard_arguments = [
-            '--debug-config-override', os.path.join(dir, 'override.conf')
-        ]
-
-        command = [cgi_file] + standard_arguments + arguments
-
-        return self.run_command(command)
-
     def flatten(self, x):
         ret = []
         if isinstance(x, list):
@@ -145,3 +122,28 @@ class CanaryTestCase(unittest.TestCase):
         # no 'assertEqual' as we're typically using this method for
         # binary data
         self.assertTrue(contentsA == contentsB)
+
+
+class CanaryTestCase(BasicTestCase):
+    def run_command(self, command):
+        process = subprocess.run(command,
+                                 check=True,
+                                 timeout=3,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
+                                 universal_newlines=True)
+        return {
+            'stdout': process.stdout,
+            'stderr': process.stderr,
+        }
+
+    def run_cgi(self, dir, cgi, arguments=[]):
+        cgi_file = os.path.join('.', 'backend', f'{cgi}.py')
+
+        standard_arguments = [
+            '--debug-config-override', os.path.join(dir, 'override.conf')
+        ]
+
+        command = [cgi_file] + standard_arguments + arguments
+
+        return self.run_command(command)

@@ -71,6 +71,12 @@ class CommandLoggerTest(BasicTestCase):
         self.assertEqual(entry['command'], 'bar')
         self.assertLenIs(dumped, 1)
 
+    def test_dump_simple_unappendable_json_list_file(self):
+        dumped = self.run_dump(contents='{}', command='bar')
+        entry = dumped[0]
+        self.assertEqual(entry['command'], 'bar')
+        self.assertLenIs(dumped, 1)
+
     def test_dump_simple_empty_json_list_file(self):
         dumped = self.run_dump(contents='[]', command='bar')
         entry = dumped[0]
@@ -79,6 +85,16 @@ class CommandLoggerTest(BasicTestCase):
 
     def test_dump_simple_1_old_entry(self):
         dumped = self.run_dump(contents='["foo"]', command='bar')
-        entry = dumped[0]
-        self.assertEqual(entry['command'], 'bar')
-        self.assertLenIs(dumped, 1)
+        self.assertEqual(dumped[0], 'foo')
+        self.assertEqual(dumped[1]['command'], 'bar')
+        self.assertLenIs(dumped, 2)
+
+    def test_dump_cutoff(self):
+        dumped = self.run_dump(contents='[1, 2, 3, 4, 5]', command='bar')
+        # Element `1` got cut off
+        self.assertEqual(dumped[0], 2)
+        self.assertEqual(dumped[1], 3)
+        self.assertEqual(dumped[2], 4)
+        self.assertEqual(dumped[3], 5)
+        self.assertEqual(dumped[4]['command'], 'bar')
+        self.assertLenIs(dumped, 5)

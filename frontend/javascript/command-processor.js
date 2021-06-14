@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 var CommandProcessor = {
-    recentUuids: [null, null, null, null, null],
+    recentUuids: [null, null, null, null, null, null, null, null, null, null],
 
     isNew: function(uuid) {
         return (uuid == null || uuid == '' || !(this.recentUuids.includes(uuid)));

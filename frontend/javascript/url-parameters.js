@@ -21,16 +21,14 @@ function updateLocation(reason, target, isDownload) {
         target = location.origin + location.pathname + '?' + urlParameters.toString();
     }
 
-    var action;
-    if ((location.origin + location.pathname + location.search) == target) {
-        action = () => {
+    var action = () => {
+        var location = window.location
+        if ((location.origin + location.pathname + location.search) == target) {
             location.reload();
-        }
-    } else {
-        action = () => {
+        } else {
             location.href = target;
-        };
-    }
+        }
+    };
 
     if (action) {
         UploadButton.runOnceUploadsFinished(action, reason, isDownload);

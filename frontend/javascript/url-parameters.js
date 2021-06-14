@@ -18,7 +18,7 @@ function parseUrlParameters()
 function updateLocation(reload, reason, target, isDownload) {
     if (!target) {
         const location = document.location;
-        target = location.protocol + '//' + location.host + location.pathname + '?' + urlParameters.toString();
+        target = location.origin + location.pathname + '?' + urlParameters.toString();
     }
 
     var action;

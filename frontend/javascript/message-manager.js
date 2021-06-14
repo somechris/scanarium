@@ -64,7 +64,7 @@ var MessageManager = {
     message.sprites.push(button);
   },
 
-  addMessage: function(message, icon, is_long) {
+  addMessage: function(message, icon, is_long, uuid) {
     var ret = null;
     if (game) {
       var y = this.getMessageTargetY(this.messages.length);
@@ -86,7 +86,7 @@ var MessageManager = {
       sprites.forEach((sprite) => {
         bringToFront(sprite);
       });
-      ret = {'sprites': sprites, duration: duration, expire: null};
+      ret = {'sprites': sprites, duration: duration, expire: null, uuid: uuid};
       this.messages.push(ret);
     }
     return ret;
@@ -110,6 +110,9 @@ var MessageManager = {
             sprite.remove();
           }
         });
+        if (message.uuid) {
+          this.lastEvictedUuid = message.uuid;
+        }
       } else {
         var targetY = this.getMessageTargetY(i);
         message.sprites.forEach(sprite => {

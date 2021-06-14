@@ -164,7 +164,7 @@ var CommandProcessor = {
         if (prefix) {
             msg = prefix + (msg ? (': ' + msg) : '');
         }
-        return MessageManager.addMessage(msg, is_ok ? 'ok' : 'failed');
+        return MessageManager.addMessage(msg, is_ok ? 'ok' : 'failed', undefined, uuid);
     },
 
     process: function(capsule, prefix) {

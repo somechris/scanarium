@@ -22,7 +22,7 @@ function updateLocation(reload, reason, target, isDownload) {
     }
 
     var action;
-    if (location.search == target) {
+    if ((location.origin + location.pathname + location.search) == target) {
         if (reload) {
             action = () => {
                 location.reload();

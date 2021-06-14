@@ -59,7 +59,7 @@ function getUrlParameterBoolean(name, defaultValue) {
 function setUrlParameter(key, value, follow) {
     urlParameters.set(key, value);
     if (follow) {
-      updateLocation(false, localize('Applying the changes requires to automatically reload the page'));
+      updateLocation(true, localize('Applying the changes requires to automatically reload the page'));
     }
 }
 

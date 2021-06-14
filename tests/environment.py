@@ -123,6 +123,10 @@ class BasicTestCase(unittest.TestCase):
         # binary data
         self.assertTrue(contentsA == contentsB)
 
+    def assertLenIs(self, lst, expected_length):
+        self.assertEqual(len(lst), expected_length,
+                         f'Length of {lst} is not {expected_length}')
+
 
 class CanaryTestCase(BasicTestCase):
     def run_command(self, command):

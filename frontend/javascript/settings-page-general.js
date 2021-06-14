@@ -68,8 +68,7 @@ class SettingsPageGeneral extends NamedPage {
                 var link = document.createElement('a');
                 link.href = config['url'];
                 link.onclick = function(e) {
-                    updateLocation(true,
-                                   localize('Forwarding to {url-description}.', {'url-description': name}),
+                    updateLocation(localize('Forwarding to {url-description}.', {'url-description': name}),
                                    config['url'], false);
                     e.stopPropagation();
                     e.preventDefault();

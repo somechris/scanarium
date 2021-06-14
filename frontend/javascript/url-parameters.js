@@ -15,7 +15,7 @@ function parseUrlParameters()
     return parameters;
 }
 
-function updateLocation(reload, reason, target, isDownload) {
+function updateLocation(reason, target, isDownload) {
     const location = window.location;
     if (!target) {
         target = location.origin + location.pathname + '?' + urlParameters.toString();
@@ -23,10 +23,8 @@ function updateLocation(reload, reason, target, isDownload) {
 
     var action;
     if ((location.origin + location.pathname + location.search) == target) {
-        if (reload) {
-            action = () => {
-                location.reload();
-            }
+        action = () => {
+            location.reload();
         }
     } else {
         action = () => {
@@ -59,7 +57,7 @@ function getUrlParameterBoolean(name, defaultValue) {
 function setUrlParameter(key, value, follow) {
     urlParameters.set(key, value);
     if (follow) {
-      updateLocation(true, localize('Applying the changes requires to automatically reload the page'));
+      updateLocation(localize('Applying the changes requires to automatically reload the page'));
     }
 }
 

@@ -65,7 +65,7 @@ function create() {
             // WebGL context to get lost. So we sleep 100ms to make sure the
             // upload can start before we try to reload the scene.
             setTimeout(() => {
-                updateLocation(true, localize('The browser lost the graphics context, which is typically fixed by automatically reloading the page.'));
+                updateLocation(localize('The browser lost the graphics context, which is typically fixed by automatically reloading the page.'));
             }, 100);
         });
     }

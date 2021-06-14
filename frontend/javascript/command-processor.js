@@ -115,7 +115,7 @@ var CommandProcessor = {
 
             if (reset_scene == '' || reset_scene == scene) {
                 // The current scene got reset, so we need to reload.
-                updateLocation(true, localize('Automatic page reload required to finish resetting the scene.'));
+                updateLocation(localize('Automatic page reload required to finish resetting the scene.'));
             }
         } else {
             if (reset_scene == '') {

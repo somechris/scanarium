@@ -7,6 +7,7 @@ import logging
 import os
 
 from .Result import Result
+from .FileLock import FileLock
 
 logger = logging.getLogger(__name__)
 
@@ -18,12 +19,12 @@ class CommandLogger(object):
         self._dumper = dumper
 
     def dump(self, entry):
-        # todo: This method introduces a race condition. If two parallel
-        # requests read the old data, update their copy with a new entry and
-        # thew write to disk, one requests overwrites the update of the
-        # other. But the current implementation is an improvement over the old
-        # implementation, which kept only the very last element, and hence
-        # suffered from the same issues.
+        lock = FileLock(self._dump_target)
+        lock.lock(force=True)
+        self.raw_dump(entry)
+        lock.unlock()
+
+    def raw_dump(self, entry):
         entries = []
         try:
             with open(self._dump_target, 'rt') as f:

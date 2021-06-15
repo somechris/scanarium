@@ -18,6 +18,12 @@ var PauseManager = {
   },
 
   pause: function() {
+    if (!this.paused) {
+        this._pause();
+    }
+  },
+
+  _pause: function() {
     this.paused = true;
 
     if (game != null) {

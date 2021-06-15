@@ -4,6 +4,8 @@
 
 var CommandLogInjector = {
     injectRunCount: 0,
+    showAfterUuid: getUrlParameter('lastFullyShownUuid'),
+    searchingShowAfterUuid: true,
 
     init: function() {
         window.setInterval(this.fetchLogs, getConfig('command-log-reload-period'));
@@ -15,10 +17,17 @@ var CommandLogInjector = {
 
     injectLogs: function(items) {
         CommandLogInjector.injectRunCount += 1;
-        if (CommandLogInjector.injectRunCount <= 3) {
+        if (CommandLogInjector.injectRunCount <= 3 && CommandLogInjector.searchingShowAfterUuid) {
             items.forEach(function (item, index) {
                 var uuid = sanitize_string(item, 'uuid');
-                CommandProcessor.markOld(uuid);
+                if (CommandLogInjector.searchingShowAfterUuid) {
+                    CommandProcessor.markOld(uuid);
+                    if (CommandLogInjector.showAfterUuid && uuid == CommandLogInjector.showAfterUuid) {
+                        CommandLogInjector.searchingShowAfterUuid = false;
+                    }
+                } else {
+                    CommandProcessor.process(item, undefined, true);
+                }
             });
         } else {
             items.forEach(function (item, index) {

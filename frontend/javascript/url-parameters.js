@@ -18,6 +18,14 @@ function parseUrlParameters()
 function updateLocation(reason, target, isDownload) {
     const location = window.location;
     if (!target) {
+        if (MessageManager && MessageManager.lastEvictedUuid) {
+            // We on purpose set the last fully shown message uuid already
+            // here. That way, message evictions that happen during waiting for
+            // uploads cannot get marked fully-shown, and will hence be shown
+            // after the reloading.
+            setUrlParameter('lastFullyShownUuid',
+                            MessageManager.lastEvictedUuid);
+        }
         target = location.origin + location.pathname + '?' + urlParameters.toString();
     }
 

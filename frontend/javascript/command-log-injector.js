@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 var CommandLogInjector = {
-    injectRunCount: 0,
+    reloadsNeededBeforeProcessingFull: 3,
     showAfterUuid: getUrlParameter('lastFullyShownUuid'),
-    searchingShowAfterUuid: true,
+    processAfterUuid: getUrlParameter('lastFullyProcessedUuid'),
 
     init: function() {
         window.setInterval(this.fetchLogs, getConfig('command-log-reload-period'));
@@ -16,19 +16,54 @@ var CommandLogInjector = {
     },
 
     injectLogs: function(items) {
-        CommandLogInjector.injectRunCount += 1;
-        if (CommandLogInjector.injectRunCount <= 3 && CommandLogInjector.searchingShowAfterUuid) {
+        if (CommandLogInjector.reloadsNeededBeforeProcessingFull > 0) {
+            // We're still in the boot-up phase and need to decide which
+            // messages to skip, which to replay, and which tno inject normally
+            const showAfterUuid = CommandLogInjector.showAfterUuid;
+            const processAfterUuid = CommandLogInjector.processAfterUuid || CommandLogInjector.showAfterUuid;
+            var searchingShowAfterUuid = true;
+            var searchingProcessAfterUuid = true;
             items.forEach(function (item, index) {
                 var uuid = sanitize_string(item, 'uuid');
-                if (CommandLogInjector.searchingShowAfterUuid) {
+                if (searchingShowAfterUuid) {
                     CommandProcessor.markOld(uuid);
-                    if (CommandLogInjector.showAfterUuid && uuid == CommandLogInjector.showAfterUuid) {
-                        CommandLogInjector.searchingShowAfterUuid = false;
+                    if (showAfterUuid && uuid == showAfterUuid) {
+                        searchingShowAfterUuid = false;
+                    }
+                    if (processAfterUuid && uuid == processAfterUuid) {
+                        searchingProcessAfterUuid = false;
+                        if (searchingShowAfterUuid) {
+                            // We've found the processAfterUuid, but not yet the
+                            // showAfterUuid. So the showAfterUuid is no longer
+                            // present in the file and must be older. Henco, all
+                            // entries up to the current in the log should have
+                            // been replayed. So we process them accordingly.
+                            items.forEach((innerItem, innerIndex) => {
+                                if (innerIndex <= index) {
+                                    CommandProcessor.process(innerItem, undefined, true);
+                                }
+                            });
+                            searchingShowAfterUuid = false;
+                        }
                     }
                 } else {
-                    CommandProcessor.process(item, undefined, true);
+                    if (searchingProcessAfterUuid) {
+                        CommandProcessor.process(item, undefined, true);
+                        if (processAfterUuid && uuid == processAfterUuid) {
+                            searchingProcessAfterUuid = false;
+                        }
+                    } else {
+                        CommandProcessor.process(item);
+                    }
                 }
             });
+            if (searchingShowAfterUuid && searchingProcessAfterUuid) {
+                CommandLogInjector.reloadsNeededBeforeProcessingFull -= 1;
+            } else {
+                // Found at least some uuid, so we can process fully from
+                // now on.
+                CommandLogInjector.reloadsNeededBeforeProcessingFull = 0;
+            }
         } else {
             items.forEach(function (item, index) {
                 CommandProcessor.process(item);

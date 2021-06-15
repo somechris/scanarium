@@ -14,7 +14,7 @@ var CommandProcessor = {
         this.recentUuids.push(uuid);
     },
 
-    processCommandActor: function(capsule) {
+    processCommandActor: function(capsule, replay) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var command = sanitize_string(capsule, 'command');
         var parameters = sanitize_list(capsule, 'parameters');
@@ -25,11 +25,16 @@ var CommandProcessor = {
             if (command == scene) {
                 var flavor = sanitize_string(capsule.payload, 'flavor')
                 if (typeof ScActorManager !== 'undefined') {
+                    // We add the actor, even if `replay` is true, as
+                    // this will help showing a recently scanned actor
+                    // more quickly.
                     ScActorManager.addActor(parameters[0], flavor);
                 }
             }
             if (PageInsertionHint != null && (global_config['drop_page_insertion_hint_after_scan'] || true)) {
-                PageInsertionHint.setInvisible();
+                if (!replay) {
+                    PageInsertionHint.setInvisible();
+                }
             }
         } else {
             template = 'Failed to scan new actor drawing for {actor_name}';
@@ -43,7 +48,7 @@ var CommandProcessor = {
         });
     },
 
-    processCommandDebug: function(capsule) {
+    processCommandDebug: function(capsule, replay) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');
         var template = 'Unknown debug command received';
@@ -52,14 +57,18 @@ var CommandProcessor = {
             template = false;
           } else if (parameters[0] == 'toggleFps') {
             if (is_ok) {
-              FrameCounter.toggleVisibility();
+              if (!replay) {
+                  FrameCounter.toggleVisibility();
+              }
               template = 'Toggled frames-per-second counter';
             } else {
               template = 'Toggling frames-per-second counter failed';
             }
           } else if (parameters[0] == 'toggleDevInfo') {
             if (is_ok) {
-              DeveloperInformation.toggleVisibility();
+              if (!replay) {
+                  DeveloperInformation.toggleVisibility();
+              }
               template = 'Toggled developer information';
             } else {
               template = 'Toggling developer information failed';
@@ -69,12 +78,14 @@ var CommandProcessor = {
         return template ? localize(template) : false;
     },
 
-    processCommandSwitchScene: function(capsule) {
+    processCommandSwitchScene: function(capsule, replay) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');
         if (is_ok) {
             template = 'Switching to scene {scene_name}';
-            setUrlParameter('scene', parameters[0], true);
+            if (!replay) {
+                setUrlParameter('scene', parameters[0], true);
+            }
         } else {
             template = 'Cannot switch to scene {scene_name}';
         }
@@ -83,7 +94,7 @@ var CommandProcessor = {
         });
     },
 
-    processCommandSystem: function(capsule) {
+    processCommandSystem: function(capsule, replay) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');
         var template = 'Unknown system command received';
@@ -99,7 +110,7 @@ var CommandProcessor = {
         return localize(template);
     },
 
-    processCommandReset: function(capsule) {
+    processCommandReset: function(capsule, replay) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');
         var reset_scene = '';
@@ -115,7 +126,10 @@ var CommandProcessor = {
 
             if (reset_scene == '' || reset_scene == scene) {
                 // The current scene got reset, so we need to reload.
-                updateLocation(localize('Automatic page reload required to finish resetting the scene.'));
+                // Unless `replay` is true, because then we've reloaded already.
+                if (!replay) {
+                    updateLocation(localize('Automatic page reload required to finish resetting the scene.'));
+                }
             }
         } else {
             if (reset_scene == '') {
@@ -127,7 +141,7 @@ var CommandProcessor = {
         return localize(template, {'scene_name': reset_scene});
     },
 
-    processNew: function(capsule, prefix) {
+    processNew: function(capsule, prefix, replay) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var command = sanitize_string(capsule, 'command');
         var parameters = sanitize_list(capsule, 'parameters');
@@ -137,15 +151,15 @@ var CommandProcessor = {
                            {'command_name': command});
 
             if (command == 'debug') {
-                msg = this.processCommandDebug(capsule) || msg;
+                msg = this.processCommandDebug(capsule, replay) || msg;
             } else if (command == 'reset') {
-                msg = this.processCommandReset(capsule) || msg;
+                msg = this.processCommandReset(capsule, replay) || msg;
             } else if (command == 'switchScene') {
-                msg = this.processCommandSwitchScene(capsule) || msg;
+                msg = this.processCommandSwitchScene(capsule, replay) || msg;
             } else if (command == 'system') {
-                msg = this.processCommandSystem(capsule) || msg;
+                msg = this.processCommandSystem(capsule, replay) || msg;
             } else {
-                msg = this.processCommandActor(capsule) || msg;
+                msg = this.processCommandActor(capsule, replay) || msg;
             }
         }
 
@@ -167,12 +181,16 @@ var CommandProcessor = {
         return MessageManager.addMessage(msg, is_ok ? 'ok' : 'failed', undefined, uuid);
     },
 
-    process: function(capsule, prefix) {
+    /* If `replay` is true, the command is processed as usual, and messages get
+       added, but no actions (changing urls, messing with url parameters, ...)
+       are taken. Only recently scanned actors are added regardless
+    */
+    process: function(capsule, prefix, replay) {
         var ret = null;
         var uuid = sanitize_string(capsule, 'uuid');
-        if (this.isNew(uuid)) {
+        if (this.isNew(uuid) || replay) {
             this.markOld(uuid);
-            ret = this.processNew(capsule, prefix);
+            ret = this.processNew(capsule, prefix, replay);
         }
         return ret;
     }

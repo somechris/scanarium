@@ -15,6 +15,7 @@ from .Config import Config
 from .CommandLogger import CommandLogger
 from .Dumper import Dumper
 from .Environment import Environment
+from .FileLock import FileLock
 from .Indexer import Indexer
 from .MessageFormatter import MessageFormatter
 from .Localizer import Localizer

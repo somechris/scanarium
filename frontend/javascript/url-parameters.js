@@ -15,7 +15,7 @@ function parseUrlParameters()
     return parameters;
 }
 
-function updateLocation(reason, target, isDownload) {
+function updateLocation(reason, target, isDownload, uuid) {
     const location = window.location;
     if (!target) {
         if (MessageManager && MessageManager.lastEvictedUuid) {
@@ -25,6 +25,13 @@ function updateLocation(reason, target, isDownload) {
             // after the reloading.
             setUrlParameter('lastFullyShownUuid',
                             MessageManager.lastEvictedUuid);
+        }
+        uuid = uuid || (CommandProcessor && CommandProcessor.lastFullyProcessedUuid);
+        if (uuid) {
+            // We on purpose set the last fully processed uuid here, as we grab
+            // the urlParameters already now. Changes that happed between now
+            // and when the reload finishes will be re-processed.
+            setUrlParameter('lastFullyProcessedUuid', uuid)
         }
         target = location.origin + location.pathname + '?' + urlParameters.toString();
     }
@@ -60,10 +67,10 @@ function getUrlParameterBoolean(name, defaultValue) {
     return (param == "1" || param == "true");
 }
 
-function setUrlParameter(key, value, follow) {
+function setUrlParameter(key, value, follow, uuid) {
     urlParameters.set(key, value);
     if (follow) {
-      updateLocation(localize('Applying the changes requires to automatically reload the page'));
+      updateLocation(localize('Applying the changes requires to automatically reload the page'), undefined, undefined, uuid);
     }
 }
 

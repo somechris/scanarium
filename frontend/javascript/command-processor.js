@@ -4,6 +4,7 @@
 
 var CommandProcessor = {
     recentUuids: [null, null, null, null, null, null, null, null, null, null],
+    lastFullyProcessedUuid: null,
 
     isNew: function(uuid) {
         return (uuid == null || uuid == '' || !(this.recentUuids.includes(uuid)));
@@ -79,12 +80,13 @@ var CommandProcessor = {
     },
 
     processCommandSwitchScene: function(capsule, replay) {
+        var uuid = sanitize_string(capsule, 'uuid');
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');
         if (is_ok) {
             template = 'Switching to scene {scene_name}';
             if (!replay) {
-                setUrlParameter('scene', parameters[0], true);
+                setUrlParameter('scene', parameters[0], true, uuid);
             }
         } else {
             template = 'Cannot switch to scene {scene_name}';
@@ -111,6 +113,7 @@ var CommandProcessor = {
     },
 
     processCommandReset: function(capsule, replay) {
+        var uuid = sanitize_string(capsule, 'uuid');
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var parameters = sanitize_list(capsule, 'parameters');
         var reset_scene = '';
@@ -128,7 +131,7 @@ var CommandProcessor = {
                 // The current scene got reset, so we need to reload.
                 // Unless `replay` is true, because then we've reloaded already.
                 if (!replay) {
-                    updateLocation(localize('Automatic page reload required to finish resetting the scene.'));
+                    updateLocation(localize('Automatic page reload required to finish resetting the scene.'), undefined, undefined, uuid);
                 }
             }
         } else {
@@ -163,6 +166,9 @@ var CommandProcessor = {
             }
         }
 
+        var uuid = sanitize_string(capsule, 'uuid');
+        this.lastFullyProcessedUuid = uuid;
+
         var error_message = sanitize_string(capsule, 'error_message');
         var error_template = sanitize_string(capsule, 'error_template');
         var error_parameters = sanitize_dictionary(capsule, 'error_parameters');
@@ -174,7 +180,6 @@ var CommandProcessor = {
             msg += localize(error_template, error_parameters);
         }
 
-        var uuid = sanitize_string(capsule, 'uuid');
         if (prefix) {
             msg = prefix + (msg ? (': ' + msg) : '');
         }

@@ -108,6 +108,18 @@ class BasicTestCase(unittest.TestCase):
             contents = file.read()
         return contents
 
+    def assertRegularFileExists(self, file_name):
+        self.assertTrue(
+            os.path.isfile(file_name) and not os.path.islink(file_name),
+            'File "{file_name}" does not exist or not a file'
+            )
+
+    def assertPathMissing(self, file_name):
+        self.assertFalse(
+            os.path.exists(file_name),
+            'Path "{file_name}" exists'
+            )
+
     def assertFileJsonContents(self, file_name, expected):
         actual = json.loads(self.get_file_contents(file_name))
         self.assertEqual(actual, expected)

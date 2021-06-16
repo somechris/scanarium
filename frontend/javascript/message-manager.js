@@ -101,6 +101,7 @@ var MessageManager = {
   update: function(time, delta) {
     var len = this.messages.length;
     var i;
+    var no_evicted_uuid_yet = true;
     for (i=len - 1; i >= 0; i--) {
       var message = this.messages[i];
       if (message.expire == null) {
@@ -116,8 +117,13 @@ var MessageManager = {
             sprite.remove();
           }
         });
-        if (message.uuid) {
+
+        // If two or more evictions take place in this method, we only need to
+        // track the first one, as we iterate from newest to oldest message.
+        // So we guard updating `lastEvictedUuid` by `no_evicted_uuid_yet`.
+        if (message.uuid && no_evicted_uuid_yet) {
           this.lastEvictedUuid = message.uuid;
+          no_evicted_uuid_yet = false;
         }
       } else {
         var targetY = this.getMessageTargetY(i);

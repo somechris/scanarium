@@ -134,10 +134,10 @@
     "undefined error": "Maldifinita eraro",
     "your.address@example.org": "via.adreso@ekzemplo.org",
     "{PoliceCar-Decal}": "P O L I C O",
-    "{cgi_name} failed": "{cgi_name} malsukcesis",
-    "{cgi_name} ok": "{cgi_name} sukcesis",
     "{command_name} command failed": "Komando {command_name} malsukcesis",
     "{command_name} command ok": "Komando {command_name} sukcesis",
+    "{method_name} failed": "{method_name} malsukcesis",
+    "{method_name} ok": "{method_name} sukcesis",
     "{month} {day}, {year}": "{day}. {month} {year}",
     "{parameter_name} ({parameter_variant_name})": "{parameter_name} kun {parameter_variant_name}",
     "↓↓↓ Insert coloring pages below ↓↓↓": "↓↓↓ Enŝovu kolorigitajn bildojn ĉi tie malsupre ↓↓↓"
@@ -188,15 +188,6 @@
       "WoodFairy": "Arbarofeino",
       "ZaggedButterfly": "Denta papilo"
     },
-    "cgi_name": {
-      "regenerate-static-content": "re-generu nevariablaj enhavoj",
-      "reindex": "Re-indeksu",
-      "report-feedback": "Koment-Alŝutado",
-      "reset-dynamic-content": "Forigu skanaĵoj",
-      "scan": "Skanu",
-      "show-source": "Motru bild-fonton",
-      "update-password": "Pasvort-ŝanĝo"
-    },
     "command_label": {
       "command": "Komando",
       "scene": "Sceno"
@@ -214,6 +205,15 @@
       "de": "Germana",
       "en": "Angla",
       "eo": "Esperanto"
+    },
+    "method_name": {
+      "regenerate-static-content": "re-generu nevariablaj enhavoj",
+      "reindex": "Re-indeksu",
+      "report-feedback": "Koment-Alŝutado",
+      "reset-dynamic-content": "Forigu skanaĵoj",
+      "scan": "Skanu",
+      "show-source": "Motru bild-fonton",
+      "update-password": "Pasvort-ŝanĝo"
     },
     "month": {
       "1": "januaro",

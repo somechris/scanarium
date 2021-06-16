@@ -40,7 +40,7 @@ var CommandLogInjector = {
                             // been replayed. So we process them accordingly.
                             items.forEach((innerItem, innerIndex) => {
                                 if (innerIndex <= index) {
-                                    CommandProcessor.process(innerItem, undefined, true);
+                                    CommandProcessor.process(innerItem, true);
                                 }
                             });
                             searchingShowAfterUuid = false;
@@ -48,7 +48,7 @@ var CommandLogInjector = {
                     }
                 } else {
                     if (searchingProcessAfterUuid) {
-                        CommandProcessor.process(item, undefined, true);
+                        CommandProcessor.process(item, true);
                         if (processAfterUuid && uuid == processAfterUuid) {
                             searchingProcessAfterUuid = false;
                         }

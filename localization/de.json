@@ -134,10 +134,10 @@
     "undefined error": "Unbekannter Fehler",
     "your.address@example.org": "deine.adresse@beispiel.org",
     "{PoliceCar-Decal}": "P O L I Z E I",
-    "{cgi_name} failed": "{cgi_name} schlug fehl",
-    "{cgi_name} ok": "{cgi_name} ok",
     "{command_name} command failed": "Kommando {command_name} schlug fehl",
     "{command_name} command ok": "Kommando {command_name} ok",
+    "{method_name} failed": "{method_name} schlug fehl",
+    "{method_name} ok": "{method_name} ok",
     "{month} {day}, {year}": "{day}. {month} {year}",
     "{parameter_name} ({parameter_variant_name})": "{parameter_name} mit {parameter_variant_name}",
     "↓↓↓ Insert coloring pages below ↓↓↓": "↓↓↓ Ausgemalte Bilder hier unten ins Fach einlegen ↓↓↓"
@@ -188,15 +188,6 @@
       "WoodFairy": "Waldfee",
       "ZaggedButterfly": "Gezackter Schmetterling"
     },
-    "cgi_name": {
-      "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",
-      "reindex": "Reindexierung",
-      "report-feedback": "Feedback-Einsendung",
-      "reset-dynamic-content": "Zurücksetzen aller dynamischen Inhalte",
-      "scan": "Scannen",
-      "show-source": "Kamera-Anzeige",
-      "update-password": "Änderung des Passworts"
-    },
     "command_label": {
       "command": "Kommando",
       "scene": "Szene"
@@ -214,6 +205,15 @@
       "de": "Deutsch",
       "en": "Englisch",
       "eo": "Esperanto"
+    },
+    "method_name": {
+      "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",
+      "reindex": "Reindexierung",
+      "report-feedback": "Feedback-Einsendung",
+      "reset-dynamic-content": "Zurücksetzen aller dynamischen Inhalte",
+      "scan": "Scannen",
+      "show-source": "Kamera-Anzeige",
+      "update-password": "Änderung des Passworts"
     },
     "month": {
       "1": "Jänner",

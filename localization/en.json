@@ -50,13 +50,6 @@
       "WoodFairy": "Wood Fairy",
       "ZaggedButterfly": "Zagged Butterfly"
     },
-    "cgi_name": {
-      "regenerate-static-content": "Regenerate static content",
-      "reindex": "Reindex",
-      "reset-dynamic-content": "Reset dynamic content",
-      "scan": "Scan",
-      "show-source": "Show source"
-    },
     "command_label": {
       "command": "Command",
       "scene": "Scene"
@@ -74,6 +67,13 @@
       "de": "German",
       "en": "English",
       "eo": "Esperanto"
+    },
+    "method_name": {
+      "regenerate-static-content": "Regenerate static content",
+      "reindex": "Reindex",
+      "reset-dynamic-content": "Reset dynamic content",
+      "scan": "Scan",
+      "show-source": "Show source"
     },
     "month": {
       "1": "January",

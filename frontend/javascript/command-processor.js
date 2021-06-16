@@ -144,7 +144,7 @@ var CommandProcessor = {
         return localize(template, {'scene_name': reset_scene});
     },
 
-    processNew: function(capsule, prefix, replay) {
+    processNew: function(capsule, replay) {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var command = sanitize_string(capsule, 'command');
         var parameters = sanitize_list(capsule, 'parameters');
@@ -180,7 +180,10 @@ var CommandProcessor = {
             msg += localize(error_template, error_parameters);
         }
 
-        if (prefix) {
+        const method = sanitize_string(capsule, 'method');
+        if (method) {
+            const is_ok_text = (is_ok ? 'ok' : 'failed')
+            const prefix = localize('{method_name} ' + is_ok_text, {'method_name': method});
             msg = prefix + (msg ? (': ' + msg) : '');
         }
         return MessageManager.addMessage(msg, is_ok ? 'ok' : 'failed', undefined, uuid);
@@ -190,12 +193,12 @@ var CommandProcessor = {
        added, but no actions (changing urls, messing with url parameters, ...)
        are taken. Only recently scanned actors are added regardless
     */
-    process: function(capsule, prefix, replay) {
+    process: function(capsule, replay) {
         var ret = null;
         var uuid = sanitize_string(capsule, 'uuid');
         if (this.isNew(uuid) || replay) {
             this.markOld(uuid);
-            ret = this.processNew(capsule, prefix, replay);
+            ret = this.processNew(capsule, replay);
         }
         return ret;
     }

@@ -6,7 +6,6 @@ var onReadyStateChange = function(cgi, finishedCallback) {
   return function() {
     if (this.readyState === XMLHttpRequest.DONE) {
       var capsule = {};
-      var prefix = '';
       var is_ok = false;
       if (this.status == 200) {
         capsule = JSON.parse(this.responseText);
@@ -19,9 +18,7 @@ var onReadyStateChange = function(cgi, finishedCallback) {
         };
       }
 
-      var status = (is_ok ? 'ok' : 'failed')
-      prefix = localize('{cgi_name} ' + status, {'cgi_name': cgi});
-      var message = CommandProcessor.process(capsule, prefix);
+      var message = CommandProcessor.process(capsule);
 
       if (finishedCallback) {
           finishedCallback(is_ok, message);

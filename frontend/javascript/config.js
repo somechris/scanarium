@@ -32,9 +32,9 @@ var default_global_config = {
 
 var global_config = {};
 
-var scenes_config = []; // Initialized in settings.js
-var actor_variants = []; // Initialized in settings.js
-var localizations_config = {}; // Initialized in settings.js
+var scenes_config = []; // Initialized in settings-page-general.js
+var actor_variants = []; // Initialized in settings-page-general.js
+var localizations_config = {}; // Initialized in settings-page-administration.js
 
 function getConfig(key, defaultValue) {
     var ret = defaultValue;

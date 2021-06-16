@@ -80,9 +80,7 @@ LayoutManager.register(function(width, height) {
   scanariumConfig.height = height;
 });
 
-// sceneConfig gets loaded dynamically from scene directory
-var sceneConfig = {
-}
+var scene_config = {}; // Per-scene config. Initialized in boot.js
 
 var dynamicConfigMethod = 'GET';
 

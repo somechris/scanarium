@@ -33,7 +33,7 @@ var ScActorManager = {
             if (document.visibilityState === 'visible') {
                 this.addActorRandom();
             }
-            this.nextSpawn = time + sceneConfig['spawnPeriod']
+            this.nextSpawn = time + scene_config['spawnPeriod']
         }
 
         var that = this;

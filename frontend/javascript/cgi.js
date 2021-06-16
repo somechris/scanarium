@@ -2,12 +2,6 @@
 // GNU Affero General Public License v3.0 (See LICENSE.md)
 // SPDX-License-Identifier: AGPL-3.0-only
 
-var cgiFail = function(uuid, cgi, reason, parameters) {
-  var msg = localize('{cgi_name} failed', {'cgi_name': cgi});
-  msg += ': ' + localize(reason, parameters);
-  MessageManager.addMessage(msg, 'failed');
-};
-
 var onReadyStateChange = function(cgi, finishedCallback) {
   return function() {
     if (this.readyState === XMLHttpRequest.DONE) {

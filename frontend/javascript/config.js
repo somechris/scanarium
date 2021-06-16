@@ -20,6 +20,9 @@ var default_global_config = {
   // reach out to.
   'help_email_address': '',
 
+  // Color to use for on-screen messages.
+  'message-color': '#ffffff',
+
   // If true, make the actor cards in the settings dialog links to pdfs.
   'offer-pdf-downloads': true,
 

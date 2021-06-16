@@ -13,6 +13,10 @@ var MessageManager = {
         },
     },
 
+  init: function() {
+      this.fontStyle.color = getConfig('message-color');
+  },
+
   getMessageTargetY: function(i) {
     var ret = this.offsetY;
     if (i > 0) {

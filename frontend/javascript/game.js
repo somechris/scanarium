@@ -37,6 +37,8 @@ function create() {
       background.setScale(width/background.width, height/background.height);
     });
 
+    MessageManager.init();
+
     ScActorManager.init(config);
 
     scene_create();

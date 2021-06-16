@@ -22,6 +22,7 @@ function preload() {
 }
 scanariumConfig.scene["preload"] = preload;
 
+var webgl_context_got_lost = false;
 function create() {
     // Initing `game` to be save even if create happens to get called before
     // `Phaser.Game` initialization can set it.
@@ -66,6 +67,7 @@ function create() {
             // this case there is a race between the upload to start and the
             // WebGL context to get lost. So we sleep 100ms to make sure the
             // upload can start before we try to reload the scene.
+            webgl_context_got_lost = true;
             setTimeout(() => {
                 updateLocation(localize('The browser lost the graphics context, which is typically fixed by automatically reloading the page.'));
             }, 100);

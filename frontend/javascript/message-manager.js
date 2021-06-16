@@ -36,6 +36,18 @@ var MessageManager = {
   },
 
   addButtonToMessage: function(message, caption, callback, extra_params) {
+      // On tablets with scarce memory (Amazon Fire Tablet 7), the webgl context
+      // routinely gets lost, when uploading a freshly taken image. If
+      // additionally the uploading fails, a help button would get added to the
+      // message. As the message still exists, we'd get a fresh button on a dark
+      // screen, which looks wrong. So we guard adding of buttons by a check for
+      // the webgl context.
+      if (!webgl_context_got_lost) {
+          this._addButtonToMessage(message, caption, callback, extra_params);
+      }
+  },
+
+  _addButtonToMessage: function(message, caption, callback, extra_params) {
     var button = document.createElement('button');
     button.className = 'message-button';
     var left = (32 * window.devicePixelRatio) + 'px';

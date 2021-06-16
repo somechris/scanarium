@@ -44,6 +44,15 @@ class Environment(object):
         self._util = util
         self._cleanup_functions = set()
         self.set_signal_handlers()
+        self.reset_method()
+
+    def reset_method(self):
+        try:
+            del os.environ['SCANARIUM_METHOD']
+        except KeyError:
+            # The environment variable has not yet been set, so it's
+            # reset already.
+            pass
 
     def run(self, command, check=True, timeout=10, input=None):
         sep = "\" \""
@@ -103,6 +112,7 @@ class Environment(object):
 
     def call_guarded(self, func_self, func, *args, check_caller=True,
                      **kwargs):
+        self.reset_method()
         exc_info = None
         try:
             caller = self.normalized_caller(-2)
@@ -110,6 +120,8 @@ class Environment(object):
             if not re.match(r'^[a-zA-Z-]*$', caller) and check_caller:
                 raise ScanariumError('SE_CGI_NAME_CHARS',
                                      'Forbidden characters in cgi name')
+
+            os.environ['SCANARIUM_METHOD'] = caller
 
             if IS_CGI:
                 if not self._config.get('cgi:%s' % caller, 'allow', 'boolean'):
@@ -135,6 +147,7 @@ class Environment(object):
                 result = Result(payload.as_dict(), exc_info)
         else:
             result = Result(payload, exc_info)
+
         if IS_CGI:
             ret = result.as_dict()
         else:

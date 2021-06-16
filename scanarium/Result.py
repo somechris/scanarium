@@ -2,6 +2,7 @@
 # GNU Affero General Public License v3.0 (See LICENSE.md)
 # SPDX-License-Identifier: AGPL-3.0-only
 
+import os
 import uuid
 
 from .ScanariumError import ScanariumError
@@ -20,6 +21,11 @@ class Result(object):
         self.error_message = None
         self.error_template = None
         self.error_parameters = {}
+
+        try:
+            self.method = os.environ['SCANARIUM_METHOD']
+        except KeyError:
+            self.method = None
 
         if exc_info is not None and len(exc_info) > 1:
             e = exc_info[1]
@@ -43,6 +49,7 @@ class Result(object):
             'parameters': self.parameters,
             'uuid': str(self.uuid),
             'payload': self.payload,
+            'method': self.method,
             'is_ok': self.is_ok,
             'error_code': self.error_code,
             'error_message': self.error_message,
@@ -53,6 +60,8 @@ class Result(object):
     def __str__(self):
         ret = f'Result(uuid={self.uuid}, command={self.command}' \
             f', parameters={self.parameters}, payload={self.payload}'
+        if self.method:
+            ret += f', method={self.method}'
         if not self.is_ok:
             ret += f', error_code={self.error_code}'
         ret += ')'

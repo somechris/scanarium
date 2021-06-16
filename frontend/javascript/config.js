@@ -23,6 +23,9 @@ var default_global_config = {
   // If true, make the actor cards in the settings dialog links to pdfs.
   'offer-pdf-downloads': true,
 
+  // How often (in milliseconds) to automatically spawn new actors.
+  'spawnPeriod': 5000,
+
   // Title of the Scanarium instance
   'title': 'Scanarium',
 
@@ -31,6 +34,7 @@ var default_global_config = {
 };
 
 var global_config = {};
+var scene_config = {}; // Per-scene config. Initialized in boot.js
 
 var scenes_config = []; // Initialized in settings-page-general.js
 var actor_variants = []; // Initialized in settings-page-general.js
@@ -38,12 +42,15 @@ var localizations_config = {}; // Initialized in settings-page-administration.js
 
 function getConfig(key, defaultValue) {
     var ret = defaultValue;
-    if (key in default_global_config) {
-        ret = default_global_config[key];
-    }
-    if (key in global_config) {
-        ret = global_config[key];
-    }
+    [
+        default_global_config,
+        global_config,
+        scene_config,
+    ].forEach(config => {
+        if (key in config) {
+            ret = config[key];
+        }
+    });
     return ret;
 }
 
@@ -79,8 +86,6 @@ LayoutManager.register(function(width, height) {
   scanariumConfig.width = width;
   scanariumConfig.height = height;
 });
-
-var scene_config = {}; // Per-scene config. Initialized in boot.js
 
 var dynamicConfigMethod = 'GET';
 

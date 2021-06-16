@@ -103,6 +103,7 @@ class Environment(object):
 
     def call_guarded(self, func_self, func, *args, check_caller=True,
                      **kwargs):
+        exc_info = None
         try:
             caller = self.normalized_caller(-2)
 
@@ -121,9 +122,10 @@ class Environment(object):
 
             payload = func(func_self, *args, **kwargs)
         except:  # noqa: E722
-            self._result(payload='Failed', exc_info=sys.exc_info())
+            payload = 'Failed'
+            exc_info = sys.exc_info()
 
-        self._result(payload=payload)
+        self._result(payload=payload, exc_info=exc_info)
 
     def _result(self, payload={}, exc_info=None):
         if isinstance(payload, Result):

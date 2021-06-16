@@ -32,7 +32,7 @@ var CommandProcessor = {
                     ScActorManager.addActor(parameters[0], flavor);
                 }
             }
-            if (PageInsertionHint != null && (global_config['drop_page_insertion_hint_after_scan'] || true)) {
+            if (PageInsertionHint != null && getConfig('drop_page_insertion_hint_after_scan')) {
                 if (!replay) {
                     PageInsertionHint.setInvisible();
                 }

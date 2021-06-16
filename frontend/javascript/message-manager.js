@@ -15,6 +15,8 @@ var MessageManager = {
 
   init: function() {
       this.fontStyle.color = getConfig('message-color');
+      this.fontStyle.fontFamily = 'sans-serif';
+      this.fontStyle.fontStyle = 'bold';
   },
 
   getMessageTargetY: function(i) {

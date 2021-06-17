@@ -148,22 +148,28 @@ var CommandProcessor = {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var command = sanitize_string(capsule, 'command');
         var parameters = sanitize_list(capsule, 'parameters');
-        var msg = '';
+        var msg;
         if ('command' in capsule && capsule['command'] != null) {
-            msg = localize('{command_name} command ' + (is_ok ? 'ok' : 'failed'),
-                           {'command_name': command});
-
             if (command == 'debug') {
-                msg = this.processCommandDebug(capsule, replay) || msg;
+                msg = this.processCommandDebug(capsule, replay);
             } else if (command == 'reset') {
-                msg = this.processCommandReset(capsule, replay) || msg;
+                msg = this.processCommandReset(capsule, replay);
             } else if (command == 'switchScene') {
-                msg = this.processCommandSwitchScene(capsule, replay) || msg;
+                msg = this.processCommandSwitchScene(capsule, replay);
             } else if (command == 'system') {
-                msg = this.processCommandSystem(capsule, replay) || msg;
+                msg = this.processCommandSystem(capsule, replay);
             } else {
-                msg = this.processCommandActor(capsule, replay) || msg;
+                msg = this.processCommandActor(capsule, replay);
             }
+
+            if (!msg && msg !== false) {
+                msg = localize('{command_name} command ' + (is_ok ? 'ok' : 'failed'),
+                               {'command_name': command});
+            }
+        }
+
+        if (!msg) {
+                msg = '';
         }
 
         var uuid = sanitize_string(capsule, 'uuid');

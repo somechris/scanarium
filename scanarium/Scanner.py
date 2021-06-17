@@ -601,7 +601,11 @@ def process_image_with_qr_code(scanarium, command_logger, image, qr_rect, data,
     payload = {}
     exc_info = None
     try:
-        (command, parameter) = data.split(':', 1)
+        try:
+            (command, parameter) = data.split(':', 1)
+        except ValueError:
+            raise ScanariumError('SE_SCAN_MISFORMED_QR_CODE',
+                                 'QR code contains misformed data')
         payload = process_image_with_qr_code_unlogged(
             scanarium, command, parameter, image, qr_rect)
     except Exception as e:

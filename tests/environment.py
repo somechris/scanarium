@@ -76,6 +76,13 @@ class BasicTestCase(unittest.TestCase):
         }
         overrides = self.update_dict(overrides, test_config)
 
+        for section, options in overrides.items():
+            for option, value in options.items():
+                if isinstance(value, str):
+                    options[option] = value.replace('%DYNAMIC_DIR%',
+                                                    dynamic_dir)
+                    if options[option] != value:
+                        print(options[option], value)
         config = configparser.ConfigParser()
         for section, options in overrides.items():
             config[section] = options

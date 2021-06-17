@@ -353,9 +353,17 @@ def extract_qr(image):
     # grey to smoothen out the noise a bit.
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     codes = pyzbar.decode(image)
-    if len(codes) != 1:
+    codes_len = len(codes)
+    if codes_len < 1:
         raise ScanariumError('SE_SCAN_NO_QR_CODE',
                              'Failed to find scanned QR code')
+
+    if codes_len > 1:
+        raise ScanariumError(
+            'SE_SCAN_TOO_MANY_QR_CODES',
+            'Expected to find 1 QR code, but found {qr_codes_count}',
+            {'qr_codes_count': codes_len})
+
     code = codes[0]
 
     rect = code.rect

@@ -195,6 +195,13 @@ class ScanDataCanaryTestCase(CanaryTestCase):
             ret = self.run_scan_data(dir, fixture)
             self.assertErrorCode('SE_SCAN_NO_QR_CODE', ret, dir)
 
+    def test_fail_too_many_qr_codes(self):
+        fixture = 'too-many-qrs.png'
+        config = {'scan': {'permit_file_type_png': True}}
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_SCAN_TOO_MANY_QR_CODES', ret, dir)
+
     def test_fail_qr_foo_bar_baz(self):
         fixture = 'qr-foo-bar-baz.png'
         config = {'scan': {'permit_file_type_png': True}}

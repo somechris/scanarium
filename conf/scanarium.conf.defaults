@@ -82,6 +82,14 @@ hide_image_masked_0_01 = False
 enable_debug_config_override_command_line_argument = False
 
 
+# Whether to have fine grained or more general error messages.
+#
+# If True, provide fine grained error messages. These are typically not too
+# useful for end-users, but help a lot during debugging. For example when trying
+# to hunt down where exactly scanning goes wrong.
+fine_grained_errors = False
+
+
 
 
 #-------------------------------------------------------------------------------

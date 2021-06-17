@@ -22,8 +22,10 @@ def scan_image_no_outer_logging(scanarium):
     qr_rect = None
     data = None
     iteration = 1
-    minimal_width = scanarium.get_config('scan', 'min_raw_width_trip',
-                                         kind='int')
+    minimal_width = scanarium.get_config(
+        'scan', 'min_raw_width_trip', kind='int')
+    fine_grained_errors = scanarium.get_config(
+        'debug', 'fine_grained_errors', kind='boolean')
     while qr_rect is None:
         try:
             (qr_rect, data) = scanarium.extract_qr(image)
@@ -35,9 +37,13 @@ def scan_image_no_outer_logging(scanarium):
                 # code to be scanable in the next round.
 
                 if iteration > 3:
-                    raise ScanariumError(
-                        'SE_SCAN_IMAGE_TOO_MANY_ITERATIONS',
-                        'Taken too many extraction tries from scanned image')
+                    if fine_grained_errors:
+                        raise ScanariumError(
+                            'SE_SCAN_IMAGE_TOO_MANY_ITERATIONS',
+                            'Taken too many extraction tries from scanned '
+                            'image')
+                    else:
+                        raise e
 
                 image = scanarium.rectify_to_biggest_rect(image)
 
@@ -47,8 +53,12 @@ def scan_image_no_outer_logging(scanarium):
                     # did not detect a proper sheet rect and we're homing in on
                     # an (unrelated) small rectangular part of the image. So we
                     # abort.
-                    raise ScanariumError('SE_SCAN_IMAGE_GREW_TOO_SMALL',
-                                         'Failed to identify sheet on scanned image')
+                    if fine_grained_errors:
+                        raise ScanariumError(
+                            'SE_SCAN_IMAGE_GREW_TOO_SMALL',
+                            'Failed to identify sheet on scanned image')
+                    else:
+                        raise e
             else:
                 raise e
 

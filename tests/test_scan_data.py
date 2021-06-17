@@ -147,19 +147,39 @@ class ScanDataCanaryTestCase(CanaryTestCase):
             ret = self.run_scan_data(dir, fixture)
             self.assertErrorCode('SE_SCAN_IMAGE_TOO_SMALL', ret, dir)
 
-    def test_fail_grew_too_small(self):
+    def test_fail_grew_too_small_fine(self):
         fixture = 'grew-too-small.png'
-        config = {'scan': {'permit_file_type_png': True}}
+        config = {
+            'scan': {'permit_file_type_png': True},
+            'debug': {'fine_grained_errors': True},
+            }
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
             self.assertErrorCode('SE_SCAN_IMAGE_GREW_TOO_SMALL', ret, dir)
 
-    def test_fail_too_many_iterations(self):
+    def test_fail_grew_too_small_general(self):
+        fixture = 'grew-too-small.png'
+        config = {'scan': {'permit_file_type_png': True}}
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_SCAN_NO_QR_CODE', ret, dir)
+
+    def test_fail_too_many_iterations_fine(self):
+        fixture = 'too-many-iterations.png'
+        config = {
+            'scan': {'permit_file_type_png': True},
+            'debug': {'fine_grained_errors': True},
+            }
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_SCAN_IMAGE_TOO_MANY_ITERATIONS', ret, dir)
+
+    def test_fail_too_many_iterations_general(self):
         fixture = 'too-many-iterations.png'
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertErrorCode('SE_SCAN_IMAGE_TOO_MANY_ITERATIONS', ret, dir)
+            self.assertErrorCode('SE_SCAN_NO_QR_CODE', ret, dir)
 
     def test_fail_qr_foo_bar_baz(self):
         fixture = 'qr-foo-bar-baz.png'

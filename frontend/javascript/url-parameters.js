@@ -15,8 +15,12 @@ function parseUrlParameters()
     return parameters;
 }
 
-function updateLocation(reason, target, isDownload, uuid) {
+function currentUrl() {
     const location = window.location;
+    return location.origin + location.pathname + '?' + urlParameters.toString();
+}
+
+function updateLocation(reason, target, isDownload, uuid) {
     if (!target) {
         if (MessageManager && MessageManager.lastEvictedUuid) {
             // We on purpose set the last fully shown message uuid already
@@ -33,7 +37,7 @@ function updateLocation(reason, target, isDownload, uuid) {
             // and when the reload finishes will be re-processed.
             setUrlParameter('lastFullyProcessedUuid', uuid)
         }
-        target = location.origin + location.pathname + '?' + urlParameters.toString();
+        target = currentUrl();
     }
 
     var action = () => {
@@ -69,6 +73,7 @@ function getUrlParameterBoolean(name, defaultValue) {
 
 function setUrlParameter(key, value, follow, uuid) {
     urlParameters.set(key, value);
+    window.history.replaceState({}, '', currentUrl());
     if (follow) {
       updateLocation(localize('Applying the changes requires to automatically reload the page'), undefined, undefined, uuid);
     }

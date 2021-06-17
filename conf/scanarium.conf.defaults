@@ -350,6 +350,12 @@ width =
 height =
 
 
+# Minimum width of image
+#
+# If the image is smaller (or gets smaller during re-alignments for
+# QR-code extracting) than this width, the image is rejected.
+min_raw_width_trip = 150
+
 # Maximum width of raw camera source
 #
 # Proportionally rescale raw camera images to at most this width, if

@@ -22,13 +22,15 @@ def scan_image_no_outer_logging(scanarium):
     qr_rect = None
     data = None
     iteration = 1
+    minimal_width = scanarium.get_config('scan', 'min_raw_width_trip',
+                                         kind='int')
     while qr_rect is None:
         if iteration > 3:
             raise ScanariumError(
                 'SE_SCAN_IMAGE_TOO_MANY_ITERATIONS',
                 'Taken too many extraction tries from scanned image')
 
-        if image.shape[1] < 150:
+        if image.shape[1] < minimal_width:
             # The image that we're homing in on is really small. It's unlikely
             # to be a proper A4 image, but rather the camera did not detect a
             # proper sheet rect and we're homing in on an (unrelated) small

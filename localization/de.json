@@ -211,7 +211,8 @@
       "reindex": "Reindexierung",
       "report-feedback": "Feedback-Einsendung",
       "reset-dynamic-content": "Zurücksetzen aller dynamischen Inhalte",
-      "scan": "Scannen",
+      "scan": "Kamera-Scan",
+      "scan-data": "Datei-Scan",
       "show-source": "Kamera-Anzeige",
       "update-password": "Änderung des Passworts"
     },

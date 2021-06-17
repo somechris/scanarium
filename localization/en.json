@@ -73,6 +73,7 @@
       "reindex": "Reindex",
       "reset-dynamic-content": "Reset dynamic content",
       "scan": "Scan",
+      "scan-data": "Upload",
       "show-source": "Show source"
     },
     "month": {

@@ -22,14 +22,6 @@ function currentUrl() {
 
 function updateLocation(reason, target, isDownload, uuid) {
     if (!target) {
-        if (MessageManager && MessageManager.lastEvictedUuid) {
-            // We on purpose set the last fully shown message uuid already
-            // here. That way, message evictions that happen during waiting for
-            // uploads cannot get marked fully-shown, and will hence be shown
-            // after the reloading.
-            setUrlParameter('lastFullyShownUuid',
-                            MessageManager.lastEvictedUuid);
-        }
         uuid = uuid || (CommandProcessor && CommandProcessor.lastFullyProcessedUuid);
         if (uuid) {
             // We on purpose set the last fully processed uuid here, as we grab

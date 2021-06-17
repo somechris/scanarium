@@ -132,9 +132,9 @@ var MessageManager = {
 
         // If two or more evictions take place in this method, we only need to
         // track the first one, as we iterate from newest to oldest message.
-        // So we guard updating `lastEvictedUuid` by `no_evicted_uuid_yet`.
+        // So we guard updating `lastFullyShownUuid` by `no_evicted_uuid_yet`.
         if (message.uuid && no_evicted_uuid_yet) {
-          this.lastEvictedUuid = message.uuid;
+          setUrlParameter('lastFullyShownUuid', message.uuid);
           no_evicted_uuid_yet = false;
         }
       } else {

@@ -78,8 +78,8 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         command_log_file = os.path.join(dir, 'dynamic', 'command-log.json')
         self.assertFileContains(command_log_file, code)
 
-    def template_test_file_type(self, file_type, pipeline=None):
-        fixture = f'space-SimpleRocket-optimal.{file_type}'
+    def template_test_file_type(self, file_type, pipeline=None, variant='optimal'):
+        fixture = f'space-SimpleRocket-{variant}.{file_type}'
         config = {'scan': {f'permit_file_type_{file_type}': True}}
         if pipeline is not None:
             config['scan'][f'pipeline_file_type_{file_type}'] = pipeline
@@ -93,6 +93,14 @@ class ScanDataCanaryTestCase(CanaryTestCase):
                                       [4, 185, 5, 'red'],
                                       [335, 365, 5, 'green'],
                                       [335, 5, 5, 'blue'],
+                                  ])
+            elif variant == '35':
+                self.assertScanOk(dir,
+                                  dimension=[304, 209],
+                                  markers=[
+                                      [2, 104, 5, 'red'],
+                                      [300, 3, 5, 'green'],
+                                      [300, 206, 5, 'blue'],
                                   ])
             else:
                 self.assertScanOk(dir,
@@ -111,6 +119,18 @@ class ScanDataCanaryTestCase(CanaryTestCase):
 
     def test_ok_png_native(self):
         self.template_test_file_type('png', pipeline='native')
+
+    def test_ok_png_35_native(self):
+        self.template_test_file_type('png', pipeline='native', variant='35')
+
+    def test_ok_png_90_native(self):
+        self.template_test_file_type('png', pipeline='native', variant='90')
+
+    def test_ok_png_180_native(self):
+        self.template_test_file_type('png', pipeline='native', variant='180')
+
+    def test_ok_png_270_native(self):
+        self.template_test_file_type('png', pipeline='native', variant='270')
 
     def test_ok_png_convert(self):
         self.template_test_file_type('png', pipeline='convert')

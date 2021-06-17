@@ -26,6 +26,9 @@ var default_global_config = {
   // If true, make the actor cards in the settings dialog links to pdfs.
   'offer-pdf-downloads': true,
 
+  // Add a prefix to on-screen messages that shows the used method
+  'prefix-messages-with-method': false,
+
   // How often (in milliseconds) to automatically spawn new actors.
   'spawnPeriod': 5000,
 

@@ -181,7 +181,7 @@ var CommandProcessor = {
         }
 
         const method = sanitize_string(capsule, 'method');
-        if (method) {
+        if (method && (getConfig('prefix-messages-with-method') || !msg)) {
             const is_ok_text = (is_ok ? 'ok' : 'failed')
             const prefix = localize('{method_name} ' + is_ok_text, {'method_name': method});
             msg = prefix + (msg ? (': ' + msg) : '');

@@ -16,7 +16,7 @@ del sys.path[0]
 logger = logging.getLogger(__name__)
 
 
-def scan_image(scanarium):
+def scan_image_no_outer_logging(scanarium):
     image = scanarium.get_image()
 
     qr_rect = None
@@ -50,6 +50,15 @@ def scan_image(scanarium):
         iteration += 1
 
     return scanarium.process_image_with_qr_code(image, qr_rect, data)
+
+
+def scan_image(scanarium):
+    ret = None
+    try:
+        ret = scan_image_no_outer_logging(scanarium)
+    except Exception:
+        ret = scanarium.get_command_logger().log(exc_info=sys.exc_info())
+    return ret
 
 
 def main(scanarium):

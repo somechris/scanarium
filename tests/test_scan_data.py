@@ -145,6 +145,13 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_SCAN_IMAGE_TOO_SMALL', ret, dir)
+
+    def test_fail_grew_too_small(self):
+        fixture = 'grew-too-small.png'
+        config = {'scan': {'permit_file_type_png': True}}
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
             self.assertErrorCode('SE_SCAN_IMAGE_GREW_TOO_SMALL', ret, dir)
 
     def test_fail_too_many_iterations(self):

@@ -824,6 +824,14 @@ def get_raw_image(scanarium, config, camera=None):
     store_raw_image(config, image)
     debug_show_image('Raw image', image, config)
 
+    min_width = scanarium.get_config('scan', 'min_raw_width_trip', kind='int')
+    if image.shape[1] < min_width:
+        raise ScanariumError(
+            'SE_SCAN_IMAGE_TOO_SMALL',
+            'Scanned image is too small. It should be at least {min_width} '
+            'pixels wide.',
+            {'min_width': min_width})
+
     return image
 
 

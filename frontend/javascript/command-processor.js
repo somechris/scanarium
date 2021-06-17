@@ -167,7 +167,9 @@ var CommandProcessor = {
         }
 
         var uuid = sanitize_string(capsule, 'uuid');
-        this.lastFullyProcessedUuid = uuid;
+        if (uuid) {
+            setUrlParameter('lastFullyProcessedUuid', uuid)
+        }
 
         var error_message = sanitize_string(capsule, 'error_message');
         var error_template = sanitize_string(capsule, 'error_template');

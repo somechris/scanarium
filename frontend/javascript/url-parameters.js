@@ -22,7 +22,6 @@ function currentUrl() {
 
 function updateLocation(reason, target, isDownload, uuid) {
     if (!target) {
-        uuid = uuid || (CommandProcessor && CommandProcessor.lastFullyProcessedUuid);
         if (uuid) {
             // We on purpose set the last fully processed uuid here, as we grab
             // the urlParameters already now. Changes that happed between now

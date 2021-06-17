@@ -45,7 +45,10 @@ def scan_image_no_outer_logging(scanarium):
                     else:
                         raise e
 
-                image = scanarium.rectify_to_biggest_rect(image)
+                try:
+                    image = scanarium.rectify_to_biggest_rect(image)
+                except ScanariumError:
+                    raise e
 
                 if image.shape[1] < minimal_width:
                     # The image that we're homing in on is really small. It's

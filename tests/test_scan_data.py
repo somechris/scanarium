@@ -138,6 +138,20 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_SCAN_NO_QR_CODE', ret, dir)
+
+    def test_fail_only_rectangle(self):
+        fixture = 'only-rect.png'
+        config = {'scan': {'permit_file_type_png': True}}
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_SCAN_NO_QR_CODE', ret, dir)
+
+    def test_fail_only_qr(self):
+        fixture = 'only-qr.png'
+        config = {'scan': {'permit_file_type_png': True}}
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
             self.assertErrorCode('SE_SCAN_NO_APPROX', ret, dir)
 
     def test_fail_too_small(self):

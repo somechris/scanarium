@@ -25,18 +25,6 @@ def scan_image_no_outer_logging(scanarium):
     minimal_width = scanarium.get_config('scan', 'min_raw_width_trip',
                                          kind='int')
     while qr_rect is None:
-        if iteration > 3:
-            raise ScanariumError(
-                'SE_SCAN_IMAGE_TOO_MANY_ITERATIONS',
-                'Taken too many extraction tries from scanned image')
-
-        if image.shape[1] < minimal_width:
-            # The image that we're homing in on is really small. It's unlikely
-            # to be a proper A4 image, but rather the camera did not detect a
-            # proper sheet rect and we're homing in on an (unrelated) small
-            # rectangular part of the image. So we abort.
-            raise ScanariumError('SE_SCAN_IMAGE_GREW_TOO_SMALL',
-                                 'Failed to identify sheet on scanned image')
         try:
             (qr_rect, data) = scanarium.extract_qr(image)
         except ScanariumError as e:
@@ -45,7 +33,22 @@ def scan_image_no_outer_logging(scanarium):
                 # is too skew. We try to rectify on the images biggest rect
                 # (probably the paper sheet). This should undistort the QR
                 # code to be scanable in the next round.
+
+                if iteration > 3:
+                    raise ScanariumError(
+                        'SE_SCAN_IMAGE_TOO_MANY_ITERATIONS',
+                        'Taken too many extraction tries from scanned image')
+
                 image = scanarium.rectify_to_biggest_rect(image)
+
+                if image.shape[1] < minimal_width:
+                    # The image that we're homing in on is really small. It's
+                    # unlikely to be a proper A4 image, but rather the camera
+                    # did not detect a proper sheet rect and we're homing in on
+                    # an (unrelated) small rectangular part of the image. So we
+                    # abort.
+                    raise ScanariumError('SE_SCAN_IMAGE_GREW_TOO_SMALL',
+                                         'Failed to identify sheet on scanned image')
             else:
                 raise e
 

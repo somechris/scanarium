@@ -105,6 +105,8 @@
     "Scanarium-Team": "Scanarium-Teamo",
     "Scene \"{scene_name}\" does not exist": "Sceno \"{scene_name}\" malekzistas",
     "Scene \"{scene_name}\" got reset": "Agantoj de sceno \"{scene_name}\" forigita",
+    "Server-side image processing failed": "Bild-prilaborado sur servilo malsukcesis",
+    "Server-side image processing took too long": "Bild-prilaborado sur servilo daŭris tro longe",
     "Settings": "Agordoj",
     "Show camera source image": "Montru bild-fonton",
     "Show/hide developer information": "(Mal)montru programistajn informojn",

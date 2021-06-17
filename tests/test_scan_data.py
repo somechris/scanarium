@@ -153,6 +153,36 @@ class ScanDataCanaryTestCase(CanaryTestCase):
     def test_ok_pdf_pdftoppm(self):
         self.template_test_file_type('pdf', pipeline='pdftoppm')
 
+    def test_fail_pipeline_os_error(self):
+        fixture = 'space-SimpleRocket-optimal.png'
+        config = {
+            'programs': {
+                'convert_untrusted': os.path.join('%DYNAMIC_DIR%', 'foo'),
+                },
+            'scan': {
+                'permit_file_type_png': True,
+                'pipeline_file_type_png': 'convert',
+                },
+            }
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_PIPELINE_OS_ERROR', ret, dir)
+
+    def test_fail_pipeline_os_error(self):
+        fixture = 'space-SimpleRocket-optimal.png'
+        config = {
+            'programs': {
+                'convert_untrusted': '/bin/false',
+                },
+            'scan': {
+                'permit_file_type_png': True,
+                'pipeline_file_type_png': 'convert',
+                },
+            }
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_PIPELINE_RETURN_VALUE', ret, dir)
+
     def test_fail_no_rectangle(self):
         fixture = 'blank-white.png'
         config = {'scan': {'permit_file_type_png': True}}

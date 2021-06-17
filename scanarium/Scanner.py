@@ -747,7 +747,23 @@ def run_get_raw_image_pipeline(scanarium, file_path, pipeline):
                     'Unknown conversion pipeline \"{pipeline}\"',
                     {'pipeline': pipeline})
 
-            scanarium.run(command)
+            try:
+                scanarium.run(command)
+            except OSError as e:
+                raise ScanariumError(
+                    'SE_PIPELINE_OS_ERROR',
+                    'Server-side image processing failed')
+            except ScanariumError as e:
+                if e.code == 'SE_TIMEOUT':
+                    raise ScanariumError(
+                        'SE_PIPELINE_TIMEOUT',
+                        'Server-side image processing took too long')
+                elif e.code == 'SE_RETURN_VALUE':
+                    raise ScanariumError(
+                        'SE_PIPELINE_RETURN_VALUE',
+                        'Server-side image processing failed')
+                else:
+                    raise e
 
             if os.path.isfile(converted_path):
                 image = cv2.imread(converted_path)

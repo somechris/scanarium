@@ -105,6 +105,8 @@
     "Scanarium-Team": "Scanarium-Team",
     "Scene \"{scene_name}\" does not exist": "Szene \"{scene_name}\" existiert nicht",
     "Scene \"{scene_name}\" got reset": "Szene \"{scene_name}\" wurde zurückgesetzt",
+    "Server-side image processing failed": "Bildverarbeitung am Server schlug fehl",
+    "Server-side image processing took too long": "Bildverarbeitung am Server dauerte zu lange",
     "Settings": "Einstellungen",
     "Show camera source image": "Zeige Kamerabild",
     "Show/hide developer information": "Entwicklerinformationen ein-/ausblenden",

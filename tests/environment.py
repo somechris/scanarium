@@ -108,6 +108,9 @@ class BasicTestCase(unittest.TestCase):
             contents = file.read()
         return contents
 
+    def get_json_file_contents(self, file_name):
+        return json.loads(self.get_file_contents(file_name))
+
     def assertRegularFileExists(self, file_name):
         self.assertTrue(
             os.path.isfile(file_name) and not os.path.islink(file_name),
@@ -121,12 +124,15 @@ class BasicTestCase(unittest.TestCase):
             )
 
     def assertFileJsonContents(self, file_name, expected):
-        actual = json.loads(self.get_file_contents(file_name))
+        actual = self.get_json_file_contents(file_name)
         self.assertEqual(actual, expected)
 
     def assertFileContents(self, file_name, expected):
         actual = self.get_file_contents(file_name)
         self.assertEqual(actual, expected)
+
+    def assertFileContains(self, file_name, expected):
+        self.assertIn(expected, self.get_file_contents(file_name))
 
     def assertSameFileContents(self, fileA, fileB):
         contentsA = self.get_file_contents(fileA, text=False)

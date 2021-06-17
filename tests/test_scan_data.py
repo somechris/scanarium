@@ -73,6 +73,11 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         for marker in markers:
             self.assertMarker(image, marker, x_factor, y_factor)
 
+    def assertErrorCode(self, code, command_output, dir):
+        self.assertIn(code, command_output['stdout'])
+        command_log_file = os.path.join(dir, 'dynamic', 'command-log.json')
+        self.assertFileContains(command_log_file, code)
+
     def template_test_file_type(self, file_type, pipeline=None):
         fixture = f'space-SimpleRocket-optimal.{file_type}'
         config = {'scan': {f'permit_file_type_{file_type}': True}}
@@ -97,6 +102,12 @@ class ScanDataCanaryTestCase(CanaryTestCase):
                                       [451, 3, 5, 'green'],
                                       [451, 308, 5, 'blue'],
                                   ])
+
+            command_log_file = os.path.join(dir, 'dynamic', 'command-log.json')
+            logged_result = self.get_json_file_contents(command_log_file)[0]
+            self.assertTrue(logged_result['is_ok'])
+            self.assertEqual(logged_result['command'], 'space')
+            self.assertEqual(logged_result['parameters'], ['SimpleRocket'])
 
     def test_ok_png_native(self):
         self.template_test_file_type('png', pipeline='native')
@@ -127,32 +138,32 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertIn('SE_SCAN_NO_APPROX', ret['stdout'])
+            self.assertErrorCode('SE_SCAN_NO_APPROX', ret, dir)
 
     def test_fail_too_small(self):
         fixture = 'too-small.png'
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertIn('SE_SCAN_IMAGE_GREW_TOO_SMALL', ret['stdout'])
+            self.assertErrorCode('SE_SCAN_IMAGE_GREW_TOO_SMALL', ret, dir)
 
     def test_fail_too_many_iterations(self):
         fixture = 'too-many-iterations.png'
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertIn('SE_SCAN_IMAGE_TOO_MANY_ITERATIONS', ret['stdout'])
+            self.assertErrorCode('SE_SCAN_IMAGE_TOO_MANY_ITERATIONS', ret, dir)
 
     def test_fail_qr_foo_bar_baz(self):
         fixture = 'qr-foo-bar-baz.png'
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertIn('SE_UNKNOWN_SCENE', ret['stdout'])
+            self.assertErrorCode('SE_UNKNOWN_SCENE', ret, dir)
 
     def test_fail_qr_space_foo(self):
         fixture = 'qr-space-foo.png'
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertIn('SE_UNKNOWN_ACTOR', ret['stdout'])
+            self.assertErrorCode('SE_UNKNOWN_ACTOR', ret, dir)

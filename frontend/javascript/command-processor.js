@@ -22,7 +22,7 @@ var CommandProcessor = {
 
         var template;
         if (is_ok) {
-            template = 'Scanned new actor drawing for {actor_name}';
+            template = 'Added new {actor_name}';
             if (command == scene) {
                 var flavor = sanitize_string(capsule.payload, 'flavor')
                 if (typeof ScActorManager !== 'undefined') {
@@ -38,15 +38,21 @@ var CommandProcessor = {
                 }
             }
         } else {
-            template = 'Failed to scan new actor drawing for {actor_name}';
+            if (sanitize_string(capsule, 'error_message') || sanitize_string(capsule, 'error_template')) {
+                // There is a proper error message, so we use that.
+                template = false;
+            } else {
+                // There is no proper error message, so we provide the best we can
+                template = 'Failed to scan new actor drawing for {actor_name}';
+            }
         }
-        if (command != scene) {
+        if (template && command != scene) {
             template += ' for scene {scene_name}';
         }
-        return localize(template, {
+        return template ? localize(template, {
             'actor_name': parameters[0],
             'scene_name': command,
-        });
+        }) : template;
     },
 
     processCommandDebug: function(capsule, replay) {

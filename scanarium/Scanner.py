@@ -304,7 +304,7 @@ def rectify(scanarium, image, decreasingArea=True, required_points=[],
 
     if found_points_scaled is None:
         raise ScanariumError('SE_SCAN_NO_APPROX',
-                             'Failed to find rectangle contour')
+                             'Failed to find big black rectangle in image')
 
     found_points = (found_points_scaled / scale_factor).astype('float32')
 
@@ -356,12 +356,13 @@ def extract_qr(image):
     codes_len = len(codes)
     if codes_len < 1:
         raise ScanariumError('SE_SCAN_NO_QR_CODE',
-                             'Failed to find scanned QR code')
+                             'Failed to find QR code in image')
 
     if codes_len > 1:
         raise ScanariumError(
             'SE_SCAN_TOO_MANY_QR_CODES',
-            'Expected to find 1 QR code, but found {qr_codes_count}',
+            'Expected to find one QR code in image, but found '
+            '{qr_codes_count}',
             {'qr_codes_count': codes_len})
 
     code = codes[0]
@@ -786,8 +787,7 @@ def get_raw_image_from_file(scanarium, config, file_path):
                     'scan', key, kind='boolean')])
         raise ScanariumError(
             'SE_SCAN_STATIC_UNREADABLE_IMAGE_TYPE',
-            'Failed to parse file. Only {supported_formats} files are '
-            'supported.',
+            'Only {supported_formats} files are supported.',
             {'supported_formats': supported_formats})
 
     return image
@@ -840,8 +840,7 @@ def get_raw_image(scanarium, config, camera=None):
     if image.shape[1] < min_width:
         raise ScanariumError(
             'SE_SCAN_IMAGE_TOO_SMALL',
-            'Scanned image is too small. It should be at least {min_width} '
-            'pixels wide.',
+            'Image is too small. Minimum width is {min_width} pixels',
             {'min_width': min_width})
 
     return image

@@ -51,6 +51,7 @@ class ManagedForm {
 
         var row = document.createElement('div');
         row.className = 'form-row';
+        row.id = 'form-row-' + control.id;
 
         row.appendChild(label);
         row.appendChild(control);

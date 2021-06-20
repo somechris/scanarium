@@ -17,6 +17,23 @@ class SettingsPageAdministration extends NamedPage {
     initContentUi() {
         this.appendSectionHeader('User interface');
 
+        const uiScanningActorSwitchesSceneParameter = 'scanningActorSwitchesScene';
+        var uiScanningActorSwitchesScene;
+
+        var submitUi = function(event) {
+            if (uiScanningActorSwitchesScene) {
+                setUrlParameter(uiScanningActorSwitchesSceneParameter, uiScanningActorSwitchesScene.checked);
+            }
+            event.stopPropagation();
+            event.preventDefault();
+        }
+
+        var uiForm = new ManagedForm('ui-settings', submitUi, localize('Apply settings'));
+
+        uiScanningActorSwitchesScene = uiForm.addCheckbox(localize('Switch scene'), 'scanning-actor-switches-scene', undefined, localize('when an actor of a different scene got scanned'));
+        uiScanningActorSwitchesScene.setChecked(getUrlParameterBoolean(uiScanningActorSwitchesSceneParameter ,true));
+        this.appendElement(uiForm.getElement());
+
         var form = new ManagedForm('scene-settings');
 
         var l10nCell = document.createElement('span');

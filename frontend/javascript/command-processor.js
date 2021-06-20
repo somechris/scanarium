@@ -19,6 +19,7 @@ var CommandProcessor = {
         var is_ok = sanitize_boolean(capsule, 'is_ok');
         var command = sanitize_string(capsule, 'command');
         var parameters = sanitize_list(capsule, 'parameters');
+        var uuid = sanitize_string(capsule, 'uuid');
 
         var template;
         if (is_ok) {
@@ -36,6 +37,10 @@ var CommandProcessor = {
                 if (!replay) {
                     PageInsertionHint.setInvisible();
                 }
+            }
+
+            if (command != scene && !replay && getUrlParameterBoolean('scanningActorSwitchesScene', true)) {
+                setUrlParameter('scene', command, true, uuid);
             }
         } else {
             if (sanitize_string(capsule, 'error_message') || sanitize_string(capsule, 'error_template')) {

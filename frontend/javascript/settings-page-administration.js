@@ -21,27 +21,17 @@ class SettingsPageAdministration extends NamedPage {
         const uiScanningActorSwitchesSceneParameter = 'scanningActorSwitchesScene';
         var uiScanningActorSwitchesScene;
 
-        var submitUi = function(event) {
-            if (uiScanningActorSwitchesScene) {
-                setUrlParameter(uiScanningActorSwitchesSceneParameter, uiScanningActorSwitchesScene.checked);
-            }
-
-            if (that.languageDropDown) {
-                if (that.languageDropDown.selectedOptions.length > 0) {
-                    const selected = that.languageDropDown.selectedOptions[0].value;
-                    setUrlParameter('language', selected, selected != language);
-                }
-            }
-
-            event.stopPropagation();
-            event.preventDefault();
-        }
-
-        var form = new ManagedForm('ui-settings', submitUi, localize('Apply settings'));
+        var form = new ManagedForm('ui-settings', false);
         this.uiForm = form;
 
         uiScanningActorSwitchesScene = form.addCheckbox(localize('Switch scene'), 'scanning-actor-switches-scene', undefined, localize('when an actor of a different scene got scanned'));
         uiScanningActorSwitchesScene.setChecked(getUrlParameterBoolean(uiScanningActorSwitchesSceneParameter ,true));
+        uiScanningActorSwitchesScene.onChangedAndValid = function(event) {
+            setUrlParameter(uiScanningActorSwitchesSceneParameter, uiScanningActorSwitchesScene.checked);
+
+            event.stopPropagation();
+            event.preventDefault();
+        };
 
         form.addFixedTextField(localize('Language'), 'ui-setting-language', localize('Loading localization data ...'));
 
@@ -155,6 +145,14 @@ class SettingsPageAdministration extends NamedPage {
 
             languageDropDown.addOption(text, key, selected);
         });
-        this.languageDropDown = languageDropDown;
+        languageDropDown.onChangedAndValid = function(event) {
+            if (languageDropDown.selectedOptions.length > 0) {
+                const selected = languageDropDown.selectedOptions[0].value;
+                setUrlParameter('language', selected, selected != language);
+            }
+
+            event.stopPropagation();
+            event.preventDefault();
+        };
     }
 }

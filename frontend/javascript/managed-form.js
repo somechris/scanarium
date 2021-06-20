@@ -30,10 +30,20 @@ class ManagedForm {
         this.validate();
     }
 
+    _getFirstId(control) {
+        var ret = control.id;
+        control.childNodes.forEach(child => {
+            if (!ret) {
+                ret = this._getFirstId(child);
+            }
+        });
+        return ret;
+    }
+
     addControl(caption, control, validation) {
         var self = this;
 
-        var controlId = control.id;
+        var controlId = this._getFirstId(control);
         var label = document.createElement('label');
         label.for = controlId;
         label.textContent = caption;

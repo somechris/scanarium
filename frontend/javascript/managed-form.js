@@ -52,6 +52,10 @@ class ManagedForm {
             }
         });
 
+        if (!caption && oldRow && oldRow.hasChildNodes() && oldRow.firstChild.nodeName.toUpperCase() == 'LABEL') {
+            caption = oldRow.firstChild.textContent;
+        }
+
         var label = document.createElement('label');
         label.for = controlId;
         label.textContent = caption;

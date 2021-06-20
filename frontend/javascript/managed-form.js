@@ -3,6 +3,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 class ManagedForm {
+    /* submit_action: Either a function, false or a falsy value.
+         If it's a function, the function will get called upon submit and
+           default form behaviour (changing url etc) is not suppressed.
+         If false, the default form behaviour is suppressed, and submitting the
+           form does nothing.
+         If a different falsy value, the default form behaviour is not
+           suppressed.
+     */
     constructor(id, submit_action, submit_button_caption) {
         var self = this;
         var form = document.createElement('form');
@@ -232,7 +240,7 @@ class ManagedForm {
     }
 
     _onsubmit(event) {
-        if (this.validate()) {
+        if (this.validate() && this.submit_action !== false) {
             if (this.submit_action) {
                 this.submit_action(event);
             }

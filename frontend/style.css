@@ -160,6 +160,7 @@ label {
 }
 
 .form-element label, .form-element input {
+    display: inline;
     width: auto;
     margin: 0em;
 }

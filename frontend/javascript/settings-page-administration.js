@@ -15,6 +15,7 @@ class SettingsPageAdministration extends NamedPage {
     }
 
     initContentUi() {
+        var that = this;
         this.appendSectionHeader('User interface');
 
         const uiScanningActorSwitchesSceneParameter = 'scanningActorSwitchesScene';
@@ -24,24 +25,25 @@ class SettingsPageAdministration extends NamedPage {
             if (uiScanningActorSwitchesScene) {
                 setUrlParameter(uiScanningActorSwitchesSceneParameter, uiScanningActorSwitchesScene.checked);
             }
+
+            if (that.languageDropDown) {
+                if (that.languageDropDown.selectedOptions.length > 0) {
+                    const selected = that.languageDropDown.selectedOptions[0].value;
+                    setUrlParameter('language', selected, selected != language);
+                }
+            }
+
             event.stopPropagation();
             event.preventDefault();
         }
 
-        var uiForm = new ManagedForm('ui-settings', submitUi, localize('Apply settings'));
+        var form = new ManagedForm('ui-settings', submitUi, localize('Apply settings'));
+        this.uiForm = form;
 
-        uiScanningActorSwitchesScene = uiForm.addCheckbox(localize('Switch scene'), 'scanning-actor-switches-scene', undefined, localize('when an actor of a different scene got scanned'));
+        uiScanningActorSwitchesScene = form.addCheckbox(localize('Switch scene'), 'scanning-actor-switches-scene', undefined, localize('when an actor of a different scene got scanned'));
         uiScanningActorSwitchesScene.setChecked(getUrlParameterBoolean(uiScanningActorSwitchesSceneParameter ,true));
-        this.appendElement(uiForm.getElement());
 
-        var form = new ManagedForm('scene-settings');
-
-        var l10nCell = document.createElement('span');
-        l10nCell.id = 'l10n-cell';
-        l10nCell.textContent = localize('Loading localization data ...');
-        form.addControl(localize('Language'), l10nCell);
-
-        this.l10nCell = l10nCell;
+        form.addFixedTextField(localize('Language'), 'ui-setting-language', localize('Loading localization data ...'));
 
         this.loadLocalizationsConfig();
 
@@ -136,12 +138,8 @@ class SettingsPageAdministration extends NamedPage {
         }
     }
 
-
     loadedLocalizationsConfig() {
-        var select = document.createElement('select');
-        select.id = 'l10n-select';
-        select.name = 'localization';
-        select.style['font-size'] = SettingsButton.button.style['font-size'];
+        var languageDropDown = this.uiForm.addDropDown(undefined, 'ui-setting-language', undefined, 'bari');
 
         localizations_config['localizations'].sort().forEach(key => {
             const selected = (key == language);
@@ -155,18 +153,8 @@ class SettingsPageAdministration extends NamedPage {
                 }
             }
 
-            const option = new Option(text, key, selected, selected);
-            select.appendChild(option)
+            languageDropDown.addOption(text, key, selected);
         });
-
-        select.oninput = function(e) {
-            if (select.selectedOptions.length == 1) {
-                var selected = select.selectedOptions[0].value;
-                setUrlParameter('language', selected, selected != language);
-            }
-        };
-
-        this.l10nCell.parentElement.replaceChild(select, this.l10nCell);
-        this.l10nCell = select;
+        this.languageDropDown = languageDropDown;
     }
 }

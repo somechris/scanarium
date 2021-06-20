@@ -76,7 +76,7 @@ class SettingsPageHelp extends NamedPage {
                 if (help_email_address) {
                     scanariumTeamText = help_email_address;
                 }
-                form.addFixedTextField(localize('To'), scanariumTeamText);
+                form.addFixedTextField(localize('To'), 'feedback-to', scanariumTeamText);
 
                 var textAreaValidator = function (node) {
                     if (!node.value) {

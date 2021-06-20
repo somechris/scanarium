@@ -135,8 +135,9 @@ class ManagedForm {
         return input;
     }
 
-    addFixedTextField(caption, text) {
+    addFixedTextField(caption, id, text) {
         var span = document.createElement('span');
+        span.id = id;
         span.className = 'form-fixed-text-element';
         span.textContent = text;
 

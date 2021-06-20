@@ -33,8 +33,9 @@ class ManagedForm {
     addControl(caption, control, validation) {
         var self = this;
 
+        var controlId = control.id;
         var label = document.createElement('label');
-        label.for = control.id;
+        label.for = controlId;
         label.textContent = caption;
 
         if (validation) {
@@ -46,12 +47,12 @@ class ManagedForm {
         }
 
         var validationContainer = document.createElement('div');
-        validationContainer.id = control.id + '-validation-message';
+        validationContainer.id = controlId + '-validation-message';
         validationContainer.className = 'validation-message';
 
         var row = document.createElement('div');
         row.className = 'form-row';
-        row.id = 'form-row-' + control.id;
+        row.id = 'form-row-' + controlId;
 
         row.appendChild(label);
         row.appendChild(control);

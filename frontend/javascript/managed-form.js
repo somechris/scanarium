@@ -171,6 +171,18 @@ class ManagedForm {
         return span;
     }
 
+    addDropDown(caption, id, validation, explanation) {
+        var dropDown = document.createElement('select');
+        this.initStandardControl(dropDown, id, explanation, caption);
+        dropDown.addOption = function(text, value, selected) {
+            dropDown.appendChild(new Option(text, value, selected, selected));
+        };
+
+        this.addControl(caption, dropDown, validation);
+
+        return dropDown;
+    }
+
     _validateNode(node) {
         var result = true;
 

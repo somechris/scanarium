@@ -44,6 +44,14 @@ class ManagedForm {
         var self = this;
 
         var controlId = this._getFirstId(control);
+
+        var oldRow = null;
+        this.form.childNodes.forEach(child => {
+            if (!oldRow && child.id == 'form-row-' + controlId) {
+                oldRow = child;
+            }
+        });
+
         var label = document.createElement('label');
         label.for = controlId;
         label.textContent = caption;
@@ -67,7 +75,9 @@ class ManagedForm {
         row.appendChild(label);
         row.appendChild(control);
         row.appendChild(validationContainer);
-        if (this.submit_button) {
+        if (oldRow) {
+            this.form.replaceChild(row, oldRow);
+        } else if (this.submit_button) {
             this.form.insertBefore(row, this.submit_button);
         } else {
             this.form.appendChild(row);

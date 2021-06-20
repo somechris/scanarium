@@ -70,15 +70,22 @@ class ManagedForm {
 
         if (validation) {
             control.scValidation = validation;
-            control.oninput = function() {
-                self.validate();
-            }
-            control.onchange = control.oninput;
         }
 
         var validationContainer = document.createElement('div');
         validationContainer.id = controlId + '-validation-message';
         validationContainer.className = 'validation-message';
+
+        control.oninput = function(event) {
+            if (validation) {
+                self.validate();
+            }
+
+            if (!validationContainer.hasChildNodes() && control.onChangedAndValid) {
+                control.onChangedAndValid(event);
+            }
+        }
+        control.onchange = control.oninput;
 
         var row = document.createElement('div');
         row.className = 'form-row';
@@ -153,6 +160,11 @@ class ManagedForm {
             input.setChecked(!input.checked);
         }
         span.appendChild(input);
+        span.onChangedAndValid = function(event) {
+            if (input.onChangedAndValid) {
+                input.onChangedAndValid(event);
+            }
+        }
 
         if (explanation) {
             var label = document.createElement('label');

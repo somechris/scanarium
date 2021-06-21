@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 var CommandLogInjector = {
-    reloadsNeededBeforeProcessingFull: 3,
+    firstInjection: true,
     showAfterUuid: getUrlParameter('lastFullyShownUuid'),
     processAfterUuid: getUrlParameter('lastFullyProcessedUuid'),
 
@@ -21,7 +21,7 @@ var CommandLogInjector = {
     },
 
     injectLogs: function(items) {
-        if (CommandLogInjector.reloadsNeededBeforeProcessingFull > 0) {
+        if (CommandLogInjector.firstInjection) {
             // We're still in the boot-up phase and need to decide which
             // messages to skip, which to replay, and which tno inject normally
             const showAfterUuid = CommandLogInjector.showAfterUuid;
@@ -62,13 +62,7 @@ var CommandLogInjector = {
                     }
                 }
             });
-            if (searchingShowAfterUuid && searchingProcessAfterUuid) {
-                CommandLogInjector.reloadsNeededBeforeProcessingFull -= 1;
-            } else {
-                // Found at least some uuid, so we can process fully from
-                // now on.
-                CommandLogInjector.reloadsNeededBeforeProcessingFull = 0;
-            }
+            CommandLogInjector.firstInjection = false;
         } else {
             items.forEach(function (item, index) {
                 CommandProcessor.process(item);

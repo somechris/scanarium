@@ -2,11 +2,34 @@
 // GNU Affero General Public License v3.0 (See LICENSE.md)
 // SPDX-License-Identifier: AGPL-3.0-only
 
+var loadingBlocks = [];
+
+function blockLoading(reason) {
+    loadingBlocks.push(reason);
+}
+
+function unblockLoading(reason) {
+    loadingBlocks = loadingBlocks.filter(item => item != reason);
+}
+
+function isLoadingBlocked(allowedBlock) {
+    var relevantBlocks = loadingBlocks.filter(item => (item !== allowedBlock));
+    return relevantBlocks.length > 0;
+}
+
+function onceLoadingIsAllowed(callback, allowedBlock) {
+    if (isLoadingBlocked(allowedBlock)) {
+        window.setTimeout(() => onceLoadingIsAllowed(callback, allowedBlock), 3000);
+    } else {
+        callback();
+    }
+}
+
 function loadJs(url, callback) {
     var element = document.createElement('script');
     element.onload = callback;
     element.src = url;
-    document.head.appendChild(element);
+    onceLoadingIsAllowed(() => document.head.appendChild(element));
 }
 
 function loadJson(url, callback, method, param, error) {
@@ -28,7 +51,7 @@ function loadJson(url, callback, method, param, error) {
         }
     }
 
-    xhr.send(param);
+    onceLoadingIsAllowed(() => xhr.send(param));
 }
 
 function loadDynamicConfig(url, callback) {

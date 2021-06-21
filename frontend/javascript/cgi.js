@@ -31,7 +31,7 @@ callCgi = function(cgi, data, finishedCallback) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'cgi-bin/' + cgi, true);
     xhr.onreadystatechange = onReadyStateChange(cgi, finishedCallback);
-    xhr.send(data);
+    onceLoadingIsAllowed(() => xhr.send(data));
 }
 
 function isCgiForbidden(cgi) {

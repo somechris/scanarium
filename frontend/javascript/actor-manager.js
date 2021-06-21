@@ -236,7 +236,7 @@ var ScActorManager = {
             var path = dyn_scene_dir + '/actors/' + actor_name + '/' + flavor + '.png';
             image = game.load.image(flavored_actor_name, path);
             image.on('filecomplete', onLoaded, this);
-            game.load.start()
+            onceLoadingIsAllowed(() => game.load.start());
         }
     },
 

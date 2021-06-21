@@ -24,7 +24,14 @@ var ScActorManager = {
     update: function(time, delta) {
         if (time > this.nextConfigFetch) {
             this.nextConfigFetch = time + getConfig('actor-reload-period');
-            this.reloadConfigFiles();
+            // If we did not check on loading being blocked, the config reload
+            // requests would get queued up and once loading is allowed again,
+            // we'd get 100s of requests to reload the same file. As this only
+            // hurts the whole situation, we simlpy skip reloading during the
+            // block. We'll catch up after the block automatically.
+            if (!isLoadingBlocked()) {
+                this.reloadConfigFiles();
+            }
         }
 
         if (time > this.nextSpawn) {

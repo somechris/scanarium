@@ -12,7 +12,12 @@ var CommandLogInjector = {
     },
 
     fetchLogs: function() {
-        loadDynamicConfig(dyn_dir + '/command-log.json', CommandLogInjector.injectLogs);
+        // Logfile requests don't need to get queued up. So we only request them
+        // if they won't be blocked. (If they are blocked, we'll catch up with
+        // log items once the block is gone).
+        if (!isLoadingBlocked()) {
+            loadDynamicConfig(dyn_dir + '/command-log.json', CommandLogInjector.injectLogs);
+        }
     },
 
     injectLogs: function(items) {

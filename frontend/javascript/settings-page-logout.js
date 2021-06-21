@@ -18,6 +18,7 @@ class SettingsPageLogout extends NamedPage {
 
   onShowPage() {
     var method = 'logout';
+    const block = 'logout';
     var config = this.config;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', config.url, true);
@@ -27,6 +28,7 @@ class SettingsPageLogout extends NamedPage {
           MessageManager.addMessage(localize('{method_name} ok', {'method_name': method}), 'ok');
           updateLocation(localize('Redirection after logout.'), config.redirect);
         } else {
+          unblockLoading(block);
           var msg = localize('{method_name} failed', {'method_name': method})
           msg += ': ' + localize('Received status {actual_status} instead of {expected_status}',
             { 'actual_status': this.status, 'expected_status': config.success_status});
@@ -34,9 +36,12 @@ class SettingsPageLogout extends NamedPage {
         }
       }
     };
-    xhr.send();
     PauseManager.resume();
-    MessageManager.addMessage(localize('{method_name} started', {'method_name': method}), 'info');
+    blockLoading(block);
+    onceLoadingIsAllowed(() => {
+        xhr.send();
+        MessageManager.addMessage(localize('{method_name} started', {'method_name': method}), 'info');
+    }, block);
     this.parent.showPage('general');
   }
 }

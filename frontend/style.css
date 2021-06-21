@@ -59,6 +59,13 @@ button {
   z-index: 30;
 }
 
+#imprint-button {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  z-index: 40;
+}
+
 #file-upload-button {
   z-index: 20;
 }

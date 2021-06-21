@@ -256,3 +256,40 @@ var UploadButton = {
       this.uploadListeners.push(callback);
   }
 };
+
+var ImprintButton = {
+  button: null,
+  show: function() {
+    var imprint = getConfig('imprint');
+    if (imprint) {
+      if (this.button == null) {
+        this.button = document.createElement('button');
+        this.button.id = 'imprint-button';
+        this.button.textContent = localize('Imprint');
+        this.button.onclick = function(e) {
+          if (imprint.startsWith('http')) {
+            updateLocation(localize('Forwarding to {url-description}.', {'url-description': 'imprint'}), imprint);
+          } else {
+            var text = '--- ' + localize('Imprint') + ' ---\n\n';
+            text += imprint;
+            alert(text);
+          }
+          e.stopPropagation();
+          e.preventDefault();
+        };
+        this.button.ontouchstart = this.button.onclick;
+        this.button.style["font-size"] = Math.ceil(12 * window.devicePixelRatio).toString() + 'px';
+      }
+
+      if (this.button.parentNode == null) {
+          document.body.appendChild(this.button);
+      }
+    }
+  },
+
+  hide: function() {
+    if (this.button != null && this.button.parentNode != null) {
+      this.button.remove();
+    }
+  },
+};

@@ -66,6 +66,7 @@
     "If you run into issues, or your pictures fail to scan please let us know through email to {email} or use this form:": "Se io ajn malfunkcias aŭ viaj bildoj mal-skanas, sciigu al ni per retmesaĝo al {email} aŭ per tiu ĉi formularo:",
     "If you run into issues, or your pictures fail to scan please report them using this form:": "Se io ajn malfunkcias aŭ viaj bildoj mal-skanas, sciigu al ni per tiu ĉi formularo:",
     "Image is too small. Minimum width is {min_width} pixels": "Bildo estas tro malgranda. Minimuma vasteco estas {min_width} rastrumeroj",
+    "Imprint": "Leĝa respondeco",
     "Include last failed upload": "Kunsendu la lastan, malsukcesan bildon",
     "Intentional error from the \"debug:fail\" command": "Intenca eraro de komando \"debug:fail\"",
     "Invalid value": "Malvalida enigaĵo",
@@ -268,6 +269,9 @@
       "Homepage": "Hejmpaĝo",
       "Instagram": "Instagram",
       "Twitter": "Tvitero"
+    },
+    "url-description": {
+      "imprint": "paĝo pri leĝa respondeco"
     }
   }
 }

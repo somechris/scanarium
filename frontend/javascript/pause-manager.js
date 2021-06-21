@@ -34,6 +34,7 @@ var PauseManager = {
 
     SettingsButton.show();
     UploadButton.show();
+    ImprintButton.show();
 
     ScreensaverManager.allowSleep();
   },
@@ -49,6 +50,7 @@ var PauseManager = {
       game.scene.resume();
     }
 
+    ImprintButton.hide();
     UploadButton.hide();
     SettingsButton.hide();
     Settings.hide();

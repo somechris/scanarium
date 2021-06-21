@@ -66,6 +66,7 @@
     "If you run into issues, or your pictures fail to scan please let us know through email to {email} or use this form:": "Wenn etwas nicht funktioniert oder das Scannen deiner Bilder nicht klappt, schick uns bitte eine Email an {email} oder melde es über dieses Formular:",
     "If you run into issues, or your pictures fail to scan please report them using this form:": "Wenn etwas nicht funktioniert oder das Scannen deiner Bilder nicht klappt, melde es bitte über dieses Formular:",
     "Image is too small. Minimum width is {min_width} pixels": "Bild ist zu klein. Mindestbreite ist {min_width} Pixel",
+    "Imprint": "Impressum",
     "Include last failed upload": "Letztes fehlgeschlagenes Bild mitschicken",
     "Intentional error from the \"debug:fail\" command": "Absichtlicher Fehler vom Kommando \"debug:fail\"",
     "Invalid value": "Ungültiger Wert",
@@ -268,6 +269,9 @@
       "Homepage": "Homepage",
       "Instagram": "Instagram",
       "Twitter": "Twitter"
+    },
+    "url-description": {
+      "imprint": "Impressum"
     }
   }
 }

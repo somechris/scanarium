@@ -41,6 +41,9 @@ class NamedPage {
         return this.name;
     }
 
+    onShowPage() {
+    }
+
     getContentElement() {
         return this.content;
     }
@@ -68,11 +71,13 @@ class TabbedPage {
         this.element.appendChild(this.tabContainer);
         this.element.appendChild(this.content);
 
+        this.pages = {}
         this.tabs = {}
         this.contents = {}
         var self = this;
         pages.forEach(page => {
             const pageId = page.getId();
+            this.pages[pageId] = page;
 
             var tab = document.createElement('div');
             tab.id = 'tabbed-page-tab-' + pageId;
@@ -106,6 +111,8 @@ class TabbedPage {
         }
         this.content.appendChild(this.contents[id]);
         this.content.scrollTop = 0;
+
+        this.pages[id].onShowPage();
     }
 
     getElement() {

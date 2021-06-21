@@ -138,7 +138,7 @@
     "fps: {fps}": "Bilder/s: {fps}",
     "more": "mehr",
     "undefined error": "Unbekannter Fehler",
-    "when an actor of a different scene got scanned": "Beim Scannen einer Figur aus einer anderen Szene",
+    "when an actor of a different scene got scanned": "Durch Scannen einer Figur aus einer anderen Szene",
     "your.address@example.org": "deine.adresse@beispiel.org",
     "{PoliceCar-Decal}": "P O L I Z E I",
     "{command_name} command failed": "Kommando {command_name} schlug fehl",

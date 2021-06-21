@@ -91,6 +91,8 @@
     "Paused": "Paŭzita",
     "QR code contains misformed data": "QR-Kodo malvalidas",
     "Really reset the scene \"{scene_name}\", delete this scenes' scanned actors, and start afresh? (This cannot be undone)": "Ĉu vere forigi skanaĵoj kaj re-komenci? (Vi ne povas malfari tion ĉi)",
+    "Received status {actual_status} instead of {expected_status}": "Ricevis kodon {actual_status} anstataŭ {expected_status}",
+    "Redirection after logout.": "Plusendado post elsalutado.",
     "Reindex actors": "Re-indeksu agantoj",
     "Reset scene \"{scene_name}\"": "Forigu agantoj de sceno \"{scene_name}\"",
     "Resetting all scenes failed": "Forigado de ĉiuj agantoj de ĉiuj scenoj malsukcesis",
@@ -146,6 +148,7 @@
     "{command_name} command ok": "Komando {command_name} sukcesis",
     "{method_name} failed": "{method_name} malsukcesis",
     "{method_name} ok": "{method_name} sukcesis",
+    "{method_name} started": "{method_name} komencis",
     "{month} {day}, {year}": "{day}. {month} {year}",
     "{parameter_name} ({parameter_variant_name})": "{parameter_name} kun {parameter_variant_name}",
     "↓↓↓ Insert coloring pages below ↓↓↓": "↓↓↓ Enŝovu kolorigitajn bildojn ĉi tie malsupre ↓↓↓"
@@ -215,6 +218,7 @@
       "eo": "Esperanto"
     },
     "method_name": {
+      "logout": "Elsalutado",
       "regenerate-static-content": "re-generu nevariablaj enhavoj",
       "reindex": "Re-indeksu",
       "report-feedback": "Koment-Alŝutado",
@@ -241,7 +245,8 @@
     "page_title": {
       "Administration": "Administrado",
       "General": "Ĉefaĵoj",
-      "Help": "Helpo"
+      "Help": "Helpo",
+      "Logout": "Elsalutado"
     },
     "parameter_label": {
       "actor": "Aganto",

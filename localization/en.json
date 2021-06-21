@@ -69,6 +69,7 @@
       "eo": "Esperanto"
     },
     "method_name": {
+      "logout": "Logout",
       "regenerate-static-content": "Regenerate static content",
       "reindex": "Reindex",
       "reset-dynamic-content": "Reset dynamic content",

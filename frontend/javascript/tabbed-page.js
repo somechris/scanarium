@@ -91,6 +91,8 @@ class TabbedPage {
             this.tabContainer.appendChild(tab);
 
             this.contents[pageId] = page.getContentElement();
+
+            page.setParent(this);
         });
 
         if (pages.length) {

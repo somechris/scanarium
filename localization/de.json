@@ -91,6 +91,8 @@
     "Paused": "Pause",
     "QR code contains misformed data": "QR-Code enthält ungültige Daten",
     "Really reset the scene \"{scene_name}\", delete this scenes' scanned actors, and start afresh? (This cannot be undone)": "Die Szene \"{scene_name}\" wirklich zurücksetzen, eingescannte Figuren löschen und neu starten? (Dies kann nicht rückgängig gemacht werden)",
+    "Received status {actual_status} instead of {expected_status}": "Antwortstatus war {actual_status} statt {expected_status}",
+    "Redirection after logout.": "Weiterleitung nach Ausloggen.",
     "Reindex actors": "Gespeicherte Zeichnungen neu indexieren",
     "Reset scene \"{scene_name}\"": "Szene \"{scene_name}\" zurücksetzen",
     "Resetting all scenes failed": "Zurücksetzen der Szenen schlug fehl",
@@ -146,6 +148,7 @@
     "{command_name} command ok": "Kommando {command_name} ok",
     "{method_name} failed": "Fehler beim {method_name}",
     "{method_name} ok": "{method_name} ok",
+    "{method_name} started": "{method_name} gestartet",
     "{month} {day}, {year}": "{day}. {month} {year}",
     "{parameter_name} ({parameter_variant_name})": "{parameter_name} mit {parameter_variant_name}",
     "↓↓↓ Insert coloring pages below ↓↓↓": "↓↓↓ Ausgemalte Bilder hier unten ins Fach einlegen ↓↓↓"
@@ -215,6 +218,7 @@
       "eo": "Esperanto"
     },
     "method_name": {
+      "logout": "Ausloggen",
       "regenerate-static-content": "Neu-Erzeugung der statischen Inhalte",
       "reindex": "Reindexierung",
       "report-feedback": "Feedback-Einsendung",
@@ -241,7 +245,8 @@
     "page_title": {
       "Administration": "Verwaltung",
       "General": "Allgemein",
-      "Help": "Hilfe"
+      "Help": "Hilfe",
+      "Logout": "Ausloggen"
     },
     "parameter_label": {
       "actor": "Figur",

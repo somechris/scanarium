@@ -28,6 +28,7 @@ var CommandLogInjector = {
             const processAfterUuid = CommandLogInjector.processAfterUuid || CommandLogInjector.showAfterUuid;
             var searchingShowAfterUuid = true;
             var searchingProcessAfterUuid = true;
+            var lastFullyShownUuid = null;
             items.forEach(function (item, index) {
                 var uuid = sanitize_string(item, 'uuid');
                 if (searchingShowAfterUuid) {
@@ -43,6 +44,7 @@ var CommandLogInjector = {
                             // present in the file and must be older. Henco, all
                             // entries up to the current in the log should have
                             // been replayed. So we process them accordingly.
+                            lastFullyShownUuid = null;
                             items.forEach((innerItem, innerIndex) => {
                                 if (innerIndex <= index) {
                                     CommandProcessor.process(innerItem, true);
@@ -50,6 +52,14 @@ var CommandLogInjector = {
                             });
                             searchingShowAfterUuid = false;
                         }
+                    }
+                    if (searchingShowAfterUuid && uuid) {
+                        // As finding the `processAfterUuid` also sets
+                        // `searchingShowAfterUuid` to `false`, we know that
+                        // we've found neither the `showAfterUuid` nor the
+                        // `processAfterUuid`.
+                        // And we can hence mark the current uuid as ignorable.
+                        lastFullyShownUuid = uuid;
                     }
                 } else {
                     if (searchingProcessAfterUuid) {
@@ -62,6 +72,15 @@ var CommandLogInjector = {
                     }
                 }
             });
+            if (lastFullyShownUuid && searchingShowAfterUuid && getUrlParameter('lastFullyShownUuid') === showAfterUuid) {
+                // No uuid was found, and `lastFullyShownUuid` parameter has not
+                // been updated in the mean time, so we shim in a good initial
+                // value.
+                // This value helps to avoid re-playing the full command log, if
+                // an image gets scanned, and the location gets updated before
+                // the message has been fully shown.
+                setUrlParameter('lastFullyShownUuid', lastFullyShownUuid);
+            }
             CommandLogInjector.firstInjection = false;
         } else {
             items.forEach(function (item, index) {

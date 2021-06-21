@@ -39,7 +39,7 @@ var CommandProcessor = {
                 }
             }
 
-            if (command != scene && !replay && getUrlParameterBoolean('scanningActorSwitchesScene', true)) {
+            if (command != scene && !replay && getUrlParameterBoolean('followScannedActorScene', true)) {
                 setUrlParameter('scene', command, true, uuid);
             }
         } else {

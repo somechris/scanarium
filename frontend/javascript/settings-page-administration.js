@@ -18,16 +18,16 @@ class SettingsPageAdministration extends NamedPage {
         var that = this;
         this.appendSectionHeader('User interface');
 
-        const uiScanningActorSwitchesSceneParameter = 'scanningActorSwitchesScene';
-        var uiScanningActorSwitchesScene;
+        const uiFollowScannedActorSceneParameter = 'followScannedActorScene';
+        var uiFollowScannedActorScene;
 
         var form = new ManagedForm('ui-settings', false);
         this.uiForm = form;
 
-        uiScanningActorSwitchesScene = form.addCheckbox(localize('Switch scene'), 'scanning-actor-switches-scene', undefined, localize('when an actor of a different scene got scanned'));
-        uiScanningActorSwitchesScene.setChecked(getUrlParameterBoolean(uiScanningActorSwitchesSceneParameter ,true));
-        uiScanningActorSwitchesScene.onChangedAndValid = function(event) {
-            setUrlParameter(uiScanningActorSwitchesSceneParameter, uiScanningActorSwitchesScene.checked);
+        uiFollowScannedActorScene = form.addCheckbox(localize('Switch scene'), 'scanning-actor-switches-scene', undefined, localize('when an actor of a different scene got scanned'));
+        uiFollowScannedActorScene.setChecked(getUrlParameterBoolean(uiFollowScannedActorSceneParameter ,true));
+        uiFollowScannedActorScene.onChangedAndValid = function(event) {
+            setUrlParameter(uiFollowScannedActorSceneParameter, uiFollowScannedActorScene.checked);
 
             event.stopPropagation();
             event.preventDefault();

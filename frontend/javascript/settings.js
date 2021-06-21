@@ -19,6 +19,7 @@ var Settings = {
       var pages = [
           new SettingsPageGeneral(),
           new SettingsPageAdministration(),
+          new SettingsPageLogout(),
           new SettingsPageHelp(),
       ];
 

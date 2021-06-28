@@ -81,8 +81,6 @@ class BasicTestCase(unittest.TestCase):
                 if isinstance(value, str):
                     options[option] = value.replace('%DYNAMIC_DIR%',
                                                     dynamic_dir)
-                    if options[option] != value:
-                        print(options[option], value)
         config = configparser.ConfigParser()
         for section, options in overrides.items():
             config[section] = options

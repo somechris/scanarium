@@ -130,6 +130,7 @@
     "This field may not be empty": "Tiu ĉi enigaĵo ne devas esti malplena",
     "To": "Al",
     "Toggled frames-per-second counter": "(Mal)ŝaltita vidigfrekvenco",
+    "Unknown QR code": "Nekonata QR-Kodon",
     "Unknown camera type \"{camera_type}\"": "Nekonata tipo de kamerao \"{camera_type}\"",
     "Unknown frontend command \"{command}\"": "Nekonata komando \"{command}\"",
     "Unknown system command": "Nekonata sistem-komando",

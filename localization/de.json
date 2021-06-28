@@ -130,6 +130,7 @@
     "This field may not be empty": "Dieses Feld darf nicht leer sein",
     "To": "An",
     "Toggled frames-per-second counter": "Bildfrequenz-Anzeige umgeschaltet",
+    "Unknown QR code": "Unbekannter QR-Code",
     "Unknown camera type \"{camera_type}\"": "Unbekannter Kameratyp \"{camera_type}\"",
     "Unknown frontend command \"{command}\"": "Unbekanntes Kommando \"{command}\"",
     "Unknown system command": "Unbekannter System-Befehl",

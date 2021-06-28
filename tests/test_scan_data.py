@@ -168,7 +168,7 @@ class ScanDataCanaryTestCase(CanaryTestCase):
             ret = self.run_scan_data(dir, fixture)
             self.assertErrorCode('SE_PIPELINE_OS_ERROR', ret, dir)
 
-    def test_fail_pipeline_os_error(self):
+    def test_fail_pipeline_return_value(self):
         fixture = 'space-SimpleRocket-optimal.png'
         config = {
             'programs': {

@@ -768,7 +768,7 @@ def run_get_raw_image_pipeline(scanarium, file_path, pipeline):
 
             try:
                 scanarium.run(command)
-            except OSError as e:
+            except OSError:
                 raise ScanariumError(
                     'SE_PIPELINE_OS_ERROR',
                     'Server-side image processing failed')

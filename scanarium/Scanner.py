@@ -40,6 +40,12 @@ def get_cv_major_version():
     return int(cv2.__version__.split('.', 1)[0])
 
 
+def create_error_unknown_qr():
+    return ScanariumError(
+        'SE_UNKNOWN_QR_CODE',
+        'Unknown QR code')
+
+
 def scale_image(scanarium, image, description, scaled_height=None,
                 scaled_width=None, trip_height=None, trip_width=None):
     scaled_image = image
@@ -491,16 +497,24 @@ def actor_image_pipeline(scanarium, image, qr_rect, scene, actor,
                          visualized_alpha=None):
     scene_dir = os.path.join(scanarium.get_scenes_dir_abs(), scene)
     if not os.path.isdir(scene_dir):
-        raise ScanariumError('SE_UNKNOWN_SCENE',
-                             'Scene "{scene_name}" does not exist',
-                             {'scene_name': scene})
+        if scanarium.get_config('debug', 'fine_grained_errors',
+                                kind='boolean'):
+            raise ScanariumError('SE_UNKNOWN_SCENE',
+                                 'Scene "{scene_name}" does not exist',
+                                 {'scene_name': scene})
+        else:
+            raise create_error_unknown_qr()
 
     actor_dir = os.path.join(scene_dir, 'actors', actor)
     if not os.path.isdir(actor_dir):
-        raise ScanariumError(
-            'SE_UNKNOWN_ACTOR',
-            'Actor "{actor_name}" does not exist in scene "{scene_name}"',
-            {'scene_name': scene, 'actor_name': actor})
+        if scanarium.get_config('debug', 'fine_grained_errors',
+                                kind='boolean'):
+            raise ScanariumError(
+                'SE_UNKNOWN_ACTOR',
+                'Actor "{actor_name}" does not exist in scene "{scene_name}"',
+                {'scene_name': scene, 'actor_name': actor})
+        else:
+            raise create_error_unknown_qr()
 
     image = rectify_to_qr_parent_rect(scanarium, image, qr_rect)
     image = orient_image(image)
@@ -605,8 +619,13 @@ def process_image_with_qr_code(scanarium, command_logger, image, qr_rect, data,
         try:
             (command, parameter) = data.split(':', 1)
         except ValueError:
-            raise ScanariumError('SE_SCAN_MISFORMED_QR_CODE',
-                                 'QR code contains misformed data')
+            if scanarium.get_config('debug', 'fine_grained_errors',
+                                    kind='boolean'):
+                raise ScanariumError('SE_SCAN_MISFORMED_QR_CODE',
+                                     'QR code contains misformed data')
+            else:
+                raise create_error_unknown_qr()
+
         payload = process_image_with_qr_code_unlogged(
             scanarium, command, parameter, image, qr_rect)
     except Exception as e:

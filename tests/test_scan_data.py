@@ -252,23 +252,53 @@ class ScanDataCanaryTestCase(CanaryTestCase):
             ret = self.run_scan_data(dir, fixture)
             self.assertErrorCode('SE_SCAN_TOO_MANY_QR_CODES', ret, dir)
 
+    def test_fail_qr_foo_fine(self):
+        fixture = 'qr-foo.png'
+        config = {
+            'scan': {'permit_file_type_png': True},
+            'debug': {'fine_grained_errors': True},
+            }
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_SCAN_MISFORMED_QR_CODE', ret, dir)
+
     def test_fail_qr_foo(self):
         fixture = 'qr-foo.png'
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertErrorCode('SE_SCAN_MISFORMED_QR_CODE', ret, dir)
+            self.assertErrorCode('SE_UNKNOWN_QR_CODE', ret, dir)
+
+    def test_fail_qr_foo_bar_baz_fine(self):
+        fixture = 'qr-foo-bar-baz.png'
+        config = {
+            'scan': {'permit_file_type_png': True},
+            'debug': {'fine_grained_errors': True},
+            }
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_UNKNOWN_SCENE', ret, dir)
 
     def test_fail_qr_foo_bar_baz(self):
         fixture = 'qr-foo-bar-baz.png'
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertErrorCode('SE_UNKNOWN_SCENE', ret, dir)
+            self.assertErrorCode('SE_UNKNOWN_QR_CODE', ret, dir)
+
+    def test_fail_qr_space_foo_fine(self):
+        fixture = 'qr-space-foo.png'
+        config = {
+            'scan': {'permit_file_type_png': True},
+            'debug': {'fine_grained_errors': True},
+            }
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_UNKNOWN_ACTOR', ret, dir)
 
     def test_fail_qr_space_foo(self):
         fixture = 'qr-space-foo.png'
         config = {'scan': {'permit_file_type_png': True}}
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertErrorCode('SE_UNKNOWN_ACTOR', ret, dir)
+            self.assertErrorCode('SE_UNKNOWN_QR_CODE', ret, dir)

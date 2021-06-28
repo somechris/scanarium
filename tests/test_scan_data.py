@@ -78,7 +78,8 @@ class ScanDataCanaryTestCase(CanaryTestCase):
         command_log_file = os.path.join(dir, 'dynamic', 'command-log.json')
         self.assertFileContains(command_log_file, code)
 
-    def template_test_file_type(self, file_type, pipeline=None, variant='optimal'):
+    def template_test_file_type(self, file_type, pipeline=None,
+                                variant='optimal'):
         fixture = f'space-SimpleRocket-{variant}.{file_type}'
         config = {'scan': {f'permit_file_type_{file_type}': True}}
         if pipeline is not None:

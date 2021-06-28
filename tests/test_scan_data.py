@@ -154,6 +154,24 @@ class ScanDataCanaryTestCase(CanaryTestCase):
     def test_ok_pdf_pdftoppm(self):
         self.template_test_file_type('pdf', pipeline='pdftoppm')
 
+    def test_fail_pipeline_os_error_fine(self):
+        fixture = 'space-SimpleRocket-optimal.png'
+        config = {
+            'programs': {
+                'convert_untrusted': os.path.join('%DYNAMIC_DIR%', 'foo'),
+                },
+            'scan': {
+                'permit_file_type_png': True,
+                'pipeline_file_type_png': 'convert',
+                },
+            'debug': {
+                'fine_grained_errors': True,
+                },
+            }
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_PIPELINE_OS_ERROR', ret, dir)
+
     def test_fail_pipeline_os_error(self):
         fixture = 'space-SimpleRocket-optimal.png'
         config = {
@@ -167,7 +185,25 @@ class ScanDataCanaryTestCase(CanaryTestCase):
             }
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertErrorCode('SE_PIPELINE_OS_ERROR', ret, dir)
+            self.assertErrorCode('SE_PIPELINE_ERROR', ret, dir)
+
+    def test_fail_pipeline_return_value_fine(self):
+        fixture = 'space-SimpleRocket-optimal.png'
+        config = {
+            'programs': {
+                'convert_untrusted': '/bin/false',
+                },
+            'scan': {
+                'permit_file_type_png': True,
+                'pipeline_file_type_png': 'convert',
+                },
+            'debug': {
+                'fine_grained_errors': True,
+                },
+            }
+        with self.prepared_environment(fixture, test_config=config) as dir:
+            ret = self.run_scan_data(dir, fixture)
+            self.assertErrorCode('SE_PIPELINE_RETURN_VALUE', ret, dir)
 
     def test_fail_pipeline_return_value(self):
         fixture = 'space-SimpleRocket-optimal.png'
@@ -182,7 +218,7 @@ class ScanDataCanaryTestCase(CanaryTestCase):
             }
         with self.prepared_environment(fixture, test_config=config) as dir:
             ret = self.run_scan_data(dir, fixture)
-            self.assertErrorCode('SE_PIPELINE_RETURN_VALUE', ret, dir)
+            self.assertErrorCode('SE_PIPELINE_ERROR', ret, dir)
 
     def test_fail_no_rectangle(self):
         fixture = 'blank-white.png'

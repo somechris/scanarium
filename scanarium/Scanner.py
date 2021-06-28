@@ -46,6 +46,12 @@ def create_error_unknown_qr():
         'Unknown QR code')
 
 
+def create_error_pipeline():
+    return ScanariumError(
+        'SE_PIPELINE_ERROR',
+        'Server-side image processing failed')
+
+
 def scale_image(scanarium, image, description, scaled_height=None,
                 scaled_width=None, trip_height=None, trip_width=None):
     scaled_image = image
@@ -769,18 +775,31 @@ def run_get_raw_image_pipeline(scanarium, file_path, pipeline):
             try:
                 scanarium.run(command)
             except OSError:
-                raise ScanariumError(
-                    'SE_PIPELINE_OS_ERROR',
-                    'Server-side image processing failed')
+                if scanarium.get_config('debug', 'fine_grained_errors',
+                                        kind='boolean'):
+                    raise ScanariumError(
+                        'SE_PIPELINE_OS_ERROR',
+                        'Server-side image processing failed')
+                else:
+                    raise create_error_pipeline()
+
             except ScanariumError as e:
                 if e.code == 'SE_TIMEOUT':
-                    raise ScanariumError(
-                        'SE_PIPELINE_TIMEOUT',
-                        'Server-side image processing took too long')
+                    if scanarium.get_config('debug', 'fine_grained_errors',
+                                            kind='boolean'):
+                        raise ScanariumError(
+                            'SE_PIPELINE_TIMEOUT',
+                            'Server-side image processing took too long')
+                    else:
+                        raise create_error_pipeline()
                 elif e.code == 'SE_RETURN_VALUE':
-                    raise ScanariumError(
-                        'SE_PIPELINE_RETURN_VALUE',
-                        'Server-side image processing failed')
+                    if scanarium.get_config('debug', 'fine_grained_errors',
+                                            kind='boolean'):
+                        raise ScanariumError(
+                            'SE_PIPELINE_RETURN_VALUE',
+                            'Server-side image processing failed')
+                    else:
+                        raise create_error_pipeline()
                 else:
                     raise e
 

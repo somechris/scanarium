@@ -9,7 +9,25 @@ class SettingsPageHelp extends NamedPage {
     }
 
     initContent() {
+        this.initContentOnlineDocumentation();
         this.initContentHelp();
+    }
+
+    initContentOnlineDocumentation() {
+        if (getConfig("documentation_url")) {
+            this.appendSectionHeader('Online Help');
+
+            var button = document.createElement('button');
+            button.textContent = localize('Go to online help');
+            button.style['font-size'] = SettingsButton.button.style['font-size'];
+            button.onclick = function(e) {
+                var reason = localize('Forwarding to {url-description}.', {'url-description': 'online help'});
+                updateLocation(reason, getConfig("documentation_url"));
+                e.stopPropagation();
+                e.preventDefault();
+            };
+            this.appendElement(button);
+        }
     }
 
     initContentHelp() {

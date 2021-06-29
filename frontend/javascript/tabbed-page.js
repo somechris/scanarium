@@ -23,6 +23,7 @@ class NamedPage {
         var heading = document.createElement('h2');
         heading.textContent = localize(title, localization_parameters);
         this.appendElement(heading);
+        return heading;
     }
 
     initContent(content) {

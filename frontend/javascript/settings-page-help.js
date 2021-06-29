@@ -36,7 +36,7 @@ class SettingsPageHelp extends NamedPage {
         const cgi = 'report-feedback';
         const cgi_allowed = !isCgiForbidden(cgi);
         if (help_email_address || cgi_allowed) {
-            this.appendSectionHeader('Feedback / Comments / Issue Reports');
+            var sectionHeader = this.appendSectionHeader('Feedback / Comments / Issue Reports');
 
             var text = '';
             if (help_email_address) {
@@ -149,6 +149,7 @@ class SettingsPageHelp extends NamedPage {
                         if (MessageManagerMessage) {
                             MessageManager.addButtonToMessage(MessageManagerMessage, localize('Report problem'), () => {
                                 Settings.show(pageId);
+                                sectionHeader.scrollIntoView();
                             });
                         }
                     }

@@ -129,7 +129,7 @@ class SettingsPageHelp extends NamedPage {
                         includeLastFailedCheckBox.setChecked(true);
 
                         if (MessageManagerMessage) {
-                            MessageManager.addButtonToMessage(MessageManagerMessage, localize_parameter('page_title', 'Help'), () => {
+                            MessageManager.addButtonToMessage(MessageManagerMessage, localize('Report problem'), () => {
                                 Settings.show(pageId);
                             });
                         }

@@ -205,7 +205,21 @@ var CommandProcessor = {
             const prefix = localize('{method_name} ' + is_ok_text, {'method_name': method});
             msg = prefix + (msg ? (': ' + msg) : '');
         }
-        return MessageManager.addMessage(msg, is_ok ? 'ok' : 'failed', undefined, uuid);
+        message = MessageManager.addMessage(msg, is_ok ? 'ok' : 'failed', undefined, uuid);
+        if (getConfig("documentation_url")) {
+            const error_code = sanitize_string(capsule, 'error_code');
+            if (error_code && getConfig('documentation_anchored_error_codes').includes(error_code)) {
+                MessageManager.addButtonToMessage(message, localize('Online Help'), () => {
+                    var target = getConfig("documentation_url")
+                    target += '#error-code-' + error_code;
+                    const reason = localize(
+                        'Forwarding to {url-description}.',
+                        {'url-description': 'online help'})
+                    updateLocation(reason, target);
+                });
+            }
+        }
+        return message;
     },
 
     /* If `replay` is true, the command is processed as usual, and messages get

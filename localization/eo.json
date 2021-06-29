@@ -85,6 +85,7 @@
     "News around Scanarium": "Novaĵoj pri Scanarium",
     "No content provided for feedback. Either provide a message, or attach the last failed image.": "Neniu enhavo por komento. Enmetu mesaĝon aŭ kunsendu la lastan, malsukcesan bildon.",
     "No image selected. Upload aborted.": "Neniu bildo elektita. Alŝutado nuligita",
+    "Online Help": "Retaj help-paĝoj",
     "Only {supported_formats} files are supported.": "Nur {supported_formats} dosieroj tauĝas.",
     "Password is not correct": "Pasvorto estas malkorekta",
     "Password is too short (minimum: {count} characters)": "Pasvorto estast tro mallonga (minimume: {count} signoj)",
@@ -95,6 +96,7 @@
     "Received status {actual_status} instead of {expected_status}": "Ricevis kodon {actual_status} anstataŭ {expected_status}",
     "Redirection after logout.": "Plusendado post elsalutado.",
     "Reindex actors": "Re-indeksu agantoj",
+    "Report problem": "Raportu problemon",
     "Reset scene \"{scene_name}\"": "Forigu agantoj de sceno \"{scene_name}\"",
     "Resetting all scenes failed": "Forigado de ĉiuj agantoj de ĉiuj scenoj malsukcesis",
     "Resetting scene \"{scene_name}\"": "Forigado de sceno \"{scene_name}\" malsukcesis",
@@ -279,7 +281,8 @@
       "Twitter": "Tvitero"
     },
     "url-description": {
-      "imprint": "paĝo pri leĝa respondeco"
+      "imprint": "paĝo pri leĝa respondeco",
+      "online help": "retaj help-paĝoj"
     }
   }
 }

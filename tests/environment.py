@@ -62,6 +62,9 @@ class BasicTestCase(unittest.TestCase):
             self.add_fixture(name, ctx.name)
 
         overrides = {
+            'general': {
+                'debug': 'False',
+                },
             'directories': {
                 'dynamic': dynamic_dir,
                 'log': log_dir,

@@ -31,6 +31,7 @@
     "Calling script \"{script_name}\" as cgi is forbidden": "Skript \"{script_name}\" darf nicht als cgi gestartet werden",
     "Cannot switch to scene {scene_name}": "Kann nicht zur Szene \"{scene_name}\" wechseln",
     "Change password": "Passwort ändern",
+    "Chapter": "Kapitel",
     "Coloring pages for scene {scene_name}": "Ausmalbilder für die {scene_name} Szene",
     "Command \"{command}\" does not allow a parameter \"{parameter}\"": "Kommando \"{command}\" erlaubt keinen Parameter \"{parameter}\"",
     "Confirm new password": "Neues Passwort bestätigen",

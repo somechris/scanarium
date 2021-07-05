@@ -31,6 +31,7 @@
     "Calling script \"{script_name}\" as cgi is forbidden": "Uzado de \"{script_name}\" kiel cgi malpermesita",
     "Cannot switch to scene {scene_name}": "Ne povas ŝanĝi al sceno \"{scene_name}\"",
     "Change password": "Pasvort-ŝanĝado",
+    "Chapter": "Ĉapitro",
     "Coloring pages for scene {scene_name}": "Kolorigaj bildoj de la sceno {scene_name}",
     "Command \"{command}\" does not allow a parameter \"{parameter}\"": "Komando \"{command}\" malpermesas parametron \"{parameter}\"",
     "Confirm new password": "Konfirmo de nova pasvorto",

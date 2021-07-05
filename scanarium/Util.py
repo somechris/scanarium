@@ -5,6 +5,7 @@
 import datetime
 import logging
 import os
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +81,13 @@ def guess_image_format(file_path):
     return guessed_type
 
 
+def to_safe_filename(name):
+    ret = re.sub('[^a-zA-Z0-9]+', '-', name).strip('-')
+    if not ret:
+        ret = 'unnamed'
+    return ret
+
+
 class Util(object):
     def __init__(self, scanarium):
         self._scanarium = scanarium
@@ -95,3 +103,6 @@ class Util(object):
 
     def guess_image_format(self, file_path):
         return guess_image_format(file_path)
+
+    def to_safe_filename(self, name):
+        return to_safe_filename(name)

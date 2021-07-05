@@ -442,13 +442,6 @@ def generate_full_svg_tree(scanarium, dir, parameter, extra_decoration_name):
     return (tree, sources)
 
 
-def to_save_filename(name):
-    ret = re.sub('[^a-zA-Z0-9]+', '-', name).strip('-')
-    if not ret:
-        ret = 'unnamed'
-    return ret
-
-
 def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
                          sources, is_actor, language, force, command_label,
                          parameter_label):
@@ -457,7 +450,8 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
         localize_command_parameter_variant(localizer, command, parameter,
                                            variant)
 
-    base_name = to_save_filename(localized_parameter_with_variant) + '.svg'
+    base_name = scanarium.to_safe_filename(
+        localized_parameter_with_variant) + '.svg'
 
     pdf_dir = os.path.join(dir, 'pdfs', language)
     os.makedirs(pdf_dir, exist_ok=True)
@@ -503,9 +497,10 @@ def regenerate_pdf_actor_books_for_language(scanarium, dir, scene, language,
 
     localizer = scanarium.get_localizer(language)
     target_dir = os.path.join(os.path.dirname(dir), 'pdfs', language)
-    target_file = os.path.join(target_dir, to_save_filename(localizer.localize(
-        'All {scene_name} coloring pages', {
-            'scene_name': scene})) + '.pdf')
+    target_file = os.path.join(target_dir, scanarium.to_safe_filename(
+            localizer.localize(
+                'All {scene_name} coloring pages', {
+                    'scene_name': scene})) + '.pdf')
 
     if scanarium.file_needs_update(target_file, pdfs, force):
         os.makedirs(target_dir, exist_ok=True)

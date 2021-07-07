@@ -52,6 +52,8 @@ addLanguageCandidate(getUrlParameter('language', ''));
 addLanguageCandidate(navigator.language);
 addLanguageCandidate('en');
 
+var isLanguageLoaded = false;
+
 function loadLanguage() {
     if (language_candidates.length) {
         const candidate = language_candidates.shift();
@@ -59,6 +61,7 @@ function loadLanguage() {
         loadJson('localization/' + candidate + '.json', function(data) {
             localization = data;
             language = candidate;
+            isLanguageLoaded = true;
         }, undefined, undefined, function() {
             loadLanguage();
         });

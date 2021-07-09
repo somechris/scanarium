@@ -557,10 +557,11 @@ def regenerate_static_content_command_parameters(
                 regenerate_static_content_command_parameter(
                     scanarium, parameter_dir, command, parameter, is_actor,
                     language, force, extra_decoration_name)
-            command_variants[parameter] = variants
-            for pdf_language, pdfs in pdfs_by_language.items():
-                command_pdfs[pdf_language] = \
-                    command_pdfs.get(pdf_language, []) + pdfs
+            if not os.path.exists(os.path.join(parameter_dir, 'hidden')):
+                command_variants[parameter] = variants
+                for pdf_language, pdfs in pdfs_by_language.items():
+                    command_pdfs[pdf_language] = \
+                        command_pdfs.get(pdf_language, []) + pdfs
     if is_actor and parameter_arg is None:
         scanarium.dump_json(os.path.join(dir, '..', 'actor-variants.json'),
                             command_variants)

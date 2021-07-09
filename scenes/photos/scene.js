@@ -47,7 +47,7 @@ class Photo extends Phaser.GameObjects.Container {
         this.photo = photo;
         this.add(photo);
 
-        this.addStrips();
+        this.addStrips(widthMm < 60);
 
         this.setPosition(scanariumConfig.width + width / 2 * 1.2, this.computeY(height));
         this.depth = -this.y;
@@ -113,9 +113,10 @@ class Photo extends Phaser.GameObjects.Container {
         });
     }
 
-    addStrips() {
+    addStrips(small) {
         this.stripDefinition = this.getStripDefinition();
-        switch (chooseInt(0, 3)) {
+        const stripVariant = small ? 0 : chooseInt(0, 3);
+        switch (stripVariant) {
         case 0:
             // Only top side
             this.addStrip(0, -0.5, 90);

@@ -51,7 +51,7 @@
     "Exception marked as skipped": "Ausnahme ist übersprungen markiert",
     "Expected to find one QR code in image, but found {qr_codes_count}": "Fand {qr_codes_count} statt nur einem QR-Code im Bild",
     "Failed to find QR code in image": "Konnte keinen QR-Code im Bild finden",
-    "Failed to find big black rectangle in image": "Konnte keinen großes schwarzes Rechteck im Bild finden",
+    "Failed to find black bounding rectangle in image": "Konnte keinen großes schwarzes Rechteck im Bild finden",
     "Failed to find mask {file_name}": "Konnte Masken-Datei \"{file_name}\" nicht finden",
     "Failed to find source file {source_file} for generating mask {target_file}": "Konnte Quelle {source_file} zur Erzeugung der Maske {target_file} nicht finden",
     "Failed to identify sheet on scanned image": "Konnte Zettel auf gescanntem Bild nicht finden",

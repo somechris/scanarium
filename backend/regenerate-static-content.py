@@ -61,6 +61,7 @@ def run_inkscape(scanarium, arguments):
     command = [
         scanarium.get_config('programs', 'inkscape'),
         '--without-gui',
+        '--export-text-to-path',
     ]
     command += arguments
     return scanarium.run(command)

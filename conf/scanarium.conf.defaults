@@ -118,6 +118,11 @@ raw_image_files = False
 inkscape = inkscape
 
 
+# The binary to start ExifTool
+exiftool = exiftool
+
+
+
 # The binary for ImageMagick's convert
 convert = convert
 
@@ -603,6 +608,33 @@ generate_png = False
 
 # Whether or not to generate JPG variants for the actor/command pages.
 generate_jpg = False
+
+# Whether or not to set metadata on the generated files.
+#
+# If `True`, the below attribution, license, etc will get set for generated
+# files. Note that Scanarium's shipped images come under CC-BY-SA and AGPL, so
+# when embedding metadata and distributing files, make sure to respect that
+# license, or drop Scanarium's shipped images beforehand.
+embed_metadata = False
+
+# The name to use for attribution of generated files
+attribution_name = n/a
+
+# The URL to use for attribution of generated files
+attribution_url = n/a
+
+# The URL to refer to for licensing details
+rights_url = n/a
+
+# The name of the license to use for generated files
+license_name = Creative Commons Attribution-ShareAlike 4.0 International
+
+# The URL for the license of the generated files
+license_url = https://creativecommons.org/licenses/by-sa/4.0/
+
+# The year to use for Copyright lines
+copyright_year = 2020
+
 
 [cgi:reindex]
 # Whether or not to allow calling the script as cgi through the webserver.

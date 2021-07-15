@@ -8,6 +8,7 @@ import os
 import locale
 import logging
 import re
+import shutil
 import sys
 import xml.etree.ElementTree as ET
 import qrcode
@@ -192,11 +193,134 @@ def generate_mask(scanarium, dir, file, force):
         run_inkscape(scanarium, inkscape_args)
 
 
-def generate_pdf(scanarium, dir, file, force):
+def embed_metadata(scanarium, file, metadata):
+    def get_conf(key):
+        return scanarium.get_config('cgi:regenerate-static-content', key)
+
+    attribution_name = get_conf('attribution_name')
+    attribution_url = get_conf('attribution_url')
+    rights_url = get_conf('rights_url')
+    license_name = get_conf('license_name')
+    license_url = get_conf('license_url')
+    copyright_year = get_conf('copyright_year')
+
+    copyright = f'Copyright (C) {copyright_year}  {attribution_name}. {attribution_url} This work is licensed under {license_name}. See {license_url}'
+    title = metadata['localized_parameter_with_variant']
+    keywords = ['Scanarium']
+    for key in [
+        'localized_command',
+        'coloring-page-l10n',
+        'localized_parameter_with_variant']:
+        if metadata[key]:
+            keywords.append(metadata[key])
+    keywords.reverse()
+    description = ' '.join(keywords)
+    keywords = ', '.join(keywords)
+
+    command = [
+        scanarium.get_config('programs', 'exiftool'),
+        '-overwrite_original',
+        '-all:all=',
+        ]
+    for category, kvs in {
+        'Copyright': {
+            '': copyright,
+            },
+        'ExifIFD': {
+            'UserComment': description,
+            },
+        'File': {
+            'Comment': description,
+            },
+        'IFD0': {
+            'Artist': attribution_name,
+            'Copyright': copyright,
+            'ImageDescription': description,
+            'XResolution': metadata['dpi'],
+            'YResolution': metadata['dpi'],
+            },
+        'IPTC': {
+            'By-line': attribution_name,
+            'Caption-Abstract': description,
+            'CopyrightNotice': copyright,
+            'Keywords': keywords,
+            'OriginatingProgram': attribution_name,
+            },
+        'XMP-xmpRights': {
+            'Marked': 'True',
+            'Owner': attribution_name,
+            'UsageTerms': copyright,
+            'WebStatement': rights_url,
+            },
+        'XMP-cc': {
+            'attributionName': attribution_name,
+            'attributionURL': attribution_url,
+            'license': license_url,
+            'morePermissions': rights_url,
+            },
+        'XMP-dc': {
+            'creator': attribution_name,
+            'description': description,
+            'language': metadata['language'],
+            'rights': copyright,
+            'title': title,
+            },
+        'XMP-exif': {
+            'UserComment': description,
+            },
+        'XMP-tiff': {
+            'Artist': attribution_name,
+            'ImageDescription': description,
+            'Software': attribution_name,
+            },
+        'XMP-photoshop': {
+            'Credit': attribution_name,
+            'Headline': description,
+            },
+        'XMP-plus': {
+            'LicensorName': attribution_name,
+            'LicensorURL': rights_url,
+            },
+        'XMP-x': {
+            'XMPToolkit': 'n/a',
+            },
+        'XMP-xmp': {
+            'CreatorTool': attribution_name,
+            'Label': 'Scanarium',
+            },
+        'XMP-pdf': {
+            'Keywords': keywords,
+            'Producer': attribution_name,
+            'Creator': attribution_name,
+            },
+        'PDF': {
+            'Keywords': keywords,
+            'Author': attribution_name,
+            'Producer': attribution_name,
+            'Creator': attribution_name,
+            'Title': title,
+            'Subject': description,
+            },
+        }.items():
+        for k, v in kvs.items():
+            param = '-' + category
+            if k:
+                param += ':' + k
+
+            if v:
+                command.append(f'{param}={v}')
+
+    command.append(file)
+    scanarium.run(command)
+
+def generate_pdf(scanarium, dir, file, force, metadata={}):
     dpi = 150
     quality = 75
     svg_source = os.path.join(dir, file)
     pdf_name = None
+
+    metadata['dpi'] = dpi
+
     formats = ['pdf']
     for format in ['png', 'jpg']:
         if scanarium.get_config('cgi:regenerate-static-content',
@@ -204,14 +328,16 @@ def generate_pdf(scanarium, dir, file, force):
             formats.append(format)
 
     for format in formats:
-        target = os.path.join(dir, file.rsplit('.', 1)[0] + '.' + format)
+        target = os.path.join(
+            dir, file.rsplit('.', 1)[0] + '.' + format)
+        target_tmp = target + '.tmp'
         if format in ['pdf', 'png']:
             source = svg_source
             if scanarium.file_needs_update(target, [source], force):
                 inkscape_args = [
                     '--export-area-page',
                     f'--export-dpi={dpi}',
-                    '--export-%s=%s' % (format, target),
+                    '--export-%s=%s' % (format, target_tmp),
                     source,
                     ]
 
@@ -237,9 +363,14 @@ def generate_pdf(scanarium, dir, file, force):
                     '-flatten',
                     '-density', str(dpi),
                     '-quality', str(quality),
-                    target
+                    target_tmp
                     ]
                 scanarium.run(command)
+        if scanarium.file_needs_update(target, [source], force):
+            if scanarium.get_config('cgi:regenerate-static-content',
+                                    'embed_metadata', kind='boolean'):
+                embed_metadata(scanarium, target_tmp, metadata)
+            shutil.move(target_tmp, target)
     return pdf_name
 
 
@@ -484,7 +615,7 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
                          sources, is_actor, language, force, command_label,
                          parameter_label):
     localizer = scanarium.get_localizer(language)
-    (_, _, _, localized_parameter_with_variant) = \
+    (localized_command, _, _, localized_parameter_with_variant) = \
         localize_command_parameter_variant(localizer, command, parameter,
                                            variant)
 
@@ -501,7 +632,14 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
                         command_label, parameter_label, '../..')
         tree.write(full_svg_name)
 
-    pdf_name = generate_pdf(scanarium, dir, full_svg_name, force)
+    pdf_name = generate_pdf(scanarium, dir, full_svg_name, force, metadata={
+            'language': language,
+            'coloring-page-l10n': \
+                localizer.localize('coloring page') if is_actor else None,
+            'localized_command': localized_command if is_actor else None,
+            'localized_parameter_with_variant': \
+                localized_parameter_with_variant if is_actor else None,
+            })
 
     if is_actor:
         if variant == '' and language == 'fallback':

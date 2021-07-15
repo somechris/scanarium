@@ -193,27 +193,52 @@ def generate_mask(scanarium, dir, file, force):
 
 def generate_pdf(scanarium, dir, file, force):
     dpi = 150
-    source = os.path.join(dir, file)
+    quality = 75
+    svg_source = os.path.join(dir, file)
     pdf_name = None
     formats = ['pdf']
-    for format in ['png']:
+    for format in ['png', 'jpg']:
         if scanarium.get_config('cgi:regenerate-static-content',
                                 f'generate_{format}', kind='boolean'):
             formats.append(format)
 
     for format in formats:
         target = os.path.join(dir, file.rsplit('.', 1)[0] + '.' + format)
-        if scanarium.file_needs_update(target, [source], force):
-            inkscape_args = [
-                '--export-area-page',
-                f'--export-dpi={dpi}',
-                '--export-%s=%s' % (format, target),
-                source,
-            ]
+        if format in ['pdf', 'png']:
+            source = svg_source
+            if scanarium.file_needs_update(target, [source], force):
+                inkscape_args = [
+                    '--export-area-page',
+                    f'--export-dpi={dpi}',
+                    '--export-%s=%s' % (format, target),
+                    source,
+                    ]
 
-            run_inkscape(scanarium, inkscape_args)
-        if format == 'pdf':
-            pdf_name = target
+                run_inkscape(scanarium, inkscape_args)
+            if format == 'pdf':
+                pdf_name = target
+        else:
+            source = os.path.join(dir, file.rsplit('.', 1)[0] + '.png')
+            if not scanarium.get_config('cgi:regenerate-static-content',
+                                        'generate_png', kind='boolean'):
+                raise ScanariumError(
+                    'SE_REGENERATE_NO_SOURCE_FOR_TARGET',
+                    'You need to enable '
+                    '`cgi:regenerate-static-content.generate_png` to generate '
+                    'the target file {target_file}.',
+                    {'source_file': source, 'target_file': target})
+            if scanarium.file_needs_update(target, [source], force):
+                command = [
+                    scanarium.get_config('programs', 'convert'),
+                    source,
+                    '-units', 'pixelsperinch',
+                    '-background', 'white',
+                    '-flatten',
+                    '-density', str(dpi),
+                    '-quality', str(quality),
+                    target
+                    ]
+                scanarium.run(command)
     return pdf_name
 
 

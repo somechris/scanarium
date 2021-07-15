@@ -315,8 +315,9 @@ def rectify(scanarium, image, decreasingArea=True, required_points=[],
                 scanarium, prepared_image, decreasingArea, scaled_points)
 
     if found_points_scaled is None:
-        raise ScanariumError('SE_SCAN_NO_APPROX',
-                             'Failed to find black bounding rectangle in image')
+        raise ScanariumError(
+            'SE_SCAN_NO_APPROX',
+            'Failed to find black bounding rectangle in image')
 
     found_points = (found_points_scaled / scale_factor).astype('float32')
 

@@ -192,17 +192,29 @@ def generate_mask(scanarium, dir, file, force):
 
 
 def generate_pdf(scanarium, dir, file, force):
+    dpi = 150
     source = os.path.join(dir, file)
-    target = os.path.join(dir, file.rsplit('.', 1)[0] + '.pdf')
-    if scanarium.file_needs_update(target, [source], force):
-        inkscape_args = [
-            '--export-area-page',
-            '--export-pdf=%s' % (target),
-            source,
-        ]
+    pdf_name = None
+    formats = ['pdf']
+    for format in ['png']:
+        if scanarium.get_config('cgi:regenerate-static-content',
+                                f'generate_{format}', kind='boolean'):
+            formats.append(format)
 
-        run_inkscape(scanarium, inkscape_args)
-    return target
+    for format in formats:
+        target = os.path.join(dir, file.rsplit('.', 1)[0] + '.' + format)
+        if scanarium.file_needs_update(target, [source], force):
+            inkscape_args = [
+                '--export-area-page',
+                f'--export-dpi={dpi}',
+                '--export-%s=%s' % (format, target),
+                source,
+            ]
+
+            run_inkscape(scanarium, inkscape_args)
+        if format == 'pdf':
+            pdf_name = target
+    return pdf_name
 
 
 def register_svg_namespaces():

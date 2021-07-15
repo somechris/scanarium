@@ -598,6 +598,9 @@ delegate =
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False
 
+# Whether or not to generate PNG variants for the actor/command pages.
+generate_png = False
+
 [cgi:reindex]
 # Whether or not to allow calling the script as cgi through the webserver.
 allow = False

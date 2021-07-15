@@ -762,6 +762,7 @@ def run_get_raw_image_pipeline(scanarium, file_path, pipeline):
                                                 'convert_untrusted'),
                            '-units', 'pixelsperinch',
                            '-background', 'white',
+                           '-flatten',
                            '-density', str(dpi),
                            '-quality', str(quality),
                            file_path + '[0]',  # [0] is first page

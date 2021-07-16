@@ -78,6 +78,7 @@
     "Invalid value": "Ungültiger Wert",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ist kein Verzeichnis",
     "Language": "Sprache",
+    "Legal": "Rechtliches",
     "Loading actor data ...": "Lade Figuren Daten ...",
     "Loading localization data ...": "Lade Übersetzungs-Daten ...",
     "Loading scene data ...": "Lade Szenen Daten ...",
@@ -300,7 +301,10 @@
     },
     "url-description": {
       "imprint": "Impressum",
-      "online help": "Online-Hilfe"
+      "license": "Lizenz",
+      "online help": "Online-Hilfe",
+      "privacy policy": "Datenschutzerklärung",
+      "terms and conditions": "Nutzungsbedingungen"
     }
   }
 }

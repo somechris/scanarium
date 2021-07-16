@@ -11,6 +11,7 @@ class SettingsPageHelp extends NamedPage {
     initContent() {
         this.initContentOnlineDocumentation();
         this.initContentHelp();
+        this.initContentLegalButtons();
     }
 
     initContentOnlineDocumentation() {
@@ -158,6 +159,40 @@ class SettingsPageHelp extends NamedPage {
 
                 this.appendElement(form.getElement());
             }
+        }
+    }
+
+    initContentLegalButtons() {
+        const buttons = getConfig("legal-buttons");
+        if (buttons && buttons.length > 0) {
+            this.appendSectionHeader('Legal');
+
+            buttons.forEach(buttonConfig => {
+                var button = document.createElement('button');
+                var name = localize_parameter('url-description', buttonConfig['name']);
+                if (name) {
+                    name = name[0].toUpperCase() + name.substring(1);
+                }
+                button.textContent = name;
+                button.style['font-size'] = SettingsButton.button.style['font-size'];
+                button.onclick = function(e) {
+                    var reason = localize('Forwarding to {url-description}.', {'url-description': buttonConfig['name']});
+                    var url = buttonConfig['url'];
+                    if (!url) {
+                        if (buttonConfig['name'] == 'imprint') {
+                            url = getConfig('imprint');
+                        }
+                    }
+                    updateLocation(reason, url);
+                    e.stopPropagation();
+                    e.preventDefault();
+                };
+
+                var p = document.createElement('p');
+                p.appendChild(button);
+
+                this.appendElement(p);
+            });
         }
     }
 }

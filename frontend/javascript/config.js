@@ -43,6 +43,9 @@ var default_global_config = {
 
   // News sites
   'news': [],
+
+  // Legal Buttons
+  'legal-buttons': [],
 };
 
 var global_config = {};

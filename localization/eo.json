@@ -78,6 +78,7 @@
     "Invalid value": "Malvalida enigaĵo",
     "Is not a directory \"{file_name}\"": "\"{file_name}\" ne estas dosierujo",
     "Language": "Lingvo",
+    "Legal": "Leĝaĵoj",
     "Loading actor data ...": "Ŝargante datumojn pri agantaj ...",
     "Loading localization data ...": "Ŝargante datumojn pri tradukaĵoj ...",
     "Loading scene data ...": "Ŝargante datumojn pri scenoj ...",
@@ -300,7 +301,10 @@
     },
     "url-description": {
       "imprint": "paĝo pri leĝa respondeco",
-      "online help": "retaj help-paĝoj"
+      "license": "licenco",
+      "online help": "retaj help-paĝoj",
+      "privacy policy": "datumprotekta deklaro",
+      "terms and conditions": "reguloj de servado"
     }
   }
 }

@@ -73,17 +73,26 @@ class SettingsPageAdministration extends NamedPage {
 
             var oldPasswordInput;
             var newPasswordInput;
+            var confirmPasswordInput;
+            var form;
             var submit = function(event) {
                 var data = new FormData();
                 data.append('old-password', oldPasswordInput.value);
                 data.append('new-password', newPasswordInput.value);
-                callCgi(cgi, data);
+                callCgi(cgi, data, (is_ok) => {
+                    if (is_ok) {
+                        oldPasswordInput.value = '';
+                        newPasswordInput.value = '';
+                        confirmPasswordInput.value = '';
+                        form.validate();
+                    }
+                });
 
                 event.stopPropagation();
                 event.preventDefault();
                 PauseManager.resume();
             }
-            var form = new ManagedForm('update-password-form', submit, localize('Change password'));
+            form = new ManagedForm('update-password-form', submit, localize('Change password'));
 
             var old_password_validator = function(node) {
                 const password = node.value;
@@ -110,7 +119,7 @@ class SettingsPageAdministration extends NamedPage {
 
             oldPasswordInput = form.addPassword(localize('Current password'), 'current-password', old_password_validator);
             newPasswordInput = form.addPassword(localize('New password'), 'new-password', new_password_validator);
-            form.addPassword(localize('Confirm new password'), 'confirm-password', new_password_validator);
+            confirmPasswordInput = form.addPassword(localize('Confirm new password'), 'confirm-password', new_password_validator);
 
             this.appendElement(form.getElement());
         }

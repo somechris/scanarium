@@ -102,6 +102,13 @@ fine_grained_errors = False
 cgi_results = False
 
 
+# If `True`, each cgi call logs the current date.
+#
+# This is useful to see when a Scanarium instance was last used without spying
+# on users.
+cgi_date = False
+
+
 # If `True`, raw images get logged to the log directory.
 raw_image_files = False
 

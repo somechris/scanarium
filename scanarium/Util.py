@@ -52,13 +52,17 @@ def generate_thumbnail(scanarium, dir, file, force, levels=[]):
         scanarium.run(command)
 
 
-def get_log_filename(scanarium, name):
+def get_log_filename(scanarium, name, timestamped=True):
     now = datetime.datetime.now()
-    date_dir = now.strftime(os.path.join('%Y', '%m', '%d'))
-    full_dir = os.path.join(scanarium.get_log_dir_abs(), date_dir)
-    os.makedirs(full_dir, exist_ok=True)
+    full_dir = scanarium.get_log_dir_abs()
+    if timestamped:
+        date_dir = now.strftime(os.path.join('%Y', '%m', '%d'))
+        full_dir = os.path.join(full_dir, date_dir)
 
-    full_file = os.path.join(full_dir, now.strftime('%H.%M.%S.%f-') + name)
+        name = now.strftime('%H.%M.%S.%f-') + name
+
+    os.makedirs(full_dir, exist_ok=True)
+    full_file = os.path.join(full_dir, name)
     return full_file
 
 
@@ -98,8 +102,8 @@ class Util(object):
     def file_needs_update(self, destination, sources, force=False):
         return file_needs_update(destination, sources, force)
 
-    def get_log_filename(self, name):
-        return get_log_filename(self._scanarium, name)
+    def get_log_filename(self, name, timestamped=True):
+        return get_log_filename(self._scanarium, name, timestamped)
 
     def guess_image_format(self, file_path):
         return guess_image_format(file_path)

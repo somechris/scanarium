@@ -14,12 +14,16 @@ class Dumper(object):
         return json.dumps(data, **JSON_DUMP_ARGS)
 
     def dump_json(self, file, data):
+        self.dump_text(file, self.dump_json_string(data))
+
+    def dump_text(self, file, data):
         dir = os.path.dirname(file)
         os.makedirs(dir, exist_ok=True)
         tmp_file = tempfile.NamedTemporaryFile(mode='w+', dir=dir,
                                                delete=False)
+
         try:
-            json.dump(data, tmp_file, **JSON_DUMP_ARGS)
+            tmp_file.write(data)
         finally:
             tmp_file.close()
         os.replace(tmp_file.name, file)

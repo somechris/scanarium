@@ -8,7 +8,7 @@ import sys
 
 SCANARIUM_DIR_ABS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SCANARIUM_DIR_ABS)
-from scanarium import Dumper, ScanariumError
+from scanarium import Dumper
 del sys.path[0]
 
 
@@ -19,8 +19,14 @@ class DumperTest(BasicTestCase):
     def assert_dumped_json(self, data):
         with self.prepared_environment() as dir:
             file = os.path.join(dir, 'dump')
-            actual = Dumper().dump_json(file, data)
+            Dumper().dump_json(file, data)
             self.assertFileJsonContents(file, data)
+
+    def assert_dumped_text(self, text):
+        with self.prepared_environment() as dir:
+            file = os.path.join(dir, 'dump')
+            Dumper().dump_text(file, text)
+            self.assertFileContents(file, text)
 
     def test_dump_json_string_None(self):
         self.assertEqual('null', Dumper().dump_json_string(None))
@@ -72,3 +78,12 @@ class DumperTest(BasicTestCase):
                 }
             }
         self.assert_dumped_json(data)
+
+    def test_dump_text_empty(self):
+        self.assert_dumped_text('')
+
+    def test_dump_text_plain(self):
+        self.assert_dumped_text('foo')
+
+    def test_dump_text_multiline(self):
+        self.assert_dumped_text('foo\nöÖß³')

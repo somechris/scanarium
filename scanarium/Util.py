@@ -2,6 +2,7 @@
 # GNU Affero General Public License v3.0 (See LICENSE.md)
 # SPDX-License-Identifier: AGPL-3.0-only
 
+import collections.abc
 import datetime
 import logging
 import os
@@ -92,6 +93,45 @@ def to_safe_filename(name):
     return ret
 
 
+def update_dict(target, source, merge_lists=False):
+    for key, value in source.items():
+        if isinstance(value, collections.abc.Mapping):
+            target[key] = update_dict(target.get(key, {}), value)
+        elif merge_lists and isinstance(value, list) \
+                and isinstance(target.get(key, 0), list):
+            target[key] += value
+        else:
+            target[key] = value
+    return target
+
+
+def embed_metadata(scanarium, filename, metadata={}):
+    command = [
+        scanarium.get_config('programs', 'exiftool'),
+        '-overwrite_original',
+        '-all:all=',
+        ]
+
+    gkvs = {
+        'XMP-x': {
+            'XMPToolkit': 'n/a',
+            },
+        }
+    gkvs = update_dict(gkvs, metadata)
+
+    for group, kvs in gkvs.items():
+        for k, v in kvs.items():
+            param = '-' + group
+            if k:
+                param += ':' + k
+
+            if v:
+                command.append(f'{param}={v}')
+
+    command.append(filename)
+    scanarium.run(command)
+
+
 class Util(object):
     def __init__(self, scanarium):
         self._scanarium = scanarium
@@ -110,3 +150,6 @@ class Util(object):
 
     def to_safe_filename(self, name):
         return to_safe_filename(name)
+
+    def embed_metadata(self, scanarium, filename, metadata):
+        return embed_metadata(scanarium, filename, metadata)

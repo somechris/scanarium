@@ -217,12 +217,7 @@ def embed_metadata(scanarium, file, metadata):
     description = ' '.join(keywords)
     keywords = ', '.join(keywords)
 
-    command = [
-        scanarium.get_config('programs', 'exiftool'),
-        '-overwrite_original',
-        '-all:all=',
-        ]
-    for category, kvs in {
+    detailed_metadata = {
         'Copyright': {
             '': copyright,
             },
@@ -281,9 +276,6 @@ def embed_metadata(scanarium, file, metadata):
             'LicensorName': attribution_name,
             'LicensorURL': rights_url,
             },
-        'XMP-x': {
-            'XMPToolkit': 'n/a',
-            },
         'XMP-xmp': {
             'CreatorTool': attribution_name,
             'Label': 'Scanarium',
@@ -301,17 +293,9 @@ def embed_metadata(scanarium, file, metadata):
             'Title': title,
             'Subject': description,
             },
-        }.items():
-        for k, v in kvs.items():
-            param = '-' + category
-            if k:
-                param += ':' + k
+        }
 
-            if v:
-                command.append(f'{param}={v}')
-
-    command.append(file)
-    scanarium.run(command)
+    scanarium.embed_metadata(file, detailed_metadata)
 
 def generate_pdf(scanarium, dir, file, force, metadata={}):
     dpi = 150

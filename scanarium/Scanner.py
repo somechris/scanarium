@@ -478,16 +478,15 @@ def balance(scanarium, image):
 
 
 def embed_metadata(scanarium, file, basename, scene, actor):
-    command = [
-        scanarium.get_config('programs', 'exiftool'),
-        '-overwrite_original',
-        '-all:all=',
-        f'-XMP-x:XMPToolkit=n/a',
-        f'-XMP-xmp:CreatorTool=Scanarium',
-        f'-XMP-xmp:Label=scene:{scene}, actor:{actor}, v:1',
-        file,
-        ]
-    scanarium.run(command)
+    scanarium.embed_metadata(
+        file, {
+            'XMP-xmp': {
+                'CreatorTool': 'Scanarium',
+                'Label': f'scene:{scene}, actor:{actor}, v:1',
+                },
+            },
+        )
+
 
 def save_image(scanarium, image, scene, actor):
     timestamp = str(int(time.time()))

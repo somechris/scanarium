@@ -180,5 +180,8 @@ class Scanarium(object):
     def to_safe_filename(self, name):
         return self._util.to_safe_filename(name)
 
+    def embed_metadata(self, filename, metadata):
+        return self._util.embed_metadata(self, filename, metadata)
+
     def get_command_logger(self):
         return self._command_logger

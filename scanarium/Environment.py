@@ -115,7 +115,7 @@ class Environment(object):
         self.reset_method()
         if self._config.get('log', 'cgi_date', kind='boolean'):
             try:
-                now = self._util.get_timestamp()
+                now = self._util.get_now()
                 formatted_now = now.strftime('%Y-%m-%dT00:00:00Z')
                 log_filename = self._util.get_log_filename(
                     'last-cgi-call-date.txt', timestamped=False)

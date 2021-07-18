@@ -56,7 +56,7 @@ def generate_thumbnail(scanarium, dir, file, force, levels=[]):
 def get_log_filename(scanarium, name, timestamped=True):
     full_dir = scanarium.get_log_dir_abs()
     if timestamped:
-        now = get_timestamp()
+        now = get_now()
         date_dir = now.strftime(os.path.join('%Y', '%m', '%d'))
         full_dir = os.path.join(full_dir, date_dir)
 
@@ -106,7 +106,7 @@ def update_dict(target, source, merge_lists=False):
 
 
 def embed_metadata(scanarium, filename, metadata={}):
-    now = get_timestamp()
+    now = get_now()
     command = [
         scanarium.get_config('programs', 'exiftool'),
         '-overwrite_original',
@@ -136,7 +136,7 @@ def embed_metadata(scanarium, filename, metadata={}):
     scanarium.run(command)
 
 
-def get_timestamp():
+def get_now():
     return datetime.datetime.now(tz=datetime.timezone.utc)
 
 
@@ -162,5 +162,5 @@ class Util(object):
     def embed_metadata(self, scanarium, filename, metadata):
         return embed_metadata(scanarium, filename, metadata)
 
-    def get_timestamp(self):
-        return get_timestamp()
+    def get_now(self):
+        return get_now()

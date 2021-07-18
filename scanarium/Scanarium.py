@@ -183,5 +183,8 @@ class Scanarium(object):
     def embed_metadata(self, filename, metadata):
         return self._util.embed_metadata(self, filename, metadata)
 
+    def get_now(self):
+        return self._util.get_now()
+
     def get_command_logger(self):
         return self._command_logger

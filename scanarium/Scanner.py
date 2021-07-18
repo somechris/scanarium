@@ -477,6 +477,18 @@ def balance(scanarium, image):
     return ret
 
 
+def embed_metadata(scanarium, file, basename, scene, actor):
+    command = [
+        scanarium.get_config('programs', 'exiftool'),
+        '-overwrite_original',
+        '-all:all=',
+        f'-XMP-x:XMPToolkit=n/a',
+        f'-XMP-xmp:CreatorTool=Scanarium',
+        f'-XMP-xmp:Label=scene:{scene}, actor:{actor}, v:1',
+        file,
+        ]
+    scanarium.run(command)
+
 def save_image(scanarium, image, scene, actor):
     timestamp = str(int(time.time()))
     actor_path = os.path.join(scene, 'actors', actor)
@@ -493,8 +505,14 @@ def save_image(scanarium, image, scene, actor):
     image_dir = os.path.join(dynamic_dir, 'scenes', actor_path)
     os.makedirs(image_dir, exist_ok=True)
     basename = f'{timestamp}.png'
+    tmp_image_file = os.path.join(image_dir, 'tmp-' + basename)
+
+    cv2.imwrite(tmp_image_file, image)
+    embed_metadata(scanarium, tmp_image_file, basename, scene, actor)
+
     image_file = os.path.join(image_dir, basename)
-    cv2.imwrite(image_file, image)
+    shutil.move(tmp_image_file, image_file)
+
     scanarium.generate_thumbnail(image_dir, basename)
 
     if scanarium.get_config('log', 'scanned_actor_files', kind='boolean'):

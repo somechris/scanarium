@@ -68,7 +68,13 @@ class BasicTestCase(unittest.TestCase):
             'directories': {
                 'dynamic': dynamic_dir,
                 'log': log_dir,
-            },
+                },
+            'log': {
+                'cgi_results': False,
+                'cgi_date': False,
+                'scanned_actor_files': False,
+                'raw_image_files': False,
+                },
             'scan': {
                 'source': '/dev/null',
                 'max_raw_width': 1000,

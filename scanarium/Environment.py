@@ -5,7 +5,6 @@
 import argparse
 import base64
 import cgi
-import datetime
 import locale
 import logging
 import os
@@ -116,7 +115,7 @@ class Environment(object):
         self.reset_method()
         if self._config.get('log', 'cgi_date', kind='boolean'):
             try:
-                now = datetime.datetime.now()
+                now = self._util.get_timestamp()
                 log_filename = self._util.get_log_filename(
                     'last-cgi-call-date.txt', timestamped=False)
                 self._dumper.dump_text(log_filename, now.strftime('%Y-%m-%d'))

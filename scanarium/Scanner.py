@@ -489,7 +489,7 @@ def embed_metadata(scanarium, file, basename, scene, actor):
 
 
 def save_image(scanarium, image, scene, actor):
-    timestamp = str(int(scanarium.get_now().timestamp()))
+    timestamp = scanarium.get_timestamp_for_filename()
     actor_path = os.path.join(scene, 'actors', actor)
     if not os.path.isdir(os.path.join(scanarium.get_scenes_dir_abs(),
                                       actor_path)):

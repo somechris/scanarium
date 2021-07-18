@@ -7,7 +7,6 @@ import logging
 import os
 import sys
 import re
-import time
 
 import cv2
 import numpy as np
@@ -144,7 +143,7 @@ def show_source(scanarium, mark, store_final):
             cv2.waitKey(25)
     finally:
         if store_final and original_image is not None:
-            filename = str(int(time.time())) + '.png'
+            filename = scanarium.get_timestamp_for_filename() + '.png'
             cv2.imwrite(filename, original_image)
             logger.info('Stored last image as "%s"' % (filename))
         if camera is not None:

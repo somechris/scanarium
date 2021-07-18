@@ -7,6 +7,7 @@ import datetime
 import logging
 import os
 import re
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -140,6 +141,10 @@ def get_now():
     return datetime.datetime.now(tz=datetime.timezone.utc)
 
 
+def get_timestamp_for_filename():
+    return str(int(time.time()))
+
+
 class Util(object):
     def __init__(self, scanarium):
         self._scanarium = scanarium
@@ -164,3 +169,6 @@ class Util(object):
 
     def get_now(self):
         return get_now()
+
+    def get_timestamp_for_filename(self):
+        return get_timestamp_for_filename()

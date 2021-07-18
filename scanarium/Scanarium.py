@@ -186,5 +186,8 @@ class Scanarium(object):
     def get_now(self):
         return self._util.get_now()
 
+    def get_timestamp_for_filename(self):
+        return self._util.get_timestamp_for_filename()
+
     def get_command_logger(self):
         return self._command_logger

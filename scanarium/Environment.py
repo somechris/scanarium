@@ -116,9 +116,10 @@ class Environment(object):
         if self._config.get('log', 'cgi_date', kind='boolean'):
             try:
                 now = self._util.get_timestamp()
+                formatted_now = now.strftime('%Y-%m-%dT00:00:00Z')
                 log_filename = self._util.get_log_filename(
                     'last-cgi-call-date.txt', timestamped=False)
-                self._dumper.dump_text(log_filename, now.strftime('%Y-%m-%d'))
+                self._dumper.dump_text(log_filename, formatted_now)
             except Exception:
                 # Logging failed. There's not much we can do here.
                 pass

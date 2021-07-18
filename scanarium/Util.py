@@ -60,7 +60,7 @@ def get_log_filename(scanarium, name, timestamped=True):
         date_dir = now.strftime(os.path.join('%Y', '%m', '%d'))
         full_dir = os.path.join(full_dir, date_dir)
 
-        name = now.strftime('%H.%M.%S.%f-') + name
+        name = now.strftime('%H.%M.%S.%fZ-') + name
 
     os.makedirs(full_dir, exist_ok=True)
     full_file = os.path.join(full_dir, name)
@@ -118,7 +118,7 @@ def embed_metadata(scanarium, filename, metadata={}):
             'XMPToolkit': 'n/a',
             },
         'XMP-xmp': {
-            'CreateDate': now.strftime('%Y:%m:%d %H:%M:%S'),
+            'CreateDate': now.strftime('%Y:%m:%d %H:%M:%SZ'),
             },
         }
     gkvs = update_dict(gkvs, metadata)
@@ -136,8 +136,8 @@ def embed_metadata(scanarium, filename, metadata={}):
     scanarium.run(command)
 
 
-def get_timestamp():
-    return datetime.datetime.now()
+def get_timestamp(utc=False):
+    return datetime.datetime.now(tz=datetime.timezone.utc)
 
 
 class Util(object):

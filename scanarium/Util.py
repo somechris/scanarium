@@ -54,9 +54,9 @@ def generate_thumbnail(scanarium, dir, file, force, levels=[]):
 
 
 def get_log_filename(scanarium, name, timestamped=True):
-    now = get_timestamp()
     full_dir = scanarium.get_log_dir_abs()
     if timestamped:
+        now = get_timestamp()
         date_dir = now.strftime(os.path.join('%Y', '%m', '%d'))
         full_dir = os.path.join(full_dir, date_dir)
 

@@ -497,6 +497,16 @@ def save_image(scanarium, image, scene, actor):
     cv2.imwrite(image_file, image)
     scanarium.generate_thumbnail(image_dir, basename)
 
+    if scanarium.get_config('log', 'scanned_actor_files', kind='boolean'):
+        try:
+            log_filename = scanarium.get_log_filename(
+                f'scanned-actor-{basename}')
+            shutil.copy2(image_file, log_filename)
+        except Exception as e:
+            print(e, file=sys.stderr)
+            # Logging failed. There's not much we can do here.
+            pass
+
     return timestamp
 
 

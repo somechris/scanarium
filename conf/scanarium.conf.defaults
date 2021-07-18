@@ -113,6 +113,14 @@ cgi_date = False
 raw_image_files = False
 
 
+# If `True`, store the scanned actors also in the log directory.
+#
+# This is immensively useful for debugging when having the logs close to the
+# scanned actors, as it allows to easily verify that the scanning extracted the
+# correct part of the image.
+scanned_actor_files = False
+
+
 
 
 #-------------------------------------------------------------------------------

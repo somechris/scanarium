@@ -136,7 +136,7 @@ def embed_metadata(scanarium, filename, metadata={}):
     scanarium.run(command)
 
 
-def get_timestamp(utc=False):
+def get_timestamp():
     return datetime.datetime.now(tz=datetime.timezone.utc)
 
 

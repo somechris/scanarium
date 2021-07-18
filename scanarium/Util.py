@@ -106,6 +106,7 @@ def update_dict(target, source, merge_lists=False):
 
 
 def embed_metadata(scanarium, filename, metadata={}):
+    now = datetime.datetime.now()
     command = [
         scanarium.get_config('programs', 'exiftool'),
         '-overwrite_original',
@@ -115,6 +116,9 @@ def embed_metadata(scanarium, filename, metadata={}):
     gkvs = {
         'XMP-x': {
             'XMPToolkit': 'n/a',
+            },
+        'XMP-xmp': {
+            'CreateDate': now.strftime('%Y:%m:%d %H:%M:%S'),
             },
         }
     gkvs = update_dict(gkvs, metadata)

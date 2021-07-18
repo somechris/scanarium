@@ -83,3 +83,18 @@ class ReindexCanaryTestCase(CanaryTestCase):
             expected = {'actors': {'foo': [str(x) for x in range(10, 0, -1)]}}
             self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
                                          'actors-latest.json'], expected)
+
+    def test_ok_skip_tmp_files(self):
+        with self.prepared_environment() as dir:
+            self.setFile([dir, 'dynamic', 'scenes', 'space', 'actors', 'foo',
+                          'bar.png'])
+            self.setFile([dir, 'dynamic', 'scenes', 'space', 'actors', 'foo',
+                          'tmp-baz.png'])
+
+            self.run_reindex(dir)
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors.json'],
+                                        {'actors': {'foo': ['bar']}})
+            self.assertFileJsonContents([dir, 'dynamic', 'scenes', 'space',
+                                         'actors-latest.json'],
+                                        {'actors': {'foo': ['bar']}})

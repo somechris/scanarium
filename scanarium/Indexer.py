@@ -33,7 +33,8 @@ class Indexer(object):
                     for flavor in os.listdir(actor_dir):
                         flavor_file = os.path.join(actor_dir, flavor)
                         if os.path.isfile(flavor_file) and \
-                                flavor.endswith('.png'):
+                                flavor.endswith('.png') and \
+                                not flavor.startswith('tmp-'):
                             flavor_files.append({
                                 'flavor': flavor[:-4],
                                 'key': os.stat(flavor_file).st_mtime,

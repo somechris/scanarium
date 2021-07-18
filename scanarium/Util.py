@@ -7,7 +7,6 @@ import datetime
 import logging
 import os
 import re
-import time
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +141,7 @@ def get_now():
 
 
 def get_timestamp_for_filename():
-    return str(int(time.time()))
+    return str(int(get_now().timestamp()))
 
 
 class Util(object):

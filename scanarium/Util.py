@@ -141,7 +141,7 @@ def get_now():
 
 
 def get_timestamp_for_filename():
-    return str(int(get_now().timestamp()))
+    return f'{get_now().timestamp():.3f}'
 
 
 class Util(object):

@@ -7,6 +7,7 @@ import collections.abc
 import configparser
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -158,6 +159,12 @@ class BasicTestCase(unittest.TestCase):
     def assertLenIs(self, lst, expected_length):
         self.assertEqual(len(lst), expected_length,
                          f'Length of {lst} is not {expected_length}')
+
+    def assertFullMatch(self, pattern, string):
+        self.assertTrue(
+            re.fullmatch(pattern, string),
+            f'"{string}" does not match "{pattern}" fully'
+            )
 
 
 class CanaryTestCase(BasicTestCase):

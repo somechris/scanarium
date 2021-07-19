@@ -204,13 +204,16 @@ def embed_metadata(scanarium, file, metadata):
     license_url = get_conf('license_url')
     copyright_year = get_conf('copyright_year')
 
-    copyright = f'Copyright (C) {copyright_year}  {attribution_name}. {attribution_url} This work is licensed under {license_name}. See {license_url}'
+    copyright = f'Copyright (C) {copyright_year}  {attribution_name}. ' \
+        f'{attribution_url} This work is licensed under {license_name}. ' \
+        f'See {license_url}'
     title = metadata['localized_parameter_with_variant']
     keywords = ['Scanarium']
     for key in [
-        'localized_command',
-        'coloring-page-l10n',
-        'localized_parameter_with_variant']:
+            'localized_command',
+            'coloring-page-l10n',
+            'localized_parameter_with_variant'
+            ]:
         if metadata[key]:
             keywords.append(metadata[key])
     keywords.reverse()
@@ -296,6 +299,7 @@ def embed_metadata(scanarium, file, metadata):
         }
 
     scanarium.embed_metadata(file, detailed_metadata)
+
 
 def generate_pdf(scanarium, dir, file, force, metadata={}):
     dpi = 150
@@ -618,11 +622,11 @@ def svg_variant_pipeline(scanarium, dir, command, parameter, variant, tree,
 
     pdf_name = generate_pdf(scanarium, dir, full_svg_name, force, metadata={
             'language': language,
-            'coloring-page-l10n': \
-                localizer.localize('coloring page') if is_actor else None,
+            'coloring-page-l10n':
+            localizer.localize('coloring page') if is_actor else None,
             'localized_command': localized_command if is_actor else None,
-            'localized_parameter_with_variant': \
-                localized_parameter_with_variant if is_actor else None,
+            'localized_parameter_with_variant':
+            localized_parameter_with_variant if is_actor else None,
             })
 
     if is_actor:

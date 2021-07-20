@@ -72,6 +72,7 @@ class SettingsPageHelp extends NamedPage {
                 var message;
                 var email;
                 var includeLastFailedCheckBox;
+                var includeUserAgent;
                 var lastFailedUpload;
                 var submit = function(event) {
                     if (message && message.value) {
@@ -80,6 +81,9 @@ class SettingsPageHelp extends NamedPage {
                         data.append('email', email.value);
                         if (includeLastFailedCheckBox.checked && lastFailedUpload) {
                             data.append('lastFailedUpload', lastFailedUpload);
+                        }
+                        if (includeUserAgent.checked) {
+                            data.append('userAgent', navigator.userAgent);
                         }
                         callCgi(cgi, data);
                     }
@@ -156,6 +160,9 @@ class SettingsPageHelp extends NamedPage {
                     }
                 };
                 UploadButton.registerUploadListener(includeLastFailedCheckBox.uploadListener);
+
+                includeUserAgent = form.addCheckbox(localize('Attachment'), 'feedback-attach-user-agent', undefined, localize('Include browser identification'));
+                includeUserAgent.setChecked(true);
 
                 this.appendElement(form.getElement());
             }

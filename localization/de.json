@@ -73,6 +73,7 @@
     "If you run into issues, or your pictures fail to scan please report them using this form:": "Wenn etwas nicht funktioniert oder das Scannen deiner Bilder nicht klappt, melde es bitte über dieses Formular:",
     "Image is too small. Minimum width is {min_width} pixels": "Bild ist zu klein. Mindestbreite ist {min_width} Pixel",
     "Imprint": "Impressum",
+    "Include browser identification": "Browserkennung mitschicken",
     "Include last failed upload": "Letztes fehlgeschlagenes Bild mitschicken",
     "Intentional error from the \"debug:fail\" command": "Absichtlicher Fehler vom Kommando \"debug:fail\"",
     "Invalid value": "Ungültiger Wert",

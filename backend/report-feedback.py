@@ -16,7 +16,7 @@ del sys.path[0]
 logger = logging.getLogger(__name__)
 
 
-def report_feedback(scanarium, message, email, lastFailedUpload):
+def report_feedback(scanarium, message, email, lastFailedUpload, userAgent):
     target = scanarium.get_config('cgi:report-feedback', 'target')
     if target == 'stderr':
         print(message, file=sys.stderr)
@@ -36,6 +36,8 @@ def report_feedback(scanarium, message, email, lastFailedUpload):
             format = scanarium.guess_image_format(img_filename)
             if format:
                 os.rename(img_filename, f'{img_filename}.{format}')
+        if userAgent:
+            scanarium.dump_text(filename_base + '-user-agent.txt', userAgent)
     else:
         raise ScanariumError('SE_UNKNOWN_FEEDBACK_TARGET',
                              'Unknown feedback target "{feedback_target}"',
@@ -48,6 +50,8 @@ def register_arguments(scanarium, parser):
     parser.add_argument('EMAIL', help='The email to send the answer to')
     parser.add_argument('LAST_FAILED_UPLOAD', nargs='?',
                         help='The last failed upload')
+    parser.add_argument('USER_AGENT', nargs='?',
+                        help='The browser identification')
 
 
 if __name__ == "__main__":
@@ -56,6 +60,6 @@ if __name__ == "__main__":
         'Reports feedback',
         register_arguments,
         whitelisted_cgi_fields={
-            'message': 1, 'email': 2, 'lastFailedUpload': 3})
+            'message': 1, 'email': 2, 'lastFailedUpload': 3, 'userAgent': 4})
     scanarium.call_guarded(report_feedback, args.MESSAGE, args.EMAIL,
-                           args.LAST_FAILED_UPLOAD)
+                           args.LAST_FAILED_UPLOAD, args.USER_AGENT)

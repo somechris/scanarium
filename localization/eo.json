@@ -73,6 +73,7 @@
     "If you run into issues, or your pictures fail to scan please report them using this form:": "Se io ajn malfunkcias aŭ viaj bildoj mal-skanas, sciigu al ni per tiu ĉi formularo:",
     "Image is too small. Minimum width is {min_width} pixels": "Bildo estas tro malgranda. Minimuma vasteco estas {min_width} rastrumeroj",
     "Imprint": "Leĝa respondeco",
+    "Include browser identification": "Kunsendu identaĵo de retumilo",
     "Include last failed upload": "Kunsendu la lastan, malsukcesan bildon",
     "Intentional error from the \"debug:fail\" command": "Intenca eraro de komando \"debug:fail\"",
     "Invalid value": "Malvalida enigaĵo",

@@ -9,18 +9,24 @@ from .environment import CanaryTestCase
 
 
 class ReportFeedbackTestCase(CanaryTestCase):
-    def run_report_feedback(self, dir, feedback, email, file):
+    def run_report_feedback(self, dir, feedback, email, file, user_agent):
         args = [feedback, email]
+
         if file:
             with open(os.path.join(dir, file), 'rb') as f:
                 raw_data = f.read()
             encoded = base64.standard_b64encode(raw_data).decode()
             args.append(encoded)
 
+        if user_agent:
+            while len(args) < 3:
+                args.append('')
+            args.append(user_agent)
+
         return self.run_cgi(dir, 'report-feedback', args)
 
     def run_test_report_feedback(
-            self, feedback='foo', email='', file_type=None):
+            self, feedback='foo', email='', file_type=None, user_agent=None):
         fixture = None
         if file_type:
             fixture = f'space-SimpleRocket-optimal.{file_type}'
@@ -33,7 +39,7 @@ class ReportFeedbackTestCase(CanaryTestCase):
                 },
             }
         with self.prepared_environment(fixture, test_config=config) as dir:
-            self.run_report_feedback(dir, feedback, email, fixture)
+            self.run_report_feedback(dir, feedback, email, fixture, user_agent)
 
             log_dir = os.path.join(dir, 'log')
             year_dir = os.path.join(log_dir, os.listdir(log_dir)[0])
@@ -43,6 +49,7 @@ class ReportFeedbackTestCase(CanaryTestCase):
             found_txt = False
             found_email = False
             found_image = False
+            found_user_agent = False
             for file in os.listdir(day_dir):
                 full_file_name = os.path.join(day_dir, file)
                 if file[-13:] == '-feedback.txt':
@@ -65,6 +72,13 @@ class ReportFeedbackTestCase(CanaryTestCase):
                     self.assertSameFileContents(
                         full_file_name,
                         self.get_fixture_file_name(fixture))
+                elif user_agent and file[-15:] == '-user-agent.txt':
+                    self.assertFalse(
+                        found_user_agent,
+                        f'found 2 user agent: "{found_user_agent}" and '
+                        f'"{full_file_name}"')
+                    found_user_agent = file
+                    self.assertFileContents(full_file_name, user_agent)
                 else:
                     self.fail(f'Found unexpected file "{full_file_name}"')
 
@@ -97,3 +111,10 @@ class ReportFeedbackTestCase(CanaryTestCase):
 
     def test_feedback_txt_file(self):
         self.run_test_report_feedback(file_type='txt')
+
+    def test_feedback_userAgent(self):
+        self.run_test_report_feedback(user_agent='bar')
+
+    def test_feedback_full_userAgent(self):
+        self.run_test_report_feedback(email="bar@example.org", file_type='jpg',
+                                      user_agent='bar')

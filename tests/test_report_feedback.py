@@ -10,12 +10,17 @@ from .environment import CanaryTestCase
 
 class ReportFeedbackTestCase(CanaryTestCase):
     def run_report_feedback(self, dir, feedback, email, file, user_agent):
-        args = [feedback, email]
+        args = [feedback]
+
+        if email:
+            args.append(email)
 
         if file:
             with open(os.path.join(dir, file), 'rb') as f:
                 raw_data = f.read()
             encoded = base64.standard_b64encode(raw_data).decode()
+            while len(args) < 2:
+                args.append('')
             args.append(encoded)
 
         if user_agent:

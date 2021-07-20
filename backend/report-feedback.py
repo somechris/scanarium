@@ -47,7 +47,8 @@ def report_feedback(scanarium, message, email, lastFailedUpload, userAgent):
 
 def register_arguments(scanarium, parser):
     parser.add_argument('MESSAGE', help='The textual part of the feedback')
-    parser.add_argument('EMAIL', help='The email to send the answer to')
+    parser.add_argument('EMAIL', nargs='?',
+                        help='The email to send the answer to')
     parser.add_argument('LAST_FAILED_UPLOAD', nargs='?',
                         help='The last failed upload')
     parser.add_argument('USER_AGENT', nargs='?',

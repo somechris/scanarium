@@ -22,13 +22,9 @@ def report_feedback(scanarium, message, email, lastFailedUpload, userAgent):
         print(message, file=sys.stderr)
     elif target == 'log':
         filename_base = scanarium.get_log_filename('feedback')
-        log_filename = filename_base + '.txt'
-        with open(log_filename, 'wt') as f:
-            f.write(message)
+        scanarium.dump_text(filename_base + '.txt', message)
         if email:
-            email_filename = filename_base + '-email.txt'
-            with open(email_filename, 'wt') as f:
-                f.write(email)
+            scanarium.dump_text(filename_base + '-email.txt', email)
         if lastFailedUpload:
             img_filename = filename_base + '-last-failed-upload'
             with open(img_filename, 'wb') as f:
